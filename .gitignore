@@ -1,0 +1,100 @@
+###############################
+### CUSTOM IGNORE FOLDERS   ###
+###############################
+__[Ii]gnore[Ff]older/*
+/[Aa]ssets/__[Ii]gnore[Ff]older/
+/[Aa]ssets/__[Ii]gnore[Ff]older.meta
+/[Aa]ssets/__[Ll]ocal[Pp]ackages/
+/[Aa]ssets/__[Ll]ocal[Pp]ackages.meta
+
+###############################
+### UNITY GENERATED FILES   ###
+###############################
+.utmp/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+*.log
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+sysinfo.txt
+mono_crash.*
+InitTestScene*.unity*
+/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+###############################
+### ASSETS & PLUGINS        ###
+###############################
+*.blend1
+*.blend1.meta
+/[Aa]ssets/AssetStoreTools*
+/[Aa]ssets/Plugins/Editor/JetBrains*
+*.unitypackage
+*.unitypackage.meta
+
+###############################
+### ADDRESSABLES & SCRIPTING###
+###############################
+/ServerData
+/[Aa]ssets/StreamingAssets/aa*
+/[Aa]ssets/AddressableAssetsData/link.xml*
+/[Aa]ssets/Addressables_Temp*
+/[Aa]ssets/AddressableAssetsData/*/*.bin*
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers
+/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
+
+###############################
+### IDE / PROJECT FILES     ###
+###############################
+.vscode/
+.vsconfig
+.idea/
+.vs/
+.gradle/
+.consulo/
+ExportedObj/
+*.sln
+*.slnx
+*.csproj
+*.unityproj
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.DotSettings.user
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+###############################
+### OS GENERATED FILES      ###
+###############################
+.DS_Store
+__MACOSX/
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+UIElementsSchema/
+
+###############################
+### BUILDS & MOBILE         ###
+###############################
+*.apk
+*.aab
+*.app
+crashlytics-build.properties
