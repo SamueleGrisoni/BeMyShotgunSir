@@ -1,0 +1,15 @@
+_Deliverables/
+
+# Ignore Unity folders that don't contain your code
+Library/
+Temp/
+Obj/
+Build/
+
+# Ignore external plugins (you don't want to format third-party code)
+Assets/Plugins/
+
+# Ignore data files
+*.json
+*.yaml
+*.meta

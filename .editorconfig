@@ -1,0 +1,209 @@
+################################################################################
+# EDITORCONFIG - Code style and formatting configuration
+################################################################################
+
+root=true
+
+################################################################################
+# 1. CONFIGURATION FILES AND MARKUP
+################################################################################
+
+[*.{json,ps1,sh,csproj,config}]
+  indent_style = space
+  indent_size = 2
+
+################################################################################
+# 2. C# FILES (.cs) CONFIGURATION
+################################################################################
+
+[*.cs]
+  # === BASE INDENTATION AND SPACING OPTIONS ===
+  indent_style = space
+  indent_size = 4
+
+  # === NEWLINE AND END-OF-FILE CONFIGURATION ===
+  insert_final_newline = true
+  # Set to "lf" for Unix/Linux/Mac compatibility (Recommended for Git)
+  end_of_line = lf
+  trim_trailing_whitespace = true
+
+  # === CSHARPIER SPECIFIC (Read from EditorConfig) ===
+  # Max line length before CSharpier forces a wrap
+  max_line_length = 100
+
+################################################################################
+# 3. CODE STYLE RULES (IDE Diagnostics)
+################################################################################
+
+  # --- 3A. SIMPLIFICATION RULES ---
+  dotnet_diagnostic.IDE0001.severity = warning
+  dotnet_diagnostic.IDE0002.severity = warning
+
+  # Choice: DO NOT use "this"
+  dotnet_diagnostic.IDE0003.severity = warning
+  dotnet_style_qualification_for_event = false
+  dotnet_style_qualification_for_field = false
+  dotnet_style_qualification_for_method = false
+  dotnet_style_qualification_for_property = false
+
+  dotnet_diagnostic.IDE0004.severity = error
+  dotnet_diagnostic.IDE0005.severity = error
+
+  # --- 3B. VARIABLE DECLARATION STYLE (var vs explicit type) ---
+  dotnet_diagnostic.IDE0007.severity = error
+  dotnet_diagnostic.IDE0008.severity = error
+  csharp_style_var_for_built_in_types = false
+  csharp_style_var_when_type_is_apparent = true
+  csharp_style_var_elsewhere = false
+
+  # --- 3C. SWITCH STATEMENT AND CONTROL FLOW ---
+  dotnet_diagnostic.IDE0010.severity = warning
+
+  # CSharpier always enforces braces for control flow.
+  # We set this to suggestion to match CSharpier's behavior.
+  dotnet_diagnostic.IDE0011.severity = suggestion
+  csharp_prefer_braces = true:suggestion
+
+  # --- 3D. THROW AND EXPRESSIONS ---
+  dotnet_diagnostic.IDE0016.severity = suggestion
+  csharp_style_throw_expression = true
+  dotnet_diagnostic.IDE0017.severity = suggestion
+  dotnet_style_object_initializer = true
+  dotnet_diagnostic.IDE0018.severity = suggestion
+  csharp_style_inlined_variable_declaration = true
+
+  # --- 3E. PATTERN MATCHING (C# 7/8) ---
+  dotnet_diagnostic.IDE0019.severity = suggestion
+  csharp_style_pattern_matching_over_as_with_null_check = true
+  dotnet_diagnostic.IDE0020.severity = suggestion
+  dotnet_diagnostic.IDE0038.severity = suggestion
+  csharp_style_pattern_matching_over_is_with_cast_check = true
+
+  # --- 3F. EXPRESSION BODIED MEMBERS (=>) ---
+  dotnet_diagnostic.IDE0021.severity = suggestion
+  csharp_style_expression_bodied_constructors = when_on_single_line
+  dotnet_diagnostic.IDE0022.severity = warning
+  csharp_style_expression_bodied_methods = when_on_single_line
+  dotnet_diagnostic.IDE0025.severity = warning
+  csharp_style_expression_bodied_properties = when_on_single_line
+
+  # --- 3G. COLLECTION AND TUPLE INITIALIZERS ---
+  dotnet_diagnostic.IDE0028.severity = suggestion
+  dotnet_style_collection_initializer = true
+  dotnet_diagnostic.IDE0033.severity = suggestion
+  dotnet_style_explicit_tuple_names = true
+
+  # --- 3H. DEFAULT EXPRESSION ---
+  dotnet_diagnostic.IDE0034.severity = suggestion
+  csharp_prefer_simple_default_expression = true
+
+  # --- 3I. UNREACHABLE CODE AND MODIFIERS ---
+  dotnet_diagnostic.IDE0035.severity = warning
+  dotnet_diagnostic.IDE0040.severity = warning
+  dotnet_style_require_accessibility_modifiers = for_non_interface_members
+  dotnet_diagnostic.IDE0062.severity = warning
+  csharp_prefer_static_local_function = true
+
+  # --- 3J. NULL HANDLING (UNITY SPECIFIC) ---
+  # Unity objects (GameObject, MonoBehaviour) do not support modern null operators properly
+  dotnet_diagnostic.IDE0030.severity = none
+  dotnet_diagnostic.IDE0031.severity = none
+  # Unity prefers "obj == null" or "ReferenceEquals" over "is null" for its custom null-check logic
+  dotnet_diagnostic.IDE0041.severity = none
+  dotnet_style_prefer_is_null_check_over_reference_equality_method = false
+
+  # --- 3K. PROPERTIES AND AUTO PROPERTIES ---
+  dotnet_diagnostic.IDE0032.severity = suggestion
+  dotnet_style_prefer_auto_properties = true
+
+  # --- 3L. DECONSTRUCTION AND LAMBDA ---
+  dotnet_diagnostic.IDE0042.severity = suggestion
+  csharp_style_deconstructed_variable_declaration = true
+  dotnet_diagnostic.IDE0053.severity = suggestion
+  csharp_style_expression_bodied_lambdas = when_on_single_line
+
+  # --- 3M. ASSIGNMENT AND RETURN ---
+  dotnet_diagnostic.IDE0046.severity = suggestion
+  dotnet_style_prefer_conditional_expression_over_return = true
+
+  # --- 3N. COMPOUND ASSIGNMENT ---
+  dotnet_diagnostic.IDE0054.severity = warning
+  dotnet_style_prefer_compound_assignment = true
+
+  # --- 3O. C# 9+ FEATURES REMOVED (NOT SUPPORTED IN UNITY) ---
+  # Removed IDE0056, IDE0057, IDE0078, IDE0083, IDE0090 as they use C# 9+ syntax
+
+  # --- 3P. OTHER DIAGNOSTICS ---
+  dotnet_diagnostic.IDE0049.severity = warning
+  dotnet_style_predefined_type_for_locals_parameters_members = true
+  dotnet_diagnostic.IDE0052.severity = suggestion
+  dotnet_diagnostic.IDE0055.severity = warning
+  dotnet_diagnostic.IDE0066.severity = suggestion
+  csharp_style_prefer_switch_expression = true
+
+################################################################################
+# 4. FORMATTING RULES (Enforced by CSharpier)
+################################################################################
+# CSharpier ignores most of these and uses its own logic.
+# We keep them here for IDE consistency.
+
+  csharp_new_line_before_open_brace = all
+  csharp_new_line_before_else = true
+  csharp_new_line_before_catch = true
+  csharp_new_line_before_finally = true
+  csharp_space_around_binary_operators = before_and_after
+  csharp_space_after_comma = true
+  csharp_space_after_semicolon_in_for_statement = true
+
+################################################################################
+# 5. NAMING CONVENTIONS
+################################################################################
+
+  # Interfaces (IMyInterface)
+  dotnet_naming_rule.interface_should_begin_with_i.symbols = interface
+  dotnet_naming_rule.interface_should_begin_with_i.style = begins_with_i
+  dotnet_naming_rule.interface_should_begin_with_i.severity = error
+  dotnet_naming_symbols.interface.applicable_kinds = interface
+  dotnet_naming_symbols.interface.applicable_accessibilities = *
+  dotnet_naming_style.begins_with_i.required_prefix = I
+  dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+  # Types, Methods, Properties (PascalCase)
+  dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+  dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+  dotnet_naming_rule.types_should_be_pascal_case.severity = error
+  dotnet_naming_symbols.types.applicable_kinds = namespace, class, struct, enum, property, method, event, delegate
+  dotnet_naming_symbols.types.applicable_accessibilities = *
+  dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+  # Private Fields (_camelCase)
+  dotnet_naming_rule.private_member_fields.symbols = private_member_fields
+  dotnet_naming_rule.private_member_fields.style = private_member_field_style
+  dotnet_naming_rule.private_member_fields.severity = error
+  dotnet_naming_symbols.private_member_fields.applicable_kinds = field
+  dotnet_naming_symbols.private_member_fields.applicable_accessibilities = private
+  dotnet_naming_style.private_member_field_style.capitalization = camel_case
+  dotnet_naming_style.private_member_field_style.required_prefix = _
+
+  # Locals and Parameters (camelCase)
+  dotnet_naming_rule.locals_should_be_camel_case.symbols = locals_and_parameters
+  dotnet_naming_rule.locals_should_be_camel_case.style = camel_case_style
+  dotnet_naming_rule.locals_should_be_camel_case.severity = error
+  dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
+  dotnet_naming_symbols.locals_and_parameters.applicable_accessibilities = *
+  dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+################################################################################
+# 6. GENERATED CODE FOLDERS
+################################################################################
+
+[Assets/{TextMesh Pro,AssetStore,Spine}/**.cs]
+  generated_code = true
+
+################################################################################
+# UNITY SPECIFIC ANALYZERS (Microsoft.Unity.Analyzers)
+################################################################################
+# These rules require the Unity Analyzers to be active in your IDE
+dotnet_diagnostic.UNT0001.severity = error
+dotnet_diagnostic.UNT0008.severity = warning
+dotnet_diagnostic.UNT0002.severity = warning
