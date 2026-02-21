@@ -1,10 +1,10 @@
 name: Code Formatter (CSharpier)
 
 on:
-  push:
-    branches: [develop]
-  pull_request:
-    types: [labeled]
+  # push:
+  #   branches: [develop]
+  # pull_request:
+  #   types: [labeled]
   workflow_dispatch:
 
 jobs:
