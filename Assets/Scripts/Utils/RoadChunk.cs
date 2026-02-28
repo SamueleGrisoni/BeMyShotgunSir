@@ -4,7 +4,7 @@ public class RoadChunk : MonoBehaviour
 {
     public Renderer MeshRenderer { get; private set; }
     public float Length => length;
-    
+
     private float length;
 
     void Awake()
@@ -17,7 +17,7 @@ public class RoadChunk : MonoBehaviour
     {
         transform.position = position;
     }
-    
+
     void OnDrawGizmos()
     {
         Renderer r = GetComponent<Renderer>();

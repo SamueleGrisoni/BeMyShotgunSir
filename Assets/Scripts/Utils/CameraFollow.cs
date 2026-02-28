@@ -5,7 +5,13 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
     public Vector3 offset;
 
-    void LateUpdate()
+    private void LateUpdate()
+    {
+        transform.position = target.position + offset;
+        transform.LookAt(target);
+    }
+
+    private void OnValidate()
     {
         transform.position = target.position + offset;
         transform.LookAt(target);

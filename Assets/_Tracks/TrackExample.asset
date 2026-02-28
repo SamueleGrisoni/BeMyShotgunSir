@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e61a4ddf7a84b4ead16f19d8954339, type: 3}
+  m_Name: TrackExample
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.SOTrack
+  <TrackName>k__BackingField: Test Track
+  <MaxPoolSize>k__BackingField: 1000
+  <RoadChunks>k__BackingField:
+  - _roadChunkPrefab: {fileID: 2935357618701975063, guid: ca54ba91477809048906a17042fe69fd, type: 3}
+    _roadChunkComponent: {fileID: 7445006724283268136, guid: ca54ba91477809048906a17042fe69fd, type: 3}
+    _nextRoadChunkIndices: 
+  - _roadChunkPrefab: {fileID: 549557994649924428, guid: 03050ff1b15c87b49aabfaa51baf1434, type: 3}
+    _roadChunkComponent: {fileID: 5807833968435914116, guid: 03050ff1b15c87b49aabfaa51baf1434, type: 3}
+    _nextRoadChunkIndices: 
+  - _roadChunkPrefab: {fileID: 7138815062166802522, guid: 6e36309fb978cde4e8b691586293440b, type: 3}
+    _roadChunkComponent: {fileID: 3741633269473230269, guid: 6e36309fb978cde4e8b691586293440b, type: 3}
+    _nextRoadChunkIndices: 
+  <RoadChunkInitPoolSize>k__BackingField: 15
+  <EnvChunks>k__BackingField:
+  - _envChunkPrefab: {fileID: 2935357618701975063, guid: 0a8e20acf6dfa864fbd1e8aa837a47e2, type: 3}
+    _envChunkComponent: {fileID: 472344658941321807, guid: 0a8e20acf6dfa864fbd1e8aa837a47e2, type: 3}
+  - _envChunkPrefab: {fileID: 2935357618701975063, guid: bf58fe87b37ab7a4c990f9ab24c5f391, type: 3}
+    _envChunkComponent: {fileID: 472344658941321807, guid: bf58fe87b37ab7a4c990f9ab24c5f391, type: 3}
+  - _envChunkPrefab: {fileID: 2935357618701975063, guid: 08ba9afab9033c749a5258dff059640c, type: 3}
+    _envChunkComponent: {fileID: 472344658941321807, guid: 08ba9afab9033c749a5258dff059640c, type: 3}
+  - _envChunkPrefab: {fileID: 2935357618701975063, guid: 2746d07a5d3a66040a9f86953f816419, type: 3}
+    _envChunkComponent: {fileID: 472344658941321807, guid: 2746d07a5d3a66040a9f86953f816419, type: 3}
+  <EnvChunkInitPoolSize>k__BackingField: 15
+  <RandomProps>k__BackingField: []
+  <RandomPropInitPoolSize>k__BackingField: 15
