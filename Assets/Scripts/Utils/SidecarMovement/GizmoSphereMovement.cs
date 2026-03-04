@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class GizmoSphereMovement : MonoBehaviour
 {
@@ -12,6 +10,8 @@ public class GizmoSphereMovement : MonoBehaviour
         Gizmos.DrawRay(transform.position, _rb.linearVelocity * _visualScale);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, _rb.linearVelocity.magnitude * transform.forward);
-
+        Gizmos.color = Color.violet;
+        // Gizmos.DrawRay(transform.position, Vector3.right * 50f);
+        // Gizmos.DrawRay(transform.position, Vector3.left * 50f);
     }
 }
