@@ -74,7 +74,7 @@ namespace BeMyShotgunSir.LevelGenerator
 
             OrderEnvChunksBySize();
 
-            int sizesCount = (int)EnvChunkSize.MAX;
+            int sizesCount = (int)EnvChunkSize.Max;
             _envChunksBySize = new EnvChunkInfo[sizesCount][];
             _envChunkIndicesAndDimensionBySize = new int[sizesCount][];
 

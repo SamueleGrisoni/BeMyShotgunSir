@@ -8,7 +8,7 @@ namespace BeMyShotgunSir.LevelGenerator
         Size1 = 1,
         Size2 = 2,
         Size3 = 3,
-        MAX
+        Max
     }
     public class EnvChunk : MonoBehaviour
     {

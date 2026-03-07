@@ -3,19 +3,14 @@ using UnityEngine;
 public class RoadChunk : MonoBehaviour
 {
     public Renderer MeshRenderer { get; private set; }
-    public float Length => length;
+    public float Length => _length;
 
-    private float length;
+    private float _length;
 
     void Awake()
     {
         MeshRenderer = GetComponent<Renderer>();
-        length = GetComponent<Renderer>().bounds.size.z;
-    }
-
-    public void SetPosition(Vector3 position)
-    {
-        transform.position = position;
+        _length = GetComponent<Renderer>().bounds.size.z;
     }
 
     void OnDrawGizmos()

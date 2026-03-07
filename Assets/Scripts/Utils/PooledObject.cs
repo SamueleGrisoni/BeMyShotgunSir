@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public abstract class PooledObject<T, H> : MonoBehaviour where T : Component where H : Component
+public abstract class PooledObject<T, TH> : MonoBehaviour where T : Component where TH : Component
 {
-    private H _component = null;
-    public H Component
+    private TH _component = null;
+    public TH Component
     {
         get
         {
             if (_component == null)
-                _component = GetComponent<H>();
+                _component = GetComponent<TH>();
             return _component;
         }
         set => _component = value;
