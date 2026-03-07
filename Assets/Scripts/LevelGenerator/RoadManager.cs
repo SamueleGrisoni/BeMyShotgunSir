@@ -39,7 +39,7 @@ namespace BeMyShotgunSir.LevelGenerator
             if (_driver != null)
                 _driver.transform.position = _startingPoint.position;
 
-            PooledRoadChunk firstRoadChunk = _trackPooler.GetPooledRoadChunk(_trackSeed.RNG.Next(0, _trackData.RoadChunks.Length));
+            PooledRoadChunk firstRoadChunk = _trackPooler.GetPooledRoadChunk(_trackSeed.Rng.Next(0, _trackData.RoadChunks.Length));
             PlaceRoadChunk(firstRoadChunk);
             _activeRoadChunks.AddLast(firstRoadChunk);
             float d = Vector3.Distance(_driver.transform.position, firstRoadChunk.Component.SpawnAnchor.position);
@@ -65,7 +65,7 @@ namespace BeMyShotgunSir.LevelGenerator
 
             while (_distanceToLastChunkEnd < _checkDistanceAhead)
             {
-                PooledRoadChunk newRoadChunk = _trackPooler.GetPooledRoadChunk(_trackSeed.RNG.Next(0, _trackData.RoadChunks.Length));
+                PooledRoadChunk newRoadChunk = _trackPooler.GetPooledRoadChunk(_trackSeed.Rng.Next(0, _trackData.RoadChunks.Length));
                 PlaceRoadChunk(newRoadChunk);
                 _activeRoadChunks.AddLast(newRoadChunk);
 
@@ -83,10 +83,10 @@ namespace BeMyShotgunSir.LevelGenerator
             }
         }
 
-        private void PlaceRoadChunk(PooledRoadChunk roadChunk)
+        private void PlaceRoadChunk(PooledRoadChunk toBePlaceRoadChunk)
         {
             if (_activeRoadChunks.Count == 0)
-                roadChunk.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                toBePlaceRoadChunk.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             else
             {
                 // 1. Ancora di uscita del pezzo precedente
@@ -95,21 +95,21 @@ namespace BeMyShotgunSir.LevelGenerator
                 // 2. Ancora di INGRESSO del pezzo nuovo (quella che deve combaciare con targetAnchor)
                 // Nota: Assicurati che nel componente RoadChunk tu abbia un riferimento all'ingresso,
                 // non usare SpawnAnchor (che di solito è l'uscita) per entrambi.
-                Transform entrance = roadChunk.Component.SpawnAnchor;
+                Transform entranceAnchor = toBePlaceRoadChunk.Component.SpawnAnchor;
 
                 // 3. Allinea la rotazione del nuovo pezzo a quella del target
-                roadChunk.transform.rotation = targetAnchor.rotation;
+                toBePlaceRoadChunk.transform.rotation = targetAnchor.rotation;
 
                 // 4. Calcola l'offset locale: quanto dista l'ingresso dal pivot del padre?
                 // Usiamo transform.InverseTransformPoint per ottenere la posizione RELATIVA dell'ingresso
-                Vector3 localOffset = roadChunk.transform.InverseTransformPoint(entrance.position);
+                Vector3 localOffset = toBePlaceRoadChunk.transform.InverseTransformPoint(entranceAnchor.position);
 
                 // 5. Posiziona il padre in modo che l'ingresso finisca esattamente sul target
                 // Sottraiamo l'offset ruotato dalla posizione del target
-                roadChunk.transform.position = targetAnchor.position - (roadChunk.transform.rotation * localOffset);
+                toBePlaceRoadChunk.transform.position = targetAnchor.position - (toBePlaceRoadChunk.transform.rotation * localOffset);
             }
-            roadChunk.gameObject.SetActive(true);
-            PopulateRoadChunk(roadChunk);
+            toBePlaceRoadChunk.gameObject.SetActive(true);
+            PopulateRoadChunk(toBePlaceRoadChunk);
         }
 
         private void PopulateRoadChunk(PooledRoadChunk roadChunk)
@@ -144,7 +144,7 @@ namespace BeMyShotgunSir.LevelGenerator
                     Debug.LogWarning($"No EnvChunks of size {targetSize} available in track data.");
                     continue;
                 }
-                PooledEnvChunk envChunk = _trackPooler.GetPooledEnvChunk(_trackSeed.RNG.Next(start, end));
+                PooledEnvChunk envChunk = _trackPooler.GetPooledEnvChunk(_trackSeed.Rng.Next(start, end));
 
                 // Recuperiamo il punto di ancoraggio dell'oggetto ambientale (quello che deve toccare la strada)
                 // Assicurati che PooledEnvChunk abbia un riferimento a questo punto (es. EntranceAnchor)

@@ -8,7 +8,7 @@ namespace BeMyShotgunSir.LevelGenerator
         [SerializeField] private string _stringSeed = "DefaultSeed";
         [SerializeField] private bool _useRandomSeed = false;
 
-        public System.Random RNG { get; private set; }
+        public System.Random Rng { get; private set; }
 
         private void Start() => InitSeed();
 
@@ -19,7 +19,7 @@ namespace BeMyShotgunSir.LevelGenerator
                 _stringSeed = System.DateTime.Now.Ticks.ToString();
             }
             int seed = _stringSeed.GetHashCode();
-            RNG = new System.Random(seed);
+            Rng = new System.Random(seed);
 
             Debug.Log($"Tracciato generato con Seed: {_stringSeed} (Hash: {seed})");
         }

@@ -1,19 +1,20 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target;
-    public Vector3 offset;
+    public Transform _target;
+    public Vector3 _offset;
 
     private void LateUpdate()
     {
-        transform.position = target.position + offset;
-        transform.LookAt(target);
+        transform.position = _target.position + _offset;
+        transform.LookAt(_target);
     }
 
     private void OnValidate()
     {
-        transform.position = target.position + offset;
-        transform.LookAt(target);
+        transform.position = _target.position + _offset;
+        transform.LookAt(_target);
     }
 }
