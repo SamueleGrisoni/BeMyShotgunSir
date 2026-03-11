@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SidecarController
   _sphereMovementRb: {fileID: 5996010580648584512}
+  _visualModel: {fileID: 0}
+  _visualDriftMultiplier: 2
   _accelerationForce: 30
   _brakingForce: 10
   _steeringSpeed: 35
