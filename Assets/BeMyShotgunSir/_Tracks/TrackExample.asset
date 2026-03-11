@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e61a4ddf7a84b4ead16f19d8954339, type: 3}
+  m_Name: TrackExample
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.SOTrack
+  <TrackName>k__BackingField: Test Track
+  <MaxPoolSize>k__BackingField: 1000
+  <RoadChunks>k__BackingField:
+  - _roadChunkPrefab: {fileID: 7789874470973508538, guid: 319e35d42ea5bff40883ff633a7e2ed4, type: 3}
+    _roadChunkComponent: {fileID: 7377708604128148175, guid: 319e35d42ea5bff40883ff633a7e2ed4, type: 3}
+    _nextRoadChunkIndices: 
+  - _roadChunkPrefab: {fileID: 1930977871349354197, guid: 66cbcbd05d3974646a9418f9ed5ab62d, type: 3}
+    _roadChunkComponent: {fileID: 2073170348481245581, guid: 66cbcbd05d3974646a9418f9ed5ab62d, type: 3}
+    _nextRoadChunkIndices: 
+  - _roadChunkPrefab: {fileID: 7605869982527980877, guid: 9edf328b0b13f4844be9f3ce8c583ba4, type: 3}
+    _roadChunkComponent: {fileID: 507698152863019374, guid: 9edf328b0b13f4844be9f3ce8c583ba4, type: 3}
+    _nextRoadChunkIndices: 
+  - _roadChunkPrefab: {fileID: 8855731116853306542, guid: ef91e0014bfc4a548bf39f2350648fdc, type: 3}
+    _roadChunkComponent: {fileID: 547517089427502785, guid: ef91e0014bfc4a548bf39f2350648fdc, type: 3}
+    _nextRoadChunkIndices: 
+  - _roadChunkPrefab: {fileID: 2198227476134254924, guid: d404eb87483ccdb4e9e2d405c663d1ac, type: 3}
+    _roadChunkComponent: {fileID: 3810105528959398424, guid: d404eb87483ccdb4e9e2d405c663d1ac, type: 3}
+    _nextRoadChunkIndices: 
+  <RoadChunkInitPoolSize>k__BackingField: 100
+  <EnvChunks>k__BackingField: []
+  <EnvChunkInitPoolSize>k__BackingField: 15
+  <RandomProps>k__BackingField: []
+  <RandomPropInitPoolSize>k__BackingField: 15
