@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae8655b161065daa842b91a053f3b56, type: 3}
+  m_Name: SOSidecarStats
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Player.SOSidecarStats
+  <AccelerationForce>k__BackingField: 30
+  <BoostForce>k__BackingField: 10
+  <BoostDuration>k__BackingField: 5
+  <SteeringForce>k__BackingField: 35
+  <Gravity>k__BackingField: 10
+  <LateralGripFactor>k__BackingField: 50
+  <SteerAngularRotation>k__BackingField: 10
+  <SteerAngularRotationSlerp>k__BackingField: 0.05
+  <GroundAllignmentSpeed>k__BackingField: 0.1
