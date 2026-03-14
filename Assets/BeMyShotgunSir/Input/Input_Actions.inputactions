@@ -288,31 +288,31 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TempAccelerate",
+                    "name": "Steer",
                     "type": "Button",
-                    "id": "cdfbd52e-713b-4ec6-ab6c-ff1bd80d544f",
+                    "id": "5cca9acf-8c77-4c86-9784-1fc20bd6406e",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TempBrake",
+                    "name": "Drift",
                     "type": "Button",
-                    "id": "1403a040-d884-4554-b063-5dc326aad8e8",
+                    "id": "cfba28ba-6b11-4140-ac24-7dcfff508fcd",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TempSteer",
-                    "type": "Value",
-                    "id": "51c874c9-681f-4839-926d-73b406c0768e",
-                    "expectedControlType": "Axis",
+                    "name": "Boost",
+                    "type": "Button",
+                    "id": "a88ac220-382d-4bbd-a40f-0bb1c37ee089",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -736,58 +736,69 @@
                 },
                 {
                     "name": "",
-                    "id": "38645559-b504-4721-b56b-45f480e66613",
-                    "path": "<Keyboard>/w",
+                    "id": "9fcedf97-0693-41f9-bbe9-be6747ddfc0d",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TempAccelerate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d7f2e15b-f8fb-4830-9ebd-a1021bf361ca",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "TempBrake",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "1D Axis",
-                    "id": "a2219c5f-845a-41e9-82bb-7037754effdf",
+                    "id": "3395b841-7c79-48bf-96af-5cd481791281",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TempSteer",
+                    "action": "Steer",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
-                    "id": "64cabd2e-ba4d-4af0-ad03-9bdb52484247",
+                    "id": "732e7191-afcb-4914-9f64-eb65c627cbda",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TempSteer",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
-                    "id": "a218b016-2aed-4ef0-9bd7-655eb4ee6ad6",
+                    "id": "7a545466-675c-4dbc-9db3-26f795b8bf6e",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TempSteer",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "bf211deb-197b-4b1e-95bc-37019227d27e",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a00fc4a2-e43d-4f45-8e7c-e6097ddf6b4f",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
