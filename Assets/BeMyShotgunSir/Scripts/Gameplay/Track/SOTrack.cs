@@ -20,8 +20,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [field: SerializeField] public int QueueBufferSize { get; private set; }
         [field: SerializeField] public int MaxPoolSize { get; private set; }
         [field: SerializeField] public int MaxActiveChunks { get; private set; }
-        [field: SerializeField] public GameObject[] RoadChunks { get; private set; }
-        [field: SerializeField] public GameObject[] SpecialRoadChunks { get; private set; }
+        [field: SerializeField] public RoadChunk[] RoadChunks { get; private set; }
+        [field: SerializeField] public RoadChunk[] SpecialRoadChunks { get; private set; }
         [field: SerializeField] public int RoadChunkInitPoolSize { get; private set; }
         [field: SerializeField] public EnvChunkInfo[] EnvChunks { get; private set; }
         [field: SerializeField] public int EnvChunkInitPoolSize { get; private set; }

@@ -1089,6 +1089,7 @@ MonoBehaviour:
   _innerEnvChunkAreas: []
   _envChunkAreas: []
   _innerRandomPropAreas: []
+  <TurnWeight>k__BackingField: 1
 --- !u!1 &8201677765154217339
 GameObject:
   m_ObjectHideFlags: 0

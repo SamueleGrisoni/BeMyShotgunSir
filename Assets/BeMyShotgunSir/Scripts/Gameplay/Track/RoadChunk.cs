@@ -13,6 +13,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public SpawnArea[] EnvChunkAreas => _envChunkAreas;
         [SerializeField] private SpawnArea[] _innerRandomPropAreas;
 
+        [field: SerializeField] public int TurnWeight { get; private set; }
+
         private int _indexInCurrentTrack;
         public void SetIndexInCurrentTrack(int index) => _indexInCurrentTrack = index;
     }

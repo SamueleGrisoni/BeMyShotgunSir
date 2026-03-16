@@ -67,10 +67,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _randomPropPools = new Dictionary<int, ObjectPool<PooledRandomProp>>(trackData.RandomProps.Length);
 
             for (int i = 0; i < trackData.RoadChunks.Length; i++)
-                SetupRoadPool(trackData, trackData.RoadChunks[i], i, _roadChunkPools);
+                SetupRoadPool(trackData, trackData.RoadChunks[i].gameObject, i, _roadChunkPools);
             for (int i = 0; i < trackData.SpecialRoadChunks.Length; i++)
             {
-                SetupRoadPool(trackData, trackData.SpecialRoadChunks[i], i, _specialRoadChunkPools);
+                SetupRoadPool(trackData, trackData.SpecialRoadChunks[i].gameObject, i, _specialRoadChunkPools);
             }
 
             for (int h = 0; h < trackData.EnvChunks.Length; h++)
