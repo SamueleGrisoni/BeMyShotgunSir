@@ -5,7 +5,7 @@ using Random = System.Random;
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public enum RoadChunkPosition { LEFT, MIDDLE, RIGHT }
-    public enum RoadChunkType { NORMAL, STARTING_CROSSROAD, ENDING_CROSSROAD }
+    public enum RoadChunkType {STRAIGHT,TURN,STARTING_CROSSROAD, ENDING_CROSSROAD }
 
     public struct GeneratedRoadChunkInfo
     {
@@ -45,9 +45,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
 
             // Initial Sequence
-            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.START_LINE, RoadChunkType.NORMAL, RoadChunkPosition.MIDDLE));
-            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.STRAIGHT, RoadChunkType.NORMAL, RoadChunkPosition.MIDDLE));
-            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.STRAIGHT, RoadChunkType.NORMAL, RoadChunkPosition.MIDDLE));
+            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.START_LINE, RoadChunkType.STRAIGHT, RoadChunkPosition.MIDDLE));
+            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.STRAIGHT, RoadChunkType.STRAIGHT, RoadChunkPosition.MIDDLE));
+            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.STRAIGHT, RoadChunkType.STRAIGHT, RoadChunkPosition.MIDDLE));
 
             _isGeneratingSplit = false;
             _chunksRemainingInCurrentState = Rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
@@ -80,21 +80,36 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _chunksRemainingInCurrentState--;
             if (_isGeneratingSplit)
             {
-                _trackBits.Enqueue(new GeneratedRoadChunkInfo(GetRandomChunkIndex(), RoadChunkType.NORMAL, RoadChunkPosition.LEFT));
-                _trackBits.Enqueue(new GeneratedRoadChunkInfo(GetRandomChunkIndex(), RoadChunkType.NORMAL, RoadChunkPosition.RIGHT));
+                GeneratedRoadChunkInfo leftChunkInfo = GetRandomChunkInfo();
+                leftChunkInfo.position = RoadChunkPosition.LEFT;
+                _trackBits.Enqueue(leftChunkInfo);
+
+                GeneratedRoadChunkInfo rightChunkInfo = GetRandomChunkInfo();
+                rightChunkInfo.position = RoadChunkPosition.RIGHT;
+                _trackBits.Enqueue(rightChunkInfo);
             }
             else
             {
-                _trackBits.Enqueue(new GeneratedRoadChunkInfo(GetRandomChunkIndex(), RoadChunkType.NORMAL, RoadChunkPosition.MIDDLE));
+               GeneratedRoadChunkInfo nextChunkInfo = GetRandomChunkInfo();
+               nextChunkInfo.position = RoadChunkPosition.MIDDLE;
+               _trackBits.Enqueue(nextChunkInfo);
             }
         }
 
-        private int GetRandomChunkIndex()
+        private GeneratedRoadChunkInfo GetRandomChunkInfo()
         {
-            //todo this RNG is not based on seed and is going to cause desyncs
+            GeneratedRoadChunkInfo result = new GeneratedRoadChunkInfo();
             if (Rng.Next(0, 100) < _trackData.StraightPercentage)
-                return (int)SpecialRoadChunkIndex.STRAIGHT;
-            return Rng.Next(0, _trackData.RoadChunks.Length);
+            {
+                result.index = (int)SpecialRoadChunkIndex.STRAIGHT;
+                result.type = RoadChunkType.STRAIGHT;
+            }
+            else
+            {
+                result.index = Rng.Next(0, _trackData.RoadChunks.Length);
+                result.type = RoadChunkType.TURN;
+            }
+            return result;
         }
 
         public List<GeneratedRoadChunkInfo> GetGeneratedRoadChunkInfo()

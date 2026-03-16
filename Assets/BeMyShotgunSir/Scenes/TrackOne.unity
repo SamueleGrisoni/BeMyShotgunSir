@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Player.Driver
   _spawnPoint: {fileID: 117990468}
-  _forwardSpeed: 20
+  _forwardSpeed: 1
   _horizontalSpeed: 5
 --- !u!4 &47480060
 Transform:

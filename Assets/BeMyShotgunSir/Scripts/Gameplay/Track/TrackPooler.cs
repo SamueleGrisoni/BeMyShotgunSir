@@ -47,7 +47,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _randomPropPools = null;
         }
 
-        private void Awake()
+        private void Start()
         {
             if (_trackData != null)
                 InitPools(_trackData);
@@ -70,7 +70,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             for (int i = 0; i < trackData.RoadChunks.Length; i++)
                 SetupRoadPool(trackData, trackData.RoadChunks[i], i, _roadChunkPools);
             for (int i = 0; i < trackData.SpecialRoadChunks.Length; i++)
+            {
                 SetupRoadPool(trackData, trackData.SpecialRoadChunks[i], i, _specialRoadChunkPools);
+            }
 
             for (int h = 0; h < trackData.EnvChunks.Length; h++)
             {

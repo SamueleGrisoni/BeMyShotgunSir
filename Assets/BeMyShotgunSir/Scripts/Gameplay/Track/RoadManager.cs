@@ -6,7 +6,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public class RoadManager : MonoBehaviour
     {
-        //todo at the end of the commit TrackSeed and SOTrack should only be in TrackManager
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
         [SerializeField] private TrackManager _trackManager;
@@ -26,13 +25,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _activeRoadChunks = new LinkedList<PooledRoadChunk>();
             _activeEnvChunks = new LinkedList<PooledEnvChunk[]>();
 
-            if (_driver != null)
-                _driver.transform.position = _startingPoint.position;
-
             for (int i = 0; i < _trackData.MaxActiveChunks; i++)
             {
                 SpawnRoadChunk();
             }
+
+            if (_driver != null)
+            {
+                //todo start on position of the start line chunk
+                _driver.transform.position = _startingPoint.position;
+            }
+            else
+            {
+                Debug.LogError("RoadManager: Driver reference is missing");
+            }
+
         }
 
         private void Update()
@@ -60,7 +67,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             foreach (GeneratedRoadChunkInfo generatedRoadChunk in generatedRoadChunkInfoList)
             {
                 int nextChunkIndex = generatedRoadChunk.index;
-                PooledRoadChunk nextChunk = generatedRoadChunk.type == RoadChunkType.NORMAL
+                PooledRoadChunk nextChunk = generatedRoadChunk.type == RoadChunkType.TURN
                     ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
                     : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
                 PlaceRoadChunk(nextChunk, generatedRoadChunk.type, generatedRoadChunk.position);
@@ -72,7 +79,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             switch (type)
             {
-                case RoadChunkType.NORMAL:
+                case RoadChunkType.TURN:
+                    PlaceNormalRoadChunk(chunk, position);
+                    break;
+                case RoadChunkType.STRAIGHT:
                     PlaceNormalRoadChunk(chunk, position);
                     break;
                 case RoadChunkType.STARTING_CROSSROAD:
