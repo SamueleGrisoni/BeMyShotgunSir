@@ -32,8 +32,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
             if (_driver != null)
             {
-                //todo start on position of the start line chunk
-                _driver.transform.position = _startingPoint.position;
+                //todo this will be set by the server so the 2 sidecar do not overlap
+                //(this implementation sucks ikik but I want to see the car on track tbh)
+                var comp = _activeRoadChunks.First.Value.Component;
+                if (comp is StartFinishLineRoadChunk startFinish)
+                {
+                    Vector3 startingPos = startFinish.GridPositions[_trackManager.GetRandomNumberInRange(0,1)].position;
+                    startingPos.y = 0.3f;
+                    _driver.transform.position = startingPos;
+                }
             }
             else
             {

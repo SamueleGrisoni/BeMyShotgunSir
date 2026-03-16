@@ -5,7 +5,7 @@ using Random = System.Random;
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public enum RoadChunkPosition { LEFT, MIDDLE, RIGHT }
-    public enum RoadChunkType {STRAIGHT,TURN,STARTING_CROSSROAD, ENDING_CROSSROAD }
+    public enum RoadChunkType { STRAIGHT,TURN,STARTING_CROSSROAD, ENDING_CROSSROAD }
 
     public struct GeneratedRoadChunkInfo
     {
@@ -27,12 +27,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
-        [SerializeField] private int _targetQueueBuffer = 10; // Adjust how many steps ahead it generates
 
         private Queue<GeneratedRoadChunkInfo> _trackBits = new Queue<GeneratedRoadChunkInfo>();
         private Random Rng => _trackSeed.Rng;
 
-        // State Machine Variables
         private bool _isGeneratingSplit = false;
         private int _chunksRemainingInCurrentState = 0;
 
@@ -47,13 +45,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             // Initial Sequence
             _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.START_LINE, RoadChunkType.STRAIGHT, RoadChunkPosition.MIDDLE));
             _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.STRAIGHT, RoadChunkType.STRAIGHT, RoadChunkPosition.MIDDLE));
-            _trackBits.Enqueue(new GeneratedRoadChunkInfo((int)SpecialRoadChunkIndex.STRAIGHT, RoadChunkType.STRAIGHT, RoadChunkPosition.MIDDLE));
 
             _isGeneratingSplit = false;
             _chunksRemainingInCurrentState = Rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
 
-            // Fill the initial buffer
-            while (_trackBits.Count < _targetQueueBuffer)
+
+            while (_trackBits.Count < _trackData.QueueBufferSize)
             {
                 GenerateNextSegment();
             }
@@ -129,6 +126,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             GenerateNextSegment();
 
             return result;
+        }
+
+        public int GetRandomNumberInRange(int min, int max)
+        {
+            return Rng.Next(min, max);
         }
     }
 }

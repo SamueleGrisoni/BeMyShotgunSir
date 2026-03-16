@@ -62,7 +62,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
 
             _roadChunkPools = new Dictionary<int, ObjectPool<PooledRoadChunk>>(trackData.RoadChunks.Length);
-            //Todo add start and finish crossroad and start line and finish line pools
             _specialRoadChunkPools = new Dictionary<int, ObjectPool<PooledRoadChunk>>(trackData.SpecialRoadChunks.Length);
             _envChunkPools = new Dictionary<int, ObjectPool<PooledEnvChunk>>(trackData.EnvChunks.Length);
             _randomPropPools = new Dictionary<int, ObjectPool<PooledRandomProp>>(trackData.RandomProps.Length);
