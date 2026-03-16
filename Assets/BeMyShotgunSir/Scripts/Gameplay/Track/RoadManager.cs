@@ -6,29 +6,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public class RoadManager : MonoBehaviour
     {
+        //todo at the end of the commit TrackSeed and SOTrack should only be in TrackManager
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
+        [SerializeField] private TrackManager _trackManager;
         [SerializeField] private Transform _startingPoint;
         [SerializeField] private Driver _driver;
         [SerializeField] private TrackPooler _trackPooler;
+        [SerializeField] private float _despawnBufferDistance = 20f;
 
-        [SerializeField] private float _checkDistanceAhead = 50f;
-        [SerializeField] private float _checkDistanceBehind = 30f;
-        [SerializeField] private float _checkInterval;
-        private float _timer;
-        [SerializeField] private LinkedList<PooledRoadChunk> _activeRoadChunks;
-        [SerializeField] private LinkedList<PooledEnvChunk[]> _activeEnvChunks;
-
-        private float _distanceToLastChunkEnd;
-        private float _distanceToFirstChunkStart;
-
-        public void SetDriver(Driver driver) => _driver = driver;
-        public void ClearRoadManager()
-        {
-            _trackPooler.ClearTrackData();
-            _activeRoadChunks = null;
-            _activeEnvChunks = null;
-        }
+        private LinkedList<PooledRoadChunk> _activeRoadChunks;
+        private LinkedList<PooledEnvChunk[]> _activeEnvChunks;
+        private Transform _lastPlacedNormalAnchor;
+        private Transform _lastPlacedRightAnchor;
 
         private void Start()
         {
@@ -39,14 +29,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_driver != null)
                 _driver.transform.position = _startingPoint.position;
 
-            PooledRoadChunk firstRoadChunk = _trackPooler.GetPooledRoadChunk(_trackSeed.Rng.Next(0, _trackData.RoadChunks.Length));
-            PlaceRoadChunk(firstRoadChunk);
-            _activeRoadChunks.AddLast(firstRoadChunk);
-            float d = Vector3.Distance(_driver.transform.position, firstRoadChunk.Component.SpawnAnchor.position);
-            _distanceToFirstChunkStart = d;
-            _distanceToLastChunkEnd = d;
-
-            _timer = _checkInterval; //start the timer
+            for (int i = 0; i < _trackData.MaxActiveChunks; i++)
+            {
+                SpawnRoadChunk();
+            }
         }
 
         private void Update()
@@ -54,63 +40,108 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_driver == null || _activeRoadChunks.Count == 0)
                 return;
 
-            _timer -= Time.deltaTime;
-            if (_timer > 0f)
-                return;
-
-            _timer = _checkInterval; //reset timer
-
-            _distanceToLastChunkEnd = Vector3.Distance(_driver.transform.position, _activeRoadChunks.Last.Value.Component.SpawnAnchor.position);
-            _distanceToFirstChunkStart = Vector3.Distance(_driver.transform.position, _activeRoadChunks.First.Value.transform.position);
-
-            while (_distanceToLastChunkEnd < _checkDistanceAhead)
-            {
-                PooledRoadChunk newRoadChunk = _trackPooler.GetPooledRoadChunk(_trackSeed.Rng.Next(0, _trackData.RoadChunks.Length));
-                PlaceRoadChunk(newRoadChunk);
-                _activeRoadChunks.AddLast(newRoadChunk);
-
-                _distanceToLastChunkEnd = Vector3.Distance(_driver.transform.position, newRoadChunk.Component.SpawnAnchor.position);
-            }
-
-            /*while (_activeRoadChunks.Count > 1 && _distanceToFirstChunkStart > _checkDistanceBehind)
+            //Remove chunk only when the ancor is passed (faster than computing the distance and works with turn (distance was eucledian))
+            PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
+            Transform exitAnchor = firstChunk.Component.NextRoadAnchors[0];
+            if (_driver.transform.position.z > exitAnchor.position.z + _despawnBufferDistance)
             {
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                 _activeRoadChunks.RemoveFirst();
-                //todo road chuck are for now decoration free
                 //CleanRoadChunk();
                 oldRoadChunk.ReturnToPool();
-
-                _distanceToFirstChunkStart = Vector3.Distance(_driver.transform.position, _activeRoadChunks.First.Value.transform.position);
-            }*/
+                SpawnRoadChunk();
+            }
         }
 
-        private void PlaceRoadChunk(PooledRoadChunk toBePlaceRoadChunk)
+        private void SpawnRoadChunk()
+        {
+            List<GeneratedRoadChunkInfo> generatedRoadChunkInfoList =
+                _trackManager.GetGeneratedRoadChunkInfo();
+            foreach (GeneratedRoadChunkInfo generatedRoadChunk in generatedRoadChunkInfoList)
+            {
+                int nextChunkIndex = generatedRoadChunk.index;
+                PooledRoadChunk nextChunk = generatedRoadChunk.type == RoadChunkType.NORMAL
+                    ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
+                    : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
+                PlaceRoadChunk(nextChunk, generatedRoadChunk.type, generatedRoadChunk.position);
+                _activeRoadChunks.AddLast(nextChunk);
+            }
+        }
+
+        private void PlaceRoadChunk(PooledRoadChunk chunk, RoadChunkType type, RoadChunkPosition position)
+        {
+            switch (type)
+            {
+                case RoadChunkType.NORMAL:
+                    PlaceNormalRoadChunk(chunk, position);
+                    break;
+                case RoadChunkType.STARTING_CROSSROAD:
+                    Debug.Log("Spawning starting crossroad");
+                    PlaceStartingCrossroad(chunk);
+                    break;
+                case RoadChunkType.ENDING_CROSSROAD:
+                    Debug.Log("Spawning ending crossroad");
+                    PlaceEndingCrossroad(chunk);
+                    break;
+            }
+            chunk.gameObject.SetActive(true);
+            PopulateRoadChunk(chunk);
+        }
+
+        private void PlaceNormalRoadChunk(PooledRoadChunk chunk, RoadChunkPosition position)
         {
             if (_activeRoadChunks.Count == 0)
-                toBePlaceRoadChunk.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            {
+                if (position == RoadChunkPosition.MIDDLE)
+                {
+                    chunk.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                    _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
+                }
+                else
+                {
+                    Debug.LogError($"activeRoadChunks is empty, can't place {position} road chunk");
+                }
+                return;
+            }
+            if (position == RoadChunkPosition.RIGHT)
+            {
+                if (_activeRoadChunks.Count == 1)
+                {
+                    Debug.LogError($"activeRoadChunks has only one element, can't place {position} road chunk. There must be at least a crossroad and a left chunk before placing a right chunk");
+                }
+                else
+                {
+                    AlignChunk(chunk, _lastPlacedRightAnchor);
+                    _lastPlacedRightAnchor = chunk.Component.NextRoadAnchors[0];
+                }
+            }
             else
             {
-                // 1. Ancora di uscita del pezzo precedente
-                Transform targetAnchor = _activeRoadChunks.Last.Value.Component.NextRoadAnchors[0];
-
-                // 2. Ancora di INGRESSO del pezzo nuovo (quella che deve combaciare con targetAnchor)
-                // Nota: Assicurati che nel componente RoadChunk tu abbia un riferimento all'ingresso,
-                // non usare SpawnAnchor (che di solito è l'uscita) per entrambi.
-                Transform entranceAnchor = toBePlaceRoadChunk.Component.SpawnAnchor;
-
-                // 3. Allinea la rotazione del nuovo pezzo a quella del target
-                toBePlaceRoadChunk.transform.rotation = targetAnchor.rotation;
-
-                // 4. Calcola l'offset locale: quanto dista l'ingresso dal pivot del padre?
-                // Usiamo transform.InverseTransformPoint per ottenere la posizione RELATIVA dell'ingresso
-                Vector3 localOffset = toBePlaceRoadChunk.transform.InverseTransformPoint(entranceAnchor.position);
-
-                // 5. Posiziona il padre in modo che l'ingresso finisca esattamente sul target
-                // Sottraiamo l'offset ruotato dalla posizione del target
-                toBePlaceRoadChunk.transform.position = targetAnchor.position - (toBePlaceRoadChunk.transform.rotation * localOffset);
+                AlignChunk(chunk, _lastPlacedNormalAnchor);
+                _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
             }
-            toBePlaceRoadChunk.gameObject.SetActive(true);
-            PopulateRoadChunk(toBePlaceRoadChunk);
+        }
+
+        private void PlaceStartingCrossroad(PooledRoadChunk chunk)
+        {
+            AlignChunk(chunk, _lastPlacedNormalAnchor);
+            _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
+            _lastPlacedRightAnchor = chunk.Component.NextRoadAnchors[1];
+        }
+
+        private void PlaceEndingCrossroad(PooledRoadChunk chunk)
+        {
+            AlignChunk(chunk, _lastPlacedNormalAnchor);
+            _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
+            _lastPlacedRightAnchor = null;
+        }
+
+        private void AlignChunk(PooledRoadChunk chunk, Transform targetAnchor)
+        {
+            Transform entranceAnchor = chunk.Component.SpawnAnchor;
+            chunk.transform.rotation = targetAnchor.rotation;
+            Vector3 localOffset = chunk.transform.InverseTransformPoint(entranceAnchor.position);
+            chunk.transform.position = targetAnchor.position - (chunk.transform.rotation * localOffset);
         }
 
         private void PopulateRoadChunk(PooledRoadChunk roadChunk)
@@ -123,7 +154,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             int outerCount = component.EnvChunkAreas.Length;
             int totalEnv = innerCount + outerCount;
 
-            // Prepariamo l'array nella LinkedList
             var spawnedInThisChunk = new PooledEnvChunk[totalEnv];
             _activeEnvChunks.AddLast(spawnedInThisChunk);
 
@@ -145,7 +175,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     Debug.LogWarning($"No EnvChunks of size {targetSize} available in track data.");
                     continue;
                 }
-                PooledEnvChunk envChunk = _trackPooler.GetPooledEnvChunk(_trackSeed.Rng.Next(start, end));
+                PooledEnvChunk envChunk =
+                    _trackPooler.GetPooledEnvChunk(_trackSeed.Rng.Next(start, end));
 
                 // Recuperiamo il punto di ancoraggio dell'oggetto ambientale (quello che deve toccare la strada)
                 // Assicurati che PooledEnvChunk abbia un riferimento a questo punto (es. EntranceAnchor)
@@ -158,12 +189,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 // 3. Calcoliamo l'OFFSET interno dell'EnvChunk
                 // Quanto dista l'ancora dell'erba/albero dal pivot del suo padre?
                 // Usiamo InverseTransformPoint per calcolare questa distanza nello spazio locale del prefab
-                Vector3 localOffset = envChunk.transform.InverseTransformPoint(envEntrance.position);
+                Vector3 localOffset =
+                    envChunk.transform.InverseTransformPoint(envEntrance.position);
 
                 // 4. Calcoliamo la posizione finale (World)
                 // Destinazione = Punto sulla strada - Offset ruotato
                 // (Sottraiamo l'offset perché vogliamo spostare il padre "all'indietro" rispetto all'ancora)
-                Vector3 worldPos = targetPoint.position - (envChunk.transform.rotation * localOffset);
+                Vector3 worldPos =
+                    targetPoint.position - (envChunk.transform.rotation * localOffset);
 
                 // 5. Applichiamo la trasformazione
                 envChunk.transform.position = worldPos;

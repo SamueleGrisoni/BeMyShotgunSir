@@ -149,7 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Player.Driver
   _spawnPoint: {fileID: 117990468}
-  _speed: 100
+  _forwardSpeed: 20
+  _horizontalSpeed: 5
 --- !u!4 &47480060
 Transform:
   m_ObjectHideFlags: 0
@@ -294,6 +295,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &204120560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 204120562}
+  - component: {fileID: 204120561}
+  m_Layer: 0
+  m_Name: TrackManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &204120561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204120560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04487c10383807c448208e627c3907d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.TrackManager
+  _trackSeed: {fileID: 743278065}
+  _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
+  _targetQueueBuffer: 10
+--- !u!4 &204120562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204120560}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1226758388}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &233792786
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +368,7 @@ Transform:
   m_GameObject: {fileID: 233792786}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7179, y: -0, z: 411.7196}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -681,7 +729,7 @@ Transform:
   m_GameObject: {fileID: 743278063}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.03939, y: 0, z: -167.69568}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -820,11 +868,12 @@ Transform:
   m_GameObject: {fileID: 1226758387}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7179, y: -0, z: 411.7196}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 743278064}
+  - {fileID: 204120562}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1226758389
@@ -841,12 +890,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.RoadManager
   _trackSeed: {fileID: 743278065}
   _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
+  _trackManager: {fileID: 204120561}
   _startingPoint: {fileID: 117990468}
   _driver: {fileID: 47480059}
   _trackPooler: {fileID: 233792788}
-  _checkDistanceAhead: 100
-  _checkDistanceBehind: 30
-  _checkInterval: 0.1
+  _despawnBufferDistance: 20
 --- !u!1 &1482682852
 GameObject:
   m_ObjectHideFlags: 0

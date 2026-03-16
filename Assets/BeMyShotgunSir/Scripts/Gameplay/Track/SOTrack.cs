@@ -3,16 +3,6 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
-    [Serializable]
-    public struct RoadChunkInfo
-    {
-        [SerializeField] private GameObject _roadChunkPrefab;
-        [SerializeField] private RoadChunk _roadChunkComponent;
-        [SerializeField] private int[] _nextRoadChunkIndices;
-        public readonly GameObject RoadChunkPrefab => _roadChunkPrefab;
-        public readonly RoadChunk RoadChunkComponent => _roadChunkComponent;
-        public readonly int[] NextRoadChunkIndices => _nextRoadChunkIndices;
-    }
 
     [Serializable]
     public struct EnvChunkInfo
@@ -28,12 +18,24 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     {
         [field: SerializeField] public string TrackName { get; private set; }
         [field: SerializeField] public int MaxPoolSize { get; private set; }
-        [field: SerializeField] public RoadChunkInfo[] RoadChunks { get; private set; }
+        [field: SerializeField] public int MaxActiveChunks { get; private set; }
+        [field: SerializeField] public GameObject[] RoadChunks { get; private set; }
+        [field: SerializeField] public GameObject[] SpecialRoadChunks { get; private set; }
         [field: SerializeField] public int RoadChunkInitPoolSize { get; private set; }
         [field: SerializeField] public EnvChunkInfo[] EnvChunks { get; private set; }
         [field: SerializeField] public int EnvChunkInitPoolSize { get; private set; }
         [field: SerializeField] public GameObject[] RandomProps { get; private set; }
         [field: SerializeField] public int RandomPropInitPoolSize { get; private set; }
+
+        [field: SerializeField] public int StraightPercentage { get; private set; }
+
+        [Header("Common Road Chunk Settings")]
+        [field: SerializeField] public int MinimumTrackLength { get; private set; }
+        [field: SerializeField] public int MaximumTrackLength { get; private set; }
+
+        [Header("Path Road Chunk Settings")]
+        [field: SerializeField] public int MinSplitRoadChunkCount { get; private set; }
+        [field: SerializeField] public int MaxSplitRoadChunkCount { get; private set; }
 
         private EnvChunkInfo[][] _envChunksBySize;
         public EnvChunkInfo[] GetEnvChunksBySize(EnvChunkSize size)
