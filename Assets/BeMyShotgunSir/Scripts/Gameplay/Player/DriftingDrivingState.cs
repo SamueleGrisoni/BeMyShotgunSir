@@ -4,8 +4,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
 {
     public class DriftingDrivingState : IDrivingState
     {
-        public void Enter(DriverController controller) { }
-        public void ExecuteUpdate(DriverController controller)
+        public void Enter(IDriverControllerContext controller) { }
+        public void ExecuteUpdate(IDriverControllerContext controller)
         {
             if (!controller.IsGrounded)
             {
@@ -17,7 +17,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
                 controller.ChangeState(controller.NormalState);
             }
         }
-        public void ExecuteFixedUpdate(DriverController controller)
+        public void ExecuteFixedUpdate(IDriverControllerContext controller)
         {
             controller.ApplyAcceleration(controller.ParentTransform.forward);
             controller.ApplyGravity(controller.Stats.Gravity);
@@ -32,6 +32,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
                 : Mathf.Lerp(2f, 0.5f, Mathf.InverseLerp(-1f, 1f, controller.SteerInput));
             controller.AnimateSidecar(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.Stats.SteerAngularRotation, 0));
         }
-        public void Exit(DriverController controller) { }
+        public void Exit(IDriverControllerContext controller) { }
     }
 }
