@@ -289,12 +289,12 @@
                 },
                 {
                     "name": "Steer",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "5cca9acf-8c77-4c86-9784-1fc20bd6406e",
-                    "expectedControlType": "",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Drift",
@@ -771,6 +771,39 @@
                     "name": "positive",
                     "id": "7a545466-675c-4dbc-9db3-26f795b8bf6e",
                     "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steer",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "6175882c-d31f-4949-affa-9b32f8e6bbd8",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steer",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "ea7cb641-aac0-4662-9f22-9f4349c8c646",
+                    "path": "<Gamepad>/leftStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steer",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "2a0418ee-31ca-4f95-b597-c6da9cdb6163",
+                    "path": "<Gamepad>/leftStick/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
