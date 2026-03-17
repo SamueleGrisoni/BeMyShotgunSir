@@ -4,26 +4,25 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Player
 {
-    public class DriverController : MonoBehaviour
+    public class DriverController : MonoBehaviour, IDriverControllerContext
     {
         [SerializeField] private SOSidecarStats _stats;
         [SerializeField] private Rigidbody _sphere;
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
 
+        [SerializeField] private Transform[] _wheelBones;
+        [SerializeField] private Transform _handlebarBones;
+        [SerializeField] private float _wheelRadius;
         private Input_Actions _inputActions;
         private Input_Actions.GameplayActions _gameplayActions;
-        public bool IsDriftingButtonPressed => _gameplayActions.Drift.IsPressed();
-        public float SteerInput => _gameplayActions.Steer.ReadValue<float>();
-        public bool IsBoostButtonPressed => _gameplayActions.Boost.IsPressed();
-
-        private IDrivingState _currentDrivingState;
-        public readonly NormalDrivingState NormalState = new NormalDrivingState();
-        public readonly DriftingDrivingState DriftingState = new DriftingDrivingState();
-        public readonly AirDrivingState AirState = new AirDrivingState();
-
-        public bool IsGrounded { get; private set; }
-        public RaycastHit Hit { get; private set; }
+        private IDrivingState _currentDrivingState = new NormalDrivingState();
+        private IDrivingState _normalState = new NormalDrivingState();
+        private IDrivingState _driftingState = new DriftingDrivingState();
+        private IDrivingState _airState = new DriftingDrivingState();
+        private bool _isGrounded;
+        private RaycastHit _hit;
+        private float _driftDirection;
         private List<float> _accelerationModifiers = new List<float>();
         private float CurrentAcceleration
         {
@@ -34,53 +33,37 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
                 {
                     totalAcceleration += mod;
                 }
+                print(totalAcceleration);
                 return totalAcceleration;
             }
         }
-        public float DriftDirection { get; set; }
-
-        private void Awake()
+        Transform IDriverControllerContext.ParentTransform => _parent;
+        Transform IDriverControllerContext.SidecarTransform => _sidecar;
+        SOSidecarStats IDriverControllerContext.Stats => _stats;
+        IDrivingState IDriverControllerContext.NormalState => _normalState;
+        IDrivingState IDriverControllerContext.DriftingState => _driftingState;
+        IDrivingState IDriverControllerContext.AirState => _airState;
+        bool IDriverControllerContext.IsGrounded => _isGrounded;
+        RaycastHit IDriverControllerContext.Hit => _hit;
+        bool IDriverControllerContext.IsDriftingButtonPressed => _gameplayActions.Drift.IsPressed();
+        float IDriverControllerContext.SteerInput => _gameplayActions.Steer.ReadValue<float>();
+        bool IDriverControllerContext.IsBoostButtonPressed => _gameplayActions.Boost.IsPressed();
+        float IDriverControllerContext.DriftDirection
         {
-            _inputActions = new Input_Actions();
-            _inputActions.Enable();
-            _gameplayActions = _inputActions.Gameplay;
+            get => _driftDirection;
+            set => _driftDirection = value;
         }
-        private void Start() => ChangeState(NormalState);
-        private void Update()
-        {
-            _currentDrivingState?.ExecuteUpdate(this);
-            if (IsBoostButtonPressed)
-            {
-                ApplyBoost(_stats.BoostForce, _stats.BoostDuration);
-            }
-        }
-        private void FixedUpdate()
-        {
-            _parent.position = _sphere.transform.position;
-            CheckGround();
-            _currentDrivingState?.ExecuteFixedUpdate(this);
-        }
-        public void ChangeState(IDrivingState state)
-        {
-            _currentDrivingState?.Exit(this);
-            _currentDrivingState = state;
-            _currentDrivingState?.Enter(this);
-        }
-        public RaycastHit CheckGround()
-        {
-            IsGrounded = Physics.Raycast(_sphere.position, -_parent.up, out RaycastHit hit, 0.6f);
-            return hit;
-        }
-        public void ApplyAcceleration(Vector3 direction) => _sphere.AddForce(direction * CurrentAcceleration, ForceMode.Acceleration);
-        public void ApplyGravity(float gravity) => _sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
-        public void ApplySteering(float steerAmount) => _parent.Rotate(_parent.up, steerAmount * _stats.SteeringForce * Time.fixedDeltaTime);
-        public void ApplyLateralGrip(Vector3 direction)
+        void IDriverControllerContext.ChangeState(IDrivingState state) => ChangeState(state);
+        void IDriverControllerContext.ApplyAcceleration(Vector3 direction) => _sphere.AddForce(direction * CurrentAcceleration, ForceMode.Acceleration);
+        void IDriverControllerContext.ApplyGravity(float gravity) => _sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
+        void IDriverControllerContext.ApplySteering(float steerAmount) => _parent.Rotate(_parent.up, steerAmount * _stats.SteeringForce * Time.fixedDeltaTime);
+        void IDriverControllerContext.ApplyLateralGrip(Vector3 direction)
         {
             Vector3 currentVelocity = _sphere.linearVelocity;
             Vector3 targetVelocity = direction * currentVelocity.magnitude;
             _sphere.linearVelocity = Vector3.Lerp(currentVelocity, targetVelocity, _stats.LateralGripFactor * Time.fixedDeltaTime);
         }
-        public void AnimateSidecar(Quaternion targetRot)
+        void IDriverControllerContext.AnimateSidecar(Quaternion targetRot)
         {
             _sidecar.localRotation = Quaternion.Slerp(
                 _sidecar.localRotation,
@@ -88,15 +71,41 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
                 _stats.SteerAngularRotationSlerp
             );
         }
-        private void ApplyBoost(float amount, float duration) => StartCoroutine(BoostRoutine(amount, duration));
+        void IDriverControllerContext.ApplyBoost(float amount, float duration) => StartCoroutine(BoostRoutine(amount, duration));
+
+        private void Awake()
+        {
+            Debug.Assert(_stats != null, "Missing Reference");
+            Debug.Assert(_sphere != null, "Missing Reference");
+            Debug.Assert(_parent != null, "Missing Reference");
+            Debug.Assert(_sidecar != null, "Missing Reference");
+            _inputActions = new Input_Actions();
+            _inputActions.Enable();
+            _gameplayActions = _inputActions.Gameplay;
+        }
+        private void Update() => _currentDrivingState?.ExecuteUpdate(this);
+        private void FixedUpdate()
+        {
+            _parent.position = _sphere.transform.position;
+            CheckGround();
+            _currentDrivingState?.ExecuteFixedUpdate(this);
+        }
+        private void ChangeState(IDrivingState state)
+        {
+            _currentDrivingState?.Exit(this);
+            _currentDrivingState = state;
+            _currentDrivingState?.Enter(this);
+        }
+        public RaycastHit CheckGround()
+        {
+            _isGrounded = Physics.Raycast(_sphere.position, -_parent.up, out RaycastHit hit, 0.6f);
+            return hit;
+        }
         private IEnumerator BoostRoutine(float amount, float duration)
         {
             _accelerationModifiers.Add(amount);
             yield return new WaitForSeconds(duration);
             _accelerationModifiers.Remove(amount);
         }
-        public Transform ParentTransform => _parent;
-        public Transform SidecarTransform => _sidecar;
-        public SOSidecarStats Stats => _stats;
     }
 }
