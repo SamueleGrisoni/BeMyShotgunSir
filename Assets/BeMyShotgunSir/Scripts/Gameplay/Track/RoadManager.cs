@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Gameplay.Player;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -37,7 +37,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 var comp = _activeRoadChunks.First.Value.Component;
                 if (comp is StartFinishLineRoadChunk startFinish)
                 {
-                    Vector3 startingPos = startFinish.GridPositions[_trackManager.GetRandomNumberInRange(0,1)].position;
+                    Vector3 startingPos = startFinish.GridPositions[_trackManager.GetRandomNumberInRange(0, 1)].position;
                     startingPos.y = 0.3f;
                     _driver.transform.position = startingPos;
                 }
