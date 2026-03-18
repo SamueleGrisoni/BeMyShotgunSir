@@ -1,4 +1,5 @@
-namespace BeMyShotgunSir.Scripts.Gameplay.Player
+
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class AirDrivingState : IDrivingState
     {
@@ -12,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
         }
         public void ExecuteFixedUpdate(IDriverControllerContext controller)
         {
-            controller.ApplyAcceleration(controller.ParentTransform.forward);
+            //controller.ApplyAcceleration(controller.ParentTransform.forward);
             controller.ApplyGravity(20f);
         }
         public void Exit(IDriverControllerContext controller) { }

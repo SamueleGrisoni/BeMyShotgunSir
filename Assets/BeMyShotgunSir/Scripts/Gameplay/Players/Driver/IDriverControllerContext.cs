@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BeMyShotgunSir.Scripts.Gameplay.Player
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public interface IDriverControllerContext
     {
