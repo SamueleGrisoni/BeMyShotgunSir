@@ -7,7 +7,6 @@ using Random = System.Random;
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public enum RoadChunkPosition { LEFT, MIDDLE, RIGHT }
-    public enum RoadChunkType { STRAIGHT,TURN,STARTING_CROSSROAD, ENDING_CROSSROAD }
 
     public struct GeneratedRoadChunkInfo
     {

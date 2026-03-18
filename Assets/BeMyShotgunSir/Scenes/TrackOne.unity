@@ -149,8 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Player.Driver
   _spawnPoint: {fileID: 117990468}
-  _forwardSpeed: 1
-  _horizontalSpeed: 5
+  _forwardSpeed: 15
+  _horizontalSpeed: 25
 --- !u!4 &47480060
 Transform:
   m_ObjectHideFlags: 0
@@ -326,7 +326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.TrackManager
   _trackSeed: {fileID: 743278065}
   _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
-  _targetQueueBuffer: 10
 --- !u!4 &204120562
 Transform:
   m_ObjectHideFlags: 0

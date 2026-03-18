@@ -87,17 +87,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             switch (type)
             {
                 case RoadChunkType.TURN:
-                    PlaceNormalRoadChunk(chunk, position);
-                    break;
                 case RoadChunkType.STRAIGHT:
+                case RoadChunkType.START_FINISH_LINE:
                     PlaceNormalRoadChunk(chunk, position);
                     break;
                 case RoadChunkType.STARTING_CROSSROAD:
-                    Debug.Log("Spawning starting crossroad");
                     PlaceStartingCrossroad(chunk);
                     break;
                 case RoadChunkType.ENDING_CROSSROAD:
-                    Debug.Log("Spawning ending crossroad");
                     PlaceEndingCrossroad(chunk);
                     break;
             }
