@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Scripts.Gameplay.Player
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public class DriverController : MonoBehaviour, IDriverControllerContext
     {

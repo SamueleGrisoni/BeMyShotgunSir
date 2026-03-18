@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-namespace BeMyShotgunSir.Scripts.Gameplay.Player
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public class Driver : MonoBehaviour
     {
@@ -25,7 +25,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
                 else if (Keyboard.current.dKey.isPressed)
                     horizontalInput = 1f;
             }
-            Vector3 movement = new Vector3(horizontalInput * _horizontalSpeed, 0, _forwardSpeed);
+            Vector3 movement = new(horizontalInput * _horizontalSpeed, 0, _forwardSpeed);
             transform.Translate(movement * Time.deltaTime, Space.World);
         }
     }
