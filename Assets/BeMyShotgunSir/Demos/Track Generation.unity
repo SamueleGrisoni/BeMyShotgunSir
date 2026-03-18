@@ -149,8 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Player.Driver
   _spawnPoint: {fileID: 117990468}
-  _forwardSpeed: 15
-  _horizontalSpeed: 25
+  _forwardSpeed: 40
+  _horizontalSpeed: 30
 --- !u!4 &47480060
 Transform:
   m_ObjectHideFlags: 0
@@ -624,8 +624,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516104865}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16018225, y: -0, z: -0, w: 0.9870875}
-  m_LocalPosition: {x: 0, y: 2, z: -6}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -643,8 +643,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f6115d27f39ff418eb2123c8c6c9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  _target: {fileID: 47480060}
-  _offset: {x: 0, y: 2, z: -6}
+  _target: {fileID: 1826709976}
+  _offset: {x: 0, y: 300, z: 0}
 --- !u!1001 &636174088
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 5123576082944101595}
   - component: {fileID: 8278470569288519569}
   m_Layer: 0
-  m_Name: RoadStartFinishLine
+  m_Name: RC_Start_Finish_Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

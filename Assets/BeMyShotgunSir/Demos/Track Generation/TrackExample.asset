@@ -32,7 +32,7 @@ MonoBehaviour:
   <RandomProps>k__BackingField: []
   <RandomPropInitPoolSize>k__BackingField: 15
   <StraightPercentage>k__BackingField: 50
-  <MinimumTrackLength>k__BackingField: 30
-  <MaximumTrackLength>k__BackingField: 50
-  <MinSplitRoadChunkCount>k__BackingField: 15
-  <MaxSplitRoadChunkCount>k__BackingField: 25
+  <MinimumTrackLength>k__BackingField: 2
+  <MaximumTrackLength>k__BackingField: 2
+  <MinSplitRoadChunkCount>k__BackingField: 2
+  <MaxSplitRoadChunkCount>k__BackingField: 2
