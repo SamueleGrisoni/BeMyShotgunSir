@@ -1,0 +1,88 @@
+.top-bar {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 4px 12px;
+}
+
+.map-bar-container {
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+    max-width: 90%;
+}
+
+.marker-row {
+    height: 80px;
+    position: relative;
+}
+
+.player-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    flex-direction: column;
+    align-items: center;
+    left: 50%;
+    width: 32px;
+    translate: -16px 0;
+}
+
+.player1-marker {
+    flex-direction: column;
+}
+
+.player2-marker {
+    flex-direction: column;
+}
+
+.map-bar {
+    flex-direction: row;
+    align-items: center;
+    height: 6px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.bar-cap {
+    width: 10px;
+    height: 120px;
+    background-color: rgb(220, 220, 220);
+    border-radius: 1px;
+}
+
+.bar-track {
+    flex-grow: 1;
+    height: 8px;
+    background-color: rgb(200, 200, 200);
+}
+
+.player-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    border-width: 2px;
+    border-color: rgb(255, 255, 255);
+    flex-shrink: 0;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+    border-bottom-right-radius: 32px;
+    border-bottom-left-radius: 32px;
+}
+
+.player1-icon {
+    background-color: rgb(52, 152, 219);
+}
+
+.player2-icon {
+    background-color: rgb(231, 76, 60);
+}
+
+.player-needle {
+    width: 4px;
+    flex-grow: 1;
+    background-color: rgb(255, 255, 255);
+    align-self: center;
+}

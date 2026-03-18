@@ -8,6 +8,7 @@ __[Ii]gnore[Ff]older/*
 /[Aa]ssets/__[Ii]gnore[Ff]older.meta
 /[Aa]ssets/__[Ll]ocal[Pp]ackages/
 /[Aa]ssets/__[Ll]ocal[Pp]ackages.meta
+/[Bb]uilds/*
 
 ###############################
 ### UNITY GENERATED FILES   ###

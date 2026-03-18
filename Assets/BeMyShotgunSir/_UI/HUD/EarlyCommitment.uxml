@@ -1,0 +1,24 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/HUD/EarlyCommitment.uss?fileID=7433441132597879392&amp;guid=93b4c11e626ad40ccb585301c5324615&amp;type=3#EarlyCommitment"/>
+    <ui:VisualElement name="UIRoot" class="uiroot">
+        <ui:VisualElement name="ContentArea" class="content-area">
+            <ui:VisualElement name="EarlyCommitmentContainer" class="earlycommitment-container">
+                <ui:VisualElement name="EarlyCommitment" class="earlycommitment">
+                    <ui:Label text=" Early Commitment BOOST! " class="boost-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="CommitmentChoice" class="commitment-choice">
+                    <ui:Button name="ArrowLeft" class="choice-arrow left-arrow">
+                        <ui:VisualElement class="glass-shine"/>
+                        <ui:VisualElement name="CommitGaugeBar" class="commit-gauge-bar"/>
+                        <ui:Label text="&lt;" class="commit-label"/>
+                    </ui:Button>
+                    <ui:Button name="ArrowRight" class="choice-arrow right-arrow">
+                        <ui:VisualElement class="glass-shine"/>
+                        <ui:VisualElement name="CommitGaugeBar" class="commit-gauge-bar"/>
+                        <ui:Label text="&gt;" class="commit-label"/>
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
