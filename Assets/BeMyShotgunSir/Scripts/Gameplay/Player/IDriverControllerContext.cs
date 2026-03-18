@@ -11,7 +11,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
         IDrivingState DriftingState { get; }
         IDrivingState AirState { get; }
         bool IsGrounded { get; }
-        RaycastHit Hit { get; }
         bool IsDriftingButtonPressed { get; }
         float SteerInput { get; }
         bool IsBoostButtonPressed { get; }
