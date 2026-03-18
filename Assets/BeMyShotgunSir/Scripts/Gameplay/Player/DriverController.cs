@@ -21,9 +21,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
         private IDrivingState _driftingState = new DriftingDrivingState();
         private IDrivingState _airState = new DriftingDrivingState();
         private bool _isGrounded;
-        private RaycastHit _hit;
         private float _driftDirection;
-        private List<float> _accelerationModifiers = new List<float>();
+        private List<float> _accelerationModifiers = new();
         private float CurrentAcceleration
         {
             get
@@ -33,9 +32,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
                 {
                     totalAcceleration += mod;
                 }
-                print(totalAcceleration);
                 return totalAcceleration;
             }
+        }
+        private void Awake()
+        {
+            Debug.Assert(_stats != null, "Missing Reference");
+            Debug.Assert(_sphere != null, "Missing Reference");
+            Debug.Assert(_parent != null, "Missing Reference");
+            Debug.Assert(_sidecar != null, "Missing Reference");
+            _inputActions = new Input_Actions();
+            _inputActions.Enable();
+            _gameplayActions = _inputActions.Gameplay;
+        }
+        private void Update() => _currentDrivingState?.ExecuteUpdate(this);
+        private void FixedUpdate()
+        {
+            _parent.position = _sphere.transform.position;
+            CheckGround();
+            _currentDrivingState?.ExecuteFixedUpdate(this);
         }
         Transform IDriverControllerContext.ParentTransform => _parent;
         Transform IDriverControllerContext.SidecarTransform => _sidecar;
@@ -44,7 +59,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
         IDrivingState IDriverControllerContext.AirState => _airState;
         bool IDriverControllerContext.IsGrounded => _isGrounded;
-        RaycastHit IDriverControllerContext.Hit => _hit;
         bool IDriverControllerContext.IsDriftingButtonPressed => _gameplayActions.Drift.IsPressed();
         float IDriverControllerContext.SteerInput => _gameplayActions.Steer.ReadValue<float>();
         bool IDriverControllerContext.IsBoostButtonPressed => _gameplayActions.Boost.IsPressed();
@@ -73,34 +87,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
         }
         void IDriverControllerContext.ApplyBoost(float amount, float duration) => StartCoroutine(BoostRoutine(amount, duration));
 
-        private void Awake()
-        {
-            Debug.Assert(_stats != null, "Missing Reference");
-            Debug.Assert(_sphere != null, "Missing Reference");
-            Debug.Assert(_parent != null, "Missing Reference");
-            Debug.Assert(_sidecar != null, "Missing Reference");
-            _inputActions = new Input_Actions();
-            _inputActions.Enable();
-            _gameplayActions = _inputActions.Gameplay;
-        }
-        private void Update() => _currentDrivingState?.ExecuteUpdate(this);
-        private void FixedUpdate()
-        {
-            _parent.position = _sphere.transform.position;
-            CheckGround();
-            _currentDrivingState?.ExecuteFixedUpdate(this);
-        }
         private void ChangeState(IDrivingState state)
         {
             _currentDrivingState?.Exit(this);
             _currentDrivingState = state;
             _currentDrivingState?.Enter(this);
         }
-        public RaycastHit CheckGround()
-        {
-            _isGrounded = Physics.Raycast(_sphere.position, -_parent.up, out RaycastHit hit, 0.6f);
-            return hit;
-        }
+        private void CheckGround() => _isGrounded = Physics.Raycast(_sphere.position, -_parent.up, out RaycastHit hit, 0.6f);
         private IEnumerator BoostRoutine(float amount, float duration)
         {
             _accelerationModifiers.Add(amount);
