@@ -37,7 +37,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private int _leftWeight = -1;
         private int _rightWeight = 1;
-        private List<int> _possibleTurnWeights = new List<int>() { -2, -1, 0, 1, 2 };
+        private List<int> _possibleTurnWeights = new List<int>() {-4, -3, -2, -1, 0, 1, 2, 3, 4 };
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
 
@@ -68,6 +68,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 int weight = _trackData.RoadChunks[i].TurnWeight;
                 if (!_weightToChunkIndexMap.ContainsKey(weight))
                 {
+                    //Debug.Log("Added " + _trackData.RoadChunks[i].name + "with weight " + _trackData.RoadChunks[i].TurnWeight + " at index " + i);
                     _weightToChunkIndexMap.Add(weight, i);
                 }
             }
