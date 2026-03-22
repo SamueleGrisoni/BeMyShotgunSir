@@ -27,18 +27,19 @@ MonoBehaviour:
   - {fileID: 2280912741786188264, guid: bba72a6c7a0512147ae54880f89c3b9e, type: 3}
   <SpecialRoadChunks>k__BackingField:
   - {fileID: -7531368988852673792, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
-  - {fileID: 6240325438499591082, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
+  - {fileID: 6758869813227164004, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
   - {fileID: 8278470569288519569, guid: e0d49705d61bd2645889f4eb1314d3ea, type: 3}
   - {fileID: 7526897643869648719, guid: bbc407e8db209984694b12576a44350b, type: 3}
   - {fileID: -285443680316755127, guid: e64dda8ac6e00e34aadeca7e951ce913, type: 3}
   - {fileID: 806372005922633484, guid: 856ff99035371204d982bb2dc57eff9c, type: 3}
+  - {fileID: 7109931595183343478, guid: c8bae53e10d71f84197095f2d66ecc1d, type: 3}
   <RoadChunkInitPoolSize>k__BackingField: 10
   <EnvChunks>k__BackingField: []
   <EnvChunkInitPoolSize>k__BackingField: 15
   <RandomProps>k__BackingField: []
   <RandomPropInitPoolSize>k__BackingField: 15
   <StraightPercentage>k__BackingField: 50
-  <MinimumTrackLength>k__BackingField: 2
-  <MaximumTrackLength>k__BackingField: 2
+  <MinimumTrackLength>k__BackingField: 5
+  <MaximumTrackLength>k__BackingField: 20
   <MinSplitRoadChunkCount>k__BackingField: 2
-  <MaxSplitRoadChunkCount>k__BackingField: 2
+  <MaxSplitRoadChunkCount>k__BackingField: 10

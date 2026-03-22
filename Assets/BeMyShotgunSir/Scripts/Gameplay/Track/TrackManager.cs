@@ -24,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
     public class TrackManager : MonoBehaviour
     {
-        private enum SpecialRoadChunkIndex { STARTING_CROSSROAD = 0, ENDING_CROSSROAD = 1, START_LINE = 2, STRAIGHT = 3 }
+        private enum SpecialRoadChunkIndex { STARTING_CROSSROAD = 0, ENDING_CROSSROAD = 1, START_LINE = 2, STRAIGHT = 3, LEFT_HALF_CIRCLE = 4, RIGHT_HALF_CIRCLE = 5, AUSTIN_SNAKE = 6 }
 
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
@@ -134,8 +134,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             GeneratedRoadChunkInfo result = new GeneratedRoadChunkInfo();
             if (Rng.Next(0, 100) < _trackData.StraightPercentage)
             {
-                result.index = (int)SpecialRoadChunkIndex.STRAIGHT;
-                result.type = RoadChunkType.STRAIGHT;
+                switch (Rng.Next(0, 4))
+                {
+                    case 0:
+                        result.index = (int)SpecialRoadChunkIndex.STRAIGHT;
+                        result.type = RoadChunkType.STRAIGHT;
+                        break;
+                    case 1:
+                        result.index = (int)SpecialRoadChunkIndex.LEFT_HALF_CIRCLE;
+                        result.type = RoadChunkType.STRAIGHT;
+                        break;
+                    case 2:
+                        result.index = (int)SpecialRoadChunkIndex.RIGHT_HALF_CIRCLE;
+                        result.type = RoadChunkType.STRAIGHT;
+                        break;
+                    case 3:
+                        result.index = (int)SpecialRoadChunkIndex.AUSTIN_SNAKE;
+                        result.type = RoadChunkType.STRAIGHT;
+                        break;
+                }
             }
             else
             {
