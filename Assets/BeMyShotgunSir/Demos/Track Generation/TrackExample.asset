@@ -17,15 +17,21 @@ MonoBehaviour:
   <MaxPoolSize>k__BackingField: 1000
   <MaxActiveChunks>k__BackingField: 10
   <RoadChunks>k__BackingField:
-  - {fileID: 7377708604128148175, guid: 319e35d42ea5bff40883ff633a7e2ed4, type: 3}
-  - {fileID: 2073170348481245581, guid: 66cbcbd05d3974646a9418f9ed5ab62d, type: 3}
-  - {fileID: 3810105528959398424, guid: d404eb87483ccdb4e9e2d405c663d1ac, type: 3}
-  - {fileID: 547517089427502785, guid: ef91e0014bfc4a548bf39f2350648fdc, type: 3}
+  - {fileID: 9164961621283262488, guid: 8228d100643abb14489af8db807c95c4, type: 3}
+  - {fileID: -5513407376871482022, guid: 1b15cd8243ff3a54192aaee590f06d42, type: 3}
+  - {fileID: -1384422789854454000, guid: 8a0ecfe696840c4448a9932bc484a4bd, type: 3}
+  - {fileID: 8479728395561834774, guid: ebbd097af73f2df4ebb34ef11a07f816, type: 3}
+  - {fileID: -3568124788943286945, guid: 1a38dd05c88e20f4da252d9685ddebe5, type: 3}
+  - {fileID: 3493420391819860979, guid: 1798aa6f889d68449b112a567eb3244d, type: 3}
+  - {fileID: -7531860501813766970, guid: f908588fa65678c4f89611be27431bfe, type: 3}
+  - {fileID: 2280912741786188264, guid: bba72a6c7a0512147ae54880f89c3b9e, type: 3}
   <SpecialRoadChunks>k__BackingField:
-  - {fileID: 5741527844939038273, guid: 2ea16b74f5a176d40bf2156d9cef7e0e, type: 3}
-  - {fileID: 3479840772652557183, guid: 551c28c00d41a4d45b9afc58395fecc3, type: 3}
+  - {fileID: -7531368988852673792, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
+  - {fileID: 6240325438499591082, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
   - {fileID: 8278470569288519569, guid: e0d49705d61bd2645889f4eb1314d3ea, type: 3}
-  - {fileID: 507698152863019374, guid: 9edf328b0b13f4844be9f3ce8c583ba4, type: 3}
+  - {fileID: 7526897643869648719, guid: bbc407e8db209984694b12576a44350b, type: 3}
+  - {fileID: -285443680316755127, guid: e64dda8ac6e00e34aadeca7e951ce913, type: 3}
+  - {fileID: 806372005922633484, guid: 856ff99035371204d982bb2dc57eff9c, type: 3}
   <RoadChunkInitPoolSize>k__BackingField: 10
   <EnvChunks>k__BackingField: []
   <EnvChunkInitPoolSize>k__BackingField: 15

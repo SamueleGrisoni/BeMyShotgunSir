@@ -155,6 +155,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1555740681799706042}
+  - component: {fileID: 7526897643869648719}
   m_Layer: 0
   m_Name: RC_(0)_var1
   m_TagString: Untagged
@@ -179,6 +180,25 @@ Transform:
   - {fileID: 1198041674819653608}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7526897643869648719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2213441545836376198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a739471e7a2c0448cf64b7e65805f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.RoadChunk
+  _spawnAnchor: {fileID: 6276117404644079746}
+  <NextRoadAnchors>k__BackingField:
+  - {fileID: 814053100383060472}
+  _innerEnvChunkAreas: []
+  _envChunkAreas: []
+  _innerRandomPropAreas: []
+  <TurnWeight>k__BackingField: 0
 --- !u!1 &3332489698977767636
 GameObject:
   m_ObjectHideFlags: 0
