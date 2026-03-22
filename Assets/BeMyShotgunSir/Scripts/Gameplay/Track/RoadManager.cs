@@ -10,7 +10,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private SOTrack _trackData;
         [SerializeField] private TrackManager _trackManager;
         [SerializeField] private Transform _startingPoint;
-        [SerializeField] private Driver _driver;
+        [SerializeField] private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
