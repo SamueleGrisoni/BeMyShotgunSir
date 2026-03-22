@@ -145,7 +145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5078552545083715686, guid: 91f9b7d7c56a912a1b853fea6cec5f96, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.6
+      value: 4.6
       objectReference: {fileID: 0}
     - target: {fileID: 5078552545083715686, guid: 91f9b7d7c56a912a1b853fea6cec5f96, type: 3}
       propertyPath: m_LocalPosition.y
@@ -153,7 +153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5078552545083715686, guid: 91f9b7d7c56a912a1b853fea6cec5f96, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -14.2
       objectReference: {fileID: 0}
     - target: {fileID: 5078552545083715686, guid: 91f9b7d7c56a912a1b853fea6cec5f96, type: 3}
       propertyPath: m_LocalRotation.w
@@ -345,13 +345,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 107880799}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0000015660626, y: -0.0018835736, z: 0.00000007195033, w: 0.9999982}
-  m_LocalPosition: {x: -6.4034, y: -0.1, z: 25.7999}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 5000, y: 0.1, z: 5000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -0.216, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &193224185
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,8 +746,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516104865}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17191948, y: 0, z: 0, w: 0.98511106}
-  m_LocalPosition: {x: 6.6, y: 0.97, z: -2}
+  m_LocalRotation: {x: 0.17191939, y: 0, z: 0, w: 0.98511106}
+  m_LocalPosition: {x: 4.6, y: 0.97, z: -16.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1137,7 +1137,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 430834768026293524, guid: b257438f9145ca044962a43723eb4866, type: 3}
       propertyPath: m_Name
-      value: Road Chnk Reference Grid
+      value: Road Chunk Reference Grid
       objectReference: {fileID: 0}
     - target: {fileID: 692197759918584796, guid: b257438f9145ca044962a43723eb4866, type: 3}
       propertyPath: m_LocalPosition.x
