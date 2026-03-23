@@ -62,7 +62,7 @@ root=true
   # CSharpier always enforces braces for control flow.
   # We set this to suggestion to match CSharpier's behavior.
   dotnet_diagnostic.IDE0011.severity = suggestion
-  csharp_prefer_braces = true:suggestion
+  csharp_prefer_braces = false
 
   # --- 3D. THROW AND EXPRESSIONS ---
   dotnet_diagnostic.IDE0016.severity = suggestion
@@ -192,6 +192,19 @@ root=true
   dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
   dotnet_naming_symbols.locals_and_parameters.applicable_accessibilities = *
   dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+  # Private Constants (SCREAMING_SNAKE_CASE with _ prefix)
+  dotnet_naming_style.screaming_snake_prefix_style.capitalization = all_upper
+  dotnet_naming_style.screaming_snake_prefix_style.required_prefix = _
+  dotnet_naming_style.screaming_snake_prefix_style.word_separator = _
+
+  dotnet_naming_symbols.private_const_symbols.applicable_kinds = field
+  dotnet_naming_symbols.private_const_symbols.applicable_accessibilities = private
+  dotnet_naming_symbols.private_const_symbols.required_modifiers = const
+
+  dotnet_naming_rule.private_constants_should_be_screaming_snake.symbols = private_const_symbols
+  dotnet_naming_rule.private_constants_should_be_screaming_snake.style = screaming_snake_prefix_style
+  dotnet_naming_rule.private_constants_should_be_screaming_snake.severity = error
 
 ################################################################################
 # 6. GENERATED CODE FOLDERS
