@@ -116,6 +116,7 @@ MonoBehaviour:
   _innerEnvChunkAreas: []
   _envChunkAreas: []
   _innerRandomPropAreas: []
+  <TurnWeight>k__BackingField: 0
   <GridPositions>k__BackingField:
   - {fileID: 6023605619146143244}
   - {fileID: 5591708993193986652}
@@ -291,7 +292,7 @@ Transform:
   m_GameObject: {fileID: 6510686333970437406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 31.47}
+  m_LocalPosition: {x: 0, y: 0, z: 28.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -315,6 +316,7 @@ MonoBehaviour:
   _innerEnvChunkAreas: []
   _envChunkAreas: []
   _innerRandomPropAreas: []
+  <TurnWeight>k__BackingField: 0
 --- !u!1 &6791730066114282827
 GameObject:
   m_ObjectHideFlags: 0
