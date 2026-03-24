@@ -1,0 +1,13 @@
+:root {
+}
+
+.editor-preview {
+    margin-top: 150px;
+    margin-bottom: 50px;
+}
+
+.safe-area {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+}
