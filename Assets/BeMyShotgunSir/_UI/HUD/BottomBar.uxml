@@ -1,3 +1,16 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/BottomBar.uss?fileID=7433441132597879392&amp;guid=ba1dfd0e60ae446c4a8e467c30a92ca0&amp;type=3#BottomBar"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/BottomBar.uss?fileID=7433441132597879392&amp;guid=ba1dfd0e60ae446c4a8e467c30a92ca0&amp;type=3#BottomBar"/>
+    <ui:VisualElement name="UIRoot" class="uiroot">
+        <ui:VisualElement name="ContentArea" class="content-area ">
+            <ui:VisualElement name="DriftControl" class="drift-control editor-debug">
+                <ui:VisualElement name="DriftOrigin" class="drift-origin"/>
+                <ui:VisualElement name="DriftJoystick" class="drift-joystick"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="SteerControl" class="steer-control">
+                <ui:VisualElement name="SteerJoystick" class="steer-joystick">
+                    <ui:Label text="&lt;  STEER  &gt;" class="steer-label"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>
