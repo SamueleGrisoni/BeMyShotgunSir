@@ -13,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public readonly EnvChunk EnvChunkComponent => _envChunkComponent;
     }
 
-    [CreateAssetMenu(fileName = "TrackSO", menuName = "Be My ShotGun, Sir!/ScriptableObjects/SOTrack", order = 1)]
+    [CreateAssetMenu(fileName = "TrackSO", menuName = "Be My Shotgun, Sir!/Track")]
     public class SOTrack : ScriptableObject
     {
         [field: SerializeField] public string TrackName { get; private set; }

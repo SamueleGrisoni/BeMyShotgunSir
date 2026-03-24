@@ -24,7 +24,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private int[] _poolSizeByEnvSize = null;
         private Dictionary<int, ObjectPool<PooledRandomProp>> _randomPropPools = null;
 
-
         public void SetTrackData(SOTrack trackData)
         {
             if (_trackData != null)
@@ -168,7 +167,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     newRoadChunk.SetActive(false);
                     return pooledRoadChunk;
                 },
-                actionOnRelease: obj => {
+                actionOnRelease: obj =>
+                {
                     obj.gameObject.SetActive(false);
                     obj.transform.SetParent(_roadChunksInactiveParent.transform);
                 },
