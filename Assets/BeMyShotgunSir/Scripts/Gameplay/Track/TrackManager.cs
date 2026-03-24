@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -75,7 +74,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public List<GeneratedRoadChunkInfo> GetGeneratedRoadChunkInfo()
         {
-            List<GeneratedRoadChunkInfo> result = new List<GeneratedRoadChunkInfo>();
+            List<GeneratedRoadChunkInfo> result = new();
             if (_trackBits.Count == 0) return result;
 
             GeneratedRoadChunkInfo nextChunk = _trackBits.Dequeue();
@@ -125,13 +124,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
             else
             {
-               _trackBits.Enqueue(GenerateCommonChunkInfo());
+                _trackBits.Enqueue(GenerateCommonChunkInfo());
             }
         }
 
         private GeneratedRoadChunkInfo GenerateCommonChunkInfo()
         {
-            GeneratedRoadChunkInfo result = new GeneratedRoadChunkInfo();
+            GeneratedRoadChunkInfo result = new();
             if (Rng.Next(0, 100) < _trackData.StraightPercentage)
             {
                 result.index = (int)SpecialRoadChunkIndex.STRAIGHT;
@@ -152,8 +151,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             int targetWeight = (position == RoadChunkPosition.LEFT) ? -1 : 1;
             int maxWeightChangePossible = _chunksRemainingInCurrentState * _maxWeight;
 
-            List<int> possibleWeights = new List<int>();
-            foreach (var w in _possibleTurnWeights)
+            List<int> possibleWeights = new();
+            foreach (int w in _possibleTurnWeights)
             {
                 int projectedWeight = currentWeight + w;
                 bool isMergeSafe = (position == RoadChunkPosition.LEFT) ? (projectedWeight <= -1) : (projectedWeight >= 1);
