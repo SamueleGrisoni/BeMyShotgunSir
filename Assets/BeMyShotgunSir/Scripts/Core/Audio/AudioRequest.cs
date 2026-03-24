@@ -6,8 +6,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
 {
     public class AudioRequest
     {
-        private static AudioManager _manager;
-
         public AudioClip Clip { get; private set; }
         public Vector3 StartingPosition { get; private set; }
         public MixerGroupEnum MixerGroup { get; private set; } = MixerGroupEnum.Master;
@@ -15,7 +13,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         public float Pitch { get; private set; } = 1f;
         public float SpatialBlend { get; private set; } = 1f; // Default to 3D sound
         public bool Loop { get; private set; } = false;
-        private AudioSource _targetSource; //if null the AudioManager will play the clip at the given position
         private AudioSource _boundSource; //if the request is played in a source, this will hold a reference to it for runtime updates
 
         public AudioRequest(SOSoundSource soundSource, Vector3 startingPosition = default)
@@ -24,7 +21,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             Volume = soundSource.Clips[0].Volume;
             StartingPosition = startingPosition;
             MixerGroup = soundSource.MixerGroup;
-            Initialize();
         }
 
         public AudioRequest(AudioClip clip, float volume = 1f, Vector3 startingPosition = default)
@@ -32,13 +28,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             Clip = clip;
             Volume = volume;
             StartingPosition = startingPosition;
-            Initialize();
-        }
-
-        private static void Initialize()
-        {
-            if (_manager != null) return;
-            _manager = GameServices.Instance.AudioManager;
         }
 
         public AudioRequest WithVolume(float volume) { Volume = volume; return this; }
@@ -51,16 +40,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         {
             if (_boundSource == null)
                 _boundSource = source;
-        }
-
-        public void Play()
-        {
-            if (_manager == null)
-            {
-                Log.ELazy(() => "AudioRequest: Cannot play audio because the AudioManager is null.", this);
-                return;
-            }
-            _manager.ExecuteAudioRequest(this, _targetSource);
         }
 
         public void Stop()
@@ -78,6 +57,5 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             if (_boundSource != null)
                 _boundSource.pitch = newPitch;
         }
-
     }
 }
