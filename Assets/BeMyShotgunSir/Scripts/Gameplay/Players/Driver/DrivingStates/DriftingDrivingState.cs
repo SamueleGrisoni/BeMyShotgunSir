@@ -4,9 +4,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class DriftingDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller) { }
+        private float _timer;
+        public void Enter(IDriverControllerContext controller)
+        {
+            controller.SetMaxSpeed(controller.Stats.MaxSpeed);
+            _timer = 0f;
+        }
         public void ExecuteUpdate(IDriverControllerContext controller)
         {
+            _timer += Time.deltaTime;
+            if (_timer >= controller.Stats.ChargeBatteryTimeRate)
+            {
+                controller.CurrentBatteryCharge += controller.Stats.ChargeBatterAmountRate;
+                _timer = 0;
+            }
             if (!controller.IsGrounded)
             {
                 controller.ChangeState(controller.AirState);
@@ -16,6 +27,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             {
                 controller.ChangeState(controller.NormalState);
             }
+
         }
         public void ExecuteFixedUpdate(IDriverControllerContext controller)
         {

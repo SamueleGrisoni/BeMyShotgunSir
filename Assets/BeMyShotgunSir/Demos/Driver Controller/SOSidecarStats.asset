@@ -12,12 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae8655b161065daa842b91a053f3b56, type: 3}
   m_Name: SOSidecarStats
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Player.SOSidecarStats
-  <AccelerationForce>k__BackingField: 50
-  <BoostForce>k__BackingField: 10
+  <AccelerationForce>k__BackingField: 70
+  <MaxSpeed>k__BackingField: 24
+  <MaxSpeedWithBoost>k__BackingField: 30
   <BoostDuration>k__BackingField: 5
-  <SteeringForce>k__BackingField: 50
+  <SteeringForce>k__BackingField: 30
   <Gravity>k__BackingField: 10
   <LateralGripFactor>k__BackingField: 50
   <SteerAngularRotation>k__BackingField: 10
   <SteerAngularRotationSlerp>k__BackingField: 0.05
   <GroundAllignmentSpeed>k__BackingField: 0.1
+  <MaxBatteryCharge>k__BackingField: 100
+  <ChargeBatteryTimeRate>k__BackingField: 1
+  <ChargeBatterAmountRate>k__BackingField: 2
+  <ConsumeBatteryTimeRate>k__BackingField: 1
+  <ConsumeBatteryAmountRate>k__BackingField: 4
+  <BoostForce>k__BackingField: 0

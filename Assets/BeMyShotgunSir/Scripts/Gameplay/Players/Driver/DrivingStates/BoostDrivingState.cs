@@ -1,15 +1,36 @@
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
+namespace BeMyShotgunSir.Scripts.Gameplay.Player.Driver.DriftingStates
 {
-    public class NormalDrivingState : IDrivingState
+
+    public class BoostDrivingState : IDrivingState
     {
+        private float _timer;
         public void Enter(IDriverControllerContext controller)
         {
-            controller.SetMaxSpeed(controller.Stats.MaxSpeed);
+            if (controller.CurrentBatteryCharge <= 0)
+            {
+                controller.ChangeState(controller.NormalState);
+            }
+            controller.SetMaxSpeed(controller.Stats.MaxSpeedWithBoost);
+            _timer = 0f;
         }
         public void ExecuteUpdate(IDriverControllerContext controller)
         {
+            _timer += Time.deltaTime;
+            if (_timer >= controller.Stats.ConsumeBatteryTimeRate)
+            {
+                controller.CurrentBatteryCharge -= controller.Stats.ConsumeBatteryAmountRate;
+                _timer = 0;
+            }
+
+            if (controller.CurrentBatteryCharge <= 0)
+            {
+                controller.CurrentBatteryCharge = 0;
+                controller.ChangeState(controller.NormalState);
+            }
+
             if (!controller.IsGrounded)
             {
                 controller.ChangeState(controller.AirState);
@@ -20,11 +41,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.DriftDirection = Mathf.Sign(controller.SteerInput);
                 controller.ChangeState(controller.DriftingState);
             }
-
-            if (controller.IsBoostButtonPressed)
-            {
-                controller.ChangeState(controller.BoostState);
-            }
         }
         public void ExecuteFixedUpdate(IDriverControllerContext controller)
         {
@@ -34,6 +50,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.SidecarTransform.forward);
             controller.AnimateSidecar(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
         }
-        public void Exit(IDriverControllerContext controller) { }
+        public void Exit(IDriverControllerContext controller)
+        {
+        }
+
     }
 }

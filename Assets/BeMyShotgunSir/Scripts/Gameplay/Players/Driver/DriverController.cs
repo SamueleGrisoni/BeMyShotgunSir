@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Gameplay.Player.Driver.DriftingStates;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Rigidbody _sphere;
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
+        [SerializeField] private Collider _collider;
 
         [SerializeField] private Transform[] _wheelBones;
         [SerializeField] private Transform _handlebarBones;
@@ -20,9 +22,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _currentDrivingState = new NormalDrivingState();
         private IDrivingState _normalState = new NormalDrivingState();
         private IDrivingState _driftingState = new DriftingDrivingState();
-        private IDrivingState _airState = new DriftingDrivingState();
+        private IDrivingState _airState = new AirDrivingState();
+        private IDrivingState _boostState = new BoostDrivingState();
+        private float _currentMaxSpeed;
         private bool _isGrounded;
         private float _driftDirection;
+        private float _currentBatteryCharge;
         private List<float> _accelerationModifiers = new();
         private float CurrentAcceleration
         {
@@ -45,10 +50,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _inputActions = new Input_Actions();
             _inputActions.Enable();
             _inGameControlsActions = _inputActions.InGameControls;
+            _currentMaxSpeed = _stats.MaxSpeed;
         }
-        private void Update() => _currentDrivingState?.ExecuteUpdate(this);
+        private void Update()
+        {
+            _currentDrivingState?.ExecuteUpdate(this);
+            Debug.Log("Current battery Charge: " + _currentBatteryCharge);
+
+        }
         private void FixedUpdate()
         {
+            // Mettere l'update della posizione dentro LateUpdate. Per fare questo bisogna spostare in LateUpdate anche l'aggiornamento della rotazione del visual del sidecar.
             _parent.position = _sphere.transform.position;
             CheckGround();
             _currentDrivingState?.ExecuteFixedUpdate(this);
@@ -59,6 +71,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDriverControllerContext.NormalState => _normalState;
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
         IDrivingState IDriverControllerContext.AirState => _airState;
+        IDrivingState IDriverControllerContext.BoostState => _boostState;
+        float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
         bool IDriverControllerContext.IsGrounded => _isGrounded;
         bool IDriverControllerContext.IsDriftingButtonPressed => _inGameControlsActions.Drift.IsPressed();
         float IDriverControllerContext.SteerInput => _inGameControlsActions.Steer.ReadValue<float>();
@@ -68,8 +82,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             get => _driftDirection;
             set => _driftDirection = value;
         }
+        float IDriverControllerContext.CurrentBatteryCharge
+        {
+            get => _currentBatteryCharge;
+            set => _currentBatteryCharge = value;
+        }
         void IDriverControllerContext.ChangeState(IDrivingState state) => ChangeState(state);
-        void IDriverControllerContext.ApplyAcceleration(Vector3 direction) => _sphere.AddForce(direction * CurrentAcceleration, ForceMode.Acceleration);
+        void IDriverControllerContext.SetMaxSpeed(float maxSpeed) => _currentMaxSpeed = maxSpeed;
+        void IDriverControllerContext.ApplyAcceleration(Vector3 direction)
+        {
+            _sphere.AddForce(direction * CurrentAcceleration, ForceMode.Acceleration);
+            if (_sphere.linearVelocity.magnitude > _currentMaxSpeed)
+            {
+                _sphere.linearVelocity = _sphere.linearVelocity.normalized * _currentMaxSpeed;
+            }
+        }
         void IDriverControllerContext.ApplyGravity(float gravity) => _sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
         void IDriverControllerContext.ApplySteering(float steerAmount) => _parent.Rotate(_parent.up, steerAmount * _stats.SteeringForce * Time.fixedDeltaTime);
         void IDriverControllerContext.ApplyLateralGrip(Vector3 direction)
@@ -94,6 +121,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentDrivingState = state;
             _currentDrivingState?.Enter(this);
         }
+
         private void CheckGround() => _isGrounded = Physics.Raycast(_sphere.position, -_parent.up, out RaycastHit hit, 0.6f);
         private IEnumerator BoostRoutine(float amount, float duration)
         {
