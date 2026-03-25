@@ -10,12 +10,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState NormalState { get; }
         IDrivingState DriftingState { get; }
         IDrivingState AirState { get; }
+        IDrivingState BoostState { get; }
+        float CurrentMaxSpeed { get; }
         bool IsGrounded { get; }
         bool IsDriftingButtonPressed { get; }
         float SteerInput { get; }
         bool IsBoostButtonPressed { get; }
         float DriftDirection { get; set; }
+        float CurrentBatteryCharge { get; set; }
         void ChangeState(IDrivingState state);
+        void SetMaxSpeed(float maxSpeed);
         void ApplyAcceleration(Vector3 direction);
         void ApplyGravity(float gravity);
         void ApplySteering(float steerAmount);
