@@ -1,0 +1,36 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeArea.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeArea"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Lobby/LobbyMenu.uss?fileID=7433441132597879392&amp;guid=11a3e6b0f26aa43f5beb6b974e6fe729&amp;type=3#LobbyMenu"/>
+    <ui:VisualElement name="LobbyRoot" class="lobby-root" style="flex-grow: 1;">
+        <ui:VisualElement name="LobbyBackground" class="lobby-background" style="flex-grow: 1; position: absolute;"/>
+        <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
+            <ui:VisualElement name="TitleContainer" class="title-container">
+                <ui:Label text="Host or join&#10;a race:" name="Title" class="title-label"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ButtonContainer" class="button-container">
+                <ui:VisualElement name="HostJoinButtonContainer" class="host-join-button-container">
+                    <ui:Button name="HostButton" class="menu-button host-button">
+                        <ui:Label text="HOST RACE!" class="button-label"/>
+                    </ui:Button>
+                    <ui:Button name="JoinButton" class="menu-button join-button">
+                        <ui:Label text="JOIN RACE!" class="button-label"/>
+                    </ui:Button>
+                    <ui:TextField name="IpAddressField" value="localhost" class="menu-field ip-address-field"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="LobbyInfoContainer" class="lobby-info-container">
+                    <ui:Label text="LOBBY ADDRESS: localhost:7770" name="LobbyAddress" class="lobby-info-label"/>
+                    <ui:Label text="PLAYERS IN LOBBY: 1/4" name="PlayersInLobby" class="lobby-info-label"/>
+                    <ui:Button name="StartRaceButton" class="menu-button start-race-button">
+                        <ui:Label text="START RACE!" class="button-label"/>
+                    </ui:Button>
+                    <ui:Button name="LeaveLobbyButton" class="menu-button leave-lobby-button">
+                        <ui:Label text="LEAVE LOBBY" class="button-label"/>
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button name="BackButton" class="menu-button back-button">
+                <ui:Label text="BACK TO TITLE" class="button-label"/>
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
