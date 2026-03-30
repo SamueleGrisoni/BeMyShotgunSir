@@ -1,11 +1,11 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/TitleMenu/Title.uss?fileID=7433441132597879392&amp;guid=123dcbed6e6a441fab1b43163f03227b&amp;type=3#Title"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/TitleMenu/TitleMenu.uss?fileID=7433441132597879392&amp;guid=123dcbed6e6a441fab1b43163f03227b&amp;type=3#TitleMenu"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeArea.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeArea"/>
     <ui:VisualElement name="TitleRoot" class="title-root" style="flex-grow: 1;">
         <ui:VisualElement name="TitleBackground" class="title-background" style="flex-grow: 1; position: absolute;"/>
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:VisualElement name="TitleContainer" class="title-container">
-                <ui:Label text="BE MY&#10;SHOTGUN,&#10;SIR!" name="Title" style="position: absolute; -unity-font-definition: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&amp;guid=7ef7c4949f3504cc4810fcd3922630c5&amp;type=3#Edo_new&quot;); color: rgb(255, 255, 255); -unity-text-align: middle-center; font-size: 200px; white-space: pre-wrap; -unity-font-style: normal;"/>
+                <ui:Label text="BE MY&#10;SHOTGUN,&#10;SIR!" name="Title"/>
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container">
                 <ui:Button name="StartButton" class="menu-button">
