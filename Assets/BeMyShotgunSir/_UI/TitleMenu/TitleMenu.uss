@@ -7,16 +7,18 @@
 .title-background {
     width: 100%;
     height: 100%;
-    /* background-image: resource("UI/TitleBackground");
-    background-image-color: rgb(255, 255, 255);
-    -unity-background-scale-mode: scale-to-fit;
-    -unity-background-image-tint-color: rgb(255, 255, 255); */
     background-color: rgb(0, 0, 0);
     position: absolute;
 }
 
 .title-container {
     align-items: center;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 200px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: upper-center;
+    white-space: pre-wrap;
+    -unity-font-style: normal;
 }
 
 .button-container {
@@ -39,6 +41,6 @@
     align-items: center;
     color: white;
     margin-bottom: 100px;
-    -unity-font-definition: url("project://database/Assets/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
     font-size: 150px;
 }
