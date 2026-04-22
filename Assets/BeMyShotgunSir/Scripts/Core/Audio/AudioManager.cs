@@ -10,16 +10,8 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
     [RequireComponent(typeof(AudioSource))]
     public class AudioManager : MonoBehaviour
     {
-        private static AudioManager _instance;
-
         private void Awake()
         {
-            if (_instance != null && _instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            _instance = this;
             Mixer = Resources.Load<AudioMixer>("BMSS-AudioMixer");
             Debug.Assert(Mixer != null, "AudioManager: Failed to load AudioMixer from Resources.", this);
         }

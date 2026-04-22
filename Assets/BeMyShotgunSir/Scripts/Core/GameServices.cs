@@ -28,7 +28,16 @@ namespace BeMyShotgunSir.Scripts.Core
             ConnectionManager.Initialize();
         }
 
-        private void HandleLobbySpawned(LobbyManager lobby) => LobbyManager = lobby;
+        private void HandleLobbySpawned(LobbyManager lobby)
+        {
+            if (LobbyManager != null && LobbyManager != lobby)
+            {
+                Debug.LogError($"GameServices: Duplicate LobbyManager detected. Keeping '{LobbyManager.name}' and ignoring '{lobby.name}'.", this);
+                return;
+            }
+
+            LobbyManager = lobby;
+        }
         private void HandleLobbyDespaired() => LobbyManager = null;
 
         private void OnDisable()

@@ -14,10 +14,16 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void Awake()
         {
-            int i = 0;
             _hostButton.onClick.AddListener(OnHostButtonClicked);
             _joinButton.onClick.AddListener(OnJoinButtonClicked);
             _ipAddressField.onValueChanged.AddListener(OnIPValueChanged);
+        }
+
+        private void OnDestroy()
+        {
+            _hostButton.onClick.RemoveListener(OnHostButtonClicked);
+            _joinButton.onClick.RemoveListener(OnJoinButtonClicked);
+            _ipAddressField.onValueChanged.RemoveListener(OnIPValueChanged);
         }
 
         private void OnHostButtonClicked() =>

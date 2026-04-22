@@ -1,4 +1,3 @@
-using FishNet;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 using FishNet.Managing.Scened;
 using UnityEngine;
@@ -13,20 +12,17 @@ namespace BeMyShotgunSir.Scripts.Core
         Track1 = 3,
         UI = 4
     }
-    public class SceneLoader : MonoBehaviour
+    public class SceneCoordinator : MonoBehaviour
     {
-        private SceneManager _sceneManager;
-        private void Start() => _sceneManager = InstanceFinder.SceneManager;
-        public void LoadInitMenuScene()
+        private readonly FishNetSceneAdapter _fishnetSceneManager = new FishNetSceneAdapter();
+
+        public void LoadInitScene()
         {
             if (UnitySceneManager.GetSceneByName(SceneName.Init.ToString()).isLoaded)
                 return;
             UnitySceneManager.LoadScene(SceneName.Init.ToString(), UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
-        public void LoadLobbyScene()
-        {
-            SceneLoadData sld = new(SceneName.Lobby.ToString()) { ReplaceScenes = ReplaceOption.OnlineOnly };
-            _sceneManager.LoadGlobalScenes(sld);
-        }
+        public void LoadLobby() =>
+            _fishnetSceneManager.TryLoadGlobalScene(SceneName.Lobby.ToString(), this, ReplaceOption.OnlineOnly);
     }
 }
