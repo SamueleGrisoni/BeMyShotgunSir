@@ -1,6 +1,8 @@
 ###############################
 ### CUSTOM IGNORE FOLDERS   ###
 ###############################
+**/__ignore/**
+**/__ignore.meta
 __[Ii]gnore[Ff]older/*
 /[Aa]ssets/__[Ii]gnore[Ff]older/
 /[Aa]ssets/__[Ii]gnore[Ff]older.meta

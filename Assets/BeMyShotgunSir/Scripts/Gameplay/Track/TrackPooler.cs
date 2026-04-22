@@ -168,7 +168,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     newRoadChunk.SetActive(false);
                     return pooledRoadChunk;
                 },
-                actionOnRelease: obj => {
+                actionOnRelease: obj =>
+                {
                     obj.gameObject.SetActive(false);
                     obj.transform.SetParent(_roadChunksInactiveParent.transform);
                 },

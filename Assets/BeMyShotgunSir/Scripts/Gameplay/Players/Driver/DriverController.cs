@@ -16,7 +16,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _handlebarBones;
         [SerializeField] private float _wheelRadius;
         private Input_Actions _inputActions;
-        private Input_Actions.GameplayActions _gameplayActions;
+        private Input_Actions.InGameControlsActions _inGameControlsActions;
         private IDrivingState _currentDrivingState = new NormalDrivingState();
         private IDrivingState _normalState = new NormalDrivingState();
         private IDrivingState _driftingState = new DriftingDrivingState();
@@ -44,7 +44,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             Debug.Assert(_sidecar != null, "Missing Reference");
             _inputActions = new Input_Actions();
             _inputActions.Enable();
-            _gameplayActions = _inputActions.Gameplay;
+            _inGameControlsActions = _inputActions.InGameControls;
         }
         private void Update() => _currentDrivingState?.ExecuteUpdate(this);
         private void FixedUpdate()
@@ -60,9 +60,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
         IDrivingState IDriverControllerContext.AirState => _airState;
         bool IDriverControllerContext.IsGrounded => _isGrounded;
-        bool IDriverControllerContext.IsDriftingButtonPressed => _gameplayActions.Drift.IsPressed();
-        float IDriverControllerContext.SteerInput => _gameplayActions.Steer.ReadValue<float>();
-        bool IDriverControllerContext.IsBoostButtonPressed => _gameplayActions.Boost.IsPressed();
+        bool IDriverControllerContext.IsDriftingButtonPressed => _inGameControlsActions.Drift.IsPressed();
+        float IDriverControllerContext.SteerInput => _inGameControlsActions.Steer.ReadValue<float>();
+        bool IDriverControllerContext.IsBoostButtonPressed => _inGameControlsActions.Boost.IsPressed();
         float IDriverControllerContext.DriftDirection
         {
             get => _driftDirection;

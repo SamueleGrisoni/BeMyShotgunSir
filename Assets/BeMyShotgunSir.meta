@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/BeMyShotgunSir/Scripts/Managers.meta
+guid: f1fccf176bc621944b83d473f28e7f29
+========
 guid: 5f68b5a4cb2ebd4d7ab7fe6dbc3c4133
+>>>>>>>> develop:Assets/BeMyShotgunSir.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

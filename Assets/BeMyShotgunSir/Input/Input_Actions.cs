@@ -89,7 +89,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
     ""name"": ""Input_Actions"",
     ""maps"": [
         {
-            ""name"": ""Lobby"",
+            ""name"": ""InLobbyUI"",
             ""id"": ""df70fa95-8a34-4494-b137-73ab6b9c7d37"",
             ""actions"": [
                 {
@@ -280,7 +280,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Gameplay"",
+            ""name"": ""InGameUI"",
             ""id"": ""272f6d14-89ba-496f-b7ff-215263d3219f"",
             ""actions"": [
                 {
@@ -369,33 +369,6 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be"",
                     ""expectedControlType"": ""Quaternion"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Steer"",
-                    ""type"": ""Value"",
-                    ""id"": ""5cca9acf-8c77-4c86-9784-1fc20bd6406e"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Drift"",
-                    ""type"": ""Button"",
-                    ""id"": ""cfba28ba-6b11-4140-ac24-7dcfff508fcd"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Boost"",
-                    ""type"": ""Button"",
-                    ""id"": ""a88ac220-382d-4bbd-a40f-0bb1c37ee089"",
-                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -819,10 +792,173 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""InGameControls"",
+            ""id"": ""7dc310f9-7481-45e5-b6e5-df6c7520f1f4"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""0dad9750-ef8f-43e2-8405-f9608eccbe21"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""a97500c0-2c83-443f-aedf-644ef0cdb246"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Button"",
+                    ""id"": ""0ec450cf-aa33-4f1e-8a1f-19b305f8cbee"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Steer"",
+                    ""type"": ""Value"",
+                    ""id"": ""943bf847-57b5-4778-9cc3-c8f831aa9134"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Drift"",
+                    ""type"": ""Button"",
+                    ""id"": ""1272578f-8a69-40d0-b349-bef6401fd569"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""cb66d39b-e57b-4eba-a09e-28b791db46f2"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""59f7ec1f-8a3e-474c-a41c-cfa69a0afd67"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""3d7dfca0-6e57-4ca5-a89a-a01ebc224831"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""54200807-9d95-4500-8017-d0322737cf10"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""c721fb53-4a13-4130-960f-1a58284a94be"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""e2ac6675-0e54-4d77-af3b-b3f2c6bb488a"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""b1cfb7d4-7f6c-4f07-8f59-0e92efe4d0ff"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""8fd341fe-a00a-4c7a-94d8-3705c6130845"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""3d283720-e667-4120-abca-57663fc21ab8"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9fcedf97-0693-41f9-bbe9-be6747ddfc0d"",
+                    ""id"": ""91ed6ade-172a-4275-848c-44907c41b000"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e7e5e84-f2ea-4ff6-ac5e-588cbbe539e7"",
                     ""path"": """",
                     ""interactions"": """",
                     ""processors"": """",
@@ -833,7 +969,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""3395b841-7c79-48bf-96af-5cd481791281"",
+                    ""id"": ""353d1f1c-96d9-451c-a307-6a5a96707d2d"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -844,7 +980,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""732e7191-afcb-4914-9f64-eb65c627cbda"",
+                    ""id"": ""2f30bcc0-f2b4-474f-b8b4-4eaa49d6d80c"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -855,7 +991,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""7a545466-675c-4dbc-9db3-26f795b8bf6e"",
+                    ""id"": ""00a58c9b-f94f-4fff-aa4b-db6273149b65"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -866,7 +1002,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""6175882c-d31f-4949-affa-9b32f8e6bbd8"",
+                    ""id"": ""6c9aa19f-f3a9-4cf0-910a-d182bbbf941a"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -877,7 +1013,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""ea7cb641-aac0-4662-9f22-9f4349c8c646"",
+                    ""id"": ""1f9de7e4-10d7-4bb2-afe6-5befc967e5d6"",
                     ""path"": ""<Gamepad>/leftStick/x"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -888,7 +1024,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""2a0418ee-31ca-4f95-b597-c6da9cdb6163"",
+                    ""id"": ""b7bc9ec4-e707-41c5-bc99-5227bcae1b01"",
                     ""path"": ""<Gamepad>/leftStick/x"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -899,7 +1035,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bf211deb-197b-4b1e-95bc-37019227d27e"",
+                    ""id"": ""14a6ddb3-b36e-4306-9556-cc795482ea42"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -910,40 +1046,12 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a00fc4a2-e43d-4f45-8e7c-e6097ddf6b4f"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""id"": ""9a9d679f-3c3e-4540-ac85-746d65e40cff"",
+                    ""path"": ""<Pointer>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Boost"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""UI"",
-            ""id"": ""7dc310f9-7481-45e5-b6e5-df6c7520f1f4"",
-            ""actions"": [
-                {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
-                    ""id"": ""0dad9750-ef8f-43e2-8405-f9608eccbe21"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""94ed8966-0d86-4144-b603-0048b47607fa"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
+                    ""groups"": "";Keyboard&Mouse;Touch"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1013,35 +1121,36 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // Lobby
-        m_Lobby = asset.FindActionMap("Lobby", throwIfNotFound: true);
-        m_Lobby_Move = m_Lobby.FindAction("Move", throwIfNotFound: true);
-        m_Lobby_Look = m_Lobby.FindAction("Look", throwIfNotFound: true);
-        // Gameplay
-        m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
-        m_Gameplay_Navigate = m_Gameplay.FindAction("Navigate", throwIfNotFound: true);
-        m_Gameplay_Submit = m_Gameplay.FindAction("Submit", throwIfNotFound: true);
-        m_Gameplay_Cancel = m_Gameplay.FindAction("Cancel", throwIfNotFound: true);
-        m_Gameplay_Point = m_Gameplay.FindAction("Point", throwIfNotFound: true);
-        m_Gameplay_Click = m_Gameplay.FindAction("Click", throwIfNotFound: true);
-        m_Gameplay_RightClick = m_Gameplay.FindAction("RightClick", throwIfNotFound: true);
-        m_Gameplay_MiddleClick = m_Gameplay.FindAction("MiddleClick", throwIfNotFound: true);
-        m_Gameplay_ScrollWheel = m_Gameplay.FindAction("ScrollWheel", throwIfNotFound: true);
-        m_Gameplay_TrackedDevicePosition = m_Gameplay.FindAction("TrackedDevicePosition", throwIfNotFound: true);
-        m_Gameplay_TrackedDeviceOrientation = m_Gameplay.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        m_Gameplay_Steer = m_Gameplay.FindAction("Steer", throwIfNotFound: true);
-        m_Gameplay_Drift = m_Gameplay.FindAction("Drift", throwIfNotFound: true);
-        m_Gameplay_Boost = m_Gameplay.FindAction("Boost", throwIfNotFound: true);
-        // UI
-        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+        // InLobbyUI
+        m_InLobbyUI = asset.FindActionMap("InLobbyUI", throwIfNotFound: true);
+        m_InLobbyUI_Move = m_InLobbyUI.FindAction("Move", throwIfNotFound: true);
+        m_InLobbyUI_Look = m_InLobbyUI.FindAction("Look", throwIfNotFound: true);
+        // InGameUI
+        m_InGameUI = asset.FindActionMap("InGameUI", throwIfNotFound: true);
+        m_InGameUI_Navigate = m_InGameUI.FindAction("Navigate", throwIfNotFound: true);
+        m_InGameUI_Submit = m_InGameUI.FindAction("Submit", throwIfNotFound: true);
+        m_InGameUI_Cancel = m_InGameUI.FindAction("Cancel", throwIfNotFound: true);
+        m_InGameUI_Point = m_InGameUI.FindAction("Point", throwIfNotFound: true);
+        m_InGameUI_Click = m_InGameUI.FindAction("Click", throwIfNotFound: true);
+        m_InGameUI_RightClick = m_InGameUI.FindAction("RightClick", throwIfNotFound: true);
+        m_InGameUI_MiddleClick = m_InGameUI.FindAction("MiddleClick", throwIfNotFound: true);
+        m_InGameUI_ScrollWheel = m_InGameUI.FindAction("ScrollWheel", throwIfNotFound: true);
+        m_InGameUI_TrackedDevicePosition = m_InGameUI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
+        m_InGameUI_TrackedDeviceOrientation = m_InGameUI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // InGameControls
+        m_InGameControls = asset.FindActionMap("InGameControls", throwIfNotFound: true);
+        m_InGameControls_Move = m_InGameControls.FindAction("Move", throwIfNotFound: true);
+        m_InGameControls_Look = m_InGameControls.FindAction("Look", throwIfNotFound: true);
+        m_InGameControls_Boost = m_InGameControls.FindAction("Boost", throwIfNotFound: true);
+        m_InGameControls_Steer = m_InGameControls.FindAction("Steer", throwIfNotFound: true);
+        m_InGameControls_Drift = m_InGameControls.FindAction("Drift", throwIfNotFound: true);
     }
 
     ~@Input_Actions()
     {
-        UnityEngine.Debug.Assert(!m_Lobby.enabled, "This will cause a leak and performance issues, Input_Actions.Lobby.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, Input_Actions.Gameplay.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, Input_Actions.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_InLobbyUI.enabled, "This will cause a leak and performance issues, Input_Actions.InLobbyUI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_InGameUI.enabled, "This will cause a leak and performance issues, Input_Actions.InGameUI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_InGameControls.enabled, "This will cause a leak and performance issues, Input_Actions.InGameControls.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1114,34 +1223,34 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Lobby
-    private readonly InputActionMap m_Lobby;
-    private List<ILobbyActions> m_LobbyActionsCallbackInterfaces = new List<ILobbyActions>();
-    private readonly InputAction m_Lobby_Move;
-    private readonly InputAction m_Lobby_Look;
+    // InLobbyUI
+    private readonly InputActionMap m_InLobbyUI;
+    private List<IInLobbyUIActions> m_InLobbyUIActionsCallbackInterfaces = new List<IInLobbyUIActions>();
+    private readonly InputAction m_InLobbyUI_Move;
+    private readonly InputAction m_InLobbyUI_Look;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Lobby".
+    /// Provides access to input actions defined in input action map "InLobbyUI".
     /// </summary>
-    public struct LobbyActions
+    public struct InLobbyUIActions
     {
         private @Input_Actions m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public LobbyActions(@Input_Actions wrapper) { m_Wrapper = wrapper; }
+        public InLobbyUIActions(@Input_Actions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Lobby/Move".
+        /// Provides access to the underlying input action "InLobbyUI/Move".
         /// </summary>
-        public InputAction @Move => m_Wrapper.m_Lobby_Move;
+        public InputAction @Move => m_Wrapper.m_InLobbyUI_Move;
         /// <summary>
-        /// Provides access to the underlying input action "Lobby/Look".
+        /// Provides access to the underlying input action "InLobbyUI/Look".
         /// </summary>
-        public InputAction @Look => m_Wrapper.m_Lobby_Look;
+        public InputAction @Look => m_Wrapper.m_InLobbyUI_Look;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Lobby; }
+        public InputActionMap Get() { return m_Wrapper.m_InLobbyUI; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1149,9 +1258,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="LobbyActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="InLobbyUIActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(LobbyActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(InLobbyUIActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1159,11 +1268,11 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="LobbyActions" />
-        public void AddCallbacks(ILobbyActions instance)
+        /// <seealso cref="InLobbyUIActions" />
+        public void AddCallbacks(IInLobbyUIActions instance)
         {
-            if (instance == null || m_Wrapper.m_LobbyActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_LobbyActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_InLobbyUIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InLobbyUIActionsCallbackInterfaces.Add(instance);
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
@@ -1178,8 +1287,8 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="LobbyActions" />
-        private void UnregisterCallbacks(ILobbyActions instance)
+        /// <seealso cref="InLobbyUIActions" />
+        private void UnregisterCallbacks(IInLobbyUIActions instance)
         {
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
@@ -1190,12 +1299,12 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="LobbyActions.UnregisterCallbacks(ILobbyActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InLobbyUIActions.UnregisterCallbacks(IInLobbyUIActions)" />.
         /// </summary>
-        /// <seealso cref="LobbyActions.UnregisterCallbacks(ILobbyActions)" />
-        public void RemoveCallbacks(ILobbyActions instance)
+        /// <seealso cref="InLobbyUIActions.UnregisterCallbacks(IInLobbyUIActions)" />
+        public void RemoveCallbacks(IInLobbyUIActions instance)
         {
-            if (m_Wrapper.m_LobbyActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_InLobbyUIActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1205,105 +1314,90 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="LobbyActions.AddCallbacks(ILobbyActions)" />
-        /// <seealso cref="LobbyActions.RemoveCallbacks(ILobbyActions)" />
-        /// <seealso cref="LobbyActions.UnregisterCallbacks(ILobbyActions)" />
-        public void SetCallbacks(ILobbyActions instance)
+        /// <seealso cref="InLobbyUIActions.AddCallbacks(IInLobbyUIActions)" />
+        /// <seealso cref="InLobbyUIActions.RemoveCallbacks(IInLobbyUIActions)" />
+        /// <seealso cref="InLobbyUIActions.UnregisterCallbacks(IInLobbyUIActions)" />
+        public void SetCallbacks(IInLobbyUIActions instance)
         {
-            foreach (var item in m_Wrapper.m_LobbyActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_InLobbyUIActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_LobbyActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_InLobbyUIActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="LobbyActions" /> instance referencing this action map.
+    /// Provides a new <see cref="InLobbyUIActions" /> instance referencing this action map.
     /// </summary>
-    public LobbyActions @Lobby => new LobbyActions(this);
+    public InLobbyUIActions @InLobbyUI => new InLobbyUIActions(this);
 
-    // Gameplay
-    private readonly InputActionMap m_Gameplay;
-    private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
-    private readonly InputAction m_Gameplay_Navigate;
-    private readonly InputAction m_Gameplay_Submit;
-    private readonly InputAction m_Gameplay_Cancel;
-    private readonly InputAction m_Gameplay_Point;
-    private readonly InputAction m_Gameplay_Click;
-    private readonly InputAction m_Gameplay_RightClick;
-    private readonly InputAction m_Gameplay_MiddleClick;
-    private readonly InputAction m_Gameplay_ScrollWheel;
-    private readonly InputAction m_Gameplay_TrackedDevicePosition;
-    private readonly InputAction m_Gameplay_TrackedDeviceOrientation;
-    private readonly InputAction m_Gameplay_Steer;
-    private readonly InputAction m_Gameplay_Drift;
-    private readonly InputAction m_Gameplay_Boost;
+    // InGameUI
+    private readonly InputActionMap m_InGameUI;
+    private List<IInGameUIActions> m_InGameUIActionsCallbackInterfaces = new List<IInGameUIActions>();
+    private readonly InputAction m_InGameUI_Navigate;
+    private readonly InputAction m_InGameUI_Submit;
+    private readonly InputAction m_InGameUI_Cancel;
+    private readonly InputAction m_InGameUI_Point;
+    private readonly InputAction m_InGameUI_Click;
+    private readonly InputAction m_InGameUI_RightClick;
+    private readonly InputAction m_InGameUI_MiddleClick;
+    private readonly InputAction m_InGameUI_ScrollWheel;
+    private readonly InputAction m_InGameUI_TrackedDevicePosition;
+    private readonly InputAction m_InGameUI_TrackedDeviceOrientation;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Gameplay".
+    /// Provides access to input actions defined in input action map "InGameUI".
     /// </summary>
-    public struct GameplayActions
+    public struct InGameUIActions
     {
         private @Input_Actions m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public GameplayActions(@Input_Actions wrapper) { m_Wrapper = wrapper; }
+        public InGameUIActions(@Input_Actions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Navigate".
+        /// Provides access to the underlying input action "InGameUI/Navigate".
         /// </summary>
-        public InputAction @Navigate => m_Wrapper.m_Gameplay_Navigate;
+        public InputAction @Navigate => m_Wrapper.m_InGameUI_Navigate;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Submit".
+        /// Provides access to the underlying input action "InGameUI/Submit".
         /// </summary>
-        public InputAction @Submit => m_Wrapper.m_Gameplay_Submit;
+        public InputAction @Submit => m_Wrapper.m_InGameUI_Submit;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Cancel".
+        /// Provides access to the underlying input action "InGameUI/Cancel".
         /// </summary>
-        public InputAction @Cancel => m_Wrapper.m_Gameplay_Cancel;
+        public InputAction @Cancel => m_Wrapper.m_InGameUI_Cancel;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Point".
+        /// Provides access to the underlying input action "InGameUI/Point".
         /// </summary>
-        public InputAction @Point => m_Wrapper.m_Gameplay_Point;
+        public InputAction @Point => m_Wrapper.m_InGameUI_Point;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Click".
+        /// Provides access to the underlying input action "InGameUI/Click".
         /// </summary>
-        public InputAction @Click => m_Wrapper.m_Gameplay_Click;
+        public InputAction @Click => m_Wrapper.m_InGameUI_Click;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/RightClick".
+        /// Provides access to the underlying input action "InGameUI/RightClick".
         /// </summary>
-        public InputAction @RightClick => m_Wrapper.m_Gameplay_RightClick;
+        public InputAction @RightClick => m_Wrapper.m_InGameUI_RightClick;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/MiddleClick".
+        /// Provides access to the underlying input action "InGameUI/MiddleClick".
         /// </summary>
-        public InputAction @MiddleClick => m_Wrapper.m_Gameplay_MiddleClick;
+        public InputAction @MiddleClick => m_Wrapper.m_InGameUI_MiddleClick;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/ScrollWheel".
+        /// Provides access to the underlying input action "InGameUI/ScrollWheel".
         /// </summary>
-        public InputAction @ScrollWheel => m_Wrapper.m_Gameplay_ScrollWheel;
+        public InputAction @ScrollWheel => m_Wrapper.m_InGameUI_ScrollWheel;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/TrackedDevicePosition".
+        /// Provides access to the underlying input action "InGameUI/TrackedDevicePosition".
         /// </summary>
-        public InputAction @TrackedDevicePosition => m_Wrapper.m_Gameplay_TrackedDevicePosition;
+        public InputAction @TrackedDevicePosition => m_Wrapper.m_InGameUI_TrackedDevicePosition;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/TrackedDeviceOrientation".
+        /// Provides access to the underlying input action "InGameUI/TrackedDeviceOrientation".
         /// </summary>
-        public InputAction @TrackedDeviceOrientation => m_Wrapper.m_Gameplay_TrackedDeviceOrientation;
-        /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Steer".
-        /// </summary>
-        public InputAction @Steer => m_Wrapper.m_Gameplay_Steer;
-        /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Drift".
-        /// </summary>
-        public InputAction @Drift => m_Wrapper.m_Gameplay_Drift;
-        /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Boost".
-        /// </summary>
-        public InputAction @Boost => m_Wrapper.m_Gameplay_Boost;
+        public InputAction @TrackedDeviceOrientation => m_Wrapper.m_InGameUI_TrackedDeviceOrientation;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
+        public InputActionMap Get() { return m_Wrapper.m_InGameUI; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1311,9 +1405,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="GameplayActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="InGameUIActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(InGameUIActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1321,11 +1415,11 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="GameplayActions" />
-        public void AddCallbacks(IGameplayActions instance)
+        /// <seealso cref="InGameUIActions" />
+        public void AddCallbacks(IInGameUIActions instance)
         {
-            if (instance == null || m_Wrapper.m_GameplayActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_GameplayActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_InGameUIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InGameUIActionsCallbackInterfaces.Add(instance);
             @Navigate.started += instance.OnNavigate;
             @Navigate.performed += instance.OnNavigate;
             @Navigate.canceled += instance.OnNavigate;
@@ -1356,15 +1450,6 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
-            @Steer.started += instance.OnSteer;
-            @Steer.performed += instance.OnSteer;
-            @Steer.canceled += instance.OnSteer;
-            @Drift.started += instance.OnDrift;
-            @Drift.performed += instance.OnDrift;
-            @Drift.canceled += instance.OnDrift;
-            @Boost.started += instance.OnBoost;
-            @Boost.performed += instance.OnBoost;
-            @Boost.canceled += instance.OnBoost;
         }
 
         /// <summary>
@@ -1373,8 +1458,8 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="GameplayActions" />
-        private void UnregisterCallbacks(IGameplayActions instance)
+        /// <seealso cref="InGameUIActions" />
+        private void UnregisterCallbacks(IInGameUIActions instance)
         {
             @Navigate.started -= instance.OnNavigate;
             @Navigate.performed -= instance.OnNavigate;
@@ -1406,24 +1491,15 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
-            @Steer.started -= instance.OnSteer;
-            @Steer.performed -= instance.OnSteer;
-            @Steer.canceled -= instance.OnSteer;
-            @Drift.started -= instance.OnDrift;
-            @Drift.performed -= instance.OnDrift;
-            @Drift.canceled -= instance.OnDrift;
-            @Boost.started -= instance.OnBoost;
-            @Boost.performed -= instance.OnBoost;
-            @Boost.canceled -= instance.OnBoost;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GameplayActions.UnregisterCallbacks(IGameplayActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InGameUIActions.UnregisterCallbacks(IInGameUIActions)" />.
         /// </summary>
-        /// <seealso cref="GameplayActions.UnregisterCallbacks(IGameplayActions)" />
-        public void RemoveCallbacks(IGameplayActions instance)
+        /// <seealso cref="InGameUIActions.UnregisterCallbacks(IInGameUIActions)" />
+        public void RemoveCallbacks(IInGameUIActions instance)
         {
-            if (m_Wrapper.m_GameplayActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_InGameUIActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1433,45 +1509,65 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="GameplayActions.AddCallbacks(IGameplayActions)" />
-        /// <seealso cref="GameplayActions.RemoveCallbacks(IGameplayActions)" />
-        /// <seealso cref="GameplayActions.UnregisterCallbacks(IGameplayActions)" />
-        public void SetCallbacks(IGameplayActions instance)
+        /// <seealso cref="InGameUIActions.AddCallbacks(IInGameUIActions)" />
+        /// <seealso cref="InGameUIActions.RemoveCallbacks(IInGameUIActions)" />
+        /// <seealso cref="InGameUIActions.UnregisterCallbacks(IInGameUIActions)" />
+        public void SetCallbacks(IInGameUIActions instance)
         {
-            foreach (var item in m_Wrapper.m_GameplayActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_InGameUIActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_GameplayActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_InGameUIActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="GameplayActions" /> instance referencing this action map.
+    /// Provides a new <see cref="InGameUIActions" /> instance referencing this action map.
     /// </summary>
-    public GameplayActions @Gameplay => new GameplayActions(this);
+    public InGameUIActions @InGameUI => new InGameUIActions(this);
 
-    // UI
-    private readonly InputActionMap m_UI;
-    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_Newaction;
+    // InGameControls
+    private readonly InputActionMap m_InGameControls;
+    private List<IInGameControlsActions> m_InGameControlsActionsCallbackInterfaces = new List<IInGameControlsActions>();
+    private readonly InputAction m_InGameControls_Move;
+    private readonly InputAction m_InGameControls_Look;
+    private readonly InputAction m_InGameControls_Boost;
+    private readonly InputAction m_InGameControls_Steer;
+    private readonly InputAction m_InGameControls_Drift;
     /// <summary>
-    /// Provides access to input actions defined in input action map "UI".
+    /// Provides access to input actions defined in input action map "InGameControls".
     /// </summary>
-    public struct UIActions
+    public struct InGameControlsActions
     {
         private @Input_Actions m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public UIActions(@Input_Actions wrapper) { m_Wrapper = wrapper; }
+        public InGameControlsActions(@Input_Actions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "UI/Newaction".
+        /// Provides access to the underlying input action "InGameControls/Move".
         /// </summary>
-        public InputAction @Newaction => m_Wrapper.m_UI_Newaction;
+        public InputAction @Move => m_Wrapper.m_InGameControls_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/Look".
+        /// </summary>
+        public InputAction @Look => m_Wrapper.m_InGameControls_Look;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/Boost".
+        /// </summary>
+        public InputAction @Boost => m_Wrapper.m_InGameControls_Boost;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/Steer".
+        /// </summary>
+        public InputAction @Steer => m_Wrapper.m_InGameControls_Steer;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/Drift".
+        /// </summary>
+        public InputAction @Drift => m_Wrapper.m_InGameControls_Drift;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public InputActionMap Get() { return m_Wrapper.m_InGameControls; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1479,9 +1575,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="InGameControlsActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(InGameControlsActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1489,14 +1585,26 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="UIActions" />
-        public void AddCallbacks(IUIActions instance)
+        /// <seealso cref="InGameControlsActions" />
+        public void AddCallbacks(IInGameControlsActions instance)
         {
-            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            if (instance == null || m_Wrapper.m_InGameControlsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InGameControlsActionsCallbackInterfaces.Add(instance);
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
+            @Boost.started += instance.OnBoost;
+            @Boost.performed += instance.OnBoost;
+            @Boost.canceled += instance.OnBoost;
+            @Steer.started += instance.OnSteer;
+            @Steer.performed += instance.OnSteer;
+            @Steer.canceled += instance.OnSteer;
+            @Drift.started += instance.OnDrift;
+            @Drift.performed += instance.OnDrift;
+            @Drift.canceled += instance.OnDrift;
         }
 
         /// <summary>
@@ -1505,21 +1613,33 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="UIActions" />
-        private void UnregisterCallbacks(IUIActions instance)
+        /// <seealso cref="InGameControlsActions" />
+        private void UnregisterCallbacks(IInGameControlsActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
+            @Boost.started -= instance.OnBoost;
+            @Boost.performed -= instance.OnBoost;
+            @Boost.canceled -= instance.OnBoost;
+            @Steer.started -= instance.OnSteer;
+            @Steer.performed -= instance.OnSteer;
+            @Steer.canceled -= instance.OnSteer;
+            @Drift.started -= instance.OnDrift;
+            @Drift.performed -= instance.OnDrift;
+            @Drift.canceled -= instance.OnDrift;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UIActions.UnregisterCallbacks(IUIActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InGameControlsActions.UnregisterCallbacks(IInGameControlsActions)" />.
         /// </summary>
-        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
-        public void RemoveCallbacks(IUIActions instance)
+        /// <seealso cref="InGameControlsActions.UnregisterCallbacks(IInGameControlsActions)" />
+        public void RemoveCallbacks(IInGameControlsActions instance)
         {
-            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_InGameControlsActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1529,21 +1649,21 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
-        public void SetCallbacks(IUIActions instance)
+        /// <seealso cref="InGameControlsActions.AddCallbacks(IInGameControlsActions)" />
+        /// <seealso cref="InGameControlsActions.RemoveCallbacks(IInGameControlsActions)" />
+        /// <seealso cref="InGameControlsActions.UnregisterCallbacks(IInGameControlsActions)" />
+        public void SetCallbacks(IInGameControlsActions instance)
         {
-            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_InGameControlsActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_InGameControlsActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="UIActions" /> instance referencing this action map.
+    /// Provides a new <see cref="InGameControlsActions" /> instance referencing this action map.
     /// </summary>
-    public UIActions @UI => new UIActions(this);
+    public InGameControlsActions @InGameControls => new InGameControlsActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1610,11 +1730,11 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         }
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Lobby" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "InLobbyUI" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="LobbyActions.AddCallbacks(ILobbyActions)" />
-    /// <seealso cref="LobbyActions.RemoveCallbacks(ILobbyActions)" />
-    public interface ILobbyActions
+    /// <seealso cref="InLobbyUIActions.AddCallbacks(IInLobbyUIActions)" />
+    /// <seealso cref="InLobbyUIActions.RemoveCallbacks(IInLobbyUIActions)" />
+    public interface IInLobbyUIActions
     {
         /// <summary>
         /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -1632,11 +1752,11 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Gameplay" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "InGameUI" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="GameplayActions.AddCallbacks(IGameplayActions)" />
-    /// <seealso cref="GameplayActions.RemoveCallbacks(IGameplayActions)" />
-    public interface IGameplayActions
+    /// <seealso cref="InGameUIActions.AddCallbacks(IInGameUIActions)" />
+    /// <seealso cref="InGameUIActions.RemoveCallbacks(IInGameUIActions)" />
+    public interface IInGameUIActions
     {
         /// <summary>
         /// Method invoked when associated input action "Navigate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -1708,6 +1828,35 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "InGameControls" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="InGameControlsActions.AddCallbacks(IInGameControlsActions)" />
+    /// <seealso cref="InGameControlsActions.RemoveCallbacks(IInGameControlsActions)" />
+    public interface IInGameControlsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Boost" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBoost(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Steer" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1722,27 +1871,5 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDrift(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Boost" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnBoost(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-    /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-    public interface IUIActions
-    {
-        /// <summary>
-        /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNewaction(InputAction.CallbackContext context);
     }
 }
