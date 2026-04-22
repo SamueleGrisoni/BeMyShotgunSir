@@ -48,12 +48,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _playerNames.OnChange += OnPlayerNamesChanged;
 
             _playerCount.Value = 0;
+            SetLobbyIP(GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort());
         }
 
         public override void OnStartClient()
         {
             base.OnStartClient();
-            SetLobbyIP(GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort());
             _data.Refresh(this);
         }
 
@@ -83,6 +83,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         [Server]
         public void RemovePlayerFromLobby(NetworkConnection conn) => _playerCount.Value--;
+
+        [Server]
+        public void AdjustPlayerCount(int delta)
+        {
+            int newValue = _playerCount.Value + delta;
+            _playerCount.Value = Mathf.Max(0, newValue);
+        }
 
 
         private readonly SyncVar<string> _lobbyIP = new("Not connected");

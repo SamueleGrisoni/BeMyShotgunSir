@@ -12,8 +12,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public interface ILobbyDataView : ILobbyData
     {
-        Action OnLobbyIPChanged { get; set; }
-        Action OnPlayerCountChanged { get; set; }
-        Action OnPlayerNamesChanged { get; set; }
+        event Action OnLobbyIPChanged;
+        event Action OnPlayerCountChanged;
+        event Action OnPlayerNamesChanged;
     }
 }

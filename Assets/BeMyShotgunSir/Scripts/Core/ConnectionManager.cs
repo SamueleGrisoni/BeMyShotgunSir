@@ -33,6 +33,7 @@ namespace BeMyShotgunSir.Scripts.Core
         private ServerManager _serverManager;
         private ClientManager _clientManager;
         private LobbyManager _lobbyManager;
+        private int _pendingRemotePlayerDelta;
         [SerializeField] private ConnectionFlowState _connectionFlowState = ConnectionFlowState.Idle;
 
         public void Initialize()
@@ -101,10 +102,16 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void HandleLobbySpawned(LobbyManager lobby)
         {
-            if (_currentAppFlow != AppFlowState.Lobby)
+            if (lobby == null)
                 return;
 
             _lobbyManager = lobby;
+
+            if (_pendingRemotePlayerDelta != 0)
+            {
+                _lobbyManager.AdjustPlayerCount(_pendingRemotePlayerDelta);
+                _pendingRemotePlayerDelta = 0;
+            }
         }
         private void HandleLobbyDespawned()
         {
@@ -131,6 +138,9 @@ namespace BeMyShotgunSir.Scripts.Core
                 Initialize();
 
             _connectionFlowState = ConnectionFlowState.Joining;
+            if (string.Equals(ipAddress, "localhost", System.StringComparison.OrdinalIgnoreCase))
+                ipAddress = "127.0.0.1";
+
             GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ipAddress);
             _clientManager.StartConnection();
         }
@@ -167,11 +177,15 @@ namespace BeMyShotgunSir.Scripts.Core
             {
                 if (_lobbyManager != null)
                     _lobbyManager.AddPlayerToLobby(net);
+                else
+                    _pendingRemotePlayerDelta++;
             }
             if (remote.ConnectionState == RemoteConnectionState.Stopped)
             {
                 if (_lobbyManager != null)
                     _lobbyManager.RemovePlayerFromLobby(net);
+                else
+                    _pendingRemotePlayerDelta--;
             }
         }
 
@@ -217,6 +231,7 @@ namespace BeMyShotgunSir.Scripts.Core
             LobbyManager.OnLobbyDespawned -= HandleLobbyDespawned;
 
             _connectionFlowState = ConnectionFlowState.Idle;
+            _pendingRemotePlayerDelta = 0;
             _isInitialized = false;
         }
 

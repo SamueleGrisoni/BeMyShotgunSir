@@ -16,6 +16,11 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             Debug.Assert(Mixer != null, "AudioManager: Failed to load AudioMixer from Resources.", this);
         }
 
+        private void Start()
+        {
+            Initialize();
+        }
+
         [SerializeField] private AudioPooler _pooler;
         [SerializeField] private SOSoundTracks _soundTracks;
         private AudioSource _musicSource;
@@ -49,7 +54,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
 
         private void SubscribeToAudioRequests()
         {
-            if (!_isInitialized || _audioRequestEvent == null)
+            if (_audioRequestEvent == null)
                 return;
 
             _audioRequestEvent.OnEventRaised -= ExecuteAudioRequestHandler;

@@ -11,6 +11,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             LobbyIP = "127.0.0.1";
             PlayerNames = new string[0];
+            PlayerCount = 0;
         }
 
         public override void Refresh(IData data)
@@ -25,7 +26,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
 
         public string LobbyIP { get; private set; }
-        public Action OnLobbyIPChanged { get; set; }
+        public event Action OnLobbyIPChanged;
         public void SetLobbyIP(string newIP)
         {
             if (LobbyIP != newIP)
@@ -35,7 +36,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
         public int PlayerCount { get; private set; }
-        public Action OnPlayerCountChanged { get; set; }
+        public event Action OnPlayerCountChanged;
         public void SetPlayerCount(int newCount)
         {
             if (PlayerCount != newCount)
@@ -45,7 +46,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
         public string[] PlayerNames { get; private set; }
-        public Action OnPlayerNamesChanged { get; set; }
+        public event Action OnPlayerNamesChanged;
         public void SetPlayerNames(string[] newPlayerNames)
         {
             PlayerNames = newPlayerNames;
