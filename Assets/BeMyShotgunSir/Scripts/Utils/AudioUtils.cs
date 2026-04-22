@@ -16,7 +16,20 @@ namespace BeMyShotgunSir.Scripts.Utils
     public class AudioUtils
     {
         private static AudioMixer _mixer;
-        public static AudioMixer Mixer { get => _mixer; set { if (_mixer != null) return; _mixer = value; } }
+        public static AudioMixer Mixer
+        {
+            get => _mixer;
+            set
+            {
+                if (value == null)
+                    return;
+
+                if (_mixer != null && _mixer != value)
+                    Log.WLazy(() => "AudioUtils: Replacing previously assigned mixer instance.", typeof(AudioUtils));
+
+                _mixer = value;
+            }
+        }
         public static AudioMixerGroup GetMixerGroup(MixerGroupEnum group)
         {
             if (_mixer == null)

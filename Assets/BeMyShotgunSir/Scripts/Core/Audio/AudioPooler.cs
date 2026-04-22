@@ -40,14 +40,10 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         [SerializeField] private int _initCapacity = 5;
         [SerializeField] private int _maxCapacity = 15;
 
-        private static IObjectPool<PooledAudioSource> _audioPool;
-        private static GameObject _inactiveObjsParentStatic;
-        private static GameObject _activeObjsParentStatic;
+        private IObjectPool<PooledAudioSource> _audioPool;
 
         private void Awake()
         {
-            _inactiveObjsParentStatic = _inactiveObjsParent;
-            _activeObjsParentStatic = _activeObjsParent;
             _audioPool = new ObjectPool<PooledAudioSource>(
                 createFunc: CreateAudioObject,
                 actionOnGet: OnGetAudioObject,
@@ -62,7 +58,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         private PooledAudioSource CreateAudioObject()
         {
             var audioObj = new GameObject("PooledAudioSource");
-            audioObj.transform.SetParent(_inactiveObjsParentStatic.transform);
+            audioObj.transform.SetParent(_inactiveObjsParent.transform);
 
             AudioSource audioSource = audioObj.AddComponent<AudioSource>();
             audioSource.outputAudioMixerGroup = GetMixerGroup(MixerGroupEnum.Master);
@@ -77,7 +73,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         private void OnGetAudioObject(PooledAudioSource audioObj)
         {
             if (audioObj == null || audioObj.Component == null) return;
-            audioObj.transform.SetParent(_activeObjsParentStatic.transform);
+            audioObj.transform.SetParent(_activeObjsParent.transform);
             //only universal resets here
             AudioSource aSource = audioObj.Component;
             aSource.volume = 1f;
@@ -91,7 +87,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             audioObj.StopMonitoring(); audioObj.Component.Stop();
             audioObj.Component.clip = null;
 
-            audioObj.transform.SetParent(_inactiveObjsParentStatic.transform);
+            audioObj.transform.SetParent(_inactiveObjsParent.transform);
             audioObj.gameObject.SetActive(false);
         }
 

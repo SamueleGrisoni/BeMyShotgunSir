@@ -17,8 +17,18 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
 
         public AudioRequest(SOSoundSource soundSource, Vector3 startingPosition = default)
         {
-            Clip = AudioUtils.GetRandomClip(soundSource.Clips);
-            Volume = soundSource.Clips[0].Volume;
+            if (soundSource == null || soundSource.Clips == null || soundSource.Clips.Length == 0)
+            {
+                Log.ELazy(() => "AudioRequest: SOSoundSource is null or has no clips. Using safe defaults.", this);
+                StartingPosition = startingPosition;
+                return;
+            }
+
+            int randomIndex = Random.Range(0, soundSource.Clips.Length);
+            AudioClipInfo clipInfo = soundSource.Clips[randomIndex];
+
+            Clip = clipInfo.Clip;
+            Volume = clipInfo.Volume;
             StartingPosition = startingPosition;
             MixerGroup = soundSource.MixerGroup;
         }

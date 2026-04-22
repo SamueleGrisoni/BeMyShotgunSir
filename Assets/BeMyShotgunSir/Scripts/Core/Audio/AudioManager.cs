@@ -33,9 +33,35 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             ExecuteAudioRequest(new AudioRequest(_soundTracks.LobbyTrack, 1f).As2D().Looping(), _musicSource);
 
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
-            if (_audioRequestEvent) _audioRequestEvent.OnEventRaised += ExecuteAudioRequestHandler;
+            SubscribeToAudioRequests();
 
             _isInitialized = true;
+        }
+
+        private void OnEnable() =>
+            SubscribeToAudioRequests();
+
+        private void OnDisable() =>
+            UnsubscribeFromAudioRequests();
+
+        private void OnDestroy() =>
+            UnsubscribeFromAudioRequests();
+
+        private void SubscribeToAudioRequests()
+        {
+            if (!_isInitialized || _audioRequestEvent == null)
+                return;
+
+            _audioRequestEvent.OnEventRaised -= ExecuteAudioRequestHandler;
+            _audioRequestEvent.OnEventRaised += ExecuteAudioRequestHandler;
+        }
+
+        private void UnsubscribeFromAudioRequests()
+        {
+            if (_audioRequestEvent == null)
+                return;
+
+            _audioRequestEvent.OnEventRaised -= ExecuteAudioRequestHandler;
         }
 
         public void ExecuteAudioRequestHandler(IEventSender sender, AudioRequest request, AudioSource targetSource = null) =>
@@ -48,6 +74,13 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                 Log.ELazy(() => "AudioManager: Cannot execute audio request because the request is null.", this);
                 return;
             }
+
+            if (request.Clip == null)
+            {
+                Log.ELazy(() => "AudioManager: Cannot execute audio request because clip is null.", this);
+                return;
+            }
+
             bool isPooled = (targetSource == null);
             if (isPooled && _pooler == null)
             {

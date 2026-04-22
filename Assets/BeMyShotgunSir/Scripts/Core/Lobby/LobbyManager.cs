@@ -92,7 +92,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public int PlayerCount => _playerCount.Value;
         private void OnPlayerCountChanged(int prev, int next, bool asServer)
         {
-            _audioRequestEvent.RaiseEvent(this, new AudioRequest(_joinLobbyClip, 1f).As2D(), null);
+            if (_audioRequestEvent != null)
+                _audioRequestEvent.RaiseEvent(this, new AudioRequest(_joinLobbyClip, 1f).As2D(), null);
+
             _data.SetPlayerCount(next);
         }
         private readonly SyncVar<string[]> _playerNames = new(new string[0]);
