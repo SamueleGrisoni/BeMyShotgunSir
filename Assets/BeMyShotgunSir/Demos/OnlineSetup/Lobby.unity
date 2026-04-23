@@ -290,6 +290,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe45188fbd74cc4d8795099adeb9c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbySceneInitializer
+  _bindTargets:
+  - _interfaceOwner: {fileID: 2347774505944634353}
+  - _interfaceOwner: {fileID: 2347774505944634354}
 --- !u!1 &823832632
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,6 +769,28 @@ PrefabInstance:
       insertIndex: 2
       addedObject: {fileID: 1242654182}
   m_SourcePrefab: {fileID: 100100000, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+--- !u!114 &2347774505944634353 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3283496575394241425, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+  m_PrefabInstance: {fileID: 2347774505944634352}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa748fdeff02f3e4cbd8543ebab97916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyMenu
+--- !u!114 &2347774505944634354 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 29908399854074626, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+  m_PrefabInstance: {fileID: 2347774505944634352}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe7f8fec991133a47876c6975a1ba98b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyIPView
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

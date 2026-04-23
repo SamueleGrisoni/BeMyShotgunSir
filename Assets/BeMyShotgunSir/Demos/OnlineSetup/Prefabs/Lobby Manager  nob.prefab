@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3073850771215983565}
   - component: {fileID: 7220682611722132601}
+  - component: {fileID: 7744919071968131708}
   - component: {fileID: 8491619145890554402}
   m_Layer: 0
   m_Name: Lobby Manager  nob
@@ -48,8 +49,24 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8491619145890554402}
   _networkObjectCache: {fileID: 0}
+  _netController: {fileID: 7744919071968131708}
   _data: {fileID: 11400000, guid: cd6fd6aa7b0cc384ba9dbeda268b2434, type: 2}
-  _joinLobbyClip: {fileID: 8300000, guid: 60f6e1d079d3ced43b84ca0a2e244fe4, type: 3}
+  _sounds: {fileID: 11400000, guid: 1cec94964cd47174a8c2565159ad3408, type: 2}
+--- !u!114 &7744919071968131708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965746313305434028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff85ce07cf2c904c9a23e7226f46cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyNetController
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8491619145890554402}
+  _networkObjectCache: {fileID: 0}
 --- !u!114 &8491619145890554402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +114,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 4235857853402834889
+  <AssetPathHash>k__BackingField: 13014091076069330966
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

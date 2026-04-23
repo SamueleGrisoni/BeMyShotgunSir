@@ -411,7 +411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a9188bf8b536e428c74d46e5947127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GlobalManager
-  _currentState: 0
+  _currentAppFlow: 0
+  _connectionFlowState: 0
 --- !u!114 &1045515489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,7 +597,7 @@ MonoBehaviour:
   <ConnectionManager>k__BackingField: {fileID: 1045515488}
   <NetworkManager>k__BackingField: {fileID: 307953469}
   <Channels>k__BackingField: {fileID: 11400000, guid: c72e358ecdcd8a64181a1f77ec4a2e86, type: 2}
-  <LobbyManager>k__BackingField: {fileID: 7220682611722132601, guid: 2a95f435221185447af7158102adc114, type: 3}
+  <LobbyManager>k__BackingField: {fileID: 0}
   <AudioManager>k__BackingField: {fileID: 565849611}
   <TrackManager>k__BackingField: {fileID: 0}
 --- !u!4 &2006144848

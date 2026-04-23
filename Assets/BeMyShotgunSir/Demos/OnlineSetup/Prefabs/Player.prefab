@@ -136,7 +136,6 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
   - {fileID: 4290595378585504839}
   - {fileID: 7855995330534766225}
   - {fileID: 4053839172059690436}
@@ -150,7 +149,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584285430672919591
+  _initializedTimestamp: -8584247261384379064
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -166,13 +165,13 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 5
+  <PrefabId>k__BackingField: 9
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 10733171998723042985
+  <AssetPathHash>k__BackingField: 6400379007749942534
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: -3.82242, y: 1.02162, z: 94.60229}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Position: {x: 3.96009, y: 0, z: 8.13882}
+    Rotation: {x: -0, y: -0, z: -0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
 --- !u!114 &4290595378585504839
@@ -187,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 1
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8054490421513367725}
   _networkObjectCache: {fileID: 8054490421513367725}
   _componentConfiguration: 0
@@ -233,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08da8dbad1a198f4bacf5a7aa2a22b74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8054490421513367725}
   _networkObjectCache: {fileID: 8054490421513367725}
 --- !u!114 &4053839172059690436
@@ -248,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca493919ad84ef4e853f0cc7028ed5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Player.PlayerController
-  _componentIndexCache: 3
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8054490421513367725}
   _networkObjectCache: {fileID: 8054490421513367725}
   _playerCamera: {fileID: 3278206429529880724, guid: a64b91e4f575048438c9581814ec0e69, type: 3}
