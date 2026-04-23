@@ -14,9 +14,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             PlayerCount = 0;
         }
 
-        public override void Refresh(IData data)
+        public override void InitNetData(INetData data)
         {
-            if (data is ILobbyNetworkData lobbyData)
+            if (data is ILobbyNetData lobbyData)
             {
                 SetLobbyIP(lobbyData.LobbyIP);
                 SetPlayerCount(lobbyData.PlayerCount);

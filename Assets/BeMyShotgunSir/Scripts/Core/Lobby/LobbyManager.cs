@@ -59,16 +59,32 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             OnLobbyDespawned?.Invoke();
         }
 
+        #region LobbyConnectionManagement
+        /// <summary>
+        /// Adds a player to the lobby. This should be called on the server when a new client connects. <br/>
+        /// </summary>
+        /// <param name="conn"></param>
         public void AddPlayerToLobby(NetworkConnection conn) =>
         _netController.AddPlayerToLobby(conn);
 
+        /// <summary>
+        /// Removes a player from the lobby. This should be called on the server when a client disconnects. <br/>
+        /// </summary>
+        /// <param name="conn"></param>
         public void RemovePlayerFromLobby(NetworkConnection conn) =>
             _netController.RemovePlayerFromLobby(conn);
 
+        /// <summary>
+        /// Adjusts the player count in the lobby.<br/>
+        /// <b>Important:</b> <br/>
+        ///  Such a method is necessary because LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available. <br/>
+        /// </summary>
+        /// <param name="delta"></param>
         public void AdjustPlayerCount(int delta) =>
             _netController.AdjustPlayerCount(delta);
+        #endregion
 
-        public void Refresh(ILobbyNetworkData data) => _data.Refresh(data);
+        public void InitNetData(ILobbyNetData data) => _data.InitNetData(data);
         public void SetLobbyIP(string ip) => _data.SetLobbyIP(ip);
         public void SetPlayerCount(int prev, int next)
         {

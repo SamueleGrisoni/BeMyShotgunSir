@@ -19,7 +19,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 coercedTargets[i] = _bindTargets[i].Interface;
             }
             UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.Init.ToString());
-            GameServices.Instance.LobbyManager.BindLobby(coercedTargets);
+
+            LobbyManager.OnLobbySpawned += lobbyManager => lobbyManager.BindLobby(coercedTargets);
         }
     }
 }

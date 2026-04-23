@@ -26,6 +26,7 @@ namespace BeMyShotgunSir.Scripts.Core
     public class ConnectionManager : MonoBehaviour
     {
         private bool _isInitialized = false;
+        private bool _isHostSession = false;
 
         [SerializeField]
         private AppFlowState _currentAppFlow = AppFlowState.Startup;
@@ -75,30 +76,34 @@ namespace BeMyShotgunSir.Scripts.Core
             switch (_currentAppFlow)
             {
                 case AppFlowState.Startup:
-                    HandleStartup();
+                    HandleStartup(_isHostSession);
                     break;
                 case AppFlowState.Init:
-                    HandleInit();
+                    HandleInit(_isHostSession);
                     break;
                 case AppFlowState.Lobby:
-                    HandleLobby();
+                    HandleLobby(_isHostSession);
                     break;
                 default:
                     break;
             }
         }
 
-        private void HandleStartup() { }
+        private void HandleStartup(bool isHostSession) { }
 
-        private void HandleInit()
+        private void HandleInit(bool isHostSession)
         {
             _serverManager.StopConnection(true);
             _clientManager.StopConnection();
             _sceneCoordinator.LoadInitScene();
         }
 
-        private void HandleLobby() =>
+        private void HandleLobby(bool isHostSession)
+        {
+            if (!isHostSession)
+                return;
             _sceneCoordinator.LoadLobby();
+        }
 
         private void HandleLobbySpawned(LobbyManager lobby)
         {
@@ -107,10 +112,13 @@ namespace BeMyShotgunSir.Scripts.Core
 
             _lobbyManager = lobby;
 
-            if (_pendingRemotePlayerDelta != 0)
+            if (_isHostSession)
             {
-                _lobbyManager.AdjustPlayerCount(_pendingRemotePlayerDelta);
-                _pendingRemotePlayerDelta = 0;
+                if (_pendingRemotePlayerDelta != 0)
+                {
+                    _lobbyManager.AdjustPlayerCount(_pendingRemotePlayerDelta);
+                    _pendingRemotePlayerDelta = 0;
+                }
             }
         }
         private void HandleLobbyDespawned()
@@ -126,6 +134,7 @@ namespace BeMyShotgunSir.Scripts.Core
         {
             if (!_isInitialized)
                 Initialize();
+            _isHostSession = true;
 
             _connectionFlowState = ConnectionFlowState.Hosting;
             _serverManager.StartConnection();
@@ -136,6 +145,7 @@ namespace BeMyShotgunSir.Scripts.Core
         {
             if (!_isInitialized)
                 Initialize();
+            _isHostSession = false;
 
             _connectionFlowState = ConnectionFlowState.Joining;
             if (string.Equals(ipAddress, "localhost", System.StringComparison.OrdinalIgnoreCase))

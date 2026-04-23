@@ -5,7 +5,7 @@ namespace BeMyShotgunSir.Scripts.Core
     public abstract class SOData : ScriptableObject
     {
         public abstract void InitData();
-        public abstract void Refresh(IData data);
+        public abstract void InitNetData(INetData data);
 
     }
 

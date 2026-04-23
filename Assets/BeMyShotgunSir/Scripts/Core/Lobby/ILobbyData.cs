@@ -4,18 +4,19 @@ using BeMyShotgunSir.Core;
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
 
-    public interface ILobbyNetworkData : IData
+    public interface ILobbyNetData : INetData
     {
         string LobbyIP { get; }
         int PlayerCount { get; }
         string[] PlayerNames { get; }
     }
-    public interface ILobbyData : ILobbyNetworkData
+
+    public interface ILobbyData : IData
     {
 
     }
 
-    public interface ILobbyDataView : ILobbyData
+    public interface ILobbyDataView : ILobbyData, ILobbyNetData
     {
         event Action OnLobbyIPChanged;
         event Action OnPlayerCountChanged;
