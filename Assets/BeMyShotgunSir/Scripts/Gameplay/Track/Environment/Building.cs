@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
 
-namespace BeMyShotgunSir.Scripts.Utils
+namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
     public class Building : MonoBehaviour
     {
-        public int ID { get; set; }
-
         public Renderer MeshRenderer { get; private set; }
 
         void Awake()
@@ -22,6 +20,16 @@ namespace BeMyShotgunSir.Scripts.Utils
                 Gizmos.color = Color.red;
                 Gizmos.DrawWireCube(r.bounds.center, r.bounds.size);
             }
+        }
+
+        public Bounds GetFlatBounds()
+        {
+            Renderer r = GetComponent<Renderer>();
+            if (r == null) return new Bounds();
+            Bounds b = r.bounds;
+            b.center = new Vector3(b.center.x, 0f, b.center.z);
+            b.size   = new Vector3(b.size.x,   0f, b.size.z);
+            return b;
         }
     }
 }
