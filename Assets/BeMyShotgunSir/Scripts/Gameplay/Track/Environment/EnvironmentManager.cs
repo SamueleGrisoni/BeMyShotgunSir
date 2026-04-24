@@ -99,7 +99,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
                     if (_currentSpawnArea.IsBoundsFullyInsidePolygon(candidateBounds) && !OverlapsExistingBuilding(candidateBounds))
                     {
-                        PlaceBuilding(buildingPrefab, candidateCenter, Vector3.forward);
+                        Vector3 lookDir = _currentSpawnArea.GetDirectionToClosestEdge(candidateCenter);
+                        PlaceBuilding(buildingPrefab, candidateCenter, lookDir);
                         _spawnBuildingsBounds.Add(candidateBounds);
 
                         if (depth > rowDepth) rowDepth = depth;

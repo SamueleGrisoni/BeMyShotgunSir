@@ -616,10 +616,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.PolygonSpawnArea
   _points:
-  - {x: -5, y: 0, z: -45}
+  - {x: -4, y: 0, z: -45.01715}
   - {x: 5, y: 0, z: -45}
   - {x: 5, y: 0, z: 5}
-  - {x: -5, y: 0, z: 5}
+  - {x: -4, y: 0, z: 5}
   _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
   _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
 --- !u!1 &7548122027262756703
@@ -668,8 +668,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.PolygonSpawnArea
   _points:
   - {x: -5, y: 0, z: -45}
-  - {x: 5, y: 0, z: -45}
-  - {x: 5, y: 0, z: 5}
+  - {x: 4, y: 0, z: -45}
+  - {x: 4, y: 0, z: 5}
   - {x: -5, y: 0, z: 5}
   _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
   _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}

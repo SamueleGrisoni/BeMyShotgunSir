@@ -32,6 +32,37 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             _worldPoints = null;
         }
 
+        public Vector3 GetDirectionToClosestEdge(Vector3 point)
+        {
+            if (_worldPoints == null || _worldPoints.Count < 2) return Vector3.forward;
+
+            float minDist = float.MaxValue;
+            Vector3 closestPoint = point;
+            int n = _worldPoints.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                Vector3 a = _worldPoints[i];
+                Vector3 b = _worldPoints[(i + 1) % n];
+
+                float abx = b.x - a.x, abz = b.z - a.z;
+                float len2 = abx * abx + abz * abz;
+
+                float t = Mathf.Clamp01(((point.x - a.x) * abx + (point.z - a.z) * abz) / len2);
+                Vector3 closestOnSegment = new Vector3(a.x + t * abx, point.y, a.z + t * abz);
+
+                float dist = Vector3.Distance(point, closestOnSegment);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closestPoint = closestOnSegment;
+                }
+            }
+
+            Vector3 dir = (closestPoint - point).normalized;
+            return dir != Vector3.zero ? dir : Vector3.forward;
+        }
+
         public Bounds ComputePolygonBounds()
         {
             if (_worldPoints == null || _worldPoints.Count == 0)
