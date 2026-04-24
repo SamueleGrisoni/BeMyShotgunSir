@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -9,6 +10,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
         [SerializeField] private TrackManager _trackManager;
+        [SerializeField] private EnvironmentManager _environmentManager;
         [SerializeField] private Transform _startingPoint;
         [SerializeField] private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
@@ -61,7 +63,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                 _activeRoadChunks.RemoveFirst();
-                //CleanRoadChunk();
+                _environmentManager.ClearSpawnedBuildings(oldRoadChunk.Component);
                 oldRoadChunk.ReturnToPool();
                 SpawnRoadChunk();
             }
@@ -99,7 +101,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     break;
             }
             chunk.gameObject.SetActive(true);
-            PopulateRoadChunk(chunk);
+            _environmentManager.PopulateChunk(chunk.Component);
         }
 
         private void PlaceNormalRoadChunk(PooledRoadChunk chunk, RoadChunkPosition position)
@@ -156,84 +158,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             chunk.transform.rotation = targetAnchor.rotation;
             Vector3 localOffset = chunk.transform.InverseTransformPoint(entranceAnchor.position);
             chunk.transform.position = targetAnchor.position - (chunk.transform.rotation * localOffset);
-        }
-
-        private void PopulateRoadChunk(PooledRoadChunk roadChunk)
-        {
-            if (_trackData.EnvChunks.Length == 0)
-                return;
-
-            RoadChunk component = roadChunk.Component;
-            int innerCount = component.InnerEnvChunkAreas.Length;
-            int outerCount = component.EnvChunkAreas.Length;
-            int totalEnv = innerCount + outerCount;
-
-            var spawnedInThisChunk = new PooledEnvChunk[totalEnv];
-            _activeEnvChunks.AddLast(spawnedInThisChunk);
-
-            // Uniamo le aree in un unico ciclo per pulizia (facoltativo, ma consigliato)
-            for (int i = 0; i < totalEnv; i++)
-            {
-                // Identifichiamo il punto sulla strada (Target)
-                SpawnArea currentArea = (i < innerCount)
-                    ? component.InnerEnvChunkAreas[i]
-                    : component.EnvChunkAreas[i - innerCount];
-                EnvChunkSize targetSize = currentArea.Size;
-                Transform targetPoint = currentArea.SpawnAnchor;
-
-                // 1. Prendiamo l'oggetto dal pool
-                int start = _trackData.GetEnvSizePoolStartIndex(targetSize);
-                int end = _trackData.GetEnvSizePoolEndIndex(targetSize);
-                if (start == -1)
-                {
-                    Debug.LogWarning($"No EnvChunks of size {targetSize} available in track data.");
-                    continue;
-                }
-                PooledEnvChunk envChunk =
-                    _trackPooler.GetPooledEnvChunk(_trackSeed.Rng.Next(start, end));
-
-                // Recuperiamo il punto di ancoraggio dell'oggetto ambientale (quello che deve toccare la strada)
-                // Assicurati che PooledEnvChunk abbia un riferimento a questo punto (es. EntranceAnchor)
-                Transform envEntrance = envChunk.Component.SpawnAnchor;
-
-                // 2. Allineiamo la rotazione: l'EnvChunk deve guardare dove guarda il punto sulla strada
-                // Usiamo la rotazione globale del punto sulla strada
-                envChunk.transform.rotation = targetPoint.rotation;
-
-                // 3. Calcoliamo l'OFFSET interno dell'EnvChunk
-                // Quanto dista l'ancora dell'erba/albero dal pivot del suo padre?
-                // Usiamo InverseTransformPoint per calcolare questa distanza nello spazio locale del prefab
-                Vector3 localOffset =
-                    envChunk.transform.InverseTransformPoint(envEntrance.position);
-
-                // 4. Calcoliamo la posizione finale (World)
-                // Destinazione = Punto sulla strada - Offset ruotato
-                // (Sottraiamo l'offset perché vogliamo spostare il padre "all'indietro" rispetto all'ancora)
-                Vector3 worldPos =
-                    targetPoint.position - (envChunk.transform.rotation * localOffset);
-
-                // 5. Applichiamo la trasformazione
-                envChunk.transform.position = worldPos;
-                envChunk.gameObject.SetActive(true);
-
-                spawnedInThisChunk[i] = envChunk;
-            }
-        }
-
-        private void CleanRoadChunk(int isLast = 0)
-        {
-            if (isLast == 0)
-            {
-                foreach (PooledEnvChunk envChunk in _activeEnvChunks.First.Value)
-                    envChunk.ReturnToPool();
-                _activeEnvChunks.RemoveFirst();
-            }
-            else
-            {
-                foreach (PooledEnvChunk envChunk in _activeEnvChunks.Last.Value)
-                    envChunk.ReturnToPool();
-                _activeEnvChunks.RemoveLast();
-            }
         }
     }
 }
