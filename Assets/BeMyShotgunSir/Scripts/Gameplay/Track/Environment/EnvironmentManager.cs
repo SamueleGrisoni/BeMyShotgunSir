@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         [SerializeField] private List<Building> _bigBuildingPrefabs;
         [SerializeField] private List<Building> _mediumBuildingPrefabs;
         [SerializeField] private List<Building> _smallBuildingPrefabs;
+        [SerializeField] private List<CityProps> _propsPrefabs;
         [SerializeField] private SOEnvironment _environmentData;
         private List<Bounds> _spawnBuildingsBounds = new List<Bounds>();
 
@@ -91,6 +92,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             int failedAttempts = 0;
             while (failedAttempts < maxFailures)
             {
+                //Todo use RNG from server to ensure same environment for all players
                 Building randomPrefab = prefabs[Random.Range(0, prefabs.Count)];
 
                 if (TrySpawnBuilding(randomPrefab))
