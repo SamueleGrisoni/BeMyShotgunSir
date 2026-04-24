@@ -17,22 +17,22 @@ MonoBehaviour:
   <MaxPoolSize>k__BackingField: 1000
   <MaxActiveChunks>k__BackingField: 10
   <RoadChunks>k__BackingField:
-  - {fileID: 9164961621283262488, guid: 8228d100643abb14489af8db807c95c4, type: 3}
-  - {fileID: -5513407376871482022, guid: 1b15cd8243ff3a54192aaee590f06d42, type: 3}
-  - {fileID: -1384422789854454000, guid: 8a0ecfe696840c4448a9932bc484a4bd, type: 3}
-  - {fileID: 8479728395561834774, guid: ebbd097af73f2df4ebb34ef11a07f816, type: 3}
-  - {fileID: -3568124788943286945, guid: 1a38dd05c88e20f4da252d9685ddebe5, type: 3}
-  - {fileID: 3493420391819860979, guid: 1798aa6f889d68449b112a567eb3244d, type: 3}
-  - {fileID: -7531860501813766970, guid: f908588fa65678c4f89611be27431bfe, type: 3}
-  - {fileID: 2280912741786188264, guid: bba72a6c7a0512147ae54880f89c3b9e, type: 3}
+  - {fileID: 467382414403310077, guid: 8228d100643abb14489af8db807c95c4, type: 3}
+  - {fileID: 5938494622761989798, guid: 1b15cd8243ff3a54192aaee590f06d42, type: 3}
+  - {fileID: 4610338512983435534, guid: 8a0ecfe696840c4448a9932bc484a4bd, type: 3}
+  - {fileID: 6204647436907474063, guid: ebbd097af73f2df4ebb34ef11a07f816, type: 3}
+  - {fileID: 8978589710754617684, guid: 1a38dd05c88e20f4da252d9685ddebe5, type: 3}
+  - {fileID: 5914225598244230519, guid: 1798aa6f889d68449b112a567eb3244d, type: 3}
+  - {fileID: 8446912763485860601, guid: f908588fa65678c4f89611be27431bfe, type: 3}
+  - {fileID: 9120054269515418538, guid: bba72a6c7a0512147ae54880f89c3b9e, type: 3}
   <SpecialRoadChunks>k__BackingField:
-  - {fileID: -7531368988852673792, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
-  - {fileID: 6758869813227164004, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
-  - {fileID: 8278470569288519569, guid: e0d49705d61bd2645889f4eb1314d3ea, type: 3}
-  - {fileID: 6421913101996624024, guid: bbc407e8db209984694b12576a44350b, type: 3}
-  - {fileID: -285443680316755127, guid: e64dda8ac6e00e34aadeca7e951ce913, type: 3}
-  - {fileID: 806372005922633484, guid: 856ff99035371204d982bb2dc57eff9c, type: 3}
-  - {fileID: 7109931595183343478, guid: c8bae53e10d71f84197095f2d66ecc1d, type: 3}
+  - {fileID: 1942636121062602937, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
+  - {fileID: 8453271865772463337, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
+  - {fileID: 2292866343609022809, guid: e0d49705d61bd2645889f4eb1314d3ea, type: 3}
+  - {fileID: 2457545915473961, guid: bbc407e8db209984694b12576a44350b, type: 3}
+  - {fileID: 3776542401026265335, guid: e64dda8ac6e00e34aadeca7e951ce913, type: 3}
+  - {fileID: 7101941440651399722, guid: 856ff99035371204d982bb2dc57eff9c, type: 3}
+  - {fileID: 3095469888323919585, guid: c8bae53e10d71f84197095f2d66ecc1d, type: 3}
   <RoadChunkInitPoolSize>k__BackingField: 10
   <EnvChunks>k__BackingField: []
   <EnvChunkInitPoolSize>k__BackingField: 15
