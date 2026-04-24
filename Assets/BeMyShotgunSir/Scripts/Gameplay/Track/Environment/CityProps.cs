@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 
-
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
-    public class Building : Placeable
+    public class CityProps : Placeable
     {
+
     }
 }
-
