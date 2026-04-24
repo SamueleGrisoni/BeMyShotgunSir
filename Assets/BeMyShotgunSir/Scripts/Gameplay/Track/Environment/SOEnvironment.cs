@@ -17,5 +17,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         [field: SerializeField] public int MaxSpawnAttemptsPerBigBuilding { get; private set; }
         [field: SerializeField] public int MaxSpawnAttemptsPerMediumBuilding { get; private set; }
         [field: SerializeField] public int MaxSpawnAttemptsPerSmallBuilding { get; private set; }
+
+        [Tooltip("Max number of props to be spawned in a spawn area")]
+        [field: SerializeField] public int MaxPropsPerSpawnArea { get; private set; }
     }
 }
