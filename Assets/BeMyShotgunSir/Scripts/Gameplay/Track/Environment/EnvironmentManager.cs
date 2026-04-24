@@ -14,7 +14,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         [SerializeField] private List<Building> _smallBuildingPrefabs;
         [SerializeField] private List<CityProps> _propsPrefabs;
         [SerializeField] private SOEnvironment _environmentData;
-        private List<Bounds> _spawnBuildingsBounds = new List<Bounds>();
+        private List<Bounds> _spawnPrefabsBounds = new List<Bounds>();
 
         public void PopulateChunk(RoadChunk chunk)
         {
@@ -40,7 +40,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             }
             foreach (var spawnArea in chunk.PolygonSpawnArea)
             {
-                _spawnBuildingsBounds.Clear();
+                _spawnPrefabsBounds.Clear();
                 if (spawnArea is null)
                 {
                     continue;
@@ -48,11 +48,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 spawnArea.InvalidateWorldPointsCache();
                 _currentSpawnArea = spawnArea;
                 SpawnBuildings();
-                //SpawnProps();
+                SpawnProps();
             }
         }
 
-        public void ClearSpawnedBuildings(RoadChunk chunk)
+        public void ClearSpawnedProps(RoadChunk chunk)
         {
             if (!AreSpawnAreasValid(chunk))
             {
@@ -78,6 +78,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             return true;
         }
 
+        private void SpawnProps()
+        {
+            if (_propsPrefabs == null || _propsPrefabs.Count == 0) return;
+            //todo use RNG from server to ensure same environment for all players
+            int propsToSpawn = Random.Range(_environmentData.MaxPropsPerSpawnArea/3, _environmentData.MaxPropsPerSpawnArea + 1);
+            for (int i = 0; i < propsToSpawn; i++)
+            {
+                CityProps randomPrefab = _propsPrefabs[Random.Range(0, _propsPrefabs.Count)];
+                TrySpawnPlaceable(randomPrefab);
+            }
+        }
+
         private void SpawnBuildings()
         {
             SpawnBuildingDimension(_bigBuildingPrefabs, _environmentData.MaxSpawnAttemptsPerBigBuilding);
@@ -95,7 +107,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 //Todo use RNG from server to ensure same environment for all players
                 Building randomPrefab = prefabs[Random.Range(0, prefabs.Count)];
 
-                if (TrySpawnBuilding(randomPrefab))
+                if (TrySpawnPlaceable(randomPrefab))
                 {
                     failedAttempts = 0;
                 }
@@ -106,12 +118,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             }
         }
 
-        private bool TrySpawnBuilding(Building building)
+        private bool TrySpawnPlaceable(Placeable prefab)
         {
             Bounds areaBounds = _currentSpawnArea.ComputePolygonBounds();
-            Bounds buildingBounds = building.GetFlatBounds();
-            float width = buildingBounds.size.x;
-            float depth = buildingBounds.size.z;
+            Bounds prefabBounds = prefab.GetFlatBounds();
+            float width = prefabBounds.size.x;
+            float depth = prefabBounds.size.z;
 
             float startX = areaBounds.min.x;
             float endX = areaBounds.max.x;
@@ -128,11 +140,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                     Vector3 candidateCenter = new Vector3(cursorX + width * 0.5f, 0f, cursorZ - depth * 0.5f);
                     Bounds candidateBounds = new Bounds(candidateCenter, new Vector3(width, 1f, depth));
 
-                    if (_currentSpawnArea.IsBoundsFullyInsidePolygon(candidateBounds) && !OverlapsExistingBuilding(candidateBounds))
+                    if (_currentSpawnArea.IsBoundsFullyInsidePolygon(candidateBounds) && !OverlapsExistingPrefabs(candidateBounds))
                     {
                         Vector3 lookDir = _currentSpawnArea.GetDirectionToClosestEdge(candidateCenter);
-                        PlaceBuilding(building, candidateCenter, lookDir);
-                        _spawnBuildingsBounds.Add(candidateBounds);
+                        Place(prefab, candidateCenter, lookDir);
+                        _spawnPrefabsBounds.Add(candidateBounds);
                         return true;
                     }
                     cursorX += width + _environmentData.GapX;
@@ -142,9 +154,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             return false;
         }
 
-        private bool OverlapsExistingBuilding(Bounds candidate)
+        private bool OverlapsExistingPrefabs(Bounds candidate)
         {
-            foreach (var b in _spawnBuildingsBounds)
+            foreach (var b in _spawnPrefabsBounds)
             {
                 Bounds expanded = candidate;
                 expanded.Expand(new Vector3(_environmentData.GapX, 0f, _environmentData.GapX));
@@ -154,18 +166,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             return false;
         }
 
-        private void PlaceBuilding(Building building, Vector3 worldPos, Vector3 edgeDir)
+        private void Place(Placeable prefab, Vector3 worldPos, Vector3 edgeDir)
         {
             Quaternion rotation = Quaternion.LookRotation(edgeDir, Vector3.up);
-
-            GameObject go = Instantiate(building.gameObject, worldPos, rotation,
-                _currentSpawnArea.transform);
-            Building instance = go.GetComponent<Building>();
-
-            if (instance == null)
-            {
-                Debug.LogError($"[EnvironmentManager] Prefab '{building.name}' has no Building component!");
-            }
+            Instantiate(prefab.gameObject, worldPos, rotation, _currentSpawnArea.transform);
         }
+
     }
 }

@@ -63,7 +63,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                 _activeRoadChunks.RemoveFirst();
-                _environmentManager.ClearSpawnedBuildings(oldRoadChunk.Component);
+                _environmentManager.ClearSpawnedProps(oldRoadChunk.Component);
                 oldRoadChunk.ReturnToPool();
                 SpawnRoadChunk();
             }
