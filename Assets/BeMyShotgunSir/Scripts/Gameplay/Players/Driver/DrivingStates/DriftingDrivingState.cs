@@ -21,18 +21,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             if (!controller.IsGrounded)
             {
                 controller.ChangeState(controller.AirState);
+                return;
             }
 
             if (!controller.IsDriftingButtonPressed)
             {
                 controller.ChangeState(controller.NormalState);
+                return;
             }
 
         }
         public void ExecuteFixedUpdate(IDriverControllerContext controller)
         {
-            controller.ApplyAcceleration(controller.ParentTransform.forward);
-            controller.ApplyGravity(controller.Stats.Gravity);
+            controller.ApplyAcceleration(controller.ParentForward);
 
             float steerControl = controller.DriftDirection == 1
                 ? Mathf.Lerp(0f, 2f, Mathf.InverseLerp(-1f, 1f, controller.SteerInput))
@@ -42,7 +43,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             float driftControl = controller.DriftDirection == 1
                 ? Mathf.Lerp(0.5f, 2f, Mathf.InverseLerp(-1f, 1f, controller.SteerInput))
                 : Mathf.Lerp(2f, 0.5f, Mathf.InverseLerp(-1f, 1f, controller.SteerInput));
-            controller.AnimateSidecar(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.Stats.SteerAngularRotation, 0));
+            controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.Stats.SteerAngularRotation, 0));
+            controller.ApplyGravity(controller.Stats.Gravity);
+            //controller.AnimateSidecar(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.Stats.SteerAngularRotation, 0));
         }
         public void Exit(IDriverControllerContext controller) { }
     }

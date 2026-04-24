@@ -4,9 +4,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public interface IDriverControllerContext
     {
-        Transform ParentTransform { get; }
+        Transform ParentTransform { get; } // TODO da capire se serve
         Transform SidecarTransform { get; }
+        Vector3 ParentForward { get; }
+        Vector3 SidecarForward { get; }
         SOSidecarStats Stats { get; }
+        IDrivingState IdleState { get; }
         IDrivingState NormalState { get; }
         IDrivingState DriftingState { get; }
         IDrivingState AirState { get; }
@@ -16,6 +19,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         bool IsDriftingButtonPressed { get; }
         float SteerInput { get; }
         bool IsBoostButtonPressed { get; }
+        bool IsStartButtonPressed { get; }
         float DriftDirection { get; set; }
         float CurrentBatteryCharge { get; set; }
         void ChangeState(IDrivingState state);
@@ -23,8 +27,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void ApplyAcceleration(Vector3 direction);
         void ApplyGravity(float gravity);
         void ApplySteering(float steerAmount);
-        void ApplyLateralGrip(Vector3 direction);
-        void AnimateSidecar(Quaternion targetRot);
+        void ApplyVisualRotation(Quaternion targetRot);
+        void ApplyLateralGrip();
+        void AnimateSidecar();
         void ApplyBoost(float amount, float duration);
     }
 }
