@@ -17,10 +17,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
         private List<Vector3> _worldPoints;
 
-        private void Awake()
-        {
-            _worldPoints = GetWorldPoints();
-        }
         public List<Vector3> GetWorldPoints()
         {
             var world = new List<Vector3>(_points.Count);
@@ -29,6 +25,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 world.Add(transform.TransformPoint(p));
             }
             return world;
+        }
+
+        public void InvalidateWorldPointsCache()
+        {
+            _worldPoints = null;
         }
 
         public Bounds ComputePolygonBounds()
@@ -191,34 +192,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 Gizmos.DrawSphere(a, 0.18f);
             }
         }
-
-        /*[SerializeField] public int _edgesCount = 4;
-        private readonly List<Vector2> _edges = new List<Vector2>();
-
-        private void ComputeEdges()
-        {
-            _edges.Clear();
-            for (int i = 0; i < _edgesCount; i++)
-            {
-                Vector3 a = _points[i];
-                Vector3 b = _points[(i + 1) % _edgesCount];
-                _edges.Add(new Vector2(b.x - a.x, b.z - a.z));
-            }
-        }
-        public List<(Vector3 start, Vector3 end)> GetWorldEdgeSegments()
-        {
-            var result = new List<(Vector3, Vector3)>();
-            if(_edges.Count == 0)
-            {
-                ComputeEdges();
-            }
-            for (int i = 0; i < _edgesCount; i++)
-            {
-                Vector3 wA = transform.TransformPoint(_points[i]);
-                Vector3 wB = transform.TransformPoint(_points[(i + 1) % _points.Count]);
-                result.Add((wA, wB));
-            }
-            return result;
-        }*/
     }
 }

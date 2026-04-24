@@ -6,8 +6,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
     public class EnvironmentManager : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private List<PolygonSpawnArea> _spawnAreas;
         private PolygonSpawnArea _currentSpawnArea;
 
         [Header("Building Prefabs")]
@@ -22,30 +20,56 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
         private List<Bounds> _spawnBuildingsBounds = new List<Bounds>();
 
-
-        [ContextMenu("Fill Area")]
-        public void FillArea()
+        public void PopulateChunk(RoadChunk chunk)
         {
-            if (_spawnAreas == null || _spawnAreas.Count == 0)
+            if (!AreSpawnAreasValid(chunk))
             {
-                Debug.LogWarning("[EnvironmentManager] No spawn areas assigned.");
                 return;
             }
+            //Todo spawning should be handle with pooling
             if (_buildingPrefabs == null || _buildingPrefabs.Count == 0)
             {
                 Debug.LogWarning("[EnvironmentManager] No building prefabs assigned.");
                 return;
             }
-
             _spawnBuildingsBounds.Clear();
-
-            foreach (var area in _spawnAreas)
+            foreach (var spawnArea in chunk.PolygonSpawnArea)
             {
-                if (area == null) continue;
-                _currentSpawnArea = area;
+                if (spawnArea is null)
+                {
+                    continue;
+                }
+                spawnArea.InvalidateWorldPointsCache();
+                _currentSpawnArea = spawnArea;
                 SpawnBuildings();
             }
-            _currentSpawnArea = null;
+        }
+
+        public void ClearSpawnedBuildings(RoadChunk chunk)
+        {
+            if (!AreSpawnAreasValid(chunk))
+            {
+                return;
+            }
+            foreach (var area in chunk.PolygonSpawnArea)
+            {
+                if (area is null) continue;
+                foreach (Transform child in area.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+            _spawnBuildingsBounds.Clear();
+        }
+
+        private bool AreSpawnAreasValid(RoadChunk chunk)
+        {
+            if (chunk.PolygonSpawnArea == null || chunk.PolygonSpawnArea.Length == 0)
+            {
+                Debug.LogError("[EnvironmentManager] No spawn areas assigned to chunk: " + chunk.name);
+                return false;
+            }
+            return true;
         }
 
         private void SpawnBuildings()
@@ -64,8 +88,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 float cursorX = startX + _roadEdgeOffset;
                 while (cursorX < endX)
                 {
+                    //todo refactor logic to use game RNG
                     Building buildingPrefab = _buildingPrefabs[Random.Range(0, _buildingPrefabs.Count)];
-                    //Building buildingPrefab = _buildingPrefabs[0];
                     Bounds buildingBounds = buildingPrefab.GetFlatBounds();
                     float width = buildingBounds.size.x;
                     float depth = buildingBounds.size.z;
@@ -114,45 +138,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 Debug.LogError($"[EnvironmentManager] Prefab '{building.name}' has no Building component!");
             }
         }
-
-        /*private void TrySpawnBuildingAlongEdge(Vector3 worldStart, Vector3 worldEnd)
-        {
-            Vector3 edgeDir    = (worldEnd - worldStart).normalized;
-            Vector3 edgeNormal = new Vector3(-edgeDir.z, 0f, edgeDir.x);
-            float   edgeLength = Vector3.Distance(worldStart, worldEnd);
-
-            var candidates = _buildingPrefabs
-                .Where(b => b.GetFlatBounds().size.x <= edgeLength)
-                .ToList();
-
-            if (candidates.Count == 0) return;
-
-            float cursor = 0f;
-            while (cursor < edgeLength)
-            {
-                Building prefab   = candidates[Random.Range(0, candidates.Count)];
-                float    width    = prefab.GetFlatBounds().size.x;
-                float    depth    = prefab.GetFlatBounds().size.z;
-
-                if (cursor + width > edgeLength) break;
-
-                float   t        = (cursor + width * 0.5f) / edgeLength;
-                Vector3 spawnPos = Vector3.Lerp(worldStart, worldEnd, t)
-                    + edgeNormal * (_roadEdgeOffset + depth * 0.5f);
-
-                // Simple AABB in world space (approximate — good enough for a corridor)
-                Bounds worldBounds = new Bounds(spawnPos,
-                    new Vector3(width, 1f, depth));
-
-                if (!OverlapsExistingBuilding(worldBounds))
-                {
-                    PlaceBuilding(prefab, spawnPos, edgeDir);
-                    _spawnBuildingsBounds.Add(worldBounds);
-                }
-
-                cursor += width + _gapX;
-            }
-        }*/
-
     }
 }

@@ -1,3 +1,4 @@
+using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -9,11 +10,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private Transform _spawnAnchor;
         public Transform SpawnAnchor => _spawnAnchor != null ? _spawnAnchor : transform;
         [field: SerializeField] public Transform[] NextRoadAnchors { get; private set; }
-        [SerializeField] private SpawnArea[] _innerEnvChunkAreas;
-        public SpawnArea[] InnerEnvChunkAreas => _innerEnvChunkAreas;
-        [SerializeField] private SpawnArea[] _envChunkAreas;
-        public SpawnArea[] EnvChunkAreas => _envChunkAreas;
-        [SerializeField] private SpawnArea[] _innerRandomPropAreas;
+        [field: SerializeField] public PolygonSpawnArea[] PolygonSpawnArea { get; private set; }
 
         [field: SerializeField] public int TurnWeight { get; private set; }
 
