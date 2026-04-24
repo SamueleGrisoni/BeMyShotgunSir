@@ -44,6 +44,8 @@
     width: 100%;
     align-items: center;
     display: flex;
+    position: relative;
+    top: 50%;
 }
 
 .host-join-button-container .hide {
