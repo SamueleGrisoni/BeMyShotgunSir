@@ -119,6 +119,78 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &41096522
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 41096523}
+  - component: {fileID: 41096524}
+  - component: {fileID: 41096525}
+  m_Layer: 0
+  m_Name: LobbyMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &41096523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41096522}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8896755781282162750}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &41096524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41096522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: eef4f0fdc631f4a8fbd945a8b2c64440, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &41096525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41096522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fe93d9fd8b904e10afc5071f239e348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.LobbyMenuController
+  _uIManager: {fileID: 5220024374106971504}
+  _lobbyMenuDocument: {fileID: 41096524}
+  _lobbyData:
+    _interfaceOwner: {fileID: 11400000, guid: cd6fd6aa7b0cc384ba9dbeda268b2434, type: 2}
 --- !u!1 &314851211077089901
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1739245695443324553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,12 +231,12 @@ GameObject:
   - component: {fileID: 5596779982308326735}
   - component: {fileID: 7306081344984030709}
   m_Layer: 0
-  m_Name: TitleMenu
+  m_Name: Central Hub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2033581459159208750
 Transform:
   m_ObjectHideFlags: 0
@@ -276,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &5220024374106971504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +361,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3c7e85696b14b9691a563b6834c990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  _centralHubController: {fileID: 7306081344984030709}
+  _lobbyViewController: {fileID: 41096525}
+  _hudController: {fileID: 1739245695443324553}
 --- !u!114 &5596779982308326735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,7 +468,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73677783e4f344cc6a10e97fbad871c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleMenuController
-  titleMenuDocument: {fileID: 5596779982308326735}
+  _uIManager: {fileID: 5220024374106971504}
+  _centralHubDocument: {fileID: 5596779982308326735}
 --- !u!4 &8896755781282162750
 Transform:
   m_ObjectHideFlags: 0
@@ -407,8 +483,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6450406133998292551}
   - {fileID: 6026686863296459039}
+  - {fileID: 6450406133998292551}
+  - {fileID: 41096523}
   - {fileID: 2955011346075238641}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
