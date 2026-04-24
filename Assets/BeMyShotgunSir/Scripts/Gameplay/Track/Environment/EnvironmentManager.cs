@@ -57,16 +57,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             float startZ = areaBounds.min.z;
             float endZ = areaBounds.max.z;
 
-            float cursorZ = endZ;
-
+            float cursorZ = endZ - _roadEdgeOffset;
             while (cursorZ > startZ)
             {
                 float rowDepth = 0f;
-                float cursorX = startX;
-
+                float cursorX = startX + _roadEdgeOffset;
                 while (cursorX < endX)
                 {
                     Building buildingPrefab = _buildingPrefabs[Random.Range(0, _buildingPrefabs.Count)];
+                    //Building buildingPrefab = _buildingPrefabs[0];
                     Bounds buildingBounds = buildingPrefab.GetFlatBounds();
                     float width = buildingBounds.size.x;
                     float depth = buildingBounds.size.z;
@@ -81,11 +80,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
                         if (depth > rowDepth) rowDepth = depth;
                     }
-
                     cursorX += width + _gapX;
                 }
 
                 float advance = rowDepth > 0f ? rowDepth + _gapX : _gapX;
+                Debug.Log("Advance cursorZ by: " + advance);
                 cursorZ -= advance;
             }
         }
