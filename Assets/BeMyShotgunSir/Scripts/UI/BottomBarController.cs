@@ -33,7 +33,7 @@ public class BottomBarController : MonoBehaviour
     {
         _root = _hudDocument.rootVisualElement;
         _bottomBar = _root.Q<TemplateContainer>("BottomBar");
-
+        _bottomBar.pickingMode = PickingMode.Position; // Let events pass through empty areas
         _steerControl = _bottomBar.Q("SteerControl");
         _steerJoystick = _bottomBar.Q("SteerJoystick");
         _driftControl = _bottomBar.Q("DriftControl");
