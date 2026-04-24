@@ -16,11 +16,11 @@ MonoBehaviour:
   <MaxSpeed>k__BackingField: 24
   <MaxSpeedWithBoost>k__BackingField: 30
   <BoostDuration>k__BackingField: 5
-  <SteeringForce>k__BackingField: 30
-  <Gravity>k__BackingField: 10
+  <SteeringForce>k__BackingField: 40
+  <Gravity>k__BackingField: 50
   <LateralGripFactor>k__BackingField: 50
   <SteerAngularRotation>k__BackingField: 10
-  <SteerAngularRotationSlerp>k__BackingField: 0.05
+  <SteerAngularRotationSlerp>k__BackingField: 4
   <GroundAllignmentSpeed>k__BackingField: 0.1
   <MaxBatteryCharge>k__BackingField: 100
   <ChargeBatteryTimeRate>k__BackingField: 1

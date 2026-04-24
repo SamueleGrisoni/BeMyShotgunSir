@@ -29,26 +29,30 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player.Driver.DriftingStates
             {
                 controller.CurrentBatteryCharge = 0;
                 controller.ChangeState(controller.NormalState);
+                return;
             }
 
             if (!controller.IsGrounded)
             {
                 controller.ChangeState(controller.AirState);
+                return;
             }
 
             if (controller.IsDriftingButtonPressed)
             {
                 controller.DriftDirection = Mathf.Sign(controller.SteerInput);
                 controller.ChangeState(controller.DriftingState);
+                return;
             }
         }
         public void ExecuteFixedUpdate(IDriverControllerContext controller)
         {
-            controller.ApplyAcceleration(controller.SidecarTransform.forward);
-            controller.ApplyGravity(controller.Stats.Gravity);
+            controller.ApplyAcceleration(controller.SidecarForward);
             controller.ApplySteering(controller.SteerInput);
-            controller.ApplyLateralGrip(controller.SidecarTransform.forward);
-            controller.AnimateSidecar(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
+            controller.ApplyLateralGrip();
+            controller.ApplyVisualRotation(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
+            controller.ApplyGravity(controller.Stats.Gravity);
+            //controller.AnimateSidecar(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
         }
         public void Exit(IDriverControllerContext controller)
         {

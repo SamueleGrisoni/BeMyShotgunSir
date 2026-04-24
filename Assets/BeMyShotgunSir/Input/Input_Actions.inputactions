@@ -877,8 +877,17 @@
                 },
                 {
                     "name": "Drift",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "1272578f-8a69-40d0-b349-bef6401fd569",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "a9e5a562-e77c-402c-bb8f-2f64408ab203",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1092,6 +1101,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse;Touch",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e88fa00c-9c04-426d-bd21-b89f43902665",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

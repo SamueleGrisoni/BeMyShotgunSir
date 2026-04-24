@@ -372,6 +372,33 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Steer"",
+                    ""type"": ""Value"",
+                    ""id"": ""5cca9acf-8c77-4c86-9784-1fc20bd6406e"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Drift"",
+                    ""type"": ""Button"",
+                    ""id"": ""cfba28ba-6b11-4140-ac24-7dcfff508fcd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Button"",
+                    ""id"": ""a88ac220-382d-4bbd-a40f-0bb1c37ee089"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -792,6 +819,105 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9fcedf97-0693-41f9-bbe9-be6747ddfc0d"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""3395b841-7c79-48bf-96af-5cd481791281"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""732e7191-afcb-4914-9f64-eb65c627cbda"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""7a545466-675c-4dbc-9db3-26f795b8bf6e"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""6175882c-d31f-4949-affa-9b32f8e6bbd8"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""ea7cb641-aac0-4662-9f22-9f4349c8c646"",
+                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""2a0418ee-31ca-4f95-b597-c6da9cdb6163"",
+                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bf211deb-197b-4b1e-95bc-37019227d27e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a00fc4a2-e43d-4f45-8e7c-e6097ddf6b4f"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -837,8 +963,17 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Drift"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""1272578f-8a69-40d0-b349-bef6401fd569"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Start"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9e5a562-e77c-402c-bb8f-2f64408ab203"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -1054,6 +1189,17 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e88fa00c-9c04-426d-bd21-b89f43902665"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Start"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1137,6 +1283,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         m_InGameUI_ScrollWheel = m_InGameUI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_InGameUI_TrackedDevicePosition = m_InGameUI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_InGameUI_TrackedDeviceOrientation = m_InGameUI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_InGameUI_Steer = m_InGameUI.FindAction("Steer", throwIfNotFound: true);
+        m_InGameUI_Drift = m_InGameUI.FindAction("Drift", throwIfNotFound: true);
+        m_InGameUI_Boost = m_InGameUI.FindAction("Boost", throwIfNotFound: true);
         // InGameControls
         m_InGameControls = asset.FindActionMap("InGameControls", throwIfNotFound: true);
         m_InGameControls_Move = m_InGameControls.FindAction("Move", throwIfNotFound: true);
@@ -1144,6 +1293,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         m_InGameControls_Boost = m_InGameControls.FindAction("Boost", throwIfNotFound: true);
         m_InGameControls_Steer = m_InGameControls.FindAction("Steer", throwIfNotFound: true);
         m_InGameControls_Drift = m_InGameControls.FindAction("Drift", throwIfNotFound: true);
+        m_InGameControls_Start = m_InGameControls.FindAction("Start", throwIfNotFound: true);
     }
 
     ~@Input_Actions()
@@ -1343,6 +1493,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_InGameUI_ScrollWheel;
     private readonly InputAction m_InGameUI_TrackedDevicePosition;
     private readonly InputAction m_InGameUI_TrackedDeviceOrientation;
+    private readonly InputAction m_InGameUI_Steer;
+    private readonly InputAction m_InGameUI_Drift;
+    private readonly InputAction m_InGameUI_Boost;
     /// <summary>
     /// Provides access to input actions defined in input action map "InGameUI".
     /// </summary>
@@ -1394,6 +1547,18 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "InGameUI/TrackedDeviceOrientation".
         /// </summary>
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_InGameUI_TrackedDeviceOrientation;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameUI/Steer".
+        /// </summary>
+        public InputAction @Steer => m_Wrapper.m_InGameUI_Steer;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameUI/Drift".
+        /// </summary>
+        public InputAction @Drift => m_Wrapper.m_InGameUI_Drift;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameUI/Boost".
+        /// </summary>
+        public InputAction @Boost => m_Wrapper.m_InGameUI_Boost;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1450,6 +1615,15 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+            @Steer.started += instance.OnSteer;
+            @Steer.performed += instance.OnSteer;
+            @Steer.canceled += instance.OnSteer;
+            @Drift.started += instance.OnDrift;
+            @Drift.performed += instance.OnDrift;
+            @Drift.canceled += instance.OnDrift;
+            @Boost.started += instance.OnBoost;
+            @Boost.performed += instance.OnBoost;
+            @Boost.canceled += instance.OnBoost;
         }
 
         /// <summary>
@@ -1491,6 +1665,15 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
+            @Steer.started -= instance.OnSteer;
+            @Steer.performed -= instance.OnSteer;
+            @Steer.canceled -= instance.OnSteer;
+            @Drift.started -= instance.OnDrift;
+            @Drift.performed -= instance.OnDrift;
+            @Drift.canceled -= instance.OnDrift;
+            @Boost.started -= instance.OnBoost;
+            @Boost.performed -= instance.OnBoost;
+            @Boost.canceled -= instance.OnBoost;
         }
 
         /// <summary>
@@ -1533,6 +1716,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_InGameControls_Boost;
     private readonly InputAction m_InGameControls_Steer;
     private readonly InputAction m_InGameControls_Drift;
+    private readonly InputAction m_InGameControls_Start;
     /// <summary>
     /// Provides access to input actions defined in input action map "InGameControls".
     /// </summary>
@@ -1564,6 +1748,10 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "InGameControls/Drift".
         /// </summary>
         public InputAction @Drift => m_Wrapper.m_InGameControls_Drift;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/Start".
+        /// </summary>
+        public InputAction @Start => m_Wrapper.m_InGameControls_Start;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1605,6 +1793,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @Drift.started += instance.OnDrift;
             @Drift.performed += instance.OnDrift;
             @Drift.canceled += instance.OnDrift;
+            @Start.started += instance.OnStart;
+            @Start.performed += instance.OnStart;
+            @Start.canceled += instance.OnStart;
         }
 
         /// <summary>
@@ -1631,6 +1822,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @Drift.started -= instance.OnDrift;
             @Drift.performed -= instance.OnDrift;
             @Drift.canceled -= instance.OnDrift;
+            @Start.started -= instance.OnStart;
+            @Start.performed -= instance.OnStart;
+            @Start.canceled -= instance.OnStart;
         }
 
         /// <summary>
@@ -1828,6 +2022,27 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Steer" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSteer(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Drift" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDrift(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Boost" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBoost(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "InGameControls" which allows adding and removing callbacks.
@@ -1871,5 +2086,12 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDrift(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Start" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStart(InputAction.CallbackContext context);
     }
 }
