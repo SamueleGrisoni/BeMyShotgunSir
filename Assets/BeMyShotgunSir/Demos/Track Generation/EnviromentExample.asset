@@ -18,3 +18,4 @@ MonoBehaviour:
   <MaxSpawnAttemptsPerMediumBuilding>k__BackingField: 3
   <MaxSpawnAttemptsPerSmallBuilding>k__BackingField: 5
   <MaxPropsPerSpawnArea>k__BackingField: 30
+  <ChanceToSpawnSomethingFunny>k__BackingField: 1

@@ -20,5 +20,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
         [Tooltip("Max number of props to be spawned in a spawn area")]
         [field: SerializeField] public int MaxPropsPerSpawnArea { get; private set; }
+        [field: SerializeField] public int ChanceToSpawnSomethingFunny { get; private set; }
     }
 }
