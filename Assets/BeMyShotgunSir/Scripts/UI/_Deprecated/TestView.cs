@@ -8,15 +8,11 @@ namespace BeMyShotgunSir.Scripts.UI
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class TestView : LobbyBindTarget
     {
-        private LobbyCommand _lobbyCommand;
-        private ILobbyDataView _lobbyDataView;
         private TextMeshProUGUI _testText;
 
-        public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyData) => _lobbyDataView = lobbyData;
         public override void OnBindComplete()
         {
-            _lobbyDataView.OnPlayerStatesChanged += UpdateTestView;
+            _dataView.OnPlayerStatesChanged += UpdateTestView;
             UpdateTestView();
         }
 
@@ -25,15 +21,15 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void OnDisable()
         {
-            if (_lobbyDataView != null) _lobbyDataView.OnPlayerStatesChanged -= UpdateTestView;
+            if (_dataView != null) _dataView.OnPlayerStatesChanged -= UpdateTestView;
         }
 
         private void UpdateTestView()
         {
-            if (_testText == null || _lobbyDataView == null)
+            if (_testText == null || _dataView == null)
                 return;
 
-            Dictionary<int, PlayerLobbyState> states = _lobbyDataView.PlayerStates;
+            Dictionary<int, PlayerLobbyState> states = _dataView.PlayerStates;
             if (states == null || states.Count == 0)
             {
                 _testText.text = "No players";

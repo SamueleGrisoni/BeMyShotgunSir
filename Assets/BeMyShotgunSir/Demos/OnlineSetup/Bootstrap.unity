@@ -514,12 +514,16 @@ PrefabInstance:
       value: NetworkManager
       objectReference: {fileID: 0}
     - target: {fileID: 7443408887813606060, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443408887813606060, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       propertyPath: _playerPrefab
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7443408887813606060, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       propertyPath: Spawns.Array.size
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7443408887813606060, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       propertyPath: 'Spawns.Array.data[0]'
@@ -597,7 +601,6 @@ MonoBehaviour:
   <ConnectionManager>k__BackingField: {fileID: 1045515488}
   <NetworkManager>k__BackingField: {fileID: 307953469}
   <Channels>k__BackingField: {fileID: 11400000, guid: c72e358ecdcd8a64181a1f77ec4a2e86, type: 2}
-  <LobbyManager>k__BackingField: {fileID: 0}
   <AudioManager>k__BackingField: {fileID: 565849611}
   <TrackManager>k__BackingField: {fileID: 0}
 --- !u!4 &2006144848

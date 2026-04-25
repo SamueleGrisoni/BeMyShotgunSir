@@ -670,6 +670,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LobbyMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 6839041328321758844, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8432409140699804140, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
       propertyPath: m_Pivot.x
       value: 0

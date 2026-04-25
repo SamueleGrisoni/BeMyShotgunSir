@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
-    public class LobbySceneInitializer : SceneInitializer
+    public class LobbySceneBootstrapper : SceneBootstrapper
     {
         [SerializeField] private InterfaceSerializer<LobbyBindTarget, ILobbyBindTarget>[] _bindTargets;
         private ILobbyBindTarget[] _coercedTargets;
@@ -11,15 +11,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void OnDisable() =>
             LobbyManager.OnLobbyManagerSpawned -= OnLobbyManagerSpawned;
 
-
         private void OnLobbyManagerSpawned(LobbyManager manager)
         {
-            RootInitialize();
+            TryInitialize();
             manager.BindLobby(_coercedTargets);
         }
 
-
-        protected override void Initializer()
+        protected override void Initialize()
         {
             UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.Init.ToString());
 
@@ -33,7 +31,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 }
                 _coercedTargets[i] = _bindTargets[i].Interface;
             }
-            blockRootInitialize = true;
+            _suppressAutoInitialize = true;
 
             LobbyManager lobbyManager = GameServices.Instance.LobbyManager;
             if (lobbyManager == null)

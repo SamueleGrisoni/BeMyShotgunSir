@@ -14,13 +14,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             BindCommand(targets);
             BindData(targets);
-            CompleteBinding();
+            CompleteBinding(targets);
         }
         private void BindCommand(ILobbyBindTarget[] bindTargets)
         {
             foreach (ILobbyBindTarget target in bindTargets)
             {
-                target.BindLobbyCommand(_lobbyCommand);
+                target.BindCommand(_lobbyCommand);
             }
         }
 
@@ -28,13 +28,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             foreach (ILobbyBindTarget target in bindTargets)
             {
-                target.BindLobbyDataView(_lobbyDataView);
+                target.BindDataView(_lobbyDataView);
             }
         }
 
-        private void CompleteBinding()
+        private void CompleteBinding(ILobbyBindTarget[] bindTargets)
         {
-            foreach (ILobbyBindTarget target in GameServices.Instance.LobbyManager.GetComponentsInChildren<ILobbyBindTarget>())
+            foreach (ILobbyBindTarget target in bindTargets)
             {
                 target.OnBindComplete();
             }

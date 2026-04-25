@@ -7,11 +7,6 @@ namespace BeMyShotgunSir.Scripts.UI
     public class LobbyMenu : LobbyBindTarget
     {
         [SerializeField] private Button _quitButton;
-        private LobbyCommand _lobbyCommand;
-        private ILobbyDataView _lobbyDataView;
-
-        public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyDataView) => _lobbyDataView = lobbyDataView;
         public override void OnBindComplete() { }
 
         private void Awake() =>
@@ -21,6 +16,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _quitButton.onClick.RemoveListener(OnQuitButtonClicked);
 
         private void OnQuitButtonClicked() =>
-            _lobbyCommand.QuitLobby_CMRequest();
+            _command.QuitLobby_CMRequest();
     }
 }

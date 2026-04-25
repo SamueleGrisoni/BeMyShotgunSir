@@ -8,15 +8,10 @@ namespace BeMyShotgunSir.Scripts.UI
     public class LobbyAddressView : LobbyBindTarget
     {
         private TextMeshProUGUI _ipText;
-        private LobbyCommand _lobbyCommand;
-        private ILobbyDataView _lobbyDataView;
-        public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyDataView) =>
-            _lobbyDataView = lobbyDataView;
 
         public override void OnBindComplete()
         {
-            _lobbyDataView.OnLobbyIPChanged += UpdateLobbyIP;
+            _dataView.OnLobbyIPChanged += UpdateLobbyIP;
             UpdateLobbyIP();
         }
 
@@ -25,15 +20,15 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void OnDisable()
         {
-            if (_lobbyDataView != null) _lobbyDataView.OnLobbyIPChanged -= UpdateLobbyIP;
+            if (_dataView != null) _dataView.OnLobbyIPChanged -= UpdateLobbyIP;
         }
 
         private void UpdateLobbyIP()
         {
             if (_ipText == null) TryGetComponent(out _ipText);
-            if (_lobbyDataView != null)
+            if (_dataView != null)
             {
-                _ipText.text = $"{_lobbyDataView.LobbyIP}";
+                _ipText.text = $"{_dataView.LobbyIP}";
             }
         }
 
