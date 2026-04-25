@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BeMyShotgunSir.Core;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
@@ -6,9 +7,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public interface ILobbyNetData : INetData
     {
+        LobbyInfo LobbyInfo { get; }
         string LobbyIP { get; }
         int PlayerCount { get; }
-        string[] PlayerNames { get; }
+        Dictionary<int, PlayerLobbyState> PlayerStates { get; }
     }
 
     public interface ILobbyData : IData
@@ -18,8 +20,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public interface ILobbyDataView : ILobbyData, ILobbyNetData
     {
+        event Action OnLobbyInfoChanged;
         event Action OnLobbyIPChanged;
         event Action OnPlayerCountChanged;
-        event Action OnPlayerNamesChanged;
+        event Action OnPlayerStatesChanged;
     }
 }

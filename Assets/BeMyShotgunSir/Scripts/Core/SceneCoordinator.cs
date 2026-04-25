@@ -14,8 +14,7 @@ namespace BeMyShotgunSir.Scripts.Core
     }
     public class SceneCoordinator : MonoBehaviour
     {
-        private readonly FishNetSceneAdapter _fishnetSceneManager = new FishNetSceneAdapter();
-
+        public readonly FishNetSceneAdapter FishnetSceneManager = new FishNetSceneAdapter();
         public void LoadInitScene()
         {
             if (UnitySceneManager.GetSceneByName(SceneName.Init.ToString()).isLoaded)
@@ -23,6 +22,6 @@ namespace BeMyShotgunSir.Scripts.Core
             UnitySceneManager.LoadScene(SceneName.Init.ToString(), UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
         public void LoadLobby() =>
-            _fishnetSceneManager.TryLoadGlobalScene(SceneName.Lobby.ToString(), this, ReplaceOption.OnlineOnly);
+            FishnetSceneManager.TryLoadGlobalScene(SceneName.Lobby.ToString(), this, ReplaceOption.OnlineOnly);
     }
 }

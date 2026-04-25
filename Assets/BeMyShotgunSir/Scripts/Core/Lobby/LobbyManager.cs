@@ -4,15 +4,15 @@ using UnityEngine;
 using System;
 using BeMyShotgunSir.Scripts.Utils;
 using BeMyShotgunSir.Scripts.Core.Audio;
-using FishNet.Connection;
+using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     public class LobbyManager : NetworkBehaviour, IEventSender
     {
         string IEventSender.SenderName => name;
-        public static event Action<LobbyManager> OnLobbySpawned;
-        public static event Action OnLobbyDespawned;
+        public static event Action<LobbyManager> OnLobbyManagerSpawned;
+        public static event Action OnLobbyManagerDespawned;
 
         private LobbyBinder _binder;
         private LobbyCommand _lobbyCommand;
@@ -37,43 +37,45 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
             _binder.BindCommand(targets);
             _binder.BindData(targets);
+            _lobbyCommand.GetInitSnapshot_Request();
         }
 
         [SerializeField] private SOLobbySounds _sounds;
         private SOAudioRequestEvent _audioRequestEvent;
 
-        public override void OnStartNetwork()
+        private void Awake()
         {
-            base.OnStartNetwork();
             Debug.Assert(_data != null, "LobbyManager: SOLobbyData reference is not assigned in the inspector.", this);
+            Debug.Assert(_netController != null, "LobbyManager: LobbyNetController reference is not assigned in the inspector.", this);
+            Debug.Assert(_sounds != null, "LobbyManager: SOLobbySounds reference is not assigned in the inspector.", this);
+            TryGetComponent(out _netController);
+            _netController.OnLobbyNetControllerSpawned += HandleLobbyNetControllerSpawned;
+            _netController.OnLobbyNetControllerDespawned += HandleLobbyNetControllerDespawned;
+        }
+
+        private void HandleLobbyNetControllerSpawned()
+        {
             _lobbyCommand = new LobbyCommand(this, _netController);
             _binder = new LobbyBinder(_lobbyCommand, _data);
-            OnLobbySpawned?.Invoke(this);
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
             _data.InitData();
+            OnLobbyManagerSpawned?.Invoke(this);
+        }
+
+        private void HandleLobbyNetControllerDespawned()
+        {
+            _lobbyCommand = null;
+            _binder = null;
+            _audioRequestEvent = null;
         }
 
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
-            OnLobbyDespawned?.Invoke();
+            OnLobbyManagerDespawned?.Invoke();
         }
 
         #region LobbyConnectionManagement
-        /// <summary>
-        /// Adds a player to the lobby. This should be called on the server when a new client connects. <br/>
-        /// </summary>
-        /// <param name="conn"></param>
-        public void AddPlayerToLobby(NetworkConnection conn) =>
-        _netController.AddPlayerToLobby(conn);
-
-        /// <summary>
-        /// Removes a player from the lobby. This should be called on the server when a client disconnects. <br/>
-        /// </summary>
-        /// <param name="conn"></param>
-        public void RemovePlayerFromLobby(NetworkConnection conn) =>
-            _netController.RemovePlayerFromLobby(conn);
-
         /// <summary>
         /// Adjusts the player count in the lobby.<br/>
         /// <b>Important:</b> <br/>
@@ -84,9 +86,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _netController.AdjustPlayerCount(delta);
         #endregion
 
-        public void InitNetData(ILobbyNetData data) => _data.InitNetData(data);
-        public void SetLobbyIP(string ip) => _data.SetLobbyIP(ip);
-        public void SetPlayerCount(int prev, int next)
+        public void InitNetData_Response(ILobbyNetData data) => _data.InitNetData(data);
+        public void SetLobbyIP_Response(string ip) => _data.SetLobbyIP(ip);
+        public void SetLobbyInfo_Response(LobbyInfo info) => _data.SetLobbyInfo(info);
+        public void SetPlayerCount_Response(int prev, int next)
         {
             if (prev < next)
             {
@@ -100,7 +103,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
             _data.SetPlayerCount(next);
         }
-        public void SetPlayerNames(string[] names) => _data.SetPlayerNames(names);
+        public void SetPlayerStates_Response(SyncDictionaryOperation op, int key, PlayerLobbyState value) => _data.SetPlayerStates(op, key, value);
 
     }
 }

@@ -11,16 +11,15 @@ namespace BeMyShotgunSir.Scripts.UI
         private LobbyCommand _lobbyCommand;
         private ILobbyDataView _lobbyDataView;
         public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyDataView) => _lobbyDataView = lobbyDataView;
+        public override void BindLobbyDataView(ILobbyDataView lobbyDataView)
+        {
+            _lobbyDataView = lobbyDataView;
+            _lobbyDataView.OnLobbyIPChanged += UpdateLobbyIP;
+            UpdateLobbyIP();
+        }
 
         private void Awake() =>
             TryGetComponent(out _ipText);
-
-        private void OnEnable()
-        {
-            if (_lobbyDataView != null) _lobbyDataView.OnLobbyIPChanged += UpdateLobbyIP;
-            UpdateLobbyIP();
-        }
 
         private void OnDisable()
         {
@@ -29,7 +28,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void UpdateLobbyIP()
         {
-            if (_ipText != null && _lobbyDataView != null)
+            if (_ipText == null) TryGetComponent(out _ipText);
+            if (_lobbyDataView != null)
             {
                 _ipText.text = $"{_lobbyDataView.LobbyIP}";
             }

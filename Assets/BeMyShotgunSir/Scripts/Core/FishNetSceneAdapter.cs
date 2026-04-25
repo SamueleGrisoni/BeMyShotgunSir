@@ -1,3 +1,5 @@
+using System;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet;
 using FishNet.Managing.Scened;
 using UnityEngine;
@@ -10,10 +12,40 @@ namespace BeMyShotgunSir.Scripts.Core
     /// </summary>
     public sealed class FishNetSceneAdapter
     {
+
+        private SceneManager _fishNetSceneManager;
+        public static event Action<SceneName> OnSceneLoaded;
+        private bool _isInitialized = false;
+        private void Initialize()
+        {
+            _fishNetSceneManager = InstanceFinder.SceneManager;
+            _fishNetSceneManager.OnLoadEnd += HandleSceneLoadEnd;
+            _isInitialized = true;
+        }
+
+        private void HandleSceneLoadEnd(SceneLoadEndEventArgs args)
+        {
+            if (args.LoadedScenes.Length > 0)
+            {
+                string sceneName = args.LoadedScenes[0].name;
+                if (Enum.TryParse(sceneName, out SceneName loadedScene))
+                {
+                    OnSceneLoaded?.Invoke(loadedScene);
+                }
+                else
+                {
+                    Log.ELazy(() => $"SceneCoordinator: Loaded scene '{sceneName}' does not match any known SceneName enum values.", this);
+                }
+            }
+        }
+
+
+
         public bool TryLoadGlobalScene(string sceneName, MonoBehaviour context, ReplaceOption replaceOption = ReplaceOption.OnlineOnly)
         {
-            SceneManager fishNetSceneManager = InstanceFinder.SceneManager;
-            if (fishNetSceneManager == null)
+            if (!_isInitialized)
+                Initialize();
+            if (_fishNetSceneManager == null)
             {
                 Debug.LogError("SceneCoordinator: FishNet SceneManager is not available.", context);
                 return false;
@@ -24,8 +56,9 @@ namespace BeMyShotgunSir.Scripts.Core
                 ReplaceScenes = replaceOption
             };
 
-            fishNetSceneManager.LoadGlobalScenes(sceneLoadData);
+            _fishNetSceneManager.LoadGlobalScenes(sceneLoadData);
             return true;
         }
     }
 }
+

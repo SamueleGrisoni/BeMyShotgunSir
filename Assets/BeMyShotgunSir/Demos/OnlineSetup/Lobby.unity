@@ -293,6 +293,19 @@ MonoBehaviour:
   _bindTargets:
   - _interfaceOwner: {fileID: 2347774505944634353}
   - _interfaceOwner: {fileID: 2347774505944634354}
+  - _interfaceOwner: {fileID: 1242654182}
+  - _interfaceOwner: {fileID: 810722992}
+--- !u!114 &810722992 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6089291078440164833, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+  m_PrefabInstance: {fileID: 2347774505944634352}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7e5a62d5e031047b66f41bd771352f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TestView
 --- !u!1 &823832632
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,25 +337,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1242654177 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5569294949319398571, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+--- !u!114 &1242654182 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3158583630598242297, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
   m_PrefabInstance: {fileID: 2347774505944634352}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1242654182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242654177}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78070abc87106044db89e44b53ecd3f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PlayerCountView
-  _lobbyData:
-    _interfaceOwner: {fileID: 11400000, guid: cd6fd6aa7b0cc384ba9dbeda268b2434, type: 2}
 --- !u!1 &1629046573
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,29 +654,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3494538324784380206, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_Name
-      value: Text - Address view
+    - target: {fileID: 1048555779146984509, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4334379720828605184, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 196
+    - target: {fileID: 1048555779146984509, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4679609741956547577, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_Name
-      value: Text - PlayerCount
-      objectReference: {fileID: 0}
-    - target: {fileID: 4765370786339823126, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_Name
-      value: Text - Address
-      objectReference: {fileID: 0}
-    - target: {fileID: 4790389355088869178, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_text
-      value: PlayerCount
-      objectReference: {fileID: 0}
-    - target: {fileID: 5569294949319398571, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_Name
-      value: Text - PlayerCount view
+    - target: {fileID: 1048555779146984509, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6839041328321758844, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
       propertyPath: m_Name
@@ -757,17 +750,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8602008294828335464, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 196
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5569294949319398571, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-      insertIndex: 2
-      addedObject: {fileID: 1242654182}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
 --- !u!114 &2347774505944634353 stripped
 MonoBehaviour:

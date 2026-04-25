@@ -1,39 +1,37 @@
 using BeMyShotgunSir.Scripts.Core.Lobby;
-using BeMyShotgunSir.Scripts.Utils;
 using TMPro;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class PlayerCountView : MonoBehaviour
+    public class PlayerCountView : LobbyBindTarget
     {
-        [SerializeField] private InterfaceSerializer<SOLobbyData, ILobbyDataView> _lobbyData;
-        private ILobbyDataView _view;
+        private LobbyCommand _lobbyCommand;
+        private ILobbyDataView _lobbyDataView;
         private TextMeshProUGUI _playerCountText;
-        private void Awake()
-        {
-            TryGetComponent(out _playerCountText);
-            _view = _lobbyData.Interface;
-            Debug.Assert(_view != null, "PlayerCountView requires a reference to an ILobbyDataView.");
-        }
 
-        private void OnEnable()
+        private void Awake() =>
+            TryGetComponent(out _playerCountText);
+
+        public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
+        public override void BindLobbyDataView(ILobbyDataView lobbyData)
         {
-            if (_view != null) _view.OnPlayerCountChanged += UpdatePlayerCount;
+            _lobbyDataView = lobbyData;
+            _lobbyDataView.OnPlayerCountChanged += UpdatePlayerCount;
             UpdatePlayerCount();
         }
 
         private void OnDisable()
         {
-            if (_view != null) _view.OnPlayerCountChanged -= UpdatePlayerCount;
+            if (_lobbyDataView != null) _lobbyDataView.OnPlayerCountChanged -= UpdatePlayerCount;
         }
 
         private void UpdatePlayerCount()
         {
-            if (_playerCountText != null && _view != null)
+            if (_playerCountText != null && _lobbyDataView != null)
             {
-                _playerCountText.text = $"{_view.PlayerCount}";
+                _playerCountText.text = $"{_lobbyDataView.PlayerCount}";
             }
         }
     }

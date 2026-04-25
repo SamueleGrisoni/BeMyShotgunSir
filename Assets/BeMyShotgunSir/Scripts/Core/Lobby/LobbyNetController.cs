@@ -1,7 +1,10 @@
-using BeMyShotgunSir.Scripts.Utils;
+using System;
+using System.Collections.Generic;
 using FishNet.Connection;
+using FishNet.Managing.Server;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FishNet.Transporting;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
@@ -20,22 +23,35 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
     }
 
+    public struct LobbyInfo
+    {
+        public int maxPlayers;
+        public LobbyInfo(bool _)
+        {
+            maxPlayers = 4;
+        }
+    }
     public struct LobbyNetDataSnapshot : ILobbyNetData
     {
         public string LobbyIP { get; set; }
+        public LobbyInfo LobbyInfo { get; set; }
         public int PlayerCount { get; set; }
-        public string[] PlayerNames { get; set; }
+        public Dictionary<int, PlayerLobbyState> PlayerStates { get; set; }
 
-        public LobbyNetDataSnapshot(string lobbyIP, int playerCount, string[] playerNames)
+        public LobbyNetDataSnapshot(string lobbyIP, int playerCount, Dictionary<int, PlayerLobbyState> playerStates, LobbyInfo lobbyInfo)
         {
             LobbyIP = lobbyIP;
             PlayerCount = playerCount;
-            PlayerNames = playerNames;
+            PlayerStates = new Dictionary<int, PlayerLobbyState>(playerStates);
+            LobbyInfo = lobbyInfo;
         }
     }
     public class LobbyNetController : NetworkBehaviour
     {
+        private ServerManager _serverManager;
         private LobbyManager _lobbyManager;
+        public event Action OnLobbyNetControllerSpawned;
+        public event Action OnLobbyNetControllerDespawned;
 
         private void Awake()
         {
@@ -48,15 +64,26 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             base.OnStartNetwork();
             _lobbyIP.OnChange += OnLobbyIPChanged;
             _playerCount.OnChange += OnPlayerCountChanged;
-            _playerNames.OnChange += OnPlayerNamesChanged;
             _playerStates.OnChange += OnPlayerStatesChanged;
+
+            _serverManager = GameServices.Instance.NetworkManager.ServerManager;
+            _serverManager.OnRemoteConnectionState += HandleRemoteConnectionState;
+            OnLobbyNetControllerSpawned?.Invoke();
         }
+
 
         public override void OnStartServer()
         {
             base.OnStartServer();
+            InitSyncValues();
+        }
+
+        private void InitSyncValues()
+        {
             _playerCount.Value = 0;
             _lobbyIP.Value = GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort();
+            _lobbyInfo.Value = new LobbyInfo(true);
+            _playerStates.Collection.Clear();
         }
 
         public override void OnStopNetwork()
@@ -64,15 +91,55 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             base.OnStopNetwork();
             _lobbyIP.OnChange -= OnLobbyIPChanged;
             _playerCount.OnChange -= OnPlayerCountChanged;
-            _playerNames.OnChange -= OnPlayerNamesChanged;
+            _playerStates.OnChange -= OnPlayerStatesChanged;
+            OnLobbyNetControllerDespawned?.Invoke();
         }
 
-        public override void OnStartClient()
+        public void HandleRefresh()
         {
-            base.OnStartClient();
-            if (IsHostInitialized) return; //no request snapshot if host, we already have the data
-            RequestNetDataSnapshot_ServerRpc();
+            if (IsController)
+            {
+                _lobbyManager.InitNetData_Response(new LobbyNetDataSnapshot(_lobbyIP.Value, _playerCount.Value, _playerStates.Collection, _lobbyInfo.Value));
+                return; // without this the host would also call RequestNetDataSnapshot_ServerRpc
+            }
+            if (IsClientInitialized)
+                RequestNetDataSnapshot_ServerRpc();
         }
+
+
+        [Server]
+        private void HandleRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
+        {
+            if (args.ConnectionState == RemoteConnectionState.Started)
+            {
+                string defaultName = connection.IsHost ? "PlayerHost " + connection.ClientId : "Player " + connection.ClientId; //DANGER qui non rileva l'host bene
+                _playerCount.Value++;
+                if (!_playerStates.ContainsKey(connection.ClientId))
+                    _playerStates[connection.ClientId] = new PlayerLobbyState(connection, defaultName);
+            }
+            else if (args.ConnectionState == RemoteConnectionState.Stopped)
+            {
+                _playerCount.Value--;
+                _playerStates.Remove(connection.ClientId);
+            }
+        }
+
+
+        #region LobbyConnectionManagement
+        /// <summary>
+        /// Adjusts the player count in the lobby. This should be called on the server when the player count needs to be updated. <br/>
+        /// The delta parameter indicates how much to adjust the player count by (positive to add players, negative to remove players). <br/>
+        /// <b>Important:</b> <br/>
+        /// LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available.
+        /// </summary>
+        /// <param name="delta"></param>
+        [Server]
+        public void AdjustPlayerCount(int delta)
+        {
+            int newValue = _playerCount.Value + delta;
+            _playerCount.Value = Mathf.Max(0, newValue);
+        }
+        #endregion
 
         /// <summary>
         /// When a client starts, it requests the current lobby data snapshot from the server to initialize its local lobby state. <br/>
@@ -85,7 +152,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (conn == null)
                 return;
 
-            var snapshot = new LobbyNetDataSnapshot(_lobbyIP.Value, _playerCount.Value, _playerNames.Value);
+            var snapshot = new LobbyNetDataSnapshot(_lobbyIP.Value, _playerCount.Value, _playerStates.Collection, _lobbyInfo.Value);
 
             InitNetData_TargetRpc(conn, snapshot);
         }
@@ -100,79 +167,75 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (conn == null)
                 return;
-            Log.DLazy(() => $"LobbyNetController: Executing TargetRpc for client '{conn.ClientId}: {snapshot.LobbyIP} : {snapshot.PlayerNames} : {snapshot.PlayerCount}'.", this);
-            _lobbyManager.InitNetData(snapshot);
+            _lobbyManager.InitNetData_Response(snapshot);
         }
 
-        /// <summary>
-        /// Adds a player to the lobby. This should be called on the server when a new client connects. <br/>
-        /// </summary>
-        /// <param name="conn"></param>
-        [Server]
-        public void AddPlayerToLobby(NetworkConnection conn) =>
-            _playerCount.Value++;
 
-        /// <summary>
-        /// Removes a player from the lobby. This should be called on the server when a client disconnects. <br/>
-        /// </summary>
-        /// <param name="conn"></param>
-        [Server]
-        public void RemovePlayerFromLobby(NetworkConnection conn) => _playerCount.Value--;
+        private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
+        public void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer) =>
+            _lobbyManager.SetLobbyInfo_Response(next);
 
-        /// <summary>
-        /// Adjusts the player count in the lobby. This should be called on the server when the player count needs to be updated. <br/>
-        /// The delta parameter indicates how much to adjust the player count by (positive to add players, negative to remove players). <br/>
-        /// <b>Important:</b> <br/>
-        /// LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available.
-        /// </summary>
-        /// <param name="delta"></param>
-        [Server]
-        public void AdjustPlayerCount(int delta)
-        {
-            int newValue = _playerCount.Value + delta;
-            _playerCount.Value = Mathf.Max(0, newValue);
-        }
 
         private readonly SyncDictionary<int, PlayerLobbyState> _playerStates = new();
 
         private void OnPlayerStatesChanged(SyncDictionaryOperation op, int key, PlayerLobbyState value, bool asServer)
         {
+            if (asServer)
+                return;
+            var playerStates = new Dictionary<int, PlayerLobbyState>(_playerStates.Collection);
             switch (op)
             {
                 case SyncDictionaryOperation.Add:
                 case SyncDictionaryOperation.Set:
-                    _playerStates[key] = value;
-                    break;
                 case SyncDictionaryOperation.Remove:
-                    _playerStates.Remove(key);
-                    break;
                 case SyncDictionaryOperation.Clear:
-                    _playerStates.Clear();
-                    break;
                 case SyncDictionaryOperation.Complete:
+                    _lobbyManager.SetPlayerStates_Response(op, key, value);
                     break;
                 default:
                     break;
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null)
+        {
+            if (conn == null)
+                return;
+
+            int connectionId = conn.ClientId;
+            PlayerLobbyState state = _playerStates[connectionId];
+            state.PlayerName = newName;
+            _playerStates[connectionId] = state;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null)
+        {
+            if (conn == null)
+                return;
+
+            int connectionId = conn.ClientId;
+            PlayerLobbyState state = _playerStates[connectionId];
+            state.IsReady = isReady;
+            _playerStates[connectionId] = state;
+        }
+
         private readonly SyncVar<string> _lobbyIP = new("Not connected");
         private void OnLobbyIPChanged(string prev, string next, bool asServer)
         {
-            _lobbyManager.SetLobbyIP(next);
+            if (asServer)
+                return;
+            _lobbyManager.SetLobbyIP_Response(next);
         }
+
 
         private readonly SyncVar<int> _playerCount = new(0);
         private void OnPlayerCountChanged(int prev, int next, bool asServer)
         {
-            _lobbyManager.SetPlayerCount(prev, next);
-        }
-
-        private readonly SyncVar<string[]> _playerNames = new(new string[0]);
-
-        private void OnPlayerNamesChanged(string[] prev, string[] next, bool asServer)
-        {
-            _lobbyManager.SetPlayerNames(next);
+            if (asServer)
+                return;
+            _lobbyManager.SetPlayerCount_Response(prev, next);
         }
     }
 }

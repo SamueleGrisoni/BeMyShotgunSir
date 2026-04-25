@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using BeMyShotgunSir.Core;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
@@ -10,7 +12,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public override void InitData()
         {
             LobbyIP = "127.0.0.1";
-            PlayerNames = new string[0];
             PlayerCount = 0;
         }
 
@@ -18,11 +19,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (data is ILobbyNetData lobbyData)
             {
-                SetLobbyIP(lobbyData.LobbyIP);
-                SetPlayerCount(lobbyData.PlayerCount);
-                SetPlayerNames(lobbyData.PlayerNames);
+                //no setters to allow a real refresh even for unchanged values
+                LobbyIP = lobbyData.LobbyIP;
+                OnLobbyIPChanged?.Invoke();
+                PlayerCount = lobbyData.PlayerCount;
+                OnPlayerCountChanged?.Invoke();
+                PlayerStates = lobbyData.PlayerStates;
+                OnPlayerStatesChanged?.Invoke();
             }
-            //NOTE: maybe one single event here? Then the UI must be aware of this
         }
 
         public string LobbyIP { get; private set; }
@@ -35,6 +39,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 OnLobbyIPChanged?.Invoke();
             }
         }
+
         public int PlayerCount { get; private set; }
         public event Action OnPlayerCountChanged;
         public void SetPlayerCount(int newCount)
@@ -45,13 +50,37 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 OnPlayerCountChanged?.Invoke();
             }
         }
-        public string[] PlayerNames { get; private set; }
-        public event Action OnPlayerNamesChanged;
-        public void SetPlayerNames(string[] newPlayerNames)
+
+        public Dictionary<int, PlayerLobbyState> PlayerStates { get; private set; } = new Dictionary<int, PlayerLobbyState>();
+        public event Action OnPlayerStatesChanged;
+        public void SetPlayerStates(SyncDictionaryOperation op, int key, PlayerLobbyState value)
         {
-            PlayerNames = newPlayerNames;
-            OnPlayerNamesChanged?.Invoke();
+            switch (op)
+            {
+                case SyncDictionaryOperation.Add:
+                case SyncDictionaryOperation.Set:
+                    PlayerStates[key] = value;
+                    break;
+                case SyncDictionaryOperation.Remove:
+                    PlayerStates.Remove(key);
+                    break;
+                case SyncDictionaryOperation.Clear:
+                    PlayerStates.Clear();
+                    break;
+                case SyncDictionaryOperation.Complete:
+                    break;
+                default:
+                    break;
+            }
+            OnPlayerStatesChanged?.Invoke();
         }
 
+        public LobbyInfo LobbyInfo { get; private set; }
+        public event Action OnLobbyInfoChanged;
+        public void SetLobbyInfo(LobbyInfo newInfo)
+        {
+            LobbyInfo = newInfo;
+            OnLobbyInfoChanged?.Invoke();
+        }
     }
 }

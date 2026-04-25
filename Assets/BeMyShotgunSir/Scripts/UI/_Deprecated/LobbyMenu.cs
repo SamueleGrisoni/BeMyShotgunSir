@@ -1,4 +1,3 @@
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +20,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _quitButton.onClick.RemoveListener(OnQuitButtonClicked);
 
         private void OnQuitButtonClicked() =>
-         GameServices.Instance.ConnectionManager.QuitLobby();
+            _lobbyCommand.QuitLobby_CMRequest();
     }
 }

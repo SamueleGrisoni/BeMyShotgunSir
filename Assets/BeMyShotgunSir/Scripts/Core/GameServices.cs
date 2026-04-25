@@ -21,8 +21,8 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void Start()
         {
-            LobbyManager.OnLobbySpawned += HandleLobbySpawned;
-            LobbyManager.OnLobbyDespawned += HandleLobbyDespaired;
+            LobbyManager.OnLobbyManagerSpawned += HandleLobbySpawned;
+            LobbyManager.OnLobbyManagerDespawned += HandleLobbyDespaired;
 
             AudioManager.Initialize();
             ConnectionManager.Initialize();
@@ -42,8 +42,8 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void OnDisable()
         {
-            LobbyManager.OnLobbySpawned -= HandleLobbySpawned;
-            LobbyManager.OnLobbyDespawned -= HandleLobbyDespaired;
+            LobbyManager.OnLobbyManagerSpawned -= HandleLobbySpawned;
+            LobbyManager.OnLobbyManagerDespawned -= HandleLobbyDespaired;
         }
 
         [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }

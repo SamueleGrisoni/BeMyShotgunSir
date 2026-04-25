@@ -1,4 +1,3 @@
-using System.Collections;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using FishNet.Connection;
 using FishNet.Managing.Client;
@@ -61,14 +60,15 @@ namespace BeMyShotgunSir.Scripts.Core
             _serverManager.OnRemoteConnectionState += OnRemoteConnectionState;
             _clientManager.OnClientConnectionState += OnClientConnectionState;
 
-            LobbyManager.OnLobbySpawned += HandleLobbySpawned;
-            LobbyManager.OnLobbyDespawned += HandleLobbyDespawned;
+            LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
 
             TryGetComponent(out _sceneCoordinator);
             ChangeState(AppFlowState.Init);
 
             _isInitialized = true;
         }
+
         private void ChangeState(AppFlowState newState)
         {
             _currentAppFlow = newState;
@@ -105,7 +105,7 @@ namespace BeMyShotgunSir.Scripts.Core
             _sceneCoordinator.LoadLobby();
         }
 
-        private void HandleLobbySpawned(LobbyManager lobby)
+        private void HandleLobbyManagerSpawned(LobbyManager lobby)
         {
             if (lobby == null)
                 return;
@@ -121,7 +121,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 }
             }
         }
-        private void HandleLobbyDespawned()
+        private void HandleLobbyManagerDespawned()
         {
             if (_currentAppFlow != AppFlowState.Lobby)
                 return;
@@ -165,7 +165,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 if (_connectionFlowState == ConnectionFlowState.Hosting)
                     _connectionFlowState = ConnectionFlowState.Idle;
 
-                StartCoroutine(WaitToLoadLobby());
+                ChangeState(AppFlowState.Lobby);
                 return;
             }
 
@@ -183,20 +183,17 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void OnRemoteConnectionState(NetworkConnection net, RemoteConnectionStateArgs remote)
         {
-            if (remote.ConnectionState == RemoteConnectionState.Started)
+            LobbyManager mng = GameServices.Instance.LobbyManager;
+            if (mng == null)
             {
-                if (_lobbyManager != null)
-                    _lobbyManager.AddPlayerToLobby(net);
-                else
+                if (remote.ConnectionState == RemoteConnectionState.Started)
                     _pendingRemotePlayerDelta++;
-            }
-            if (remote.ConnectionState == RemoteConnectionState.Stopped)
-            {
-                if (_lobbyManager != null)
-                    _lobbyManager.RemovePlayerFromLobby(net);
-                else
+                else if (remote.ConnectionState == RemoteConnectionState.Stopped)
                     _pendingRemotePlayerDelta--;
+                return;
             }
+            else if (_pendingRemotePlayerDelta != 0)
+                mng.AdjustPlayerCount(_pendingRemotePlayerDelta);
         }
 
         private void OnClientConnectionState(ClientConnectionStateArgs args)
@@ -220,12 +217,6 @@ namespace BeMyShotgunSir.Scripts.Core
             }
         }
 
-        private IEnumerator WaitToLoadLobby()
-        {
-            yield return new WaitForEndOfFrame();
-            ChangeState(AppFlowState.Lobby);
-        }
-
         private void OnDisable()
         {
             if (_serverManager != null)
@@ -237,8 +228,8 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_clientManager != null)
                 _clientManager.OnClientConnectionState -= OnClientConnectionState;
 
-            LobbyManager.OnLobbySpawned -= HandleLobbySpawned;
-            LobbyManager.OnLobbyDespawned -= HandleLobbyDespawned;
+            LobbyManager.OnLobbyManagerSpawned -= HandleLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerDespawned -= HandleLobbyManagerDespawned;
 
             _connectionFlowState = ConnectionFlowState.Idle;
             _pendingRemotePlayerDelta = 0;
