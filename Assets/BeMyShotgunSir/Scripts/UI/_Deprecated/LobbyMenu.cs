@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
         public override void BindLobbyDataView(ILobbyDataView lobbyDataView) => _lobbyDataView = lobbyDataView;
+        public override void OnBindComplete() { }
 
         private void Awake() =>
             _quitButton.onClick.AddListener(OnQuitButtonClicked);

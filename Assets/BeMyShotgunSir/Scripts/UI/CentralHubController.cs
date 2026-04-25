@@ -26,7 +26,7 @@ namespace BeMyShotgunSir.Scripts.UI
             Show(false);
         }
 
-        IEnumerator InitNextFrame()
+        private IEnumerator InitNextFrame()
         {
             yield return null;
             _playButton.clicked += OnPlayButtonClicked;

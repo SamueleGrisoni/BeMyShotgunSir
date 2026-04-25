@@ -66,6 +66,12 @@ namespace BeMyShotgunSir.Scripts.UI
                 case UIScreen.HUD:
                     // _hudController.Show(show);
                     break;
+                case UIScreen.SettingsMenu:
+                    break;
+                case UIScreen.CustomizationMenu:
+                    break;
+                case UIScreen.ShopMenu:
+                    break;
                 default:
                     Debug.LogWarning("Unknown screen: " + screen);
                     break;

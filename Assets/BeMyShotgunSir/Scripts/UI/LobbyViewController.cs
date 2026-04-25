@@ -1,17 +1,46 @@
 using System.Collections;
 using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Lobby;
-using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
-    public class LobbyViewController : MonoBehaviour
+    public class LobbyViewController : LobbyBindTarget
     {
         [SerializeField] private UIManager _uIManager;
         [SerializeField] private UIDocument _lobbyMenuDocument;
-        [SerializeField] private InterfaceSerializer<SOLobbyData, ILobbyDataView> _lobbyData;
+
+        #region Lobby Data & Commands
+        private LobbyCommand _command;
+        private ILobbyDataView _view;
+
+        public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _command = lobbyCommand;
+        public override void BindLobbyDataView(ILobbyDataView lobbyData) => _view = lobbyData;
+        public override void OnBindComplete()
+        {
+            if (_command == null)
+            {
+                Debug.LogError("LobbyCommand not bound to LobbyViewController!");
+                return;
+            }
+            if (_view == null)
+            {
+                Debug.LogError("LobbyDataView not bound to LobbyViewController!");
+                return;
+            }
+
+            _view.OnLobbyIPChanged += UpdateLobbyIP;
+            _view.OnPlayerCountChanged += UpdatePlayerCount;
+            // NOTE the following is commented since not really needed (as LobbyInfo should not change). The choice is up to @OmegaMorello
+            // _view.OnLobbyInfoChanged += UpdateLobbyInfo;
+
+            //NOTE the following two instructions are redundant since as soon as the bind occurs, the SOData will trigger the events
+            UpdatePlayerCount();
+            UpdateLobbyIP();
+        }
+        #endregion
+
 
         #region UI Elements
         private VisualElement _root;
@@ -27,34 +56,15 @@ namespace BeMyShotgunSir.Scripts.UI
         private Button _backButton;
         #endregion
 
-        #region Lobby Data
-        private ILobbyDataView _view;
-        private int _maxPlayers = 4;
-        #endregion
-
-        private void Awake()
-        {
-            _view = _lobbyData.Interface;
-            Debug.Assert(_view != null, "LobbyViewController requires a reference to an ILobbyDataView.");
-        }
-
         private void OnEnable()
         {
-            if (_view != null)
-            {
-                _view.OnLobbyIPChanged += UpdateLobbyIP;
-                _view.OnPlayerCountChanged += UpdatePlayerCount;
-            }
-            UpdatePlayerCount();
-            UpdateLobbyIP();
-
             if (_lobbyMenuDocument == null) return;
             _root = _lobbyMenuDocument.rootVisualElement;
             StartCoroutine(InitNextFrame());
             Show(false);
         }
 
-        IEnumerator InitNextFrame()
+        private IEnumerator InitNextFrame()
         {
             _hostJoinButtonContainer = _root.Q<VisualElement>("HostJoinButtonContainer");
             _hostButton = _root.Q<Button>("HostButton");
@@ -147,7 +157,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void CloseConnection()
         {
-            GameServices.Instance.ConnectionManager.ChangeState(InitManagerState.Init);
+            _command.QuitLobby_CMRequest();
             ShowHostJoinButtons();
         }
 
@@ -163,7 +173,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_playersInLobby != null && _view != null)
             {
-                _playersInLobby.text = $"PLAYERS IN LOBBY: {_view.PlayerCount}/{_maxPlayers}";
+                _playersInLobby.text = $"PLAYERS IN LOBBY: {_view.PlayerCount}/{_view.LobbyInfo.MaxPlayers}";
             }
         }
 
@@ -182,7 +192,5 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
-
-
     }
 }

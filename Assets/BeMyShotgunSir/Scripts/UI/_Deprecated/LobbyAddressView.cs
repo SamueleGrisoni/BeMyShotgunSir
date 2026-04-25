@@ -11,9 +11,11 @@ namespace BeMyShotgunSir.Scripts.UI
         private LobbyCommand _lobbyCommand;
         private ILobbyDataView _lobbyDataView;
         public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyDataView)
-        {
+        public override void BindLobbyDataView(ILobbyDataView lobbyDataView) =>
             _lobbyDataView = lobbyDataView;
+
+        public override void OnBindComplete()
+        {
             _lobbyDataView.OnLobbyIPChanged += UpdateLobbyIP;
             UpdateLobbyIP();
         }

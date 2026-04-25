@@ -25,10 +25,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public struct LobbyInfo
     {
-        public int maxPlayers;
+        public int MaxPlayers;
         public LobbyInfo(bool _)
         {
-            maxPlayers = 4;
+            MaxPlayers = 4;
         }
     }
     public struct LobbyNetDataSnapshot : ILobbyNetData

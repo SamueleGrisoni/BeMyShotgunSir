@@ -43,7 +43,7 @@ public class BottomBarController : MonoBehaviour
         StartCoroutine(InitNextFrame());
     }
 
-    IEnumerator InitNextFrame()
+    private IEnumerator InitNextFrame()
     {
         yield return null;
 

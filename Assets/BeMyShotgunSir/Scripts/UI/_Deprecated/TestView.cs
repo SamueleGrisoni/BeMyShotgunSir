@@ -12,16 +12,16 @@ namespace BeMyShotgunSir.Scripts.UI
         private ILobbyDataView _lobbyDataView;
         private TextMeshProUGUI _testText;
 
-        private void Awake() =>
-            TryGetComponent(out _testText);
-
         public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyData)
+        public override void BindLobbyDataView(ILobbyDataView lobbyData) => _lobbyDataView = lobbyData;
+        public override void OnBindComplete()
         {
-            _lobbyDataView = lobbyData;
             _lobbyDataView.OnPlayerStatesChanged += UpdateTestView;
             UpdateTestView();
         }
+
+        private void Awake() =>
+            TryGetComponent(out _testText);
 
         private void OnDisable()
         {
@@ -49,7 +49,5 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _testText.text = sb.ToString();
         }
-
-
     }
 }

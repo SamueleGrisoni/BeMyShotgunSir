@@ -35,8 +35,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 Log.ELazy(() => "LobbyManager: No SOLobbyData found. Cannot bind lobby data.", this);
                 return;
             }
-            _binder.BindCommand(targets);
-            _binder.BindData(targets);
+            _binder.Bind(targets);
             _lobbyCommand.GetInitSnapshot_Request();
         }
 

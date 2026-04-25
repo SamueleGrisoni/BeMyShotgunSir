@@ -15,9 +15,10 @@ namespace BeMyShotgunSir.Scripts.UI
             TryGetComponent(out _playerCountText);
 
         public override void BindLobbyCommand(LobbyCommand lobbyCommand) => _lobbyCommand = lobbyCommand;
-        public override void BindLobbyDataView(ILobbyDataView lobbyData)
+        public override void BindLobbyDataView(ILobbyDataView lobbyData) => _lobbyDataView = lobbyData;
+
+        public override void OnBindComplete()
         {
-            _lobbyDataView = lobbyData;
             _lobbyDataView.OnPlayerCountChanged += UpdatePlayerCount;
             UpdatePlayerCount();
         }

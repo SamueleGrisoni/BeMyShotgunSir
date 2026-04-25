@@ -9,7 +9,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _lobbyCommand = lobbyCommand;
             _lobbyDataView = lobbyDataView;
         }
-        public void BindCommand(ILobbyBindTarget[] bindTargets)
+
+        public void Bind(ILobbyBindTarget[] targets)
+        {
+            BindCommand(targets);
+            BindData(targets);
+            CompleteBinding();
+        }
+        private void BindCommand(ILobbyBindTarget[] bindTargets)
         {
             foreach (ILobbyBindTarget target in bindTargets)
             {
@@ -17,11 +24,19 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
 
-        public void BindData(ILobbyBindTarget[] bindTargets)
+        private void BindData(ILobbyBindTarget[] bindTargets)
         {
             foreach (ILobbyBindTarget target in bindTargets)
             {
                 target.BindLobbyDataView(_lobbyDataView);
+            }
+        }
+
+        private void CompleteBinding()
+        {
+            foreach (ILobbyBindTarget target in GameServices.Instance.LobbyManager.GetComponentsInChildren<ILobbyBindTarget>())
+            {
+                target.OnBindComplete();
             }
         }
     }
