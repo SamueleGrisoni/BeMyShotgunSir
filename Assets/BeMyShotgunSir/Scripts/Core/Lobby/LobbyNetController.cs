@@ -78,6 +78,30 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             InitSyncValues();
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            // Solo host: il server è l'unico che può scrivere SyncDictionary.
+            if (!IsServerInitialized)
+                return;
+
+            NetworkConnection localConnection = GameServices.Instance.NetworkManager.ClientManager.Connection;
+            if (localConnection == null)
+                return;
+
+            int localId = localConnection.ClientId;
+            if (!_playerStates.TryGetValue(localId, out PlayerLobbyState state))
+                return;
+
+            string hostName = "PlayerHost " + localId;
+            if (state.PlayerName == hostName)
+                return;
+
+            state.PlayerName = hostName;
+            _playerStates[localId] = state;
+        }
+
         private void InitSyncValues()
         {
             _playerCount.Value = 0;
@@ -112,10 +136,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (args.ConnectionState == RemoteConnectionState.Started)
             {
-                string defaultName = connection.IsHost ? "PlayerHost " + connection.ClientId : "Player " + connection.ClientId; //DANGER qui non rileva l'host bene
-                _playerCount.Value++;
                 if (!_playerStates.ContainsKey(connection.ClientId))
+                {
+                    _playerCount.Value++;
+                    string defaultName = "Player " + connection.ClientId;
                     _playerStates[connection.ClientId] = new PlayerLobbyState(connection, defaultName);
+                }
             }
             else if (args.ConnectionState == RemoteConnectionState.Stopped)
             {
