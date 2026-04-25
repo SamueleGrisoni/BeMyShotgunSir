@@ -177,13 +177,13 @@ root=true
   dotnet_naming_style.pascal_case.capitalization = pascal_case
 
   # Private Fields (_camelCase)
-  dotnet_naming_rule.private_member_fields.symbols = private_member_fields
-  dotnet_naming_rule.private_member_fields.style = private_member_field_style
+  dotnet_naming_rule.private_member_fields.symbols = private_protected_member_fields
+  dotnet_naming_rule.private_member_fields.style = private_protected_member_fields
   dotnet_naming_rule.private_member_fields.severity = error
-  dotnet_naming_symbols.private_member_fields.applicable_kinds = field
-  dotnet_naming_symbols.private_member_fields.applicable_accessibilities = private
-  dotnet_naming_style.private_member_field_style.capitalization = camel_case
-  dotnet_naming_style.private_member_field_style.required_prefix = _
+  dotnet_naming_symbols.private_protected_member_fields.applicable_kinds = field, property
+  dotnet_naming_symbols.private_protected_member_fields.applicable_accessibilities = private, protected, protected_internal, private_protected
+  dotnet_naming_style.private_protected_member_fields.capitalization = camel_case
+  dotnet_naming_style.private_protected_member_fields.required_prefix = _
 
   # Locals and Parameters (camelCase)
   dotnet_naming_rule.locals_should_be_camel_case.symbols = locals_and_parameters
