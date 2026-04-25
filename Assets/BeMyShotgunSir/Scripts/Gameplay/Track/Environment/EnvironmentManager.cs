@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+using Random = System.Random;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
@@ -14,28 +14,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         [SerializeField] private List<Building> _smallBuildingPrefabs;
         [SerializeField] private List<CityProps> _propsPrefabs;
         [SerializeField] private SOEnvironment _environmentData;
+        [SerializeField] private TrackSeed _trackSeed;
         private List<Bounds> _spawnPrefabsBounds = new List<Bounds>();
-
+        private Random Rng => _trackSeed.Rng;
         public void PopulateChunk(RoadChunk chunk)
         {
-            if (!AreSpawnAreasValid(chunk))
+            if(!ValidateInspectorData(chunk))
             {
-                return;
-            }
-            //Todo spawning should be handle with pooling
-            if (_bigBuildingPrefabs == null || _bigBuildingPrefabs.Count == 0)
-            {
-                Debug.LogWarning("[EnvironmentManager] No big building prefabs assigned.");
-                return;
-            }
-            if (_mediumBuildingPrefabs == null || _mediumBuildingPrefabs.Count == 0)
-            {
-                Debug.LogWarning("[EnvironmentManager] No medium building prefabs assigned.");
-                return;
-            }
-            if (_smallBuildingPrefabs == null || _smallBuildingPrefabs.Count == 0)
-            {
-                Debug.LogWarning("[EnvironmentManager] No small building prefabs assigned.");
                 return;
             }
             foreach (var spawnArea in chunk.PolygonSpawnArea)
@@ -82,10 +67,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         {
             if (_propsPrefabs == null || _propsPrefabs.Count == 0) return;
             //todo use RNG from server to ensure same environment for all players
-            int propsToSpawn = Random.Range(_environmentData.MaxPropsPerSpawnArea/3, _environmentData.MaxPropsPerSpawnArea + 1);
+            int propsToSpawn = Rng.Next(_environmentData.MaxPropsPerSpawnArea/3, _environmentData.MaxPropsPerSpawnArea + 1);
             for (int i = 0; i < propsToSpawn; i++)
             {
-                CityProps randomPrefab = _propsPrefabs[Random.Range(0, _propsPrefabs.Count)];
+                CityProps randomPrefab = _propsPrefabs[Rng.Next(0, _propsPrefabs.Count)];
                 TrySpawnPlaceable(randomPrefab);
             }
         }
@@ -105,7 +90,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             while (failedAttempts < maxFailures)
             {
                 //Todo use RNG from server to ensure same environment for all players
-                Building randomPrefab = prefabs[Random.Range(0, prefabs.Count)];
+                Building randomPrefab = prefabs[Rng.Next(0, prefabs.Count)];
 
                 if (TrySpawnPlaceable(randomPrefab))
                 {
@@ -169,8 +154,32 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         private void Place(Placeable prefab, Vector3 worldPos, Vector3 edgeDir)
         {
             Quaternion rotation = Quaternion.LookRotation(edgeDir, Vector3.up);
+            //Todo spawning should be handle with pooling
             Instantiate(prefab.gameObject, worldPos, rotation, _currentSpawnArea.transform);
         }
 
+        private bool ValidateInspectorData(RoadChunk chunk)
+        {
+            if (!AreSpawnAreasValid(chunk))
+            {
+                return false;
+            }
+            if (_bigBuildingPrefabs == null || _bigBuildingPrefabs.Count == 0)
+            {
+                Debug.LogWarning("[EnvironmentManager] No big building prefabs assigned.");
+                return false;
+            }
+            if (_mediumBuildingPrefabs == null || _mediumBuildingPrefabs.Count == 0)
+            {
+                Debug.LogWarning("[EnvironmentManager] No medium building prefabs assigned.");
+                return false;
+            }
+            if (_smallBuildingPrefabs == null || _smallBuildingPrefabs.Count == 0)
+            {
+                Debug.LogWarning("[EnvironmentManager] No small building prefabs assigned.");
+                return false;
+            }
+            return true;
+        }
     }
 }

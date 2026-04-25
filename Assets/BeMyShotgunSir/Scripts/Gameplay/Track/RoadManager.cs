@@ -17,7 +17,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private float _despawnBufferDistance = 20f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
-        private LinkedList<PooledEnvChunk[]> _activeEnvChunks;
         private Transform _lastPlacedNormalAnchor;
         private Transform _lastPlacedRightAnchor;
 
@@ -25,7 +24,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             _trackPooler.SetTrackData(_trackData);
             _activeRoadChunks = new LinkedList<PooledRoadChunk>();
-            _activeEnvChunks = new LinkedList<PooledEnvChunk[]>();
 
             for (int i = 0; i < _trackData.MaxActiveChunks; i++)
             {
