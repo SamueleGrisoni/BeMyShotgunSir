@@ -70,8 +70,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             int propsToSpawn = Rng.Next(_environmentData.MaxPropsPerSpawnArea/3, _environmentData.MaxPropsPerSpawnArea + 1);
             for (int i = 0; i < propsToSpawn; i++)
             {
-                CityProps randomPrefab = _propsPrefabs[Rng.Next(0, _propsPrefabs.Count)];
+                CityProps randomPrefab = _propsPrefabs[Rng.Next(0, _propsPrefabs.Count - 1)];
                 TrySpawnPlaceable(randomPrefab);
+            }
+            if (Rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
+            {
+                Debug.Log("Something funny spawned!");
+                Instantiate(_propsPrefabs[^1].gameObject,
+                    _currentSpawnArea.transform.position + Vector3.up * 50f, default,
+                    _currentSpawnArea.transform);
             }
         }
 
