@@ -1,119 +1,123 @@
-using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Gameplay.Player.Driver.DriftingStates;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using FishNet.Object;
+using FishNet.Object.Prediction;
+using FishNet.Transporting;
+using GameKit.Dependencies.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
+    /*  Questo enum serve per identificare e riconciliare gli stati tra client e server.
+        Ci sono dei casi in cui sul client e sul server il sidecar non si trova nello stesso stato e quindi sul client
+        deve essere riconciliato usando il replicate data.       
+    */
+    public enum DrivingStateType : byte
+    {
+        Idle,
+        Normal,
+        Drifting,
+        Boost,
+    }
+
+    /*  This struct contains the inputs of the owner client required to calculate the next state of the
+        sidecar. Each ReplicateData is associated with a specific 'Tick' allowing FishNet to keep track
+        of exactly when the input state occured.
+        It is used on the owner clients to implement the CSP: the client immediately exectues the logic
+        giving the player the felling of zero latency.
+        It is also sent to the Authoritative Server and other Clients (since it is enabled StateForwarding).
+    */
+    public struct ReplicateData : IReplicateData
+    {
+        public float SteerInput;
+        public bool IsDrifting;
+        public bool IsBoosting;
+        public bool IsStarting;
+        public ReplicateData(float steerInput, bool isDrifting, bool isBoosting, bool isStarting) : this()
+        {
+            SteerInput = steerInput;
+            IsDrifting = isDrifting;
+            IsBoosting = isBoosting;
+            IsStarting = isStarting;
+        }
+
+        private uint _tick;
+        public void Dispose() { }
+        public uint GetTick() => _tick;
+        public void SetTick(uint value) => _tick = value;
+    }
+    /*  ReconcileData is the actual snapshot of the sidecar sent by the Server to the Clients.
+        When the clients receives a ReconcileData, it compares its prediction with the server's data.
+        If the difference exceeds a certain threshold the client uses ReconcileData to reconcile the client.
+    */
+    public struct ReconcileData : IReconcileData
+    {
+        public PredictionRigidbody PredictionRigidbody;
+        public Quaternion ParentRotation;
+        public Quaternion SidecarLocalRotation;
+        public Vector3 CurrentLinearVelocity;
+        public float DriftDirection;
+        public float CurrentBatteryCharge;
+        public float BatteryChargeTimer;
+        public float BoostTimer;
+        public DrivingStateType StateType;
+        public ReconcileData(PredictionRigidbody pr, Quaternion parentRotation, Quaternion sidecarLocalRotation, Vector3 currentLinearVelocity, float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, DrivingStateType stateType) : this()
+        {
+            PredictionRigidbody = pr;
+            ParentRotation = parentRotation;
+            SidecarLocalRotation = sidecarLocalRotation;
+            CurrentLinearVelocity = currentLinearVelocity;
+            DriftDirection = driftDirection;
+            CurrentBatteryCharge = currentBatteryCharge;
+            BatteryChargeTimer = batteryChargeTimer;
+            BoostTimer = boostTimer;
+            StateType = stateType;
+        }
+        private uint _tick;
+        public void Dispose() { }
+        public uint GetTick() => _tick;
+        public void SetTick(uint value) => _tick = value;
+    }
     public class DriverController : NetworkBehaviour, IDriverControllerContext
     {
         [SerializeField] private SOSidecarStats _stats;
         [SerializeField] private Rigidbody _sphere;
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
-        [SerializeField] private Collider _collider;
 
-        [SerializeField] private Transform[] _wheelBones;
-        [SerializeField] private Transform _handlebarBones;
-        [SerializeField] private float _wheelRadius;
+        private PredictionRigidbody _predictionRigidbody;
+        private Vector3 _currentLinearVelocity;
         private Quaternion _parentRotation;
         private Quaternion _sidecarLocalRotation;
         private IDrivingState _currentDrivingState;
+        private DrivingStateType _currentStateType;
         private IDrivingState _idleState = new IdleDrivingState();
         private IDrivingState _normalState = new NormalDrivingState();
         private IDrivingState _driftingState = new DriftingDrivingState();
-        private IDrivingState _airState = new AirDrivingState();
         private IDrivingState _boostState = new BoostDrivingState();
         private float _currentMaxSpeed;
-        private bool _isGrounded;
-        private float _driftDirection;
-        private float _currentBatteryCharge;
-        private List<float> _accelerationModifiers = new();
-        private float CurrentAcceleration
-        {
-            get
-            {
-                float totalAcceleration = _stats.AccelerationForce;
-                foreach (float mod in _accelerationModifiers)
-                {
-                    totalAcceleration += mod;
-                }
-                return totalAcceleration;
-            }
-        }
         private float _steerInput;
-        private bool _isDriftButtonPressed;
-        private bool _isBoostButtonPressed;
-        private float _steerInputOnServer;
-        private bool _isStartButtonPressed;
-        private bool _isDrifiButtonPressedOnServer;
-        private bool _isBoostButtonpressedOnServer;
-        private bool _isStartButtonPressedOnServer;
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
-            _currentDrivingState = _idleState;
-        }
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
+        private bool _isDrifting;
+        private bool _isBoosting;
+        private float _currentBatteryCharge;
+        private float _batteryChargeTimer;
+        private float _boostTimer;
+        private float _driftDirection;
+        private bool _isStarting;
 
-            _parent.gameObject.SetActive(true);
-
-            if (IsOwner)
-            {
-                GetComponent<PlayerInput>().enabled = true;
-            }
-        }
-        private void Awake()
-        {
-            Debug.Assert(_stats != null, "Missing Reference");
-            Debug.Assert(_sphere != null, "Missing Reference");
-            Debug.Assert(_parent != null, "Missing Reference");
-            Debug.Assert(_sidecar != null, "Missing Reference");
-
-            _currentMaxSpeed = _stats.MaxSpeed;
-            _parentRotation = _parent.rotation;
-            _sidecarLocalRotation = _sidecar.localRotation;
-        }
-        private void Update()
-        {
-            if (!IsServerInitialized) return;
-            _currentDrivingState?.ExecuteUpdate(this);
-
-        }
-        private void LateUpdate()
-        {
-            _parent.position = _sphere.transform.position; // TODO maybe this is useless
-
-            if (!IsServerInitialized) return;
-            _parent.rotation = _parentRotation;
-            _sidecar.localRotation = _sidecarLocalRotation;
-        }
-        private void FixedUpdate()
-        {
-            if (!IsServerInitialized) return;
-            CheckGround();
-            _currentDrivingState?.ExecuteFixedUpdate(this);
-        }
-        Transform IDriverControllerContext.ParentTransform => _parent;
-        Transform IDriverControllerContext.SidecarTransform => _sidecar;
         Vector3 IDriverControllerContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDriverControllerContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
         SOSidecarStats IDriverControllerContext.Stats => _stats;
         IDrivingState IDriverControllerContext.IdleState => _idleState;
         IDrivingState IDriverControllerContext.NormalState => _normalState;
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
-        IDrivingState IDriverControllerContext.AirState => _airState;
         IDrivingState IDriverControllerContext.BoostState => _boostState;
         float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
-        bool IDriverControllerContext.IsGrounded => _isGrounded;
-        bool IDriverControllerContext.IsDriftingButtonPressed => _isDrifiButtonPressedOnServer;
-        float IDriverControllerContext.SteerInput => _steerInputOnServer;
-        bool IDriverControllerContext.IsBoostButtonPressed => _isBoostButtonpressedOnServer;
-        bool IDriverControllerContext.IsStartButtonPressed => _isStartButtonPressedOnServer;
+        bool IDriverControllerContext.IsGrounded => throw new System.NotImplementedException();
+        bool IDriverControllerContext.IsDriftingButtonPressed => throw new System.NotImplementedException();
+        float IDriverControllerContext.SteerInput => throw new System.NotImplementedException();
+        bool IDriverControllerContext.IsBoostButtonPressed => throw new System.NotImplementedException();
+        bool IDriverControllerContext.IsStartButtonPressed => throw new System.NotImplementedException();
         float IDriverControllerContext.DriftDirection
         {
             get => _driftDirection;
@@ -124,119 +128,180 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             get => _currentBatteryCharge;
             set => _currentBatteryCharge = value;
         }
-        void IDriverControllerContext.ChangeState(IDrivingState state) => ChangeState(state);
-        void IDriverControllerContext.SetMaxSpeed(float maxSpeed) => _currentMaxSpeed = maxSpeed;
-        void IDriverControllerContext.ApplyAcceleration(Vector3 direction)
+        float IDriverControllerContext.BatteryChargeTimer
         {
-            _sphere.AddForce(direction * CurrentAcceleration, ForceMode.Acceleration);
+            get => _batteryChargeTimer;
+            set => _batteryChargeTimer = value;
+        }
+        float IDriverControllerContext.BoostTimer
+        {
+            get => _boostTimer;
+            set => _boostTimer = value;
+        }
 
-            Vector3 currentVel = _sphere.linearVelocity;
-            Vector3 horizontalVel = new(currentVel.x, 0, currentVel.z);
-            if (horizontalVel.magnitude > _currentMaxSpeed)
+        public IDrivingState AirState => throw new System.NotImplementedException();
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (IsOwner)
             {
-                Vector3 limitedHorizontalVel = horizontalVel.normalized * _currentMaxSpeed;
-                _sphere.linearVelocity = new Vector3(limitedHorizontalVel.x, currentVel.y, limitedHorizontalVel.z);
+                GetComponent<UnityEngine.InputSystem.PlayerInput>().enabled = true;
+
             }
         }
-        void IDriverControllerContext.ApplyGravity(float gravity) => _sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
+        private void Awake()
+        {
+            _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
+            _predictionRigidbody.Initialize(_sphere);
+            _parentRotation = _parent.rotation;
+            _sidecarLocalRotation = _sidecar.localRotation;
+            _currentMaxSpeed = _stats.MaxSpeed;
+            _currentDrivingState = _idleState;
+            _currentStateType = DrivingStateType.Idle;
+        }
+        private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
+        public override void OnStartNetwork()
+        {
+            TimeManager.OnTick += TimeManager_OnTick;
+            TimeManager.OnPostTick += TimeManager_OnPostTick;
+        }
+
+        public override void OnStopNetwork()
+        {
+            TimeManager.OnTick -= TimeManager_OnTick;
+            TimeManager.OnPostTick -= TimeManager_OnPostTick;
+        }
+        private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
+        private ReplicateData CreateReplicateData()
+        {
+            if (!IsOwner)
+                return default;
+
+            var md = new ReplicateData(_steerInput, _isDrifting, _isBoosting, _isStarting);
+            return md;
+        }
+        [Replicate]
+        /*
+        Questo metodo viene eseguito sia sul Client che sul Server per ridurre i problemi di latenza. 
+        Il client esegue immediatamente il codice, senza aspettare il server
+        Il server esegue anch'esso i calcoli una volta ricevuti i dati (ReplicateDate)
+        */
+        private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
+        {
+            _currentDrivingState?.CheckStateChange(this, data);
+            _currentDrivingState?.RunInputs(this, data);
+
+            _predictionRigidbody.Velocity(_currentLinearVelocity);
+            _predictionRigidbody.Simulate();
+        }
+        private void TimeManager_OnPostTick() => CreateReconcile();
+        public override void CreateReconcile()
+        {
+            if (!IsServerInitialized)
+                return;
+
+            var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _driftDirection, _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType);
+            ReconcileState(rd, Channel.Reliable);
+        }
+        [Reconcile]
+        /*
+        Dopo ogni tick, il server invia al client un pacchetto ReconcileData che contiene lo stato ufficiale.
+        Il client riceve il pacchetto ReconcileData, lo confronta con la sua predizione e se c'è una differenza
+        significativa il client sovrascrive i propri dati con quelli del server.
+        */
+        private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable)
+        {
+            _parentRotation = data.ParentRotation;
+            _sidecarLocalRotation = data.SidecarLocalRotation;
+
+            _currentLinearVelocity = data.CurrentLinearVelocity;
+            _driftDirection = data.DriftDirection;
+            _currentBatteryCharge = data.CurrentBatteryCharge;
+            _batteryChargeTimer = data.BatteryChargeTimer;
+            _boostTimer = data.BoostTimer;
+
+            _currentStateType = data.StateType;
+            switch (_currentStateType)
+            {
+                case DrivingStateType.Idle: _currentDrivingState = _idleState; break;
+                case DrivingStateType.Normal: _currentDrivingState = _normalState; break;
+                case DrivingStateType.Drifting: _currentDrivingState = _driftingState; break;
+                case DrivingStateType.Boost: _currentDrivingState = _boostState; break;
+                default:
+                    break;
+            }
+
+            _predictionRigidbody.Reconcile(data.PredictionRigidbody);
+        }
+
+        public void LateUpdate()
+        {
+            _parent.position = _sphere.transform.position;
+            if (!IsOwner && !IsServerInitialized) return;
+            _parent.rotation = _parentRotation;
+            _sidecar.localRotation = _sidecarLocalRotation;
+        }
         void IDriverControllerContext.ApplySteering(float steerAmount)
         {
-            _parent.Rotate(_parent.up, steerAmount * _stats.SteeringForce * Time.fixedDeltaTime);
-            float steerAngle = steerAmount * _stats.SteeringForce * Time.fixedDeltaTime;
+            float steerAngle = steerAmount * _stats.SteeringForce * (float)TimeManager.TickDelta;
             var steerRotation = Quaternion.AngleAxis(steerAngle, _parent.up);
             _parentRotation *= steerRotation;
         }
-        void IDriverControllerContext.ApplyVisualRotation(Quaternion targetRot)
+        void IDriverControllerContext.ApplyAcceleration(Vector3 direction)
         {
-            // Questo metodo aggiunge una rotazione in più al sidecar rispetto al parent.
-            // Serve per dare la sensazione visiva che il sidecar sta effettivamente ruotando.
-            // Cambiare il valore di SteerAngularRotationSlerp per rendere più o meno veloce questa rotazione. Il valore è da settare meglio quando si ha i comandi touch
-            _sidecarLocalRotation = Quaternion.Slerp(
-                _sidecarLocalRotation,
-                targetRot,
-                _stats.SteerAngularRotationSlerp * Time.fixedDeltaTime // Cambiare SteerAngularRotationSlerp per rendere più o meno veloce la rotazione visiva del sidear
-            );
+            Vector3 predictedVelocity = _predictionRigidbody.Rigidbody.linearVelocity + direction * (_stats.AccelerationForce * (float)TimeManager.TickDelta);
+            Vector3 horrizontalLinearVelocity = new(predictedVelocity.x, 0, predictedVelocity.z);
+            if (horrizontalLinearVelocity.magnitude > _currentMaxSpeed)
+            {
+                Vector3 limitedHorizontalVel = horrizontalLinearVelocity.normalized * _currentMaxSpeed;
+                predictedVelocity = new Vector3(limitedHorizontalVel.x, predictedVelocity.y, limitedHorizontalVel.z);
+            }
+            _currentLinearVelocity = predictedVelocity;
         }
+        // TODO implementare gravità
+        void IDriverControllerContext.ApplyGravity(float gravity) => _predictionRigidbody.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
         void IDriverControllerContext.ApplyLateralGrip()
         {
-            /*
-            Vector3 direction = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-            Vector3 targetVelocity = direction * _sphere.linearVelocity.magnitude;
-            _sphere.linearVelocity = Vector3.Lerp(_sphere.linearVelocity, targetVelocity, _stats.LateralGripFactor * Time.fixedDeltaTime); // TODO Probabilmente è da alzare molto LateralGripFactor per rendere meno sviloso il sidecar quando si sterza in NormalState 
-            */
-
-            // TODO REFACTORARE
             Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
             Vector3 flatForwardDir = new Vector3(forwardDir.x, 0, forwardDir.z).normalized;
 
-            Vector3 currentVel = _sphere.linearVelocity;
-            Vector3 horizontalVel = new(currentVel.x, 0, currentVel.z);
+            Vector3 horizontalVel = new(_currentLinearVelocity.x, 0, _currentLinearVelocity.z);
             Vector3 targetHorizontalVel = flatForwardDir * horizontalVel.magnitude;
-            var newHorizontalVel = Vector3.Lerp(horizontalVel, targetHorizontalVel, _stats.LateralGripFactor * Time.fixedDeltaTime);
-            _sphere.linearVelocity = new(newHorizontalVel.x, currentVel.y, newHorizontalVel.z);
+            var newHorizontalVel = Vector3.MoveTowards(horizontalVel, targetHorizontalVel, _stats.LateralGripFactor * (float)TimeManager.TickDelta);
+            _currentLinearVelocity = new Vector3(newHorizontalVel.x, _currentLinearVelocity.y, newHorizontalVel.z);
         }
-        void IDriverControllerContext.AnimateSidecar()
+        void IDriverControllerContext.ApplyVisualRotation(Quaternion targetRot)
         {
-            /*
-            _sidecar.localRotation = Quaternion.Slerp(
-                _sidecar.localRotation,
+            _sidecarLocalRotation = Quaternion.RotateTowards(
+                _sidecarLocalRotation,
                 targetRot,
-                _stats.SteerAngularRotationSlerp
+                _stats.SteerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
-            */
         }
-        void IDriverControllerContext.ApplyBoost(float amount, float duration)
+        void IDriverControllerContext.AnimateSidecar() => throw new System.NotImplementedException();
+        void IDriverControllerContext.ChangeState(IDrivingState state, ReplicateData data)
         {
-            //StartCoroutine(BoostRoutine(amount, duration));
-        }
-
-        private void ChangeState(IDrivingState state)
-        {
-            _currentDrivingState?.Exit(this);
+            _currentDrivingState?.Exit(this, data);
             _currentDrivingState = state;
-            _currentDrivingState?.Enter(this);
-        }
 
-        private void CheckGround() => _isGrounded = Physics.Raycast(_sphere.position, -_parent.up, out RaycastHit hit, 0.6f);
-        /*
-        private IEnumerator BoostRoutine(float amount, float duration)
-        {
-            _accelerationModifiers.Add(amount);
-            yield return new WaitForSeconds(duration);
-            _accelerationModifiers.Remove(amount);
+            if (state == _idleState) _currentStateType = DrivingStateType.Idle;
+            else if (state == _normalState) _currentStateType = DrivingStateType.Normal;
+            else if (state == _driftingState) _currentStateType = DrivingStateType.Drifting;
+            else if (state == _boostState) _currentStateType = DrivingStateType.Boost;
+            _currentDrivingState?.Enter(this, data);
         }
-        */
-        [Client]
-        private void OnSteer(InputValue value)
-        {
-            _steerInput = value.Get<float>();
-            SyncSteerInput(_steerInput);
-        }
-        [Client]
-        private void OnDrift(InputValue value)
-        {
-            _isDriftButtonPressed = value.isPressed;
-            SyncDriftInput(_isDriftButtonPressed);
-        }
-        [Client]
-        private void OnBoost(InputValue value)
-        {
-            _isBoostButtonPressed = value.isPressed;
-            SyncBoostInput(_isBoostButtonPressed);
-        }
-        [Client]
-        private void OnStart(InputValue value)
-        {
-            _isStartButtonPressed = value.isPressed;
-            SyncStartInput(_isStartButtonPressed);
-        }
-        [ServerRpc]
-        private void SyncSteerInput(float steerInput) => _steerInputOnServer = steerInput;
-        [ServerRpc]
-        private void SyncDriftInput(bool isDriftingButtonPressed) => _isDrifiButtonPressedOnServer = isDriftingButtonPressed;
-        [ServerRpc]
-        private void SyncBoostInput(bool isBoostButtonPressed) => _isBoostButtonpressedOnServer = isBoostButtonPressed;
-        [ServerRpc]
-        private void SyncStartInput(bool isStartButtonPressed) => _isStartButtonPressedOnServer = isStartButtonPressed;
+        void IDriverControllerContext.SetMaxSpeed(float maxSpeed) => _currentMaxSpeed = maxSpeed;
+        void IDriverControllerContext.SetDriftDirection(float driftDirection) => _driftDirection = driftDirection;
+        float IDriverControllerContext.TickDelta() => (float)TimeManager.TickDelta;
+        bool IDriverControllerContext.IsOnwer => IsOwner;
+        bool IDriverControllerContext.IsServer => IsServerInitialized;
+
+        // TODO aggiungere controlli sull'input (forse)
+        private void OnSteer(InputValue value) => _steerInput = value.Get<float>();
+        private void OnStart(InputValue value) => _isStarting = value.isPressed;
+        private void OnDrift(InputValue value) => _isDrifting = value.isPressed;
+        private void OnBoost(InputValue value) => _isBoosting = value.isPressed;
+
     }
 }

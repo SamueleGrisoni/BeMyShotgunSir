@@ -1,62 +1,48 @@
-using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Scripts.Gameplay.Player.Driver.DriftingStates
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
-
     public class BoostDrivingState : IDrivingState
     {
-        private float _timer;
-        public void Enter(IDriverControllerContext controller)
+        public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
             if (controller.CurrentBatteryCharge <= 0)
             {
-                controller.ChangeState(controller.NormalState);
+                controller.ChangeState(controller.NormalState, data);
             }
             controller.SetMaxSpeed(controller.Stats.MaxSpeedWithBoost);
-            _timer = 0f;
+            controller.BoostTimer = 0f;
         }
-        public void ExecuteUpdate(IDriverControllerContext controller)
+        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            _timer += Time.deltaTime;
-            if (_timer >= controller.Stats.ConsumeBatteryTimeRate)
+            if (controller.IsOnwer || controller.IsServer)
             {
-                controller.CurrentBatteryCharge -= controller.Stats.ConsumeBatteryAmountRate;
-                _timer = 0;
-            }
+                controller.BoostTimer += controller.TickDelta();
+                if (controller.BoostTimer >= controller.Stats.ConsumeBatteryTimeRate)
+                {
+                    controller.CurrentBatteryCharge -= controller.Stats.ConsumeBatteryAmountRate;
+                    controller.BoostTimer = 0;
+                }
 
-            if (controller.CurrentBatteryCharge <= 0)
-            {
-                controller.CurrentBatteryCharge = 0;
-                controller.ChangeState(controller.NormalState);
-                return;
+                if (controller.CurrentBatteryCharge <= 0)
+                {
+                    controller.CurrentBatteryCharge = 0;
+                    controller.ChangeState(controller.NormalState, data);
+                    return;
+                }
             }
-
-            if (!controller.IsGrounded)
+            if (data.IsDrifting)
             {
-                controller.ChangeState(controller.AirState);
-                return;
-            }
-
-            if (controller.IsDriftingButtonPressed)
-            {
-                controller.DriftDirection = Mathf.Sign(controller.SteerInput);
-                controller.ChangeState(controller.DriftingState);
-                return;
+                controller.ChangeState(controller.DriftingState, data);
             }
         }
-        public void ExecuteFixedUpdate(IDriverControllerContext controller)
+        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.SidecarForward);
-            controller.ApplySteering(controller.SteerInput);
+            controller.ApplySteering(data.SteerInput);
+            controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.Stats.SteerAngularRotation, 0));
             controller.ApplyLateralGrip();
-            controller.ApplyVisualRotation(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
-            controller.ApplyGravity(controller.Stats.Gravity);
-            //controller.AnimateSidecar(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
         }
-        public void Exit(IDriverControllerContext controller)
-        {
-        }
-
+        public void Exit(IDriverControllerContext controller, ReplicateData data) { }
     }
 }

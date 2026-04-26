@@ -4,8 +4,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public interface IDriverControllerContext
     {
-        Transform ParentTransform { get; } // TODO da capire se serve
-        Transform SidecarTransform { get; }
         Vector3 ParentForward { get; }
         Vector3 SidecarForward { get; }
         SOSidecarStats Stats { get; }
@@ -22,14 +20,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         bool IsStartButtonPressed { get; }
         float DriftDirection { get; set; }
         float CurrentBatteryCharge { get; set; }
-        void ChangeState(IDrivingState state);
-        void SetMaxSpeed(float maxSpeed);
+        float BatteryChargeTimer { get; set; }
+        float BoostTimer { get; set; }
+        void ChangeState(IDrivingState state, ReplicateData data);
+        void SetMaxSpeed(float maxSpeed); // TODO spostare in CUrrentMaxSpeed 
+        void SetDriftDirection(float driftDirection);
         void ApplyAcceleration(Vector3 direction);
         void ApplyGravity(float gravity);
         void ApplySteering(float steerAmount);
         void ApplyVisualRotation(Quaternion targetRot);
         void ApplyLateralGrip();
         void AnimateSidecar();
-        void ApplyBoost(float amount, float duration);
+        float TickDelta();
+        bool IsOnwer { get; }
+        bool IsServer { get; }
     }
 }
