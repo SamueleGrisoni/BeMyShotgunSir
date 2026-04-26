@@ -4,37 +4,27 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller) => controller.SetMaxSpeed(controller.Stats.MaxSpeed);
-        public void ExecuteUpdate(IDriverControllerContext controller)
+        public void Enter(IDriverControllerContext controller, ReplicateData data) => controller.SetMaxSpeed(controller.Stats.MaxSpeed);
+        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if (!controller.IsGrounded)
+            if (data.IsDrifting)
             {
-                controller.ChangeState(controller.AirState);
+                controller.ChangeState(controller.DriftingState, data);
                 return;
             }
-
-            if (controller.IsDriftingButtonPressed)
+            if (data.IsBoosting)
             {
-                controller.DriftDirection = Mathf.Sign(controller.SteerInput);
-                controller.ChangeState(controller.DriftingState);
-                return;
-            }
-
-            if (controller.IsBoostButtonPressed)
-            {
-                controller.ChangeState(controller.BoostState);
+                controller.ChangeState(controller.BoostState, data);
                 return;
             }
         }
-        public void ExecuteFixedUpdate(IDriverControllerContext controller)
+        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.SidecarForward);
-            controller.ApplySteering(controller.SteerInput);
+            controller.ApplySteering(data.SteerInput);
+            controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.Stats.SteerAngularRotation, 0));
             controller.ApplyLateralGrip();
-            controller.ApplyVisualRotation(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
-            controller.ApplyGravity(controller.Stats.Gravity);
-            //controller.AnimateSidecar(Quaternion.Euler(0, controller.SteerInput * controller.Stats.SteerAngularRotation, 0));
         }
-        public void Exit(IDriverControllerContext controller) { }
+        public void Exit(IDriverControllerContext controller, ReplicateData data) { }
     }
 }
