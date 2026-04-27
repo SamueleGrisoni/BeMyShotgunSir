@@ -10,7 +10,7 @@
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:Instance template="TopBar" name="TopBar"/>
             <ui:VisualElement name="MainContent" style="flex-grow: 1;">
-                <ui:Instance template="DialogWheel" name="DialogWheel"/>
+                <!-- <ui:Instance template="DialogWheel" name="DialogWheel"/> -->
             </ui:VisualElement>
             <ui:Instance template="BottomBar" name="BottomBar" class="mobile-portrait"/>
         </ui:VisualElement>
