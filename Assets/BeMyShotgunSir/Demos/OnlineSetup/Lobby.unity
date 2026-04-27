@@ -119,6 +119,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &301446556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 301446558}
+  - component: {fileID: 301446557}
+  m_Layer: 0
+  m_Name: UI Controller Lobby
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &301446557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301446556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e29a675b277f641cf8e79cf803acfd43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _lobbyViewController: {fileID: 1701470600}
+--- !u!4 &301446558
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301446556}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.09213, y: 0.51852, z: 18.59616}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1701470602}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &486265848
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,21 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbySceneInitializer
   _bindTargets:
-  - _interfaceOwner: {fileID: 2347774505944634353}
-  - _interfaceOwner: {fileID: 2347774505944634354}
-  - _interfaceOwner: {fileID: 1242654182}
-  - _interfaceOwner: {fileID: 810722992}
---- !u!114 &810722992 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6089291078440164833, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-  m_PrefabInstance: {fileID: 2347774505944634352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7e5a62d5e031047b66f41bd771352f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TestView
+  - _interfaceOwner: {fileID: 1701470600}
 --- !u!1 &823832632
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,17 +369,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1242654182 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3158583630598242297, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-  m_PrefabInstance: {fileID: 2347774505944634352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78070abc87106044db89e44b53ecd3f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PlayerCountView
 --- !u!1 &1629046573
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +447,76 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1701470599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1701470602}
+  - component: {fileID: 1701470601}
+  - component: {fileID: 1701470600}
+  m_Layer: 0
+  m_Name: Lobby
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1701470600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701470599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fe93d9fd8b904e10afc5071f239e348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.LobbyViewController
+  _uiControllerLobby: {fileID: 301446557}
+  _lobbyDocument: {fileID: 1701470601}
+--- !u!114 &1701470601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701470599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: eef4f0fdc631f4a8fbd945a8b2c64440, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &1701470602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701470599}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 301446558}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1903696670
 GameObject:
@@ -672,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6839041328321758844, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8432409140699804140, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
       propertyPath: m_Pivot.x
@@ -759,28 +850,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
---- !u!114 &2347774505944634353 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3283496575394241425, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-  m_PrefabInstance: {fileID: 2347774505944634352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa748fdeff02f3e4cbd8543ebab97916, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LobbyMenu
---- !u!114 &2347774505944634354 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 29908399854074626, guid: 0a0d6a3b408040143943f7431930e76c, type: 3}
-  m_PrefabInstance: {fileID: 2347774505944634352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe7f8fec991133a47876c6975a1ba98b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LobbyIPView
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -792,3 +861,4 @@ SceneRoots:
   - {fileID: 823832633}
   - {fileID: 635297028}
   - {fileID: 2347774505944634352}
+  - {fileID: 301446558}
