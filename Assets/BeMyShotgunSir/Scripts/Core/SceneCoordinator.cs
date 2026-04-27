@@ -9,8 +9,7 @@ namespace BeMyShotgunSir.Scripts.Core
         Persistent = 0,
         Init = 1,
         Lobby = 2,
-        Track1 = 3,
-        UI = 4
+        Track1 = 3
     }
 
     public class SceneCoordinator : MonoBehaviour
