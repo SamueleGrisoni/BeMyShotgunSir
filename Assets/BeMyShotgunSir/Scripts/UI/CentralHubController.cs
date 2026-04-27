@@ -6,7 +6,7 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class CentralHubController : MonoBehaviour
     {
-        [SerializeField] private UIManager _uIManager;
+        [SerializeField] private UIControllerInit _uiControllerInit;
         [SerializeField] private UIDocument _centralHubDocument;
 
         private VisualElement _root;
@@ -37,7 +37,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void OnPlayButtonClicked()
         {
-            _uIManager.ShowScreen(UIScreen.LobbyMenu, true);
+            _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
             Debug.Log("Play Button Clicked");
         }
 

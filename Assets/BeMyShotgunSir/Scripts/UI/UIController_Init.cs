@@ -1,14 +1,15 @@
+using BeMyShotgunSir.Scripts.Core;
 using UnityEngine;
 
-
 namespace BeMyShotgunSir.Scripts.UI
-
 {
+
     public enum UIScreen
     {
         None = 0,
         CentralHub,
-        LobbyMenu,
+        HostOrJoin,
+        Lobby,
         SettingsMenu,
         CustomizationMenu,
         ShopMenu,
@@ -22,33 +23,25 @@ namespace BeMyShotgunSir.Scripts.UI
         PrivateLobby
     }
 
-    public class UIManager : MonoBehaviour
+    public class UIControllerInit : MonoBehaviour
     {
         [Header("UI Controllers")]
         [Header("Central Hub")]
         [SerializeField] private CentralHubController _centralHubController;
-        [Header("Lobby Menu")]
-        [SerializeField] private LobbyViewController _lobbyViewController;
+        [Header("Host Or Join Menu")]
+        [SerializeField] private HostOrJoinViewController _hostOrJoinViewController;
 
-
-        [Header("HUD")]
-        [SerializeField] private HUDController _hudController;
-
-        #region Game Objects
-        private GameObject _centralHubGO;
-        private GameObject _lobbyMenuGO;
-        private GameObject _hudGO;
-        #endregion
-
-        private void Awake()
-        {
-            _centralHubGO = _centralHubController.gameObject;
-            _lobbyMenuGO = _lobbyViewController.gameObject;
-            _hudGO = _hudController.gameObject;
-        }
+        private UIScreen _nextScreen;
 
         private void Start()
         {
+            _nextScreen = GameServices.Instance.UIFlowState.GetNextState();
+
+            if (_nextScreen != UIScreen.None)
+            {
+                ShowScreen(_nextScreen, true);
+                return;
+            }
             ShowScreen(UIScreen.CentralHub, true);
         }
 
@@ -60,12 +53,9 @@ namespace BeMyShotgunSir.Scripts.UI
                     _centralHubController.Show(show);
                     HideAllScreensExcept(centralHub: true);
                     break;
-                case UIScreen.LobbyMenu:
-                    _lobbyViewController.Show(show);
-                    HideAllScreensExcept(lobbyMenu: true);
-                    break;
-                case UIScreen.HUD:
-                    // _hudController.Show(show);
+                case UIScreen.HostOrJoin:
+                    _hostOrJoinViewController.Show(show);
+                    HideAllScreensExcept(hostOrJoin: true);
                     break;
                 case UIScreen.SettingsMenu:
                     break;
@@ -79,11 +69,12 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
-        private void HideAllScreensExcept(bool centralHub = false, bool lobbyMenu = false, bool hud = false)
+        private void HideAllScreensExcept(bool centralHub = false, bool hostOrJoin = false)
         {
             if (!centralHub) _centralHubController.Show(false);
-            if (!lobbyMenu) _lobbyViewController.Show(false);
-            // if (!hud) _hudController.Show(false);
+            if (!hostOrJoin) _hostOrJoinViewController.Show(false);
         }
+
+
     }
 }
