@@ -26,22 +26,23 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     public struct LobbyInfo
     {
         public int MaxPlayers;
-        public LobbyInfo(bool _)
+        public string LobbyIP;
+        public LobbyInfo(string lobbyIP = "<IP>:<Port>")
         {
+            LobbyIP = lobbyIP;
+            //CONST VALUES DOWN
             MaxPlayers = 4;
         }
     }
 
     public struct LobbyNetDataSnapshot : ILobbyNetData
     {
-        public string LobbyIP { get; set; }
         public LobbyInfo LobbyInfo { get; set; }
         public int PlayerCount { get; set; }
         public Dictionary<int, PlayerLobbyState> PlayerStates { get; set; }
 
-        public LobbyNetDataSnapshot(string lobbyIP, int playerCount, Dictionary<int, PlayerLobbyState> playerStates, LobbyInfo lobbyInfo)
+        public LobbyNetDataSnapshot(int playerCount, Dictionary<int, PlayerLobbyState> playerStates, LobbyInfo lobbyInfo)
         {
-            LobbyIP = lobbyIP;
             PlayerCount = playerCount;
             PlayerStates = new Dictionary<int, PlayerLobbyState>(playerStates);
             LobbyInfo = lobbyInfo;
@@ -64,7 +65,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
-            _lobbyIP.OnChange += OnLobbyIPChanged;
+            // _lobbyIP.OnChange += OnLobbyIPChanged;
             _playerCount.OnChange += OnPlayerCountChanged;
             _playerStates.OnChange += OnPlayerStatesChanged;
 
@@ -109,8 +110,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void InitSyncValues()
         {
             _playerCount.Value = 0;
-            _lobbyIP.Value = GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort();
-            _lobbyInfo.Value = new LobbyInfo(true);
+            string lobbyIP = GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort();
+            _lobbyInfo.Value = new LobbyInfo(lobbyIP);
             _playerStates.Collection.Clear();
         }
 
@@ -123,23 +124,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
-            _lobbyIP.OnChange -= OnLobbyIPChanged;
+            // _lobbyIP.OnChange -= OnLobbyIPChanged;
             _playerCount.OnChange -= OnPlayerCountChanged;
             _playerStates.OnChange -= OnPlayerStatesChanged;
             OnLobbyNetControllerDespawned?.Invoke();
         }
-
-        public void HandleRefresh()
-        {
-            if (IsController)
-            {
-                _lobbyManager.InitNetData_Response(new LobbyNetDataSnapshot(_lobbyIP.Value, _playerCount.Value, _playerStates.Collection, _lobbyInfo.Value));
-                return; // without this the host would also call RequestNetDataSnapshot_ServerRpc
-            }
-            if (IsClientInitialized)
-                RequestNetDataSnapshot_ServerRpc();
-        }
-
 
         [Server]
         private void HandleRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
@@ -178,6 +167,18 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
         #endregion
 
+        #region Snapshot
+        public void HandleRefresh()
+        {
+            if (IsController)
+            {
+                _lobbyManager.InitNetData_Response(new LobbyNetDataSnapshot(_playerCount.Value, _playerStates.Collection, _lobbyInfo.Value));
+                return; // without this the host would also call RequestNetDataSnapshot_ServerRpc
+            }
+            if (IsClientInitialized)
+                RequestNetDataSnapshot_ServerRpc();
+        }
+
         /// <summary>
         /// When a client starts, it requests the current lobby data snapshot from the server to initialize its local lobby state. <br/>
         /// This ensures that late-joining clients have the correct lobby information upon joining.
@@ -189,7 +190,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (conn == null)
                 return;
 
-            var snapshot = new LobbyNetDataSnapshot(_lobbyIP.Value, _playerCount.Value, _playerStates.Collection, _lobbyInfo.Value);
+            var snapshot = new LobbyNetDataSnapshot(_playerCount.Value, _playerStates.Collection, _lobbyInfo.Value);
 
             InitNetData_TargetRpc(conn, snapshot);
         }
@@ -206,15 +207,16 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
             _lobbyManager.InitNetData_Response(snapshot);
         }
+        #endregion
 
-
+        #region LobbyInfo
         private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
         public void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer) =>
             _lobbyManager.SetLobbyInfo_Response(next);
+        #endregion
 
-
+        #region PlayerStates
         private readonly SyncDictionary<int, PlayerLobbyState> _playerStates = new();
-
         private void OnPlayerStatesChanged(SyncDictionaryOperation op, int key, PlayerLobbyState value, bool asServer)
         {
             if (asServer)
@@ -257,16 +259,19 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             state.IsReady = isReady;
             _playerStates[connectionId] = state;
         }
+        #endregion
 
-        private readonly SyncVar<string> _lobbyIP = new("Not connected");
-        private void OnLobbyIPChanged(string prev, string next, bool asServer)
-        {
-            if (asServer)
-                return;
-            _lobbyManager.SetLobbyIP_Response(next);
-        }
+        // #region LobbyIP
+        // private readonly SyncVar<string> _lobbyIP = new("Not connected");
+        // private void OnLobbyIPChanged(string prev, string next, bool asServer)
+        // {
+        //     if (asServer)
+        //         return;
+        //     _lobbyManager.SetLobbyIP_Response(next);
+        // }
+        // #endregion
 
-
+        #region PlayerCount
         private readonly SyncVar<int> _playerCount = new(0);
         private void OnPlayerCountChanged(int prev, int next, bool asServer)
         {
@@ -274,5 +279,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
             _lobbyManager.SetPlayerCount_Response(prev, next);
         }
+        #endregion
     }
 }

@@ -24,12 +24,22 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
 
             //no setters to allow a real refresh even for unchanged values
-            LobbyIP = lobbyData.LobbyIP;
+            LobbyInfo = lobbyData.LobbyInfo;
+            OnLobbyInfoChanged?.Invoke();
+            LobbyIP = lobbyData.LobbyInfo.LobbyIP;
             OnLobbyIPChanged?.Invoke();
             PlayerCount = lobbyData.PlayerCount;
             OnPlayerCountChanged?.Invoke();
             PlayerStates = lobbyData.PlayerStates;
             OnPlayerStatesChanged?.Invoke();
+        }
+
+        public LobbyInfo LobbyInfo { get; private set; }
+        public event Action OnLobbyInfoChanged;
+        public void SetLobbyInfo(LobbyInfo newInfo)
+        {
+            LobbyInfo = newInfo;
+            OnLobbyInfoChanged?.Invoke();
         }
 
         public string LobbyIP { get; private set; }
@@ -76,14 +86,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                     break;
             }
             OnPlayerStatesChanged?.Invoke();
-        }
-
-        public LobbyInfo LobbyInfo { get; private set; }
-        public event Action OnLobbyInfoChanged;
-        public void SetLobbyInfo(LobbyInfo newInfo)
-        {
-            LobbyInfo = newInfo;
-            OnLobbyInfoChanged?.Invoke();
         }
     }
 }

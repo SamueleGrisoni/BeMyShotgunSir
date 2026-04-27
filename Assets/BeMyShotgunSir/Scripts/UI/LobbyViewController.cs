@@ -158,7 +158,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_lobbyIPAddress != null && _dataView != null)
             {
-                _lobbyIPAddress.text = $"{_dataView.LobbyIP}";
+                _lobbyIPAddress.text = $"{_dataView.LobbyInfo.LobbyIP}";
             }
         }
 

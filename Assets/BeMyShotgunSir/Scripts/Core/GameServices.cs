@@ -3,6 +3,7 @@ using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using FishNet.Managing;
+using BeMyShotgunSir.Scripts.UI;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
@@ -22,6 +23,8 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void Start()
         {
+            UIFlowState = ScriptableObject.CreateInstance<SOUIFlowState>();
+
             LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
             LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
 
@@ -50,6 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core
         }
 
         [SerializeField] private SceneCoordinator _sceneCoordinator;
+        public SOUIFlowState UIFlowState { get; private set; }
         public SceneCoordinator SceneCoordinator => _sceneCoordinator;
         [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }

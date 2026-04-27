@@ -6,6 +6,7 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public enum UIScreen
     {
+        None = 0,
         CentralHub,
         LobbyMenu,
         SettingsMenu,

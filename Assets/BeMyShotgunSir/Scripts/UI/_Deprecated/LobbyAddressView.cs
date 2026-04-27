@@ -28,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.UI
             if (_ipText == null) TryGetComponent(out _ipText);
             if (_dataView != null)
             {
-                _ipText.text = $"{_dataView.LobbyIP}";
+                _ipText.text = $"{_dataView.LobbyInfo.LobbyIP}";
             }
         }
 

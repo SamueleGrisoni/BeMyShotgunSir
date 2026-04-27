@@ -8,7 +8,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     public interface ILobbyNetData : INetData
     {
         LobbyInfo LobbyInfo { get; }
-        string LobbyIP { get; }
         int PlayerCount { get; }
         Dictionary<int, PlayerLobbyState> PlayerStates { get; }
     }
