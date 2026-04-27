@@ -20,6 +20,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             this.type = type;
             this.position = position;
         }
+        //todo add list of powerup/obstacle
     }
 
     public class TrackManager : MonoBehaviour
