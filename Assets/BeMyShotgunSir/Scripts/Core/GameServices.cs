@@ -21,7 +21,7 @@ namespace BeMyShotgunSir.Scripts.Core
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        private void Start()
+        private void OnEnable()
         {
             UIFlowState = ScriptableObject.CreateInstance<SOUIFlowState>();
 
