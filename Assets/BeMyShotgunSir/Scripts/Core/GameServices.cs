@@ -6,6 +6,7 @@ using FishNet.Managing;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
+    [RequireComponent(typeof(SceneCoordinator))]
     public class GameServices : MonoBehaviour
     {
         public static GameServices Instance { get; private set; }
@@ -21,14 +22,16 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void Start()
         {
-            LobbyManager.OnLobbyManagerSpawned += HandleLobbySpawned;
-            LobbyManager.OnLobbyManagerDespawned += HandleLobbyDespaired;
+            LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
+
+            TryGetComponent(out _sceneCoordinator);
 
             AudioManager.Initialize();
             ConnectionManager.Initialize();
         }
 
-        private void HandleLobbySpawned(LobbyManager lobby)
+        private void HandleLobbyManagerSpawned(LobbyManager lobby)
         {
             if (LobbyManager != null && LobbyManager != lobby)
             {
@@ -38,14 +41,16 @@ namespace BeMyShotgunSir.Scripts.Core
 
             LobbyManager = lobby;
         }
-        private void HandleLobbyDespaired() => LobbyManager = null;
+        private void HandleLobbyManagerDespawned() => LobbyManager = null;
 
         private void OnDisable()
         {
-            LobbyManager.OnLobbyManagerSpawned -= HandleLobbySpawned;
-            LobbyManager.OnLobbyManagerDespawned -= HandleLobbyDespaired;
+            LobbyManager.OnLobbyManagerSpawned -= HandleLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerDespawned -= HandleLobbyManagerDespawned;
         }
 
+        [SerializeField] private SceneCoordinator _sceneCoordinator;
+        public SceneCoordinator SceneCoordinator => _sceneCoordinator;
         [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
         [field: SerializeField] public SOChannels Channels { get; private set; }

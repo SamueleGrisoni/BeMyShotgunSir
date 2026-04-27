@@ -1,3 +1,4 @@
+using System;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
@@ -5,16 +6,29 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     public class LobbySceneBootstrapper : SceneBootstrapper
     {
+        public static event Action OnLobbySceneInitialized;
+
         [SerializeField] private InterfaceSerializer<LobbyBindTarget, ILobbyBindTarget>[] _bindTargets;
         private ILobbyBindTarget[] _coercedTargets;
 
         private void OnDisable() =>
             LobbyManager.OnLobbyManagerSpawned -= OnLobbyManagerSpawned;
 
+        private void Bind(LobbyManager manager)
+        {
+            if (_coercedTargets == null)
+            {
+                Log.ELazy(() => "LobbySceneBootstrapper: Coerced bind targets are null. Cannot bind lobby.", this);
+                return;
+            }
+            manager.BindLobby(_coercedTargets);
+            OnLobbySceneInitialized?.Invoke();
+        }
+
         private void OnLobbyManagerSpawned(LobbyManager manager)
         {
             TryInitialize();
-            manager.BindLobby(_coercedTargets);
+            Bind(manager);
         }
 
         protected override void Initialize()
@@ -36,7 +50,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             LobbyManager lobbyManager = GameServices.Instance.LobbyManager;
             if (lobbyManager == null)
                 LobbyManager.OnLobbyManagerSpawned += OnLobbyManagerSpawned;
-            else lobbyManager.BindLobby(_coercedTargets);
+            else
+                Bind(lobbyManager);
         }
     }
 }

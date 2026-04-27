@@ -1,7 +1,9 @@
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Client;
 using FishNet.Managing.Server;
+using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
 
@@ -21,7 +23,6 @@ namespace BeMyShotgunSir.Scripts.Core
         Joining
     }
 
-    [RequireComponent(typeof(SceneCoordinator))]
     public class ConnectionManager : MonoBehaviour
     {
         private bool _isInitialized = false;
@@ -29,12 +30,21 @@ namespace BeMyShotgunSir.Scripts.Core
 
         [SerializeField]
         private AppFlowState _currentAppFlow = AppFlowState.Startup;
-        private SceneCoordinator _sceneCoordinator;
         private ServerManager _serverManager;
         private ClientManager _clientManager;
         private LobbyManager _lobbyManager;
         private int _pendingRemotePlayerDelta;
         [SerializeField] private ConnectionFlowState _connectionFlowState = ConnectionFlowState.Idle;
+        [SerializeField] private NetworkObject _lobbyManagerPrefab;
+        private NetworkObject _spawnedLobbyManagerInstance;
+
+        private void Awake()
+        {
+            if (_lobbyManagerPrefab == null)
+                Log.ELazy(() => "ConnectionManager: LobbyManager prefab reference is not assigned in the inspector.", this);
+
+            HandleStartup();
+        }
 
         public void Initialize()
         {
@@ -43,7 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (GameServices.Instance == null || GameServices.Instance.NetworkManager == null)
             {
-                Debug.LogError("ConnectionManager: GameServices or NetworkManager is missing.", this);
+                Log.ELazy(() => "ConnectionManager: GameServices or NetworkManager is missing.", this);
                 return;
             }
 
@@ -52,7 +62,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (_serverManager == null || _clientManager == null)
             {
-                Debug.LogError("ConnectionManager: ServerManager or ClientManager is missing.", this);
+                Log.ELazy(() => "ConnectionManager: ServerManager or ClientManager is missing.", this);
                 return;
             }
 
@@ -63,46 +73,83 @@ namespace BeMyShotgunSir.Scripts.Core
             LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
             LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
 
-            TryGetComponent(out _sceneCoordinator);
-            ChangeState(AppFlowState.Init);
+            HandleInit();
 
             _isInitialized = true;
         }
 
-        private void ChangeState(AppFlowState newState)
+        public void StartHost()
         {
-            _currentAppFlow = newState;
+            if (!_isInitialized)
+                Initialize();
 
-            switch (_currentAppFlow)
-            {
-                case AppFlowState.Startup:
-                    HandleStartup(_isHostSession);
-                    break;
-                case AppFlowState.Init:
-                    HandleInit(_isHostSession);
-                    break;
-                case AppFlowState.Lobby:
-                    HandleLobby(_isHostSession);
-                    break;
-                default:
-                    break;
-            }
+            _isHostSession = true;
+
+            _connectionFlowState = ConnectionFlowState.Hosting;
+            _serverManager.StartConnection();
+            _clientManager.StartConnection();
         }
 
-        private void HandleStartup(bool isHostSession) { }
-
-        private void HandleInit(bool isHostSession)
+        public void StartJoin(string ipAddress)
         {
+            if (!_isInitialized)
+                Initialize();
+
+            _isHostSession = false;
+            _connectionFlowState = ConnectionFlowState.Joining;
+
+            if (string.Equals(ipAddress, "localhost", System.StringComparison.OrdinalIgnoreCase))
+                ipAddress = "127.0.0.1";
+            GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ipAddress);
+
+            _clientManager.StartConnection();
+        }
+
+        public void QuitLobby() =>
+            HandleInit();
+
+        private void HandleStartup()
+        {
+            if (_currentAppFlow == AppFlowState.Startup)
+                return;
+
+            _currentAppFlow = AppFlowState.Startup;
+        }
+
+        private void HandleInit()
+        {
+            if (_currentAppFlow == AppFlowState.Init)
+                return;
+
+            _currentAppFlow = AppFlowState.Init;
+
+            if (_spawnedLobbyManagerInstance != null)
+            {
+                _spawnedLobbyManagerInstance.Despawn();
+                _spawnedLobbyManagerInstance = null;
+            }
+
             _serverManager.StopConnection(true);
             _clientManager.StopConnection();
-            _sceneCoordinator.LoadInitScene();
+            GameServices.Instance.SceneCoordinator.LoadInitScene();
         }
 
-        private void HandleLobby(bool isHostSession)
+        private void HandleLobby()
         {
-            if (!isHostSession)
+            if (_currentAppFlow == AppFlowState.Lobby)
                 return;
-            _sceneCoordinator.LoadLobby();
+
+            _currentAppFlow = AppFlowState.Lobby;
+
+            if (!_isHostSession)
+                return;
+
+            if (_lobbyManagerPrefab != null && _spawnedLobbyManagerInstance == null)
+            {
+                NetworkObject instance = Instantiate(_lobbyManagerPrefab);
+                _serverManager.Spawn(instance);
+                _spawnedLobbyManagerInstance = instance;
+            }
         }
 
         private void HandleLobbyManagerSpawned(LobbyManager lobby)
@@ -123,40 +170,9 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void HandleLobbyManagerDespawned()
         {
-            if (_currentAppFlow != AppFlowState.Lobby)
-                return;
-
             _lobbyManager = null;
-            ChangeState(AppFlowState.Init);
+            HandleInit();
         }
-
-        public void StartHost()
-        {
-            if (!_isInitialized)
-                Initialize();
-            _isHostSession = true;
-
-            _connectionFlowState = ConnectionFlowState.Hosting;
-            _serverManager.StartConnection();
-            _clientManager.StartConnection();
-        }
-
-        public void StartJoin(string ipAddress)
-        {
-            if (!_isInitialized)
-                Initialize();
-            _isHostSession = false;
-
-            _connectionFlowState = ConnectionFlowState.Joining;
-            if (string.Equals(ipAddress, "localhost", System.StringComparison.OrdinalIgnoreCase))
-                ipAddress = "127.0.0.1";
-
-            GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ipAddress);
-            _clientManager.StartConnection();
-        }
-
-        public void QuitLobby() =>
-            ChangeState(AppFlowState.Init);
 
         private void OnServerConnectionState(ServerConnectionStateArgs args)
         {
@@ -165,7 +181,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 if (_connectionFlowState == ConnectionFlowState.Hosting)
                     _connectionFlowState = ConnectionFlowState.Idle;
 
-                ChangeState(AppFlowState.Lobby);
+                HandleLobby();
                 return;
             }
 
@@ -176,7 +192,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 if (_currentAppFlow == AppFlowState.Lobby || _currentAppFlow == AppFlowState.Startup)
                 {
                     Debug.LogWarning("ConnectionManager: Server stopped, returning to init state.", this);
-                    ChangeState(AppFlowState.Init);
+                    HandleInit();
                 }
             }
         }
@@ -205,7 +221,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 _connectionFlowState = ConnectionFlowState.Idle;
-                ChangeState(AppFlowState.Lobby);
+                HandleLobby();
                 return;
             }
 
@@ -213,7 +229,7 @@ namespace BeMyShotgunSir.Scripts.Core
             {
                 _connectionFlowState = ConnectionFlowState.Idle;
                 Debug.LogWarning("ConnectionManager: Join failed or was interrupted.", this);
-                ChangeState(AppFlowState.Init);
+                HandleInit();
             }
         }
 

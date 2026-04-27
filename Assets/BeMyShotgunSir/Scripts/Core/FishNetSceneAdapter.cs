@@ -1,4 +1,5 @@
 using System;
+using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet;
 using FishNet.Managing.Scened;
@@ -12,15 +13,34 @@ namespace BeMyShotgunSir.Scripts.Core
     /// </summary>
     public sealed class FishNetSceneAdapter
     {
+        public static event Action<SceneName> OnSceneLoaded;
+        public static event Action<SceneName> OnSceneUnloaded;
+        public static event Action<SceneName> OnSceneInitialized;
 
         private SceneManager _fishNetSceneManager;
-        public static event Action<SceneName> OnSceneLoaded;
         private bool _isInitialized = false;
         private void Initialize()
         {
             _fishNetSceneManager = InstanceFinder.SceneManager;
             _fishNetSceneManager.OnLoadEnd += HandleSceneLoadEnd;
+            _fishNetSceneManager.OnUnloadEnd += HandleSceneUnloadEnd;
+            LobbySceneBootstrapper.OnLobbySceneInitialized += HandleLobbySceneInitialized;
             _isInitialized = true;
+        }
+
+        private void HandleLobbySceneInitialized() =>
+            OnSceneInitialized?.Invoke(SceneName.Lobby);
+
+        private void HandleSceneUnloadEnd(SceneUnloadEndEventArgs args) //TODO test it
+        {
+            if (args.UnloadedScenesV2.Count > 0)
+            {
+                string sceneName = args.UnloadedScenesV2.ToArray()[0].Name;
+                if (Enum.TryParse(sceneName, out SceneName unloadedScene))
+                    OnSceneUnloaded?.Invoke(unloadedScene);
+                else
+                    Log.ELazy(() => $"SceneCoordinator: Unloaded scene '{sceneName}' does not match any known SceneName enum values.", this);
+            }
         }
 
         private void HandleSceneLoadEnd(SceneLoadEndEventArgs args)
@@ -29,17 +49,12 @@ namespace BeMyShotgunSir.Scripts.Core
             {
                 string sceneName = args.LoadedScenes[0].name;
                 if (Enum.TryParse(sceneName, out SceneName loadedScene))
-                {
+
                     OnSceneLoaded?.Invoke(loadedScene);
-                }
                 else
-                {
                     Log.ELazy(() => $"SceneCoordinator: Loaded scene '{sceneName}' does not match any known SceneName enum values.", this);
-                }
             }
         }
-
-
 
         public bool TryLoadGlobalScene(string sceneName, MonoBehaviour context, ReplaceOption replaceOption = ReplaceOption.OnlineOnly)
         {

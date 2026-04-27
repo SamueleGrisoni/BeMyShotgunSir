@@ -12,16 +12,19 @@ namespace BeMyShotgunSir.Scripts.Core
         Track1 = 3,
         UI = 4
     }
+
     public class SceneCoordinator : MonoBehaviour
     {
         public readonly FishNetSceneAdapter FishnetSceneManager = new FishNetSceneAdapter();
+
         public void LoadInitScene()
         {
             if (UnitySceneManager.GetSceneByName(SceneName.Init.ToString()).isLoaded)
                 return;
             UnitySceneManager.LoadScene(SceneName.Init.ToString(), UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
-        public void LoadLobby() =>
+
+        public void LoadLobbyScene() =>
             FishnetSceneManager.TryLoadGlobalScene(SceneName.Lobby.ToString(), this, ReplaceOption.OnlineOnly);
     }
 }

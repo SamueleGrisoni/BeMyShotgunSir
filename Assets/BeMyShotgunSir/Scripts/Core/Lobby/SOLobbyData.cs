@@ -9,7 +9,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     [CreateAssetMenu(fileName = "LobbyData", menuName = "Be My Shotgun, Sir!/RuntimeData/LobbyData")]
     public class SOLobbyData : SOData, ILobbyDataView
     {
-        public override void InitData()
+        public override void InitData(SOData data = null)
         {
             LobbyIP = "127.0.0.1";
             PlayerCount = 0;
@@ -17,16 +17,19 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         public override void InitNetData(INetData data)
         {
-            if (data is ILobbyNetData lobbyData)
+            if (data is not ILobbyNetData lobbyData)
             {
-                //no setters to allow a real refresh even for unchanged values
-                LobbyIP = lobbyData.LobbyIP;
-                OnLobbyIPChanged?.Invoke();
-                PlayerCount = lobbyData.PlayerCount;
-                OnPlayerCountChanged?.Invoke();
-                PlayerStates = lobbyData.PlayerStates;
-                OnPlayerStatesChanged?.Invoke();
+                Debug.LogError("SOLobbyData: InitNetData called with invalid data type. Expected ILobbyNetData.", this);
+                return;
             }
+
+            //no setters to allow a real refresh even for unchanged values
+            LobbyIP = lobbyData.LobbyIP;
+            OnLobbyIPChanged?.Invoke();
+            PlayerCount = lobbyData.PlayerCount;
+            OnPlayerCountChanged?.Invoke();
+            PlayerStates = lobbyData.PlayerStates;
+            OnPlayerStatesChanged?.Invoke();
         }
 
         public string LobbyIP { get; private set; }

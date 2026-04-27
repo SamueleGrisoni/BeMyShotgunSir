@@ -31,6 +31,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             MaxPlayers = 4;
         }
     }
+
     public struct LobbyNetDataSnapshot : ILobbyNetData
     {
         public string LobbyIP { get; set; }
@@ -46,6 +47,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             LobbyInfo = lobbyInfo;
         }
     }
+
     public class LobbyNetController : NetworkBehaviour
     {
         private ServerManager _serverManager;
@@ -66,15 +68,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _playerCount.OnChange += OnPlayerCountChanged;
             _playerStates.OnChange += OnPlayerStatesChanged;
 
-            _serverManager = GameServices.Instance.NetworkManager.ServerManager;
-            _serverManager.OnRemoteConnectionState += HandleRemoteConnectionState;
             OnLobbyNetControllerSpawned?.Invoke();
         }
-
 
         public override void OnStartServer()
         {
             base.OnStartServer();
+            _serverManager = GameServices.Instance.NetworkManager.ServerManager;
+            _serverManager.OnRemoteConnectionState += HandleRemoteConnectionState;
+
+            GameServices.Instance.SceneCoordinator.LoadLobbyScene();
+
             InitSyncValues();
         }
 
@@ -108,6 +112,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _lobbyIP.Value = GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort();
             _lobbyInfo.Value = new LobbyInfo(true);
             _playerStates.Collection.Clear();
+        }
+
+        public override void OnStopServer()
+        {
+            base.OnStopServer();
+            _serverManager.OnRemoteConnectionState -= HandleRemoteConnectionState;
         }
 
         public override void OnStopNetwork()
@@ -146,7 +156,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             else if (args.ConnectionState == RemoteConnectionState.Stopped)
             {
                 _playerCount.Value--;
-                _playerStates.Remove(connection.ClientId);
+                if (_playerStates.ContainsKey(connection.ClientId))
+                    _playerStates.Remove(connection.ClientId);
             }
         }
 
@@ -223,7 +234,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false)] //TODO
         public void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null)
         {
             if (conn == null)
@@ -235,7 +246,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _playerStates[connectionId] = state;
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false)] //TODO
         public void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null)
         {
             if (conn == null)

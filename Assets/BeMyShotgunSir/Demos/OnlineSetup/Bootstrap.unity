@@ -157,21 +157,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c95dfde7d73b54dbbdc23155d35d36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &307953471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 307953461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 859294e5d2aaf9a47b1e00bd20772f2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Spawning.ServerSpawner
-  _automaticallySpawn: 1
-  _networkObjects:
-  - {fileID: 8491619145890554402, guid: 2a95f435221185447af7158102adc114, type: 3}
 --- !u!1 &511418089
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,7 +361,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1045515487}
   - component: {fileID: 1045515488}
-  - component: {fileID: 1045515489}
   m_Layer: 0
   m_Name: Connection Manager
   m_TagString: Untagged
@@ -413,18 +397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GlobalManager
   _currentAppFlow: 0
   _connectionFlowState: 0
---- !u!114 &1045515489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045515486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 308baeaa208a3914593e0c7abd29c5c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.SceneLoader
+  _lobbyManagerPrefab: {fileID: 8491619145890554402, guid: 2a95f435221185447af7158102adc114, type: 3}
 --- !u!1001 &1796052445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -565,9 +538,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7443408887813606051, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 307953466}
-    - targetCorrespondingSourceObject: {fileID: 7443408887813606051, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 307953471}
   m_SourcePrefab: {fileID: 100100000, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
 --- !u!1 &2006144845
 GameObject:
@@ -579,6 +549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2006144848}
   - component: {fileID: 2006144847}
+  - component: {fileID: 2006144849}
   m_Layer: 0
   m_Name: Game Services
   m_TagString: Untagged
@@ -598,6 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023376e00875623468f98046056dc64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GameServices
+  _sceneCoordinator: {fileID: 2006144849}
   <ConnectionManager>k__BackingField: {fileID: 1045515488}
   <NetworkManager>k__BackingField: {fileID: 307953469}
   <Channels>k__BackingField: {fileID: 11400000, guid: c72e358ecdcd8a64181a1f77ec4a2e86, type: 2}
@@ -616,10 +588,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 565849613}
   - {fileID: 1045515487}
+  - {fileID: 565849613}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2006144849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006144845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 308baeaa208a3914593e0c7abd29c5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.SceneLoader
 --- !u!1 &2082211048
 GameObject:
   m_ObjectHideFlags: 0
