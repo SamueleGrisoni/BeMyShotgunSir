@@ -19,17 +19,14 @@
     flex-grow: 1;
     justify-content: center;
     align-items: center;
-    height: 200px;
-    background-color: rgba(0, 0, 0, 0.004);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .steer-control {
     width: 100%;
-    flex-grow: 1;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.004);
-
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .editor-debug {
@@ -48,7 +45,7 @@
 }
 
 .steer-joystick {
-    height: 80%;
+    height: 300px;
     width: auto;
     aspect-ratio: 1;
     justify-content: center;
@@ -85,4 +82,73 @@
     -unity-background-scale-mode: scale-to-fit;
     height: 60%;
     aspect-ratio: 1;
+}
+
+.upper-area {
+    flex-grow: 1;
+    min-width: 100%;
+    align-items: center;
+}
+
+.lower-area {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.boost-control {
+    flex-grow: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.boost-container {
+    width: 135px;
+    height: 250px;
+    left: 150px;
+    align-items: center;
+    justify-content: center;
+}
+
+.boost-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_BoostFill.png?fileID=2800000&guid=cad6cdf9c9b47459fb182996e871286a&type=3#HUD_BoostFill");
+}
+
+.boost-button {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_BoostContainer.png?fileID=2800000&guid=208efc6f2b0fd421da3f6bf09dbf56ee&type=3#HUD_BoostContainer");
+    background-color: rgba(188, 188, 188, 0);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.feedback-button {
+    -unity-background-scale-mode: scale-to-fit;
+    aspect-ratio: 1;
+}
+
+.feedback-container {
+    position: absolute;
+    bottom: 100px;
+    height: 170px;
+    width: 85%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.thumb-down {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_ThumbDown.png?fileID=2800000&guid=26bd64ce7dcbf46b888ce0d0cbbd6b8f&type=3#HUD_ThumbDown");
+}
+
+.thumb-up {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_ThumbUp.png?fileID=2800000&guid=a48e068a7b0cf438593931eca6463803&type=3#HUD_ThumbUp");
 }
