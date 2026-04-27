@@ -2,16 +2,20 @@
     <ui:Template name="BottomBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/BottomBar.uxml?fileID=9197481963319205126&amp;guid=da15384d80eba4927a3ed1800fa07c89&amp;type=3#BottomBar"/>
     <ui:Template name="EarlyCommitment" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/EarlyCommitment.uxml?fileID=9197481963319205126&amp;guid=636b4ebea67364f50951f00fd9d09ffc&amp;type=3#EarlyCommitment"/>
     <ui:Template name="TopBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBar.uxml?fileID=9197481963319205126&amp;guid=2844772360ef641b18534d407b497b36&amp;type=3#TopBar"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/HUD.uss?fileID=7433441132597879392&amp;guid=ad7ed1cd4669f4ae99603cc9d091a54e&amp;type=3#HUD"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/EarlyCommitment.uss?fileID=7433441132597879392&amp;guid=93b4c11e626ad40ccb585301c5324615&amp;type=3#EarlyCommitment"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBar.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBar"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeArea.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeArea"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/BottomBar.uss?fileID=7433441132597879392&amp;guid=ba1dfd0e60ae446c4a8e467c30a92ca0&amp;type=3#BottomBar"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/HudUSS.uss?fileID=7433441132597879392&amp;guid=ad7ed1cd4669f4ae99603cc9d091a54e&amp;type=3#HudUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/EarlyCommitmentUSS.uss?fileID=7433441132597879392&amp;guid=93b4c11e626ad40ccb585301c5324615&amp;type=3#EarlyCommitmentUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBarUSS.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBarUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/BottomBarUSS.uss?fileID=7433441132597879392&amp;guid=ba1dfd0e60ae446c4a8e467c30a92ca0&amp;type=3#BottomBarUSS"/>
     <ui:VisualElement name="Root" style="width: 100%; height: 100%;">
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:Instance template="TopBar" name="TopBar"/>
-            <ui:Instance template="EarlyCommitment" name="EarlyCommitment" class="mobile-portrait mobile-landscape"/>
-            <ui:Instance template="BottomBar" name="BottomBar" class="mobile-portrait"/>
+            <ui:VisualElement name="EarlyCommitment" style="flex-grow: 1; position: absolute; width: 100%; bottom: 650px;">
+                <ui:Instance template="EarlyCommitment" name="EarlyCommitment" class="mobile-landscape" style="bottom: 0; height: 500px;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="BottomBar" style="flex-grow: 1; position: absolute; width: 100%; height: 1200px; bottom: 0;">
+                <ui:Instance template="BottomBar" name="BottomBar" class="mobile-portrait" style="bottom: 0%; flex-grow: 1;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
