@@ -17,7 +17,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         public Bounds GetFlatBounds()
         {
             Renderer r = GetComponent<Renderer>();
-            if (r == null) return new Bounds();
+            if (r == null)
+            {
+                Debug.LogError("Placeable: No renderer found. Cannot calculate bounds. " + name);
+                return new Bounds();
+            }
             Bounds b = r.bounds;
             b.center = new Vector3(b.center.x, 0f, b.center.z);
             b.size   = new Vector3(b.size.x,   0f, b.size.z);
