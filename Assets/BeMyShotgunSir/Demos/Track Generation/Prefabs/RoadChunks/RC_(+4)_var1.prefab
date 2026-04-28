@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 120706568541549847}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.6499996, y: 0, z: 8.490001}
+  m_LocalPosition: {x: -0.03000021, y: 0, z: -0.009999275}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39,57 +39,6 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 120706568541549847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70c6a097a1eb57c4492693c59069e0cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.PolygonSpawnArea
-  _points:
-  - {x: -1, y: 0, z: -1}
-  - {x: 1, y: 0, z: -1}
-  - {x: 1, y: 0, z: 1}
-  - {x: -1, y: 0, z: 1}
-  _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
-  _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
---- !u!1 &584055141367764538
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4623070020944759364}
-  - component: {fileID: 9058664663406119054}
-  m_Layer: 0
-  m_Name: ItemArea8
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4623070020944759364
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 584055141367764538}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 95.200005, y: 0, z: 47.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1662861969583367685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9058664663406119054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 584055141367764538}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70c6a097a1eb57c4492693c59069e0cf, type: 3}
@@ -911,7 +860,7 @@ Transform:
   m_GameObject: {fileID: 1826329087599042108}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 61.140003, y: 0, z: 26.84}
+  m_LocalPosition: {x: 0.020000458, y: 0, z: -3.209999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1075,7 +1024,7 @@ Transform:
   m_GameObject: {fileID: 2440857592759109827}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.76, y: 0, z: 8.490001}
+  m_LocalPosition: {x: 3.0800004, y: 0, z: -0.009999275}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4015,7 +3964,7 @@ Transform:
   m_GameObject: {fileID: 3892366431969588332}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.1200008, y: 0, z: 8.490001}
+  m_LocalPosition: {x: -3.559999, y: 0, z: -0.009999275}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4094,108 +4043,6 @@ MonoBehaviour:
   - {x: 47.345764, y: 0, z: -2.254696}
   - {x: 47.22081, y: 0, z: 4.7816925}
   - {x: -52.46899, y: 0, z: 5.162529}
-  _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
-  _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
---- !u!1 &4184648869572054869
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1140794664760767288}
-  - component: {fileID: 4528421677127397548}
-  m_Layer: 0
-  m_Name: ItemArea9
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1140794664760767288
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4184648869572054869}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 98.31, y: 0, z: 47.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1662861969583367685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4528421677127397548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4184648869572054869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70c6a097a1eb57c4492693c59069e0cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.PolygonSpawnArea
-  _points:
-  - {x: -1, y: 0, z: -1}
-  - {x: 1, y: 0, z: -1}
-  - {x: 1, y: 0, z: 1}
-  - {x: -1, y: 0, z: 1}
-  _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
-  _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
---- !u!1 &4844727112864907228
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2566837618715371280}
-  - component: {fileID: 8604444904173996771}
-  m_Layer: 0
-  m_Name: ItemArea7
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2566837618715371280
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4844727112864907228}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 91.670006, y: 0, z: 47.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1662861969583367685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8604444904173996771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4844727112864907228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70c6a097a1eb57c4492693c59069e0cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.PolygonSpawnArea
-  _points:
-  - {x: -1, y: 0, z: -1}
-  - {x: 1, y: 0, z: -1}
-  - {x: 1, y: 0, z: 1}
-  - {x: -1, y: 0, z: 1}
   _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
   _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
 --- !u!1 &4947806844646594203
@@ -4367,7 +4214,7 @@ Transform:
   m_GameObject: {fileID: 5225616380618240219}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 61.12, y: 0, z: 30.099998}
+  m_LocalPosition: {x: 0, y: 0, z: 0.049999237}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4450,7 +4297,7 @@ Transform:
   m_GameObject: {fileID: 5973780780596243681}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6.68, y: 0, z: 8.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4484,7 +4331,7 @@ Transform:
   m_GameObject: {fileID: 6106763317633613710}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 60.93, y: 0, z: 29.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6758,7 +6605,6 @@ Transform:
   m_Children:
   - {fileID: 2910184782502232946}
   - {fileID: 8180622626318371027}
-  - {fileID: 1662861969583367685}
   m_Father: {fileID: 7122765127643211994}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8258637530391518000
@@ -6787,7 +6633,7 @@ Transform:
   m_GameObject: {fileID: 8258637530391518000}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 61.100002, y: 0, z: 33.32}
+  m_LocalPosition: {x: -0.020000458, y: 0, z: 3.2700005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6812,37 +6658,3 @@ MonoBehaviour:
   - {x: -1, y: 0, z: 1}
   _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
   _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
---- !u!1 &8885788419979906593
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1662861969583367685}
-  m_Layer: 0
-  m_Name: ItemAreaGroup3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1662861969583367685
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8885788419979906593}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2566837618715371280}
-  - {fileID: 4623070020944759364}
-  - {fileID: 1140794664760767288}
-  m_Father: {fileID: 7493818777664580997}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
