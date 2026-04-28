@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BeMyShotgunSir/Demos/UI.unity
     guid: e99f99c291e054cfba9305b52756132c
+  - enabled: 1
+    path: Assets/BeMyShotgunSir/Demos/OnlineSetup/Race.unity
+    guid: 0338725d8527abb4baa693401ead203c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
