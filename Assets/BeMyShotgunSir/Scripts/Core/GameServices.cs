@@ -20,11 +20,11 @@ namespace BeMyShotgunSir.Scripts.Core
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-        private void OnEnable()
-        {
-            UIFlowState = ScriptableObject.CreateInstance<SOUIFlowState>();
 
+            UIFlowState = new UIFlowState();
+        }
+        private void Start()
+        {
             LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
             LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
 
@@ -53,7 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core
         }
 
         [SerializeField] private SceneCoordinator _sceneCoordinator;
-        public SOUIFlowState UIFlowState { get; private set; }
+        public UIFlowState UIFlowState { get; private set; }
         public SceneCoordinator SceneCoordinator => _sceneCoordinator;
         [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }

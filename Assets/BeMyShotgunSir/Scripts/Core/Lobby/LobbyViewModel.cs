@@ -1,25 +1,40 @@
 using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Core;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object.Synchronizing;
-using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
-    [CreateAssetMenu(fileName = "LobbyData", menuName = "Be My Shotgun, Sir!/RuntimeData/LobbyData")]
-    public class SOLobbyData : SOData, ILobbyDataView
+    public interface ILobbyNetData : INetData
     {
-        public override void InitData(SOData data = null)
+        LobbyInfo LobbyInfo { get; }
+        int PlayerCount { get; }
+        Dictionary<int, PlayerLobbyState> PlayerStates { get; }
+    }
+
+    public interface ILobbyData : IData { }
+
+    public interface ILobbyDataView : ILobbyData, ILobbyNetData
+    {
+        event Action OnLobbyInfoChanged;
+        event Action OnLobbyIPChanged;
+        event Action OnPlayerCountChanged;
+        event Action OnPlayerStatesChanged;
+    }
+
+    public class LobbyViewModel : ViewModel<ILobbyData, ILobbyNetData>, ILobbyDataView
+    {
+        public override void InitData(ILobbyData data = null)
         {
             LobbyIP = "127.0.0.1";
             PlayerCount = 0;
         }
 
-        public override void InitNetData(INetData data)
+        public override void InitNetData(ILobbyNetData data)
         {
             if (data is not ILobbyNetData lobbyData)
             {
-                Debug.LogError("SOLobbyData: InitNetData called with invalid data type. Expected ILobbyNetData.", this);
+                Log.ELazy(() => "LobbyData: InitNetData called with invalid data type. Expected ILobbyNetData.", this);
                 return;
             }
 

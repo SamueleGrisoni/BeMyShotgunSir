@@ -17,7 +17,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private LobbyBinder _binder;
         private LobbyCommand _lobbyCommand;
         [SerializeField] private LobbyNetController _netController;
-        [SerializeField] private SOLobbyData _data;
+        private LobbyViewModel _viewModel;
         public void BindLobby(ILobbyBindTarget[] targets)
         {
             if (_binder == null)
@@ -30,9 +30,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 Log.ELazy(() => "LobbyManager: No LobbyCommand found. Cannot bind lobby commands.", this);
                 return;
             }
-            if (_data == null)
+            if (_viewModel == null)
             {
-                Log.ELazy(() => "LobbyManager: No SOLobbyData found. Cannot bind lobby data.", this);
+                Log.ELazy(() => "LobbyManager: No LobbyViewModel found. Cannot bind lobby data.", this);
                 return;
             }
             _binder.Bind(targets);
@@ -44,9 +44,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         private void Awake()
         {
-            Debug.Assert(_data != null, "LobbyManager: SOLobbyData reference is not assigned in the inspector.", this);
             Debug.Assert(_netController != null, "LobbyManager: LobbyNetController reference is not assigned in the inspector.", this);
             Debug.Assert(_sounds != null, "LobbyManager: SOLobbySounds reference is not assigned in the inspector.", this);
+            _viewModel = new LobbyViewModel();
             TryGetComponent(out _netController);
             _netController.OnLobbyNetControllerSpawned += HandleLobbyNetControllerSpawned;
             _netController.OnLobbyNetControllerDespawned += HandleLobbyNetControllerDespawned;
@@ -55,9 +55,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void HandleLobbyNetControllerSpawned()
         {
             _lobbyCommand = new LobbyCommand(this, _netController);
-            _binder = new LobbyBinder(_lobbyCommand, _data);
+            _binder = new LobbyBinder(_lobbyCommand, _viewModel);
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
-            _data.InitData();
+            _viewModel.InitData();
             OnLobbyManagerSpawned?.Invoke(this);
         }
 
@@ -85,9 +85,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _netController.AdjustPlayerCount(delta);
         #endregion
 
-        public void InitNetData_Response(ILobbyNetData data) => _data.InitNetData(data);
-        public void SetLobbyIP_Response(string ip) => _data.SetLobbyIP(ip);
-        public void SetLobbyInfo_Response(LobbyInfo info) => _data.SetLobbyInfo(info);
+        public void InitNetData_Response(ILobbyNetData data) => _viewModel.InitNetData(data);
+        public void SetLobbyIP_Response(string ip) => _viewModel.SetLobbyIP(ip);
+        public void SetLobbyInfo_Response(LobbyInfo info) => _viewModel.SetLobbyInfo(info);
         public void SetPlayerCount_Response(int prev, int next)
         {
             if (prev < next)
@@ -100,9 +100,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 if (_audioRequestEvent != null)
                     _audioRequestEvent.RaiseEvent(this, new AudioRequest(_sounds.LeaveLobbyClip, 1f).As2D(), null);
             }
-            _data.SetPlayerCount(next);
+            _viewModel.SetPlayerCount(next);
         }
-        public void SetPlayerStates_Response(SyncDictionaryOperation op, int key, PlayerLobbyState value) => _data.SetPlayerStates(op, key, value);
+        public void SetPlayerStates_Response(SyncDictionaryOperation op, int key, PlayerLobbyState value) => _viewModel.SetPlayerStates(op, key, value);
 
     }
 }
