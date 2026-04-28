@@ -19,7 +19,7 @@ namespace BeMyShotgunSir.Editor
                 if (PrefabUtility.GetPrefabAssetType(obj) == PrefabAssetType.NotAPrefab) continue;
                 string newPath = $"{targetFolder}/{obj.name}_Variant.prefab";
 
-                GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(obj);
+                var instance = (GameObject)PrefabUtility.InstantiatePrefab(obj);
                 instance.AddComponent<CityProps>();
 
                 PrefabUtility.SaveAsPrefabAsset(instance, newPath);

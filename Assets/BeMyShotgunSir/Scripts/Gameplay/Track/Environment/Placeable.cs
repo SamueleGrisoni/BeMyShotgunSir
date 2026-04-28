@@ -4,7 +4,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
     public class Placeable : MonoBehaviour
     {
-        void OnDrawGizmos()
+        private void OnDrawGizmos()
         {
             Renderer r = GetComponent<Renderer>();
             if (r != null)
@@ -24,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             }
             Bounds b = r.bounds;
             b.center = new Vector3(b.center.x, 0f, b.center.z);
-            b.size   = new Vector3(b.size.x,   0f, b.size.z);
+            b.size = new Vector3(b.size.x, 0f, b.size.z);
             return b;
         }
     }

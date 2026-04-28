@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using UnityEngine;
 
@@ -34,7 +33,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 //todo this will be set by the server so the 2 sidecar do not overlap
                 //(this implementation sucks ikik but I want to see the car on track tbh)
-                var comp = _activeRoadChunks.First.Value.Component;
+                RoadChunk comp = _activeRoadChunks.First.Value.Component;
                 if (comp is StartFinishLineRoadChunk startFinish)
                 {
                     Vector3 startingPos = startFinish.GridPositions[_trackManager.GetRandomNumberInRange(0, 1)].position;
@@ -96,6 +95,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     break;
                 case RoadChunkType.ENDING_CROSSROAD:
                     PlaceEndingCrossroad(chunk);
+                    break;
+                default:
                     break;
             }
             chunk.gameObject.SetActive(true);

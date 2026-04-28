@@ -16,14 +16,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         [SerializeField] private SOEnvironment _environmentData;
         [SerializeField] private TrackSeed _trackSeed;
         private List<Bounds> _spawnPrefabsBounds = new List<Bounds>();
-        private Random Rng => _trackSeed.Rng;
+        private Random _rng => _trackSeed.Rng;
         public void PopulateChunk(RoadChunk chunk)
         {
-            if(!ValidateInspectorData(chunk))
+            if (!ValidateInspectorData(chunk))
             {
                 return;
             }
-            foreach (var spawnArea in chunk.PolygonSpawnArea)
+            foreach (PolygonSpawnArea spawnArea in chunk.PolygonSpawnArea)
             {
                 _spawnPrefabsBounds.Clear();
                 if (spawnArea is null)
@@ -43,7 +43,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             {
                 return;
             }
-            foreach (var area in chunk.PolygonSpawnArea)
+            foreach (PolygonSpawnArea area in chunk.PolygonSpawnArea)
             {
                 if (area is null) continue;
                 foreach (Transform child in area.transform)
@@ -67,13 +67,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         {
             if (_propsPrefabs == null || _propsPrefabs.Count == 0) return;
             //todo use RNG from server to ensure same environment for all players
-            int propsToSpawn = Rng.Next(_environmentData.MaxPropsPerSpawnArea/3, _environmentData.MaxPropsPerSpawnArea + 1);
+            int propsToSpawn = _rng.Next(_environmentData.MaxPropsPerSpawnArea / 3, _environmentData.MaxPropsPerSpawnArea + 1);
             for (int i = 0; i < propsToSpawn; i++)
             {
-                CityProps randomPrefab = _propsPrefabs[Rng.Next(0, _propsPrefabs.Count - 1)];
+                CityProps randomPrefab = _propsPrefabs[_rng.Next(0, _propsPrefabs.Count - 1)];
                 TrySpawnPlaceable(randomPrefab);
             }
-            if (Rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
+            if (_rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
             {
                 Debug.Log("Something funny spawned!");
                 Instantiate(_propsPrefabs[^1].gameObject,
@@ -97,7 +97,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             while (failedAttempts < maxFailures)
             {
                 //Todo use RNG from server to ensure same environment for all players
-                Building randomPrefab = prefabs[Rng.Next(0, prefabs.Count)];
+                Building randomPrefab = prefabs[_rng.Next(0, prefabs.Count)];
 
                 if (TrySpawnPlaceable(randomPrefab))
                 {
@@ -129,8 +129,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 float cursorX = startX + _environmentData.RoadEdgeOffset;
                 while (cursorX < endX)
                 {
-                    Vector3 candidateCenter = new Vector3(cursorX + width * 0.5f, 0f, cursorZ - depth * 0.5f);
-                    Bounds candidateBounds = new Bounds(candidateCenter, new Vector3(width, 1f, depth));
+                    var candidateCenter = new Vector3(cursorX + width * 0.5f, 0f, cursorZ - depth * 0.5f);
+                    var candidateBounds = new Bounds(candidateCenter, new Vector3(width, 1f, depth));
 
                     if (_currentSpawnArea.IsBoundsFullyInsidePolygon(candidateBounds) && !OverlapsExistingPrefabs(candidateBounds))
                     {
@@ -148,7 +148,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
         private bool OverlapsExistingPrefabs(Bounds candidate)
         {
-            foreach (var b in _spawnPrefabsBounds)
+            foreach (Bounds b in _spawnPrefabsBounds)
             {
                 Bounds expanded = candidate;
                 expanded.Expand(new Vector3(_environmentData.GapX, 0f, _environmentData.GapX));
@@ -160,7 +160,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
         private void Place(Placeable prefab, Vector3 worldPos, Vector3 edgeDir)
         {
-            Quaternion rotation = Quaternion.LookRotation(edgeDir, Vector3.up);
+            var rotation = Quaternion.LookRotation(edgeDir, Vector3.up);
             //Todo spawning should be handle with pooling
             Instantiate(prefab.gameObject, worldPos, rotation, _currentSpawnArea.transform);
         }

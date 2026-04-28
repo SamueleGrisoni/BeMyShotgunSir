@@ -10,7 +10,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     /*  Questo enum serve per identificare e riconciliare gli stati tra client e server.
         Ci sono dei casi in cui sul client e sul server il sidecar non si trova nello stesso stato e quindi sul client
-        deve essere riconciliato usando il replicate data.       
+        deve essere riconciliato usando il replicate data.
     */
     public enum DrivingStateType : byte
     {
@@ -183,7 +183,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         [Replicate]
         /*
-        Questo metodo viene eseguito sia sul Client che sul Server per ridurre i problemi di latenza. 
+        Questo metodo viene eseguito sia sul Client che sul Server per ridurre i problemi di latenza.
         Il client esegue immediatamente il codice, senza aspettare il server
         Il server esegue anch'esso i calcoli una volta ricevuti i dati (ReplicateDate)
         */
