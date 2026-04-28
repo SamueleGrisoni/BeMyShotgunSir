@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
+using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -11,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private SOTrack _trackData;
         [SerializeField] private TrackManager _trackManager;
         [SerializeField] private EnvironmentManager _environmentManager;
+        [SerializeField] private ItemManager _itemManager;
         [SerializeField] private Transform _startingPoint;
         [SerializeField] private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
@@ -69,20 +71,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void SpawnRoadChunk()
         {
-            List<GeneratedRoadChunkInfo> generatedRoadChunkInfoList =
+            List<GeneratedRoadChunkInfoWithItems> generatedRoadChunkInfoList =
                 _trackManager.GetGeneratedRoadChunkInfo();
-            foreach (GeneratedRoadChunkInfo generatedRoadChunk in generatedRoadChunkInfoList)
+            foreach (GeneratedRoadChunkInfoWithItems chunkInfoWithItems in generatedRoadChunkInfoList)
             {
-                int nextChunkIndex = generatedRoadChunk.index;
-                PooledRoadChunk nextChunk = generatedRoadChunk.type == RoadChunkType.TURN
+                int nextChunkIndex = chunkInfoWithItems.roadChunkInfo.index;
+                PooledRoadChunk nextChunk = chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
                     ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
                     : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
-                PlaceRoadChunk(nextChunk, generatedRoadChunk.type, generatedRoadChunk.position);
+                PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type, chunkInfoWithItems.roadChunkInfo.position, chunkInfoWithItems.itemsToSpawn);
                 _activeRoadChunks.AddLast(nextChunk);
             }
         }
 
-        private void PlaceRoadChunk(PooledRoadChunk chunk, RoadChunkType type, RoadChunkPosition position)
+        private void PlaceRoadChunk(PooledRoadChunk chunk, RoadChunkType type, RoadChunkPosition position, List<GeneratedItemInfo> itemsToSpawn)
         {
             switch (type)
             {
@@ -100,6 +102,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
             chunk.gameObject.SetActive(true);
             _environmentManager.PopulateChunk(chunk.Component);
+            _itemManager.PopulateChunkWithItems(chunk.Component, itemsToSpawn);
         }
 
         private void PlaceNormalRoadChunk(PooledRoadChunk chunk, RoadChunkPosition position)
