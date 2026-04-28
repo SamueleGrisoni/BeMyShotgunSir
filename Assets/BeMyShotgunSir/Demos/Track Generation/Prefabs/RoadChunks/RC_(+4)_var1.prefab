@@ -803,6 +803,9 @@ MonoBehaviour:
   - {fileID: 5684187781424520606}
   - {fileID: 1988631761674484635}
   <TurnWeight>k__BackingField: 4
+  <AreaGroup>k__BackingField:
+  - {fileID: 5714456903222825715}
+  - {fileID: 7886832435609484483}
 --- !u!1 &1693291318286206913
 GameObject:
   m_ObjectHideFlags: 0
@@ -4281,6 +4284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2910184782502232946}
+  - component: {fileID: 5714456903222825715}
   m_Layer: 0
   m_Name: ItemAreaGroup
   m_TagString: Untagged
@@ -4306,6 +4310,22 @@ Transform:
   - {fileID: 7462010385987622221}
   m_Father: {fileID: 7493818777664580997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5714456903222825715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5973780780596243681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172f4c974ee83c6409714fc453bffdaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemAreaGroup
+  <ItemSpawnPoints>k__BackingField:
+  - {fileID: 2181107152519208470}
+  - {fileID: 2509873649880896649}
+  - {fileID: 4848716984509082642}
 --- !u!1 &6106763317633613710
 GameObject:
   m_ObjectHideFlags: 0
@@ -4315,6 +4335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8180622626318371027}
+  - component: {fileID: 7886832435609484483}
   m_Layer: 0
   m_Name: ItemAreaGroup2
   m_TagString: Untagged
@@ -4340,6 +4361,22 @@ Transform:
   - {fileID: 5219094231354526397}
   m_Father: {fileID: 7493818777664580997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7886832435609484483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6106763317633613710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172f4c974ee83c6409714fc453bffdaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemAreaGroup
+  <ItemSpawnPoints>k__BackingField:
+  - {fileID: 987444667382033068}
+  - {fileID: 1415491747961949241}
+  - {fileID: 8595716738503774783}
 --- !u!1 &6135603722632198584
 GameObject:
   m_ObjectHideFlags: 0

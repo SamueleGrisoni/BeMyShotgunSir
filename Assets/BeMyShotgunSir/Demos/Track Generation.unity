@@ -488,6 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc25fed85d614f7184021ae251302128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemSpawner
+  _itemData: {fileID: 11400000, guid: e9dce43d4db29ec418ac6b7d49b839f3, type: 2}
 --- !u!1 &233792786
 GameObject:
   m_ObjectHideFlags: 0
