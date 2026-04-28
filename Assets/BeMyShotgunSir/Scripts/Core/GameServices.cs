@@ -42,7 +42,7 @@ namespace BeMyShotgunSir.Scripts.Core
         [field: SerializeField] public SOChannels Channels { get; private set; }
         [field: SerializeField] public LobbyManager LobbyManager { get; private set; }
         [field: SerializeField] public AudioManager AudioManager { get; private set; }
-        [field: SerializeField] public TrackManager TrackManager { get; private set; }
+        [field: SerializeField] public TrackGenerator TrackGenerator { get; private set; }
 
 
 

@@ -8,19 +8,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public class RoadManager : MonoBehaviour
     {
+        [Header("Data References")]
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
-        [SerializeField] private TrackManager _trackManager;
-        [SerializeField] private EnvironmentManager _environmentManager;
-        [SerializeField] private ItemManager _itemManager;
+        [Header("Generators References")]
+        [Tooltip("Generator are responsible for generating the data of the track and items to spawn")]
+        [SerializeField] private TrackGenerator _trackGenerator;
+        [SerializeField] private ItemGenerator _itemGenerator;
+        [Header("Spawner References")]
+        [Tooltip("Spawners are responsible for spawning the actual gameobjects in the scene")]
+        [SerializeField] private RoadSpawner _roadSpawner;
+        [SerializeField] private EnvironmentSpawner _environmentSpawner;
+        [SerializeField] private ItemSpawner _itemSpawner;
+        [Header("Other References")]
         [SerializeField] private Transform _startingPoint;
         [SerializeField] private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
-        private Transform _lastPlacedNormalAnchor;
-        private Transform _lastPlacedRightAnchor;
 
         private void Start()
         {
@@ -39,7 +45,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 var comp = _activeRoadChunks.First.Value.Component;
                 if (comp is StartFinishLineRoadChunk startFinish)
                 {
-                    Vector3 startingPos = startFinish.GridPositions[_trackManager.GetRandomNumberInRange(0, 1)].position;
+                    Vector3 startingPos = startFinish
+                        .GridPositions[_trackGenerator.GetRandomNumberInRange(0, 1)].position;
                     startingPos.y = 0.3f;
                     _driver.transform.position = startingPos;
                 }
@@ -63,7 +70,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                 _activeRoadChunks.RemoveFirst();
-                _environmentManager.ClearSpawnedProps(oldRoadChunk.Component);
+                _environmentSpawner.ClearSpawnedProps(oldRoadChunk.Component);
                 oldRoadChunk.ReturnToPool();
                 SpawnRoadChunk();
             }
@@ -72,93 +79,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private void SpawnRoadChunk()
         {
             List<GeneratedRoadChunkInfoWithItems> generatedRoadChunkInfoList =
-                _trackManager.GetGeneratedRoadChunkInfo();
-            foreach (GeneratedRoadChunkInfoWithItems chunkInfoWithItems in generatedRoadChunkInfoList)
+                _trackGenerator.GetGeneratedRoadChunkInfoWithItems();
+            foreach (GeneratedRoadChunkInfoWithItems chunkInfoWithItems in
+                generatedRoadChunkInfoList)
             {
                 int nextChunkIndex = chunkInfoWithItems.roadChunkInfo.index;
-                PooledRoadChunk nextChunk = chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
-                    ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
-                    : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
-                PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type, chunkInfoWithItems.roadChunkInfo.position, chunkInfoWithItems.itemsToSpawn);
+                PooledRoadChunk nextChunk =
+                    chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
+                        ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
+                        : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
+
+                _roadSpawner.PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type,
+                    chunkInfoWithItems.roadChunkInfo.position, _activeRoadChunks.Count);
+                _environmentSpawner.PopulateChunk(nextChunk.Component);
+                _itemSpawner.PopulateChunkWithItems(nextChunk.Component, chunkInfoWithItems.itemsToSpawn);
+
                 _activeRoadChunks.AddLast(nextChunk);
             }
-        }
-
-        private void PlaceRoadChunk(PooledRoadChunk chunk, RoadChunkType type, RoadChunkPosition position, List<GeneratedItemInfo> itemsToSpawn)
-        {
-            switch (type)
-            {
-                case RoadChunkType.TURN:
-                case RoadChunkType.STRAIGHT:
-                case RoadChunkType.START_FINISH_LINE:
-                    PlaceNormalRoadChunk(chunk, position);
-                    break;
-                case RoadChunkType.STARTING_CROSSROAD:
-                    PlaceStartingCrossroad(chunk);
-                    break;
-                case RoadChunkType.ENDING_CROSSROAD:
-                    PlaceEndingCrossroad(chunk);
-                    break;
-            }
-            chunk.gameObject.SetActive(true);
-            _environmentManager.PopulateChunk(chunk.Component);
-            _itemManager.PopulateChunkWithItems(chunk.Component, itemsToSpawn);
-        }
-
-        private void PlaceNormalRoadChunk(PooledRoadChunk chunk, RoadChunkPosition position)
-        {
-            if (_activeRoadChunks.Count == 0)
-            {
-                if (position == RoadChunkPosition.MIDDLE)
-                {
-                    chunk.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-                    _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
-                }
-                else
-                {
-                    Debug.LogError($"activeRoadChunks is empty, can't place {position} road chunk");
-                }
-                return;
-            }
-            if (position == RoadChunkPosition.RIGHT)
-            {
-                if (_activeRoadChunks.Count == 1)
-                {
-                    Debug.LogError($"activeRoadChunks has only one element, can't place {position} road chunk. There must be at least a crossroad and a left chunk before placing a right chunk");
-                }
-                else
-                {
-                    AlignChunk(chunk, _lastPlacedRightAnchor);
-                    _lastPlacedRightAnchor = chunk.Component.NextRoadAnchors[0];
-                }
-            }
-            else
-            {
-                AlignChunk(chunk, _lastPlacedNormalAnchor);
-                _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
-            }
-        }
-
-        private void PlaceStartingCrossroad(PooledRoadChunk chunk)
-        {
-            AlignChunk(chunk, _lastPlacedNormalAnchor);
-            _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
-            _lastPlacedRightAnchor = chunk.Component.NextRoadAnchors[1];
-        }
-
-        private void PlaceEndingCrossroad(PooledRoadChunk chunk)
-        {
-            AlignChunk(chunk, _lastPlacedNormalAnchor);
-            _lastPlacedNormalAnchor = chunk.Component.NextRoadAnchors[0];
-            _lastPlacedRightAnchor = null;
-        }
-
-        private void AlignChunk(PooledRoadChunk chunk, Transform targetAnchor)
-        {
-            Transform entranceAnchor = chunk.Component.SpawnAnchor;
-            chunk.transform.rotation = targetAnchor.rotation;
-            Vector3 localOffset = chunk.transform.InverseTransformPoint(entranceAnchor.position);
-            chunk.transform.position = targetAnchor.position - (chunk.transform.rotation * localOffset);
         }
     }
 }

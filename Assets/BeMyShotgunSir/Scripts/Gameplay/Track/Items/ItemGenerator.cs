@@ -18,7 +18,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         }
     }
 
-    public class ItemManager : MonoBehaviour
+    public class ItemGenerator : MonoBehaviour
     {
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOItem _itemData;
@@ -40,11 +40,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         public List<GeneratedItemInfo> GenerateItemsForRoadChunk(GeneratedRoadChunkInfo roadChunkInfo)
         {
             return roadChunkInfo.position == RoadChunkPosition.MIDDLE ? GenerateObstacle(roadChunkInfo) : GeneratePowerUp(roadChunkInfo);
-        }
-
-        public void PopulateChunkWithItems(RoadChunk chunk, List<GeneratedItemInfo> items)
-        {
-
         }
 
         private List<GeneratedItemInfo> GenerateObstacle(GeneratedRoadChunkInfo roadChunkInfo)
