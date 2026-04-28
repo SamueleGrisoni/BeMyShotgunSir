@@ -237,8 +237,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         public void LateUpdate()
         {
+            // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
+            // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
             _parent.position = _sphere.transform.position;
-            if (!IsOwner && !IsServerInitialized) return;
+            //if (!IsOwner && !IsServerInitialized) return;
             _parent.rotation = _parentRotation;
             _sidecar.localRotation = _sidecarLocalRotation;
         }
