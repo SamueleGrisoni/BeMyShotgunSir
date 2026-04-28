@@ -1,4 +1,5 @@
 ﻿using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
+using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,8 +10,8 @@ namespace BeMyShotgunSir.Editor
         [MenuItem("Tools/Create Variants and Add Script")]
         public static void CreateVariants()
         {
-            // Target save path
-            string targetFolder = "Assets/BeMyShotgunSir/Demos/Track Generation/Prefabs/Props";
+            // Target save path //Assets\BeMyShotgunSir\Demos\Track Generation\Prefabs\Item\Obstacles
+            string targetFolder = "Assets/BeMyShotgunSir/Demos/Track Generation/Prefabs/Item/Obstacles";
 
             GameObject[] selectedObjects = Selection.GetFiltered<GameObject>(SelectionMode.Assets);
 
@@ -19,8 +20,8 @@ namespace BeMyShotgunSir.Editor
                 if (PrefabUtility.GetPrefabAssetType(obj) == PrefabAssetType.NotAPrefab) continue;
                 string newPath = $"{targetFolder}/{obj.name}_Variant.prefab";
 
-                var instance = (GameObject)PrefabUtility.InstantiatePrefab(obj);
-                instance.AddComponent<CityProps>();
+                GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(obj);
+                instance.AddComponent<Item>();
 
                 PrefabUtility.SaveAsPrefabAsset(instance, newPath);
                 Object.DestroyImmediate(instance);

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5084273317064146506}
+  - component: {fileID: 70911360918858443}
   m_Layer: 0
   m_Name: ItemAreaGroup2
   m_TagString: Untagged
@@ -34,6 +35,22 @@ Transform:
   - {fileID: 3334748953890351716}
   m_Father: {fileID: 6701955652057378637}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &70911360918858443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541568379605126608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172f4c974ee83c6409714fc453bffdaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemAreaGroup
+  <ItemSpawnPoints>k__BackingField:
+  - {fileID: 6075032019164608693}
+  - {fileID: 981445223622811813}
+  - {fileID: 3231188314968302637}
 --- !u!1 &643398221733859722
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,6 +485,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3583753982441913215}
+  - component: {fileID: 1941152239276832085}
   m_Layer: 0
   m_Name: ItemAreaGroup1
   m_TagString: Untagged
@@ -493,6 +511,22 @@ Transform:
   - {fileID: 1036627350995309088}
   m_Father: {fileID: 6701955652057378637}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1941152239276832085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4043754789819607220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172f4c974ee83c6409714fc453bffdaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemAreaGroup
+  <ItemSpawnPoints>k__BackingField:
+  - {fileID: 6363771330256693312}
+  - {fileID: 7659362282386727690}
+  - {fileID: 343578834240974608}
 --- !u!1 &4285687889006621702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,6 +1669,9 @@ MonoBehaviour:
   - {fileID: 3000723705404181061}
   - {fileID: 2913024577175288802}
   <TurnWeight>k__BackingField: -2
+  <AreaGroup>k__BackingField:
+  - {fileID: 1941152239276832085}
+  - {fileID: 70911360918858443}
 --- !u!1 &5437448741073861217
 GameObject:
   m_ObjectHideFlags: 0

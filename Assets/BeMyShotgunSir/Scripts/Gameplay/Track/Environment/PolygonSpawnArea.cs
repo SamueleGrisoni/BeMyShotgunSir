@@ -119,6 +119,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             return true;
         }
 
+        //Note this is not the actual center of the polygon but the center of its bounding box.
+        //It works well enough for ItemSpawnArea but if you need the center of a spawnArea for a generic purpose is going to fuck you up
+        public Vector3 GetPolygonBoundsCenter()
+        {
+            return ComputePolygonBounds().center;
+        }
+
         private bool SegmentsIntersect2D(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
         {
             float d1X = p2.x - p1.x, d1Z = p2.z - p1.z;

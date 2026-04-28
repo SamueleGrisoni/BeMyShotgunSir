@@ -153,14 +153,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_isGeneratingSplit)
             {
                 GeneratedRoadChunkInfo leftChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.LEFT);
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, _itemGenerator.GenerateItemsForRoadChunk(leftChunkInfo)));
+                List<GeneratedItemInfo> powerUpsForLeftSplit = _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.LEFT);
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, powerUpsForLeftSplit));
+
                 GeneratedRoadChunkInfo rightChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.RIGHT);
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, _itemGenerator.GenerateItemsForRoadChunk(rightChunkInfo)));
+                List<GeneratedItemInfo> powerUpsForRightSplit = _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.RIGHT);
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, powerUpsForRightSplit));
             }
             else
             {
-                GeneratedRoadChunkInfo commonRoadChunkInfo = GenerateCommonChunkInfo();
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(commonRoadChunkInfo, _itemGenerator.GenerateItemsForRoadChunk(commonRoadChunkInfo)));
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(GenerateCommonChunkInfo(), _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.MIDDLE)));
             }
         }
 

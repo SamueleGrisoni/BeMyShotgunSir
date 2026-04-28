@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1289077612423173828
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -293203802875518696, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_Name
+      value: Exploding Barrel Spil
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881466077556996133, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -293203802875518696, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7590213016651367565}
+  m_SourcePrefab: {fileID: -3199799093341109342, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+--- !u!1 &7642025774453356508 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -293203802875518696, guid: 31f2e5091edbc254e97d823e42caf3f5, type: 3}
+  m_PrefabInstance: {fileID: 1289077612423173828}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-7590213016651367565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7642025774453356508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc1dadac571c48b196800d785c603470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.Item
