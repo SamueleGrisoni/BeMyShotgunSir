@@ -14,7 +14,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public interface ILobbyData : IData { }
 
-    public interface ILobbyDataView : ILobbyData, ILobbyNetData
+    public interface ILobbyDataView : IDataView, ILobbyData, ILobbyNetData
     {
         event Action OnLobbyInfoChanged;
         event Action OnLobbyIPChanged;

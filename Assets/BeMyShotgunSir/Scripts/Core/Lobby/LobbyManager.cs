@@ -54,7 +54,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         private void HandleLobbyNetControllerSpawned()
         {
-            _lobbyCommand = new LobbyCommand(this, _netController);
+            _lobbyCommand = new LobbyCommand(_netController);
             _binder = new LobbyBinder(_lobbyCommand, _viewModel);
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
             _viewModel.InitData();

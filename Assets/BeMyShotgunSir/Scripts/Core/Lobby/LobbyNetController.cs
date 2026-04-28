@@ -49,12 +49,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
     }
 
-    public class LobbyNetController : NetworkBehaviour
+    public class LobbyNetController : NetController
     {
         private ServerManager _serverManager;
         private LobbyManager _lobbyManager;
         public event Action OnLobbyNetControllerSpawned;
         public event Action OnLobbyNetControllerDespawned;
+
+        [SerializeField] private NetworkObject _raceManager;
 
         private void Awake()
         {
@@ -150,6 +152,25 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
 
+        [Server]
+        private void StartRace()
+        {
+            if (_raceManager == null)
+            {
+                Debug.LogError("LobbyNetController: RaceManager prefab reference is not assigned in the inspector.", this);
+                return;
+            }
+            GameObject raceInstance = Instantiate(_raceManager.gameObject);
+            NetworkObject netObj = raceInstance.GetComponent<NetworkObject>();
+            if (netObj == null)
+            {
+                Debug.LogError("LobbyNetController: RaceManager prefab does not have a NetworkObject component.", this);
+                Destroy(raceInstance);
+                return;
+            }
+            // GameServices.Instance.SceneCoordinator.LoadRaceScene();
+            netObj.Spawn(netObj);
+        }
 
         #region LobbyConnectionManagement
         /// <summary>
@@ -258,6 +279,23 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             PlayerLobbyState state = _playerStates[connectionId];
             state.IsReady = isReady;
             _playerStates[connectionId] = state;
+
+            if (isReady)
+            {
+                bool allReady = true;
+                foreach (KeyValuePair<int, PlayerLobbyState> kvp in _playerStates.Collection)
+                {
+                    if (!kvp.Value.IsReady)
+                    {
+                        allReady = false;
+                        break;
+                    }
+                }
+                if (allReady)
+                {
+                    StartRace();
+                }
+            }
         }
         #endregion
 

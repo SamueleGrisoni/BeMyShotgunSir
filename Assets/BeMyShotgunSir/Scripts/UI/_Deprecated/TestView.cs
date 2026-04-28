@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         public override void OnBindComplete()
         {
-            _dataView.OnPlayerStatesChanged += UpdateTestView;
+            _viewModel.OnPlayerStatesChanged += UpdateTestView;
             UpdateTestView();
         }
 
@@ -21,15 +21,15 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void OnDisable()
         {
-            if (_dataView != null) _dataView.OnPlayerStatesChanged -= UpdateTestView;
+            if (_viewModel != null) _viewModel.OnPlayerStatesChanged -= UpdateTestView;
         }
 
         private void UpdateTestView()
         {
-            if (_testText == null || _dataView == null)
+            if (_testText == null || _viewModel == null)
                 return;
 
-            Dictionary<int, PlayerLobbyState> states = _dataView.PlayerStates;
+            Dictionary<int, PlayerLobbyState> states = _viewModel.PlayerStates;
             if (states == null || states.Count == 0)
             {
                 _testText.text = "No players";

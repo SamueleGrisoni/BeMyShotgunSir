@@ -18,20 +18,14 @@ namespace BeMyShotgunSir.Scripts.UI
                 Debug.LogError("LobbyCommand not bound to LobbyViewController!");
                 return;
             }
-            if (_dataView == null)
+            if (_viewModel == null)
             {
                 Debug.LogError("LobbyDataView not bound to LobbyViewController!");
                 return;
             }
 
-            _dataView.OnLobbyIPChanged += UpdateLobbyIP;
-            _dataView.OnPlayerCountChanged += UpdatePlayerCount;
-            // NOTE the following is commented since not really needed (as LobbyInfo should not change). The choice is up to @OmegaMorello
-            // _dataView.OnLobbyInfoChanged += UpdateLobbyInfo;
-
-            //NOTE the following two instructions are redundant since as soon as the bind occurs, the SOData will trigger the events
-            UpdatePlayerCount();
-            UpdateLobbyIP();
+            _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
+            _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
         }
 
 
@@ -67,9 +61,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _leaveLobbyButton.clicked += LeaveLobbyButtonHandler;
 
             _backButton.clicked += BackButtonHandler;
-
-            _lobbyIPAddress.text = "LOBBY ADDRESS: localhost:7770";
-            _playersInLobby.text = "PLAYERS IN LOBBY: 1/4";
         }
 
 
@@ -83,7 +74,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void LeaveLobbyButtonHandler()
         {
-            // TODO: Save on a SO which screen to show after leaving the lobby
             GameServices.Instance.UIFlowState.SetNextState(UIScreen.HostOrJoin);
             CloseConnection();
         }
@@ -105,23 +95,24 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void UpdateLobbyIP()
         {
-            if (_lobbyIPAddress != null && _dataView != null)
+            if (_lobbyIPAddress != null && _viewModel != null)
             {
-                _lobbyIPAddress.text = $"{_dataView.LobbyInfo.LobbyIP}";
+                _lobbyIPAddress.text = $"{_viewModel.LobbyInfo.LobbyIP}";
             }
         }
 
         private void UpdatePlayerCount()
         {
-            if (_playersInLobby != null && _dataView != null)
+            if (_playersInLobby != null && _viewModel != null)
             {
-                _playersInLobby.text = $"PLAYERS IN LOBBY: {_dataView.PlayerCount}/{_dataView.LobbyInfo.MaxPlayers}";
+                _playersInLobby.text = $"PLAYERS IN LOBBY: {_viewModel.PlayerCount}/{_viewModel.LobbyInfo.MaxPlayers}";
             }
         }
 
         private void OnDisable()
         {
-            if (_dataView != null) _dataView.OnLobbyIPChanged -= UpdateLobbyIP;
+            if (_viewModel != null) _viewModel.OnLobbyIPChanged -= UpdateLobbyIP;
+            if (_viewModel != null) _viewModel.OnPlayerCountChanged -= UpdatePlayerCount;
 
             _startRaceButton.clicked -= StartRaceButtonHandler;
             _leaveLobbyButton.clicked -= LeaveLobbyButtonHandler;

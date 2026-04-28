@@ -14,20 +14,20 @@ namespace BeMyShotgunSir.Scripts.UI
 
         public override void OnBindComplete()
         {
-            _dataView.OnPlayerCountChanged += UpdatePlayerCount;
+            _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
             UpdatePlayerCount();
         }
 
         private void OnDisable()
         {
-            if (_dataView != null) _dataView.OnPlayerCountChanged -= UpdatePlayerCount;
+            if (_viewModel != null) _viewModel.OnPlayerCountChanged -= UpdatePlayerCount;
         }
 
         private void UpdatePlayerCount()
         {
-            if (_playerCountText != null && _dataView != null)
+            if (_playerCountText != null && _viewModel != null)
             {
-                _playerCountText.text = $"{_dataView.PlayerCount}";
+                _playerCountText.text = $"{_viewModel.PlayerCount}";
             }
         }
     }
