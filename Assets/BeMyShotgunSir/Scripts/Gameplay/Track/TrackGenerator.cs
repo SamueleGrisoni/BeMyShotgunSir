@@ -32,13 +32,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         }
     }
 
-    public class TrackManager : MonoBehaviour
+    public class TrackGenerator : MonoBehaviour
     {
         private enum SpecialRoadChunkIndex { STARTING_CROSSROAD = 0, ENDING_CROSSROAD = 1, START_LINE = 2, STRAIGHT = 3, LEFT_HALF_CIRCLE = 4, RIGHT_HALF_CIRCLE = 5, AUSTIN_SNAKE = 6 }
 
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
-        [SerializeField] private ItemManager _itemManager;
+        [SerializeField] private ItemGenerator _itemGenerator;
 
         private Queue<GeneratedRoadChunkInfoWithItems> _trackBits = new Queue<GeneratedRoadChunkInfoWithItems>();
         private Random Rng => _trackSeed.Rng;
@@ -95,7 +95,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
         }
 
-        public List<GeneratedRoadChunkInfoWithItems> GetGeneratedRoadChunkInfo()
+        public List<GeneratedRoadChunkInfoWithItems> GetGeneratedRoadChunkInfoWithItems()
         {
             List<GeneratedRoadChunkInfoWithItems> result = new List<GeneratedRoadChunkInfoWithItems>();
             if (_trackBits.Count == 0) return result;
@@ -153,14 +153,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_isGeneratingSplit)
             {
                 GeneratedRoadChunkInfo leftChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.LEFT);
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, _itemManager.GenerateItemsForRoadChunk(leftChunkInfo)));
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, _itemGenerator.GenerateItemsForRoadChunk(leftChunkInfo)));
                 GeneratedRoadChunkInfo rightChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.RIGHT);
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, _itemManager.GenerateItemsForRoadChunk(rightChunkInfo)));
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, _itemGenerator.GenerateItemsForRoadChunk(rightChunkInfo)));
             }
             else
             {
                 GeneratedRoadChunkInfo commonRoadChunkInfo = GenerateCommonChunkInfo();
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(commonRoadChunkInfo, _itemManager.GenerateItemsForRoadChunk(commonRoadChunkInfo)));
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(commonRoadChunkInfo, _itemGenerator.GenerateItemsForRoadChunk(commonRoadChunkInfo)));
             }
         }
 

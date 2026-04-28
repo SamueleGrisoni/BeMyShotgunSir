@@ -4,7 +4,7 @@ using Random = System.Random;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
-    public class EnvironmentManager : MonoBehaviour
+    public class EnvironmentSpawner : MonoBehaviour
     {
         private PolygonSpawnArea _currentSpawnArea;
 
@@ -57,7 +57,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         {
             if (chunk.PolygonSpawnArea == null || chunk.PolygonSpawnArea.Length == 0)
             {
-                Debug.LogError("[EnvironmentManager] No spawn areas assigned to chunk: " + chunk.name);
+                Debug.LogError("[EnvironmentSpawnerSpanwer] No spawn areas assigned to chunk: " + chunk.name);
                 return false;
             }
             return true;
@@ -173,17 +173,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             }
             if (_bigBuildingPrefabs == null || _bigBuildingPrefabs.Count == 0)
             {
-                Debug.LogWarning("[EnvironmentManager] No big building prefabs assigned.");
+                Debug.LogWarning("[EnvironmentSpawnerEnvironmentSpanwer] No big building prefabs assigned.");
                 return false;
             }
             if (_mediumBuildingPrefabs == null || _mediumBuildingPrefabs.Count == 0)
             {
-                Debug.LogWarning("[EnvironmentManager] No medium building prefabs assigned.");
+                Debug.LogWarning("[EnvironmentSpawnerEnvironmentSpanwer] No medium building prefabs assigned.");
                 return false;
             }
             if (_smallBuildingPrefabs == null || _smallBuildingPrefabs.Count == 0)
             {
-                Debug.LogWarning("[EnvironmentManager] No small building prefabs assigned.");
+                Debug.LogWarning("[EnvironmentSpawnerEnvironmentSpanwer] No small building prefabs assigned.");
                 return false;
             }
             return true;
