@@ -146,7 +146,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             base.OnStartClient();
             if (IsOwner)
             {
-                GetComponent<UnityEngine.InputSystem.PlayerInput>().enabled = true;
+                GetComponent<PlayerInput>().enabled = true;
 
             }
         }
