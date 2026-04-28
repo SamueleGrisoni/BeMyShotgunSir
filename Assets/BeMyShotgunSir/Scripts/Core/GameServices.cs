@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
+using FishNet.Managing;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Lobby;
-using FishNet.Managing;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
@@ -71,6 +72,7 @@ namespace BeMyShotgunSir.Scripts.Core
         #region Network
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
         public LobbyManager LobbyManager { get; private set; }
+        public RaceManager RaceManager { get; private set; }
         #endregion
     }
 }

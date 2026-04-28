@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
 using FishNet.Object;
@@ -61,7 +62,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void Awake()
         {
             if (!TryGetComponent(out _lobbyManager))
-                Debug.LogError("LobbyNetController: LobbyManager not found as parent!", this);
+                Log.ELazy(() => "LobbyNetController: LobbyManager not found as parent!", this);
         }
 
         public override void OnStartNetwork()
@@ -157,14 +158,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (_raceManager == null)
             {
-                Debug.LogError("LobbyNetController: RaceManager prefab reference is not assigned in the inspector.", this);
+                Log.ELazy(() => "LobbyNetController: RaceManager prefab reference is not assigned in the inspector.", this);
                 return;
             }
             GameObject raceInstance = Instantiate(_raceManager.gameObject);
             NetworkObject netObj = raceInstance.GetComponent<NetworkObject>();
             if (netObj == null)
             {
-                Debug.LogError("LobbyNetController: RaceManager prefab does not have a NetworkObject component.", this);
+                Log.ELazy(() => "LobbyNetController: RaceManager prefab does not have a NetworkObject component.", this);
                 Destroy(raceInstance);
                 return;
             }
