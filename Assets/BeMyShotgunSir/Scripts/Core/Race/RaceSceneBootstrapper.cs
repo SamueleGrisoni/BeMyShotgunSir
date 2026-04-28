@@ -18,7 +18,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             if (_coercedTargets == null)
             {
-                Log.ELazy(() => "RaceSceneBootstrapper: Coerced bind targets are null. Cannot bind race.", this);
+                Log.ELazy(() => "Coerced bind targets are null. Cannot bind race.", this);
                 return;
             }
             manager.BindLobby(_coercedTargets);
@@ -33,15 +33,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         protected override void Initialize()
         {
-            //NOTE this should be handled by fishnet (scenes are now networked)
-            // UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.Lobby.ToString());
-
             _coercedTargets = new IRaceBindTarget[_bindTargets.Length];
             for (int i = 0; i < _bindTargets.Length; i++)
             {
                 if (_bindTargets[i].Interface == null)
                 {
-                    Log.ELazy(() => $"RaceSceneInitializer: Bind target at index {i} does not implement IRaceBindTarget. Skipping.", this);
+                    Log.ELazy(() => $"Bind target at index {i} does not implement IRaceBindTarget. Skipping.", this);
                     continue;
                 }
                 _coercedTargets[i] = _bindTargets[i].Interface;

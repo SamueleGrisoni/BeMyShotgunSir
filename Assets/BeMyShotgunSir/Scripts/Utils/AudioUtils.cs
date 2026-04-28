@@ -25,7 +25,7 @@ namespace BeMyShotgunSir.Scripts.Utils
                     return;
 
                 if (_mixer != null && _mixer != value)
-                    Log.WLazy(() => "AudioUtils: Replacing previously assigned mixer instance.", typeof(AudioUtils));
+                    Log.WLazy(() => "Replacing previously assigned mixer instance.", typeof(AudioUtils));
 
                 _mixer = value;
             }
@@ -34,7 +34,7 @@ namespace BeMyShotgunSir.Scripts.Utils
         {
             if (_mixer == null)
             {
-                Log.ELazy(() => "AudioUtils: Mixer is not assigned! Returning null.", typeof(AudioUtils));
+                Log.ELazy(() => "Mixer is not assigned! Returning null.", typeof(AudioUtils));
                 return null;
             }
 
@@ -42,7 +42,7 @@ namespace BeMyShotgunSir.Scripts.Utils
 
             if (groups == null || groups.Length == 0)
             {
-                Log.ELazy(() => $"AudioUtils: No MixerGroup found for {group}.", typeof(AudioUtils));
+                Log.ELazy(() => $"No MixerGroup found for {group}.", typeof(AudioUtils));
                 return null;
             }
 

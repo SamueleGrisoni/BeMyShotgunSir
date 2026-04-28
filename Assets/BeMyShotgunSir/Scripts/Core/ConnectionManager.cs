@@ -41,7 +41,7 @@ namespace BeMyShotgunSir.Scripts.Core
         private void Awake()
         {
             if (_lobbyManagerPrefab == null)
-                Log.ELazy(() => "ConnectionManager: LobbyManager prefab reference is not assigned in the inspector.", this);
+                Log.ELazy(() => "LobbyManager prefab reference is not assigned in the inspector.", this);
 
             HandleStartup();
         }
@@ -53,7 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (GameServices.Instance == null || GameServices.Instance.NetworkManager == null)
             {
-                Log.ELazy(() => "ConnectionManager: GameServices or NetworkManager is missing.", this);
+                Log.ELazy(() => "GameServices or NetworkManager is missing.", this);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (_serverManager == null || _clientManager == null)
             {
-                Log.ELazy(() => "ConnectionManager: ServerManager or ClientManager is missing.", this);
+                Log.ELazy(() => "ServerManager or ClientManager is missing.", this);
                 return;
             }
 
@@ -192,7 +192,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
                 if (_currentAppFlow == AppFlowState.Lobby || _currentAppFlow == AppFlowState.Startup)
                 {
-                    Debug.LogWarning("ConnectionManager: Server stopped, returning to init state.", this);
+                    Debug.LogWarning("Server stopped, returning to init state.", this);
                     HandleInit();
                 }
             }
@@ -229,7 +229,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
                 _connectionFlowState = ConnectionFlowState.Idle;
-                Debug.LogWarning("ConnectionManager: Join failed or was interrupted.", this);
+                Debug.LogWarning("Join failed or was interrupted.", this);
                 HandleInit();
             }
         }

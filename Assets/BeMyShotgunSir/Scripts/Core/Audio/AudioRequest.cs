@@ -19,7 +19,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         {
             if (soundSource == null || soundSource.Clips == null || soundSource.Clips.Length == 0)
             {
-                Log.ELazy(() => "AudioRequest: SOSoundSource is null or has no clips. Using safe defaults.", this);
+                Log.ELazy(() => "SOSoundSource is null or has no clips. Using safe defaults.", this);
                 StartingPosition = startingPosition;
                 return;
             }
@@ -56,7 +56,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         {
             if (_boundSource == null)
             {
-                Log.ELazy(() => "AudioRequest: Cannot stop audio because the request is not bound to any AudioSource.", this);
+                Log.ELazy(() => "Cannot stop audio because the request is not bound to any AudioSource.", this);
                 return;
             }
             _boundSource.Stop();

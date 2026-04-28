@@ -22,17 +22,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (_binder == null)
             {
-                Log.ELazy(() => "LobbyManager: No LobbyBinder found. Cannot bind lobby commands.", this);
+                Log.ELazy(() => "No LobbyBinder found. Cannot bind lobby commands.", this);
                 return;
             }
             if (_lobbyCommand == null)
             {
-                Log.ELazy(() => "LobbyManager: No LobbyCommand found. Cannot bind lobby commands.", this);
+                Log.ELazy(() => "No LobbyCommand found. Cannot bind lobby commands.", this);
                 return;
             }
             if (_viewModel == null)
             {
-                Log.ELazy(() => "LobbyManager: No LobbyViewModel found. Cannot bind lobby data.", this);
+                Log.ELazy(() => "No LobbyViewModel found. Cannot bind lobby data.", this);
                 return;
             }
             _binder.Bind(targets);

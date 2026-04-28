@@ -76,26 +76,26 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         {
             if (request == null)
             {
-                Log.ELazy(() => "AudioManager: Cannot execute audio request because the request is null.", this);
+                Log.ELazy(() => "Cannot execute audio request because the request is null.", this);
                 return;
             }
 
             if (request.Clip == null)
             {
-                Log.ELazy(() => "AudioManager: Cannot execute audio request because clip is null.", this);
+                Log.ELazy(() => "Cannot execute audio request because clip is null.", this);
                 return;
             }
 
             bool isPooled = (targetSource == null);
             if (isPooled && _pooler == null)
             {
-                Log.ELazy(() => "AudioManager: Pooler is not assigned!", this);
+                Log.ELazy(() => "Pooler is not assigned!", this);
                 return;
             }
             AudioSource finalSource = (isPooled) ? _pooler.GetAudioSource() : targetSource;
             if (finalSource == null)
             {
-                Log.ELazy(() => "AudioManager: Failed to obtain an AudioSource for the request.", this);
+                Log.ELazy(() => "Failed to obtain an AudioSource for the request.", this);
                 return;
             }
             ApplyRequestToSource(request, finalSource);

@@ -30,7 +30,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             if (data is not LobbyViewModel lobbyData)
             {
-                Log.ELazy(() => "SORaceData: InitData called with invalid data type. Expected SOLobbyData.", this);
+                Log.ELazy(() => "InitData called with invalid data type. Expected SOLobbyData.", this);
                 return;
             }
             LobbyInfo = lobbyData.LobbyInfo;
@@ -42,7 +42,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             if (data is not IRaceNetData raceNetData)
             {
-                Log.ELazy(() => "SORaceData: InitNetData called with invalid data type. Expected IRaceNetData.", this);
+                Log.ELazy(() => "InitNetData called with invalid data type. Expected IRaceNetData.", this);
                 return;
             }
             //no setters to allow a real refresh even for unchanged values

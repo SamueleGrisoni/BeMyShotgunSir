@@ -34,7 +34,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (data is not ILobbyNetData lobbyData)
             {
-                Log.ELazy(() => "LobbyData: InitNetData called with invalid data type. Expected ILobbyNetData.", this);
+                Log.ELazy(() => "InitNetData called with invalid data type. Expected ILobbyNetData.", this);
                 return;
             }
 

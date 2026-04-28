@@ -18,7 +18,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (_coercedTargets == null)
             {
-                Log.ELazy(() => "LobbySceneBootstrapper: Coerced bind targets are null. Cannot bind lobby.", this);
+                Log.ELazy(() => "Coerced bind targets are null. Cannot bind lobby.", this);
                 return;
             }
             manager.BindLobby(_coercedTargets);
@@ -40,7 +40,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             {
                 if (_bindTargets[i].Interface == null)
                 {
-                    Log.ELazy(() => $"LobbySceneInitializer: Bind target at index {i} does not implement ILobbyBindTarget. Skipping.", this);
+                    Log.ELazy(() => $"Bind target at index {i} does not implement ILobbyBindTarget. Skipping.", this);
                     continue;
                 }
                 _coercedTargets[i] = _bindTargets[i].Interface;

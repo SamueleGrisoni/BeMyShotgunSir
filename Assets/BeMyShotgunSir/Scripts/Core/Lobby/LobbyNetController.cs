@@ -63,7 +63,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void Awake()
         {
             if (!TryGetComponent(out _lobbyManager))
-                Log.ELazy(() => "LobbyNetController: LobbyManager not found as parent!", this);
+                Log.ELazy(() => "LobbyManager not found as parent!", this);
         }
 
         public override void OnStartNetwork()

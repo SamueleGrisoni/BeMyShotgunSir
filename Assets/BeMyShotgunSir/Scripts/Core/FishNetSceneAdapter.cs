@@ -39,7 +39,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 if (Enum.TryParse(sceneName, out SceneName unloadedScene))
                     OnSceneUnloaded?.Invoke(unloadedScene);
                 else
-                    Log.ELazy(() => $"SceneCoordinator: Unloaded scene '{sceneName}' does not match any known SceneName enum values.", this);
+                    Log.ELazy(() => $"Unloaded scene '{sceneName}' does not match any known SceneName enum values.", this);
             }
         }
 
@@ -52,7 +52,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
                     OnSceneLoaded?.Invoke(loadedScene);
                 else
-                    Log.ELazy(() => $"SceneCoordinator: Loaded scene '{sceneName}' does not match any known SceneName enum values.", this);
+                    Log.ELazy(() => $"Loaded scene '{sceneName}' does not match any known SceneName enum values.", this);
             }
         }
 
@@ -62,7 +62,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 Initialize();
             if (_fishNetSceneManager == null)
             {
-                Debug.LogError("SceneCoordinator: FishNet SceneManager is not available.", context);
+                Log.ELazy(() => "FishNet SceneManager is not available.", context);
                 return false;
             }
 
