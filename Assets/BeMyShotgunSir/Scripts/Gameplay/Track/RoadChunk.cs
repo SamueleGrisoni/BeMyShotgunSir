@@ -1,4 +1,5 @@
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
+using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -13,7 +14,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [field: SerializeField] public PolygonSpawnArea[] PolygonSpawnArea { get; private set; }
 
         [field: SerializeField] public int TurnWeight { get; private set; }
-
+        [field: SerializeField] public ItemAreaGroup[] AreaGroup { get; private set; }
         private int _indexInCurrentTrack;
         public void SetIndexInCurrentTrack(int index) => _indexInCurrentTrack = index;
     }

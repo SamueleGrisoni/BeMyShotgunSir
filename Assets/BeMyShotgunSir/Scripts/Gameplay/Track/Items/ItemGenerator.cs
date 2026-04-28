@@ -8,13 +8,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
     {
         public int index;
         public ItemType type;
-        public int areGroupIndex;
+        public int areaGroupIndex;
+        public int spawnPointIndex;
 
-        public GeneratedItemInfo(int index, ItemType type, int areGroupIndex)
+        public GeneratedItemInfo(int index, ItemType type, int areaGroupIndex, int spawnPointIndex = 0)
         {
             this.index = index;
             this.type = type;
-            this.areGroupIndex = areGroupIndex;
+            this.areaGroupIndex = areaGroupIndex;
+            this.spawnPointIndex = spawnPointIndex;
         }
     }
 
@@ -23,8 +25,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOItem _itemData;
 
-        [SerializeField] private List<Item> _obstacleItems;
-        [SerializeField] private List<Item> _powerUpItems;
+        private bool _isInCommonRoad = true;
+        private int _numOfPowerUpSpawnedInRightSplit = 0;
+        private int _numOfPowerUpSpawnedInLeftSplit = 0;
 
         private Random Rng => _trackSeed.Rng;
 
@@ -37,19 +40,62 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             }
         }
 
-        public List<GeneratedItemInfo> GenerateItemsForRoadChunk(GeneratedRoadChunkInfo roadChunkInfo)
+        public List<GeneratedItemInfo> GenerateItemsForRoadChunk(RoadChunkPosition roadChunkPosition)
         {
-            return roadChunkInfo.position == RoadChunkPosition.MIDDLE ? GenerateObstacle(roadChunkInfo) : GeneratePowerUp(roadChunkInfo);
+            if (roadChunkPosition == RoadChunkPosition.MIDDLE)
+            {
+                if (!_isInCommonRoad)
+                {
+                    _isInCommonRoad = true;
+                    _numOfPowerUpSpawnedInLeftSplit = 0;
+                    _numOfPowerUpSpawnedInRightSplit = 0;
+                }
+                return GenerateObstacle();
+            }
+            if (_isInCommonRoad)
+            {
+                _isInCommonRoad = false;
+            }
+            return GeneratePowerUp(roadChunkPosition);
         }
 
-        private List<GeneratedItemInfo> GenerateObstacle(GeneratedRoadChunkInfo roadChunkInfo)
+        private List<GeneratedItemInfo> GenerateObstacle()
         {
-            return new List<GeneratedItemInfo>();
+            List<GeneratedItemInfo> generatedObstacles = new List<GeneratedItemInfo>();
+            int numOfAreaGroupWithObstacle = 0;
+
+            for (int areaGroupIndex = 0; areaGroupIndex < _itemData.NumberOfAreaGroupPerChunk; areaGroupIndex++)
+            {
+                if (Rng.NextDouble() < _itemData.ChanceToSpawnObstaclePerAreaGroup && numOfAreaGroupWithObstacle < _itemData.MaxAreaGroupsWithObstaclePerRoadChunk)
+                {
+                    generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, Rng.Next(0, _itemData.NumberOfItemSpawnAreaPerAreaGroup)));
+                    numOfAreaGroupWithObstacle++;
+                }
+            }
+
+            return generatedObstacles;
         }
 
-        private List<GeneratedItemInfo> GeneratePowerUp(GeneratedRoadChunkInfo roadChunkInfo)
+        private List<GeneratedItemInfo> GeneratePowerUp(RoadChunkPosition position)
         {
-            return new List<GeneratedItemInfo>();
+            List<GeneratedItemInfo> generatedPowerUps = new List<GeneratedItemInfo>();
+            for (int areaGroupIndex = 0; areaGroupIndex < _itemData.NumberOfAreaGroupPerChunk; areaGroupIndex++)
+            {
+                if (Rng.NextDouble() < _itemData.ChanceToSpawnPowerUpPerAreaGroup)
+                {
+                    if (position == RoadChunkPosition.LEFT && _numOfPowerUpSpawnedInLeftSplit < _itemData.MaxNumberOfPowerUpPerSplit)
+                    {
+                        generatedPowerUps.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
+                        _numOfPowerUpSpawnedInLeftSplit++;
+                    }
+                    else if (position == RoadChunkPosition.RIGHT && _numOfPowerUpSpawnedInRightSplit < _itemData.MaxNumberOfPowerUpPerSplit)
+                    {
+                        generatedPowerUps.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
+                        _numOfPowerUpSpawnedInRightSplit++;
+                    }
+                }
+            }
+            return generatedPowerUps;
         }
     }
 }

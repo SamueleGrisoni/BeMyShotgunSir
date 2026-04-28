@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6357536776425833809
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 34.73392
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.000000008833254
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -27.319763
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361845057497919690, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874854502988560431, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      propertyPath: m_Name
+      value: Gunny Sack
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4874854502988560431, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2162092322452692106}
+  m_SourcePrefab: {fileID: 3150474306388093854, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+--- !u!1 &1989593039835807102 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4874854502988560431, guid: 3630077e883d8f04997a3bd6d011f782, type: 3}
+  m_PrefabInstance: {fileID: 6357536776425833809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2162092322452692106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989593039835807102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc1dadac571c48b196800d785c603470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.Item
