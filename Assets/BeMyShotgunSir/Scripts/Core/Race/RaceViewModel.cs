@@ -25,6 +25,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public override void InitData(IRaceData data = null)
         {
+            if (data == null)
+                return;
+
             if (data is not LobbyViewModel lobbyData)
             {
                 Log.ELazy(() => "SORaceData: InitData called with invalid data type. Expected SOLobbyData.", this);

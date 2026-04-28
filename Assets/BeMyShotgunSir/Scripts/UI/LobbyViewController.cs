@@ -69,6 +69,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             // TODO: Implement start
             Debug.Log("Start Race button clicked");
+            _command.SetPlayerReady_Request(true);
             // GameServices.Instance.ConnectionManager.StartGame();
         }
 

@@ -9,7 +9,7 @@ namespace BeMyShotgunSir.Scripts.Core
         Persistent = 0,
         Init = 1,
         Lobby = 2,
-        Track1 = 3
+        Race = 3
     }
 
     public class SceneCoordinator : MonoBehaviour
@@ -25,5 +25,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
         public void LoadLobbyScene() =>
             FishnetSceneManager.TryLoadGlobalScene(SceneName.Lobby.ToString(), this, ReplaceOption.OnlineOnly);
+        internal void LoadRaceScene() =>
+            FishnetSceneManager.TryLoadGlobalScene(SceneName.Race.ToString(), this, ReplaceOption.OnlineOnly);
     }
 }

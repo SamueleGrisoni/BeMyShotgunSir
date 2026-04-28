@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7744919071968131708}
   - component: {fileID: 8491619145890554402}
   m_Layer: 0
-  m_Name: Lobby Manager  nob
+  m_Name: Lobby Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,11 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97bdf3c4fc9e9f04b81d687d6c082c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.LobbyManager
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8491619145890554402}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8491619145890554402}
   _netController: {fileID: 7744919071968131708}
-  _data: {fileID: 11400000, guid: cd6fd6aa7b0cc384ba9dbeda268b2434, type: 2}
   _sounds: {fileID: 11400000, guid: 1cec94964cd47174a8c2565159ad3408, type: 2}
 --- !u!114 &7744919071968131708
 MonoBehaviour:
@@ -64,9 +63,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff85ce07cf2c904c9a23e7226f46cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyNetController
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8491619145890554402}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8491619145890554402}
+  _raceManager: {fileID: 3414248990729970632, guid: 515c13b689a1d004a9c85aaae30f5784, type: 3}
 --- !u!114 &8491619145890554402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,7 +85,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 7220682611722132601}
+  - {fileID: 7744919071968131708}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -96,7 +98,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584242028906047198
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -112,12 +114,12 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 11
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 13014091076069330966
+  <AssetPathHash>k__BackingField: 11943269692250088202
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Rotation: {x: -0, y: -0, z: -0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1

@@ -147,6 +147,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_lobbyManagerPrefab != null && _spawnedLobbyManagerInstance == null)
             {
                 NetworkObject instance = Instantiate(_lobbyManagerPrefab);
+                instance.gameObject.name = instance.gameObject.name.Replace("(Clone)", "");
                 _serverManager.Spawn(instance);
                 _spawnedLobbyManagerInstance = instance;
             }

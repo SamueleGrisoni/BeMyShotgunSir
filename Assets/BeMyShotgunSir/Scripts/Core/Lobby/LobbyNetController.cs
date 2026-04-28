@@ -58,6 +58,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public event Action OnLobbyNetControllerDespawned;
 
         [SerializeField] private NetworkObject _raceManager;
+        private NetworkObject _activeRaceManager;
 
         private void Awake()
         {
@@ -90,7 +91,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             base.OnStartClient();
 
-            // Solo host: il server è l'unico che può scrivere SyncDictionary.
+            //NOTE host operations must be written below this check, otherwise the host will execute them twice (once as server, once as client)
             if (!IsServerInitialized)
                 return;
 
@@ -156,21 +157,30 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         [Server]
         private void StartRace()
         {
+            Log.DLazy(() => "All players ready, starting race!", this);
+            if (_activeRaceManager != null)
+            {
+                Log.ELazy(() => "Active RaceManager already exists.", this);
+                return;
+            }
             if (_raceManager == null)
             {
-                Log.ELazy(() => "LobbyNetController: RaceManager prefab reference is not assigned in the inspector.", this);
+                Log.ELazy(() => "RaceManager prefab reference is not assigned in the inspector.", this);
                 return;
             }
-            GameObject raceInstance = Instantiate(_raceManager.gameObject);
-            NetworkObject netObj = raceInstance.GetComponent<NetworkObject>();
-            if (netObj == null)
+
+            _activeRaceManager = Instantiate(_raceManager);
+            Log.DLazy(() => "RaceManager istanziato, attivo? " + _activeRaceManager.gameObject.activeSelf, this);
+
+            if (_activeRaceManager == null)
             {
-                Log.ELazy(() => "LobbyNetController: RaceManager prefab does not have a NetworkObject component.", this);
-                Destroy(raceInstance);
+                Log.ELazy(() => "RaceManager prefab does not have a NetworkObject component.", this);
+                Destroy(_activeRaceManager);
                 return;
             }
-            // GameServices.Instance.SceneCoordinator.LoadRaceScene();
-            netObj.Spawn(netObj);
+            _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", "");
+            Spawn(_activeRaceManager);
+            Log.DLazy(() => "RaceManager spawned, active? " + _activeRaceManager.gameObject.activeSelf, this);
         }
 
         #region LobbyConnectionManagement

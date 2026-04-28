@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
+    [RequireComponent(typeof(RaceNetController))]
     public class RaceManager : NetworkBehaviour, IEventSender
     {
         public string SenderName => name;
@@ -21,17 +22,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             if (_binder == null)
             {
-                Log.ELazy(() => "RaceManager: No RaceBinder found. Cannot bind race commands.", this);
+                Log.ELazy(() => "No RaceBinder found. Cannot bind race commands.", this);
                 return;
             }
             if (_raceCommand == null)
             {
-                Log.ELazy(() => "RaceManager: No RaceCommand found. Cannot bind race commands.", this);
+                Log.ELazy(() => "No RaceCommand found. Cannot bind race commands.", this);
                 return;
             }
             if (_viewModel == null)
             {
-                Log.ELazy(() => "RaceManager: No RaceViewModel found. Cannot bind race data.", this);
+                Log.ELazy(() => "No RaceViewModel found. Cannot bind race data.", this);
                 return;
             }
             _binder.Bind(targets);
@@ -43,15 +44,41 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void Awake()
         {
-            Debug.Assert(_netController != null, "RaceManager: RaceNetController reference is not assigned in the inspector.", this);
-            Debug.Assert(_sounds != null, "RaceManager: SORaceSounds reference is not assigned in the inspector.", this);
+            Debug.Assert(_netController != null, "RaceNetController reference is not assigned in the inspector.", this);
+            Debug.Assert(_sounds != null, "SORaceSounds reference is not assigned in the inspector.", this);
             _viewModel = new RaceViewModel();
             TryGetComponent(out _netController);
             _netController.OnRaceNetControllerSpawned += HandleRaceNetControllerSpawned;
             _netController.OnRaceNetControllerDespawned += HandleRaceNetControllerDespawned;
         }
 
-        private void HandleRaceNetControllerDespawned() => throw new NotImplementedException();
-        private void HandleRaceNetControllerSpawned() => throw new NotImplementedException();
+        public override void OnStartNetwork()
+        {
+            base.OnStartNetwork();
+            Log.DLazy(() => "RaceManager spawned on the network.", this);
+        }
+
+        private void HandleRaceNetControllerSpawned()
+        {
+            _raceCommand = new RaceCommand(_netController);
+            _binder = new RaceBinder(_raceCommand, _viewModel);
+            _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
+            _viewModel.InitData();
+            OnRaceManagerSpawned?.Invoke(this);
+            //DANGER
+            GameServices.Instance.SceneCoordinator.LoadRaceScene();
+        }
+        private void HandleRaceNetControllerDespawned()
+        {
+            _raceCommand = null;
+            _binder = null;
+            _audioRequestEvent = null;
+        }
+
+        public override void OnStopNetwork()
+        {
+            base.OnStopNetwork();
+            OnRaceManagerDespawned?.Invoke(this);
+        }
     }
 }
