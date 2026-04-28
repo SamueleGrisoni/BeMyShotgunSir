@@ -168,6 +168,19 @@ root=true
   dotnet_naming_style.begins_with_i.required_prefix = I
   dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
+  # Private const fields (_UPPER_CASE)
+  dotnet_naming_rule.private_const_fields_should_be_prefixed_upper.symbols = private_const_fields
+  dotnet_naming_rule.private_const_fields_should_be_prefixed_upper.style = private_const_field_style
+  dotnet_naming_rule.private_const_fields_should_be_prefixed_upper.severity = warning
+
+  dotnet_naming_symbols.private_const_fields.applicable_kinds = field
+  dotnet_naming_symbols.private_const_fields.applicable_accessibilities = private
+  dotnet_naming_symbols.private_const_fields.required_modifiers = const
+
+  dotnet_naming_style.private_const_field_style.required_prefix = _
+  dotnet_naming_style.private_const_field_style.capitalization = all_upper
+  dotnet_naming_style.private_const_field_style.word_separator = _
+
   # Types, Methods, Properties (PascalCase)
   dotnet_naming_rule.types_should_be_pascal_case.symbols = types
   dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
