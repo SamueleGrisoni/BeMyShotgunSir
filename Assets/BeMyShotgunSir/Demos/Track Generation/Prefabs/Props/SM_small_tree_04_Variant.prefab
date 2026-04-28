@@ -55,5 +55,25 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2448635709820948643, guid: 2b3e5bf3f8bf1e842807147da77362fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5577234623146238061}
   m_SourcePrefab: {fileID: 100100000, guid: 2b3e5bf3f8bf1e842807147da77362fa, type: 3}
+--- !u!1 &2257971165343333415 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2448635709820948643, guid: 2b3e5bf3f8bf1e842807147da77362fa, type: 3}
+  m_PrefabInstance: {fileID: 4516725578449808516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5577234623146238061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2257971165343333415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae9e79d69b945dea5e4ea935a01212a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.CityProps
