@@ -20,6 +20,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 
         [Tooltip("Max number of Obstacle that can be spawn in a given Road Chunk.")]
         [field: SerializeField] public int MaxAreaGroupsWithObstaclePerRoadChunk { get; private set; }
+        [Tooltip("Percentage of spawning 2 obstacles instead of 1 when an obstacle is spawned in an Area Group.")]
+        [field: SerializeField] public float ChanceToSpawnTwoObstaclesInAreaGroup { get; private set; }
 
         [Header("Item Prefabs")]
         [field: SerializeField] public Item[] ObstacleItems { get; private set; }
