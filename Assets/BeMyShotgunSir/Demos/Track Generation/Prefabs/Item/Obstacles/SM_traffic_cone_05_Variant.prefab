@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_traffic_cone_05_Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1622052247920223428, guid: 76851d54f523cbb41bc6d60f2d0690f6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 2146386612267318910, guid: 76851d54f523cbb41bc6d60f2d0690f6, type: 3}
       propertyPath: m_LocalScale.x
       value: 3

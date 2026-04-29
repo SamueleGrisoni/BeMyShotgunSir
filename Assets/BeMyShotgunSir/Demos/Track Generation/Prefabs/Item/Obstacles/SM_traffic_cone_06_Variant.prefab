@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_traffic_cone_06_Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6469941368646720570, guid: 114528e9a582e754db0bf4ad50a4959e, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

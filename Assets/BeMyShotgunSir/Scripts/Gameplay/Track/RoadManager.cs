@@ -14,7 +14,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [Header("Generators References")]
         [Tooltip("Generator are responsible for generating the data of the track and items to spawn")]
         [SerializeField] private TrackGenerator _trackGenerator;
-        [SerializeField] private ItemGenerator _itemGenerator;
         [Header("Spawner References")]
         [Tooltip("Spawners are responsible for spawning the actual gameobjects in the scene")]
         [SerializeField] private RoadSpawner _roadSpawner;
@@ -71,6 +70,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                 _activeRoadChunks.RemoveFirst();
                 _environmentSpawner.ClearSpawnedProps(oldRoadChunk.Component);
+                _itemSpawner.ClearItemsFromChunk(oldRoadChunk.Component);
                 oldRoadChunk.ReturnToPool();
                 SpawnRoadChunk();
             }
@@ -83,6 +83,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             foreach (GeneratedRoadChunkInfoWithItems chunkInfoWithItems in
                 generatedRoadChunkInfoList)
             {
+                //Debug.Log("Spawning chunk at position: " + chunkInfoWithItems.roadChunkInfo.position);
                 int nextChunkIndex = chunkInfoWithItems.roadChunkInfo.index;
                 PooledRoadChunk nextChunk =
                     chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN

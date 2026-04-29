@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - GridPosition
+  - Fire
   layers:
   - Default
   - TransparentFX
