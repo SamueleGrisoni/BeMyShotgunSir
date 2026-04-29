@@ -1,6 +1,4 @@
-using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Utils;
-using FishNet.Connection;
 using FishNet.Managing.Client;
 using FishNet.Managing.Server;
 using FishNet.Object;
@@ -34,7 +32,6 @@ namespace BeMyShotgunSir.Scripts.Core
         private AppFlowState _currentAppFlow = AppFlowState.Startup;
         private ServerManager _serverManager;
         private ClientManager _clientManager;
-        private ILobbyManager_ConnectionManager _lobbyManager;
         private int _pendingRemotePlayerDelta;
         [SerializeField] private ConnectionFlowState _connectionFlowState = ConnectionFlowState.Idle;
         [SerializeField] private NetworkObject _lobbyManagerPrefab;
@@ -69,11 +66,7 @@ namespace BeMyShotgunSir.Scripts.Core
             }
 
             _serverManager.OnServerConnectionState += OnServerConnectionState;
-            _serverManager.OnRemoteConnectionState += OnRemoteConnectionState;
             _clientManager.OnClientConnectionState += OnClientConnectionState;
-
-            LobbyManager.OnLobbyManagerReady += OnLobbyManagerReady;
-            LobbyManager.OnLobbyManagerDespawned += OnLobbyManagerDespawned;
 
             Log.DLazy(() => "ConnectionManager initialized.", this);
 
@@ -161,32 +154,6 @@ namespace BeMyShotgunSir.Scripts.Core
             }
         }
 
-        private void OnLobbyManagerReady(ILobbyManager lobby)
-        {
-            if (lobby == null || lobby is not ILobbyManager_ConnectionManager lobby_ConnectionManager)
-                return;
-
-            _lobbyManager = lobby_ConnectionManager;
-            Log.DLazy(() => "Lobby manager initialized.", this);
-
-            _lobbyManager.AdjustPlayerCount(_pendingRemotePlayerDelta);
-
-            if (_isHostSession)
-            {
-                if (_pendingRemotePlayerDelta != 0)
-                {
-                    _lobbyManager.AdjustPlayerCount(_pendingRemotePlayerDelta);
-                    _pendingRemotePlayerDelta = 0;
-                }
-            }
-        }
-
-        private void OnLobbyManagerDespawned()
-        {
-            _lobbyManager = null;
-            HandleInit();
-        }
-
         private void OnServerConnectionState(ServerConnectionStateArgs args)
         {
             if (args.ConnectionState == LocalConnectionState.Started)
@@ -204,25 +171,6 @@ namespace BeMyShotgunSir.Scripts.Core
                 _connectionFlowState = ConnectionFlowState.Idle;
                 Log.WLazy(() => "Server stopped, returning to init state.", this);
                 HandleInit();
-            }
-        }
-
-        private void OnRemoteConnectionState(NetworkConnection net, RemoteConnectionStateArgs remote)
-        {
-            var mng = GameServices.Instance.LobbyManager as ILobbyManager_ConnectionManager;
-            if (mng == null)
-            {
-                if (remote.ConnectionState == RemoteConnectionState.Started)
-                {
-                    _pendingRemotePlayerDelta++;
-                    Log.DLazy(() => $"Remote connection started. Pending player count delta: {_pendingRemotePlayerDelta}", this);
-                }
-                else if (remote.ConnectionState == RemoteConnectionState.Stopped)
-                {
-                    _pendingRemotePlayerDelta--;
-                    Log.DLazy(() => $"Remote connection stopped. Pending player count delta: {_pendingRemotePlayerDelta}", this);
-                }
-                return;
             }
         }
 
@@ -254,14 +202,10 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_serverManager != null)
             {
                 _serverManager.OnServerConnectionState -= OnServerConnectionState;
-                _serverManager.OnRemoteConnectionState -= OnRemoteConnectionState;
             }
 
             if (_clientManager != null)
                 _clientManager.OnClientConnectionState -= OnClientConnectionState;
-
-            LobbyManager.OnLobbyManagerReady -= OnLobbyManagerReady;
-            LobbyManager.OnLobbyManagerDespawned -= OnLobbyManagerDespawned;
 
             _connectionFlowState = ConnectionFlowState.Idle;
             _pendingRemotePlayerDelta = 0;

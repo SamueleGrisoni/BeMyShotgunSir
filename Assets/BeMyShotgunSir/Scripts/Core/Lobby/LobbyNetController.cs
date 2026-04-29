@@ -59,18 +59,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
         void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null);
     }
-    public interface ILobbyNetController_Manager : INetController_Manager
-    {
-        /// <summary>
-        /// Adjusts the player count in the lobby. This should be called on the server when the player count needs to be updated. <br/>
-        /// The delta parameter indicates how much to adjust the player count by (positive to add players, negative to remove players). <br/>
-        /// <b>Important:</b> <br/>
-        /// LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available.
-        /// </summary>
-        /// <param name="delta"></param>
-        void AdjustPlayerCount(int delta);
-    }
-    public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetController_Manager { }
+    public interface ILobbyNetController : INetController, ILobbyNetController_Command { }
 
     #endregion
 

@@ -19,16 +19,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void BindLobby(ILobbyBindTarget[] targets);
     }
 
-    public interface ILobbyManager_ConnectionManager : IManager_ConnectionManager
-    {
-        /// <summary>
-        /// Adjusts the player count in the lobby.<br/>
-        /// <b>Important:</b> <br/>
-        ///  Such a method is necessary because LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available. <br/>
-        /// </summary>
-        /// <param name="delta"></param>
-        void AdjustPlayerCount(int delta);
-    }
     public interface ILobbyManager_NetController : IManager_NetController
     {
         void InitNetData_Response(ILobbyNetData data);
@@ -38,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void SetPlayerStates_Response(SyncDictionaryOperation op, int key, PlayerLobbyState value);
     }
 
-    public interface ILobbyManager : IManager, ILobbyManager_Bootstrapper, ILobbyManager_ConnectionManager, ILobbyManager_NetController { }
+    public interface ILobbyManager : IManager, ILobbyManager_Bootstrapper, ILobbyManager_NetController { }
 
     #endregion
 
@@ -61,7 +51,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private bool _isReady = false;
         private LobbyBinder _binder;
         private LobbyCommand _lobbyCommand;
-        private ILobbyNetController_Manager _netController;
         private LobbyViewModel _viewModel;
         [SerializeField] private SOLobbySounds _sounds;
         private SOAudioRequestEvent _audioRequestEvent;
@@ -111,8 +100,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (_isReady)
                 return;
 
-            if (netController is ILobbyNetController_Manager netController_Manager)
-                _netController = netController_Manager;
             if (netController is ILobbyNetController_Command netController_Command)
                 _lobbyCommand = new LobbyCommand(netController_Command);
             _binder = new LobbyBinder(_lobbyCommand, _viewModel);
@@ -147,7 +134,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (!_isReady)
                 return;
 
-            _netController = null;
             _lobbyCommand = null;
             _binder = null;
             _audioRequestEvent = null;
@@ -173,11 +159,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
             RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
         }
-
-        #region LobbyConnectionManagement
-        public void AdjustPlayerCount(int delta) =>
-            _netController.AdjustPlayerCount(delta);
-        #endregion
 
         public void InitNetData_Response(ILobbyNetData data) => _viewModel.InitNetData(data);
         public void SetLobbyIP_Response(string ip) => _viewModel.SetLobbyIP(ip);
