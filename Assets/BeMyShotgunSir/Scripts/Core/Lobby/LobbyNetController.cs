@@ -76,7 +76,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private NetworkObject _activeRaceManager;
 
         private void OnEnable() =>
-            LobbyManager.OnLobbyManagerSpawned += OnLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerStarted += OnLobbyManagerStarted;
 
         public override void OnStartNetwork()
         {
@@ -86,7 +86,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _playerStates.OnChange += OnPlayerStatesChanged;
         }
 
-        private void OnLobbyManagerSpawned(ILobbyManager manager)
+        private void OnLobbyManagerStarted(ILobbyManager manager)
         {
             if (manager is not ILobbyManager_NetController manager_NetController)
                 return;
@@ -154,6 +154,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             base.OnStopNetwork();
             UnsubscribeEvents();
+            Log.DLazy(() => "LobbyNetController despawned from the network.", this);
             OnLobbyNetControllerDespawned?.Invoke();
         }
 
@@ -166,7 +167,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _playerCount.OnChange -= OnPlayerCountChanged;
             _playerStates.OnChange -= OnPlayerStatesChanged;
 
-            LobbyManager.OnLobbyManagerSpawned -= OnLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerStarted -= OnLobbyManagerStarted;
 
             if (_serverManager != null)
                 _serverManager.OnRemoteConnectionState -= OnRemoteConnectionState;
@@ -221,15 +222,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             Spawn(_activeRaceManager);
         }
 
-        #region LobbyConnectionManagement
-        [Server]
-        public void AdjustPlayerCount(int delta)
-        {
-            int newValue = _playerCount.Value + delta;
-            _playerCount.Value = Mathf.Max(0, newValue);
-        }
-        #endregion
-
         #region Snapshot
         public void HandleRefresh()
         {
@@ -274,15 +266,19 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         #region LobbyInfo
         private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
-        private void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer) =>
+        private void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer)
+        {
+            if (asServer || _lobbyManager == null)
+                return;
             _lobbyManager.SetLobbyInfo_Response(next);
+        }
         #endregion
 
         #region PlayerStates
         private readonly SyncDictionary<int, PlayerLobbyState> _playerStates = new();
         private void OnPlayerStatesChanged(SyncDictionaryOperation op, int key, PlayerLobbyState value, bool asServer)
         {
-            if (asServer)
+            if (asServer || _lobbyManager == null)
                 return;
             var playerStates = new Dictionary<int, PlayerLobbyState>(_playerStates.Collection);
             switch (op)
@@ -345,7 +341,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private readonly SyncVar<int> _playerCount = new(0);
         private void OnPlayerCountChanged(int prev, int next, bool asServer)
         {
-            if (asServer)
+            if (asServer || _lobbyManager == null)
                 return;
             _lobbyManager.SetPlayerCount_Response(prev, next);
         }

@@ -31,10 +31,16 @@ namespace BeMyShotgunSir.Scripts.Core
             _isInitialized = true;
         }
 
-        private void HandleLobbySceneInitialized() =>
+        private void HandleLobbySceneInitialized()
+        {
+            Log.DLazy(() => "Lobby scene initialized.", this);
             OnSceneInitialized?.Invoke(SceneName.Lobby);
-        private void HandleRaceSceneInitialized() =>
+        }
+        private void HandleRaceSceneInitialized()
+        {
+            Log.DLazy(() => "Race scene initialized.", this);
             OnSceneInitialized?.Invoke(SceneName.Race);
+        }
 
         private void HandleSceneUnloadEnd(SceneUnloadEndEventArgs args) //TODO test it
         {

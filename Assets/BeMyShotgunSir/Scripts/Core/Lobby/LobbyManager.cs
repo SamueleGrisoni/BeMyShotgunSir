@@ -39,7 +39,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         /// <summary>
         /// Raised when a LobbyManager is spawned, regardless of whether it's ready to be used.
         /// </summary>
-        public static event Action<ILobbyManager> OnLobbyManagerSpawned;
+        public static event Action<ILobbyManager> OnLobbyManagerStarted;
         /// <summary>
         /// Raised when a LobbyManager is spawned and ready to be used, meaning the LobbyNetController is spawned and initialized, and the LobbyBinder and LobbyCommand are created. <br/>
         /// </summary>
@@ -80,7 +80,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void Awake()
         {
             Debug.Assert(_sounds != null, "LobbyManager: SOLobbySounds reference is not assigned in the inspector.", this);
-
             _viewModel = new LobbyViewModel();
         }
 
@@ -92,8 +91,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             RaceManager.OnRaceManagerReady += OnRaceManagerReady;
         }
 
-        private void Start() =>
-            OnLobbyManagerSpawned?.Invoke(this);
+        private void Start()
+        {
+            Log.DLazy(() => "LobbyManager started.", this);
+            OnLobbyManagerStarted?.Invoke(this);
+        }
 
         private void OnLobbyNetControllerReady(ILobbyNetController netController)
         {
@@ -107,6 +109,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _viewModel.InitData();
 
             _isReady = true;
+            Log.DLazy(() => "LobbyManager is ready.", this);
             OnLobbyManagerReady?.Invoke(this);
 
             if (!IsServerInitialized) //server instructions below
@@ -147,6 +150,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             OnLobbyNetControllerDespawned();
             UnsubscribeEvents();
 
+            Log.DLazy(() => "LobbyManager despawned from the network.", this);
             OnLobbyManagerDespawned?.Invoke();
         }
 

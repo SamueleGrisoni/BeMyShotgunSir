@@ -1,8 +1,8 @@
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
-    public class RaceCommand : Command<RaceNetController>
+    public class RaceCommand : Command<IRaceNetController_Command>
     {
-        public RaceCommand(RaceNetController netController) : base(netController) { }
+        public RaceCommand(IRaceNetController_Command netController) : base(netController) { }
 
         public void LeaveRace_CMRequest() { /*TODO*/ }
 

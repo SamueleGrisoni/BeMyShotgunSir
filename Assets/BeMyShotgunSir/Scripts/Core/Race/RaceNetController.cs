@@ -12,7 +12,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public interface IRaceNetController_Command : INetController_Command { }
     public interface IRaceNetController_Manager : INetController_Manager { }
     public interface IRaceNetController : INetController, IRaceNetController_Command, IRaceNetController_Manager { }
-
     #endregion
 
     [RequireComponent(typeof(RaceManager))]
@@ -20,31 +19,30 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         private ServerManager _serverManager;
         private IRaceManager_NetController _raceManager;
-        public event Action OnRaceNetControllerSpawned;
-        public event Action<IRaceNetController> OnRaceNetControllerReady;
-        public event Action OnRaceNetControllerDespawned;
+        public static event Action<IRaceNetController> OnRaceNetControllerReady;
+        public static event Action OnRaceNetControllerDespawned;
 
         private void OnEnable() =>
-             RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
-        private void OnRaceManagerSpawned(IRaceManager manager)
+             RaceManager.OnRaceManagerStarted += OnRaceManagerStarted;
+
+        public override void OnStartNetwork() =>
+            base.OnStartNetwork();
+
+        private void OnRaceManagerStarted(IRaceManager manager)
         {
+            if (manager is not IRaceManager_NetController manager_NetController)
+                return;
+
             if (_raceManager != null)
             {
                 Log.ELazy(() => "RaceManager reference is already set. Multiple RaceManagers are not supported.", this);
                 return;
             }
-            if (manager is not IRaceManager_NetController manager_NetController)
-                return;
 
             _raceManager = manager_NetController;
+
+            Log.DLazy(() => "RaceNetController is ready.", this);
             OnRaceNetControllerReady?.Invoke(this);
-        }
-
-        public override void OnStartNetwork()
-        {
-            base.OnStartNetwork();
-
-            OnRaceNetControllerSpawned?.Invoke();
         }
 
         public override void OnStartServer()
@@ -71,9 +69,19 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
-
+            UnsubscribeEvents();
+            Log.DLazy(() => "RaceNetController despawned from the network.", this);
             OnRaceNetControllerDespawned?.Invoke();
         }
+
+        private void OnDisable() => UnsubscribeEvents();
+
+        private void UnsubscribeEvents()
+        {
+            if (_serverManager != null)
+                _serverManager.OnRemoteConnectionState -= HandleRemoteConnectionState;
+        }
+
 
         [Server]
         private void HandleRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)

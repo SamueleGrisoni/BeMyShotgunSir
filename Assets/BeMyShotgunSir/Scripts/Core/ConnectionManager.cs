@@ -80,11 +80,10 @@ namespace BeMyShotgunSir.Scripts.Core
             if (!_isInitialized)
                 Initialize();
 
+            Log.DLazy(() => "Starting host session.", this);
             _isHostSession = true;
-
             _connectionFlowState = ConnectionFlowState.Hosting;
 
-            Log.DLazy(() => "Starting host session.", this);
             _serverManager.StartConnection();
             _clientManager.StartConnection();
         }
@@ -105,14 +104,18 @@ namespace BeMyShotgunSir.Scripts.Core
             _clientManager.StartConnection();
         }
 
-        public void QuitLobby() =>
+        public void QuitLobby()
+        {
+            Log.DLazy(() => "Quitting lobby", this);
             HandleInit();
+        }
 
         private void HandleStartup()
         {
             if (_currentAppFlow == AppFlowState.Startup)
                 return;
 
+            Log.DLazy(() => "Start Up State", this);
             _currentAppFlow = AppFlowState.Startup;
         }
 
@@ -121,6 +124,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_currentAppFlow == AppFlowState.Init)
                 return;
 
+            Log.DLazy(() => "Init State", this);
             _currentAppFlow = AppFlowState.Init;
 
             if (_spawnedLobbyManagerInstance != null)
@@ -139,6 +143,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_currentAppFlow == AppFlowState.Lobby)
                 return;
 
+            Log.DLazy(() => "Lobby State", this);
             _currentAppFlow = AppFlowState.Lobby;
 
             if (!_isHostSession)
