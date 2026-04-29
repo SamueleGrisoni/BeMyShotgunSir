@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core
     /// The type of NetController this Command will interact with.
     /// </typeparam>
     public abstract class Command<T> : Command
-        where T : NetController
+        where T : INetController_Command
     {
         protected readonly T _netController;
         protected Command(T netController)

@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
+    #region ConnectionManager Enums
     public enum AppFlowState
     {
         Startup,
@@ -22,6 +23,7 @@ namespace BeMyShotgunSir.Scripts.Core
         Hosting,
         Joining
     }
+    #endregion
 
     public class ConnectionManager : MonoBehaviour
     {
@@ -32,7 +34,7 @@ namespace BeMyShotgunSir.Scripts.Core
         private AppFlowState _currentAppFlow = AppFlowState.Startup;
         private ServerManager _serverManager;
         private ClientManager _clientManager;
-        private LobbyManager _lobbyManager;
+        private ILobbyManager_ConnectionManager _lobbyManager;
         private int _pendingRemotePlayerDelta;
         [SerializeField] private ConnectionFlowState _connectionFlowState = ConnectionFlowState.Idle;
         [SerializeField] private NetworkObject _lobbyManagerPrefab;
@@ -70,8 +72,10 @@ namespace BeMyShotgunSir.Scripts.Core
             _serverManager.OnRemoteConnectionState += OnRemoteConnectionState;
             _clientManager.OnClientConnectionState += OnClientConnectionState;
 
-            LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
-            LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
+            LobbyManager.OnLobbyManagerReady += OnLobbyManagerReady;
+            LobbyManager.OnLobbyManagerDespawned += OnLobbyManagerDespawned;
+
+            Log.DLazy(() => "ConnectionManager initialized.", this);
 
             HandleInit();
 
@@ -86,6 +90,8 @@ namespace BeMyShotgunSir.Scripts.Core
             _isHostSession = true;
 
             _connectionFlowState = ConnectionFlowState.Hosting;
+
+            Log.DLazy(() => "Starting host session.", this);
             _serverManager.StartConnection();
             _clientManager.StartConnection();
         }
@@ -102,6 +108,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 ipAddress = "127.0.0.1";
             GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ipAddress);
 
+            Log.DLazy(() => $"Starting join session to {ipAddress}.", this);
             _clientManager.StartConnection();
         }
 
@@ -143,22 +150,26 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (!_isHostSession)
                 return;
+            //NOTE host only operations below this
 
             if (_lobbyManagerPrefab != null && _spawnedLobbyManagerInstance == null)
             {
                 NetworkObject instance = Instantiate(_lobbyManagerPrefab);
-                instance.gameObject.name = instance.gameObject.name.Replace("(Clone)", "");
+                instance.gameObject.name = instance.gameObject.name.Replace("(Clone)", " Server");
                 _serverManager.Spawn(instance);
                 _spawnedLobbyManagerInstance = instance;
             }
         }
 
-        private void HandleLobbyManagerSpawned(LobbyManager lobby)
+        private void OnLobbyManagerReady(ILobbyManager lobby)
         {
-            if (lobby == null)
+            if (lobby == null || lobby is not ILobbyManager_ConnectionManager lobby_ConnectionManager)
                 return;
 
-            _lobbyManager = lobby;
+            _lobbyManager = lobby_ConnectionManager;
+            Log.DLazy(() => "Lobby manager initialized.", this);
+
+            _lobbyManager.AdjustPlayerCount(_pendingRemotePlayerDelta);
 
             if (_isHostSession)
             {
@@ -169,7 +180,8 @@ namespace BeMyShotgunSir.Scripts.Core
                 }
             }
         }
-        private void HandleLobbyManagerDespawned()
+
+        private void OnLobbyManagerDespawned()
         {
             _lobbyManager = null;
             HandleInit();
@@ -182,6 +194,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 if (_connectionFlowState == ConnectionFlowState.Hosting)
                     _connectionFlowState = ConnectionFlowState.Idle;
 
+                Log.DLazy(() => "Server connection started.", this);
                 HandleLobby();
                 return;
             }
@@ -189,38 +202,40 @@ namespace BeMyShotgunSir.Scripts.Core
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
                 _connectionFlowState = ConnectionFlowState.Idle;
-
-                if (_currentAppFlow == AppFlowState.Lobby || _currentAppFlow == AppFlowState.Startup)
-                {
-                    Debug.LogWarning("Server stopped, returning to init state.", this);
-                    HandleInit();
-                }
+                Log.WLazy(() => "Server stopped, returning to init state.", this);
+                HandleInit();
             }
         }
 
         private void OnRemoteConnectionState(NetworkConnection net, RemoteConnectionStateArgs remote)
         {
-            LobbyManager mng = GameServices.Instance.LobbyManager;
+            var mng = GameServices.Instance.LobbyManager as ILobbyManager_ConnectionManager;
             if (mng == null)
             {
                 if (remote.ConnectionState == RemoteConnectionState.Started)
+                {
                     _pendingRemotePlayerDelta++;
+                    Log.DLazy(() => $"Remote connection started. Pending player count delta: {_pendingRemotePlayerDelta}", this);
+                }
                 else if (remote.ConnectionState == RemoteConnectionState.Stopped)
+                {
                     _pendingRemotePlayerDelta--;
+                    Log.DLazy(() => $"Remote connection stopped. Pending player count delta: {_pendingRemotePlayerDelta}", this);
+                }
                 return;
             }
-            else if (_pendingRemotePlayerDelta != 0)
-                mng.AdjustPlayerCount(_pendingRemotePlayerDelta);
         }
 
         private void OnClientConnectionState(ClientConnectionStateArgs args)
         {
+
             //Blocks the host from reacting to its own client connection state changes
             if (_connectionFlowState != ConnectionFlowState.Joining)
                 return;
 
             if (args.ConnectionState == LocalConnectionState.Started)
             {
+                Log.DLazy(() => "Client connection started.", this);
                 _connectionFlowState = ConnectionFlowState.Idle;
                 HandleLobby();
                 return;
@@ -229,7 +244,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
                 _connectionFlowState = ConnectionFlowState.Idle;
-                Debug.LogWarning("Join failed or was interrupted.", this);
+                Log.WLazy(() => "Client connection stopped, returning to init state.", this);
                 HandleInit();
             }
         }
@@ -245,13 +260,12 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_clientManager != null)
                 _clientManager.OnClientConnectionState -= OnClientConnectionState;
 
-            LobbyManager.OnLobbyManagerSpawned -= HandleLobbyManagerSpawned;
-            LobbyManager.OnLobbyManagerDespawned -= HandleLobbyManagerDespawned;
+            LobbyManager.OnLobbyManagerReady -= OnLobbyManagerReady;
+            LobbyManager.OnLobbyManagerDespawned -= OnLobbyManagerDespawned;
 
             _connectionFlowState = ConnectionFlowState.Idle;
             _pendingRemotePlayerDelta = 0;
             _isInitialized = false;
         }
-
     }
 }

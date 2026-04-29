@@ -2,22 +2,42 @@ using System;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
+using FishNet.Object;
 using FishNet.Transporting;
+using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
-    public class RaceNetController : NetController
+    #region RaceNetController Interfaces
+    public interface IRaceNetController_Command : INetController_Command { }
+    public interface IRaceNetController_Manager : INetController_Manager { }
+    public interface IRaceNetController : INetController, IRaceNetController_Command, IRaceNetController_Manager { }
+
+    #endregion
+
+    [RequireComponent(typeof(RaceManager))]
+    public class RaceNetController : NetController, IRaceNetController
     {
         private ServerManager _serverManager;
-        private RaceManager _raceManager;
+        private IRaceManager_NetController _raceManager;
         public event Action OnRaceNetControllerSpawned;
+        public event Action<IRaceNetController> OnRaceNetControllerReady;
         public event Action OnRaceNetControllerDespawned;
 
-        private void Awake()
+        private void OnEnable() =>
+             RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
+        private void OnRaceManagerSpawned(IRaceManager manager)
         {
-            _serverManager = GameServices.Instance.NetworkManager.ServerManager;
-            if (!TryGetComponent(out _raceManager))
-                Log.ELazy(() => "No RaceManager found on the same GameObject.", this);
+            if (_raceManager != null)
+            {
+                Log.ELazy(() => "RaceManager reference is already set. Multiple RaceManagers are not supported.", this);
+                return;
+            }
+            if (manager is not IRaceManager_NetController manager_NetController)
+                return;
+
+            _raceManager = manager_NetController;
+            OnRaceNetControllerReady?.Invoke(this);
         }
 
         public override void OnStartNetwork()
@@ -34,7 +54,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _serverManager = GameServices.Instance.NetworkManager.ServerManager;
             _serverManager.OnRemoteConnectionState += HandleRemoteConnectionState;
 
-            // InitSyncValues();
+            InitSyncValues();
         }
 
         public override void OnStartClient()
@@ -55,6 +75,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnRaceNetControllerDespawned?.Invoke();
         }
 
+        [Server]
         private void HandleRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
         {
             if (!IsServerInitialized)
@@ -64,10 +85,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
 
             if (args.ConnectionState == RemoteConnectionState.Stopped)
-                Despawn();
+                return;
         }
-
-
-
     }
 }

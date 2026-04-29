@@ -6,15 +6,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 {
     public class RaceSceneBootstrapper : SceneBootstrapper
     {
+        /// <summary>
+        /// Avoid subscribing to this event directly. Instead, subscribe to FishNetSceneAdapter.OnSceneInitialized and check for SceneName to determine when a scene is initialized.
+        /// </summary>
         public static event Action OnRaceSceneInitialized;
 
         [SerializeField] private InterfaceSerializer<RaceBindTarget, IRaceBindTarget>[] _bindTargets;
         private IRaceBindTarget[] _coercedTargets;
 
         private void OnDisable() =>
-            RaceManager.OnRaceManagerSpawned -= OnRaceManagerSpawned;
+            RaceManager.OnRaceManagerReady -= OnRaceManagerSpawned;
 
-        private void Bind(RaceManager manager)
+        private void Bind(IRaceManager_Bootstrapper manager)
         {
             if (_coercedTargets == null)
             {
@@ -25,10 +28,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnRaceSceneInitialized?.Invoke();
         }
 
-        private void OnRaceManagerSpawned(RaceManager manager)
+        private void OnRaceManagerSpawned(IRaceManager manager)
         {
+            if (manager is not IRaceManager_Bootstrapper manager_Bootstrapper)
+                return;
             TryInitialize();
-            Bind(manager);
+            Bind(manager_Bootstrapper);
         }
 
         protected override void Initialize()
@@ -45,9 +50,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             _suppressAutoInitialize = true;
 
-            RaceManager raceManager = GameServices.Instance.RaceManager;
+            var raceManager = GameServices.Instance.RaceManager as IRaceManager_Bootstrapper;
             if (raceManager == null)
-                RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
+                RaceManager.OnRaceManagerReady += OnRaceManagerSpawned;
             else
                 Bind(raceManager);
         }

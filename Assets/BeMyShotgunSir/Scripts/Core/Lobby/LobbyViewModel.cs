@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
@@ -32,20 +31,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         public override void InitNetData(ILobbyNetData data)
         {
-            if (data is not ILobbyNetData lobbyData)
-            {
-                Log.ELazy(() => "InitNetData called with invalid data type. Expected ILobbyNetData.", this);
-                return;
-            }
-
             //no setters to allow a real refresh even for unchanged values
-            LobbyInfo = lobbyData.LobbyInfo;
+            LobbyInfo = data.LobbyInfo;
             OnLobbyInfoChanged?.Invoke();
-            LobbyIP = lobbyData.LobbyInfo.LobbyIP;
+            LobbyIP = data.LobbyInfo.LobbyIP;
             OnLobbyIPChanged?.Invoke();
-            PlayerCount = lobbyData.PlayerCount;
+            PlayerCount = data.PlayerCount;
             OnPlayerCountChanged?.Invoke();
-            PlayerStates = lobbyData.PlayerStates;
+            PlayerStates = data.PlayerStates;
             OnPlayerStatesChanged?.Invoke();
         }
 

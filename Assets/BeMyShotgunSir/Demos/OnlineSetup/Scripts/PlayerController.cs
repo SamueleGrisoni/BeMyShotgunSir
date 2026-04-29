@@ -10,8 +10,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Player
     {
         [SerializeField] private CinemachineCamera _playerCamera;
         [SerializeField] private PlayerUI _playerUI;
-        private LobbyManager _lobbyManager;
-        public void SetLobbyManager(LobbyManager lobbyManager)
+        private ILobbyManager _lobbyManager;
+        public void SetLobbyManager(ILobbyManager lobbyManager)
         {
             if (_lobbyManager == null)
                 _lobbyManager = lobbyManager;

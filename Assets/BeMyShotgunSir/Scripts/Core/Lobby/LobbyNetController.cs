@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
+    #region DataStructures
     public struct PlayerLobbyState
     {
         public int ConnectionId;
@@ -49,22 +50,44 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             LobbyInfo = lobbyInfo;
         }
     }
+    #endregion
 
-    public class LobbyNetController : NetController
+    #region LobbyNetControllerInterfaces
+    public interface ILobbyNetController_Command : INetController_Command
     {
+        void HandleRefresh();
+        void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
+        void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null);
+    }
+    public interface ILobbyNetController_Manager : INetController_Manager
+    {
+        /// <summary>
+        /// Adjusts the player count in the lobby. This should be called on the server when the player count needs to be updated. <br/>
+        /// The delta parameter indicates how much to adjust the player count by (positive to add players, negative to remove players). <br/>
+        /// <b>Important:</b> <br/>
+        /// LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available.
+        /// </summary>
+        /// <param name="delta"></param>
+        void AdjustPlayerCount(int delta);
+    }
+    public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetController_Manager { }
+
+    #endregion
+
+    [RequireComponent(typeof(ILobbyManager))]
+    public class LobbyNetController : NetController, ILobbyNetController
+    {
+        #region Lifecycle
+        public static event Action<ILobbyNetController> OnLobbyNetControllerReady;
+        public static event Action OnLobbyNetControllerDespawned;
         private ServerManager _serverManager;
-        private LobbyManager _lobbyManager;
-        public event Action OnLobbyNetControllerSpawned;
-        public event Action OnLobbyNetControllerDespawned;
+        private ILobbyManager_NetController _lobbyManager;
 
         [SerializeField] private NetworkObject _raceManager;
         private NetworkObject _activeRaceManager;
 
-        private void Awake()
-        {
-            if (!TryGetComponent(out _lobbyManager))
-                Log.ELazy(() => "LobbyManager not found as parent!", this);
-        }
+        private void OnEnable() =>
+            LobbyManager.OnLobbyManagerSpawned += OnLobbyManagerSpawned;
 
         public override void OnStartNetwork()
         {
@@ -72,17 +95,30 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             // _lobbyIP.OnChange += OnLobbyIPChanged;
             _playerCount.OnChange += OnPlayerCountChanged;
             _playerStates.OnChange += OnPlayerStatesChanged;
+        }
 
-            OnLobbyNetControllerSpawned?.Invoke();
+        private void OnLobbyManagerSpawned(ILobbyManager manager)
+        {
+            if (manager is not ILobbyManager_NetController manager_NetController)
+                return;
+
+            if (_lobbyManager != null)
+            {
+                Log.ELazy(() => "LobbyManager reference is already set. Multiple LobbyManagers are not supported.", this);
+                return;
+            }
+
+            _lobbyManager = manager_NetController;
+
+            Log.DLazy(() => "LobbyNetController is ready!", this);
+            OnLobbyNetControllerReady?.Invoke(this);
         }
 
         public override void OnStartServer()
         {
             base.OnStartServer();
             _serverManager = GameServices.Instance.NetworkManager.ServerManager;
-            _serverManager.OnRemoteConnectionState += HandleRemoteConnectionState;
-
-            GameServices.Instance.SceneCoordinator.LoadLobbyScene();
+            _serverManager.OnRemoteConnectionState += OnRemoteConnectionState;
 
             InitSyncValues();
         }
@@ -122,20 +158,34 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public override void OnStopServer()
         {
             base.OnStopServer();
-            _serverManager.OnRemoteConnectionState -= HandleRemoteConnectionState;
+            _serverManager.OnRemoteConnectionState -= OnRemoteConnectionState;
         }
 
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
-            // _lobbyIP.OnChange -= OnLobbyIPChanged;
-            _playerCount.OnChange -= OnPlayerCountChanged;
-            _playerStates.OnChange -= OnPlayerStatesChanged;
+            UnsubscribeEvents();
             OnLobbyNetControllerDespawned?.Invoke();
         }
 
+        private void OnDisable() => UnsubscribeEvents();
+
+
+        private void UnsubscribeEvents()
+        {
+            _lobbyInfo.OnChange -= OnLobbyInfoChanged;
+            _playerCount.OnChange -= OnPlayerCountChanged;
+            _playerStates.OnChange -= OnPlayerStatesChanged;
+
+            LobbyManager.OnLobbyManagerSpawned -= OnLobbyManagerSpawned;
+
+            if (_serverManager != null)
+                _serverManager.OnRemoteConnectionState -= OnRemoteConnectionState;
+        }
+        #endregion
+
         [Server]
-        private void HandleRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
+        private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
         {
             if (args.ConnectionState == RemoteConnectionState.Started)
             {
@@ -170,7 +220,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
 
             _activeRaceManager = Instantiate(_raceManager);
-            Log.DLazy(() => "RaceManager istanziato, attivo? " + _activeRaceManager.gameObject.activeSelf, this);
 
             if (_activeRaceManager == null)
             {
@@ -178,19 +227,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 Destroy(_activeRaceManager);
                 return;
             }
-            _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", "");
+
+            _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", " Server");
             Spawn(_activeRaceManager);
-            Log.DLazy(() => "RaceManager spawned, active? " + _activeRaceManager.gameObject.activeSelf, this);
         }
 
         #region LobbyConnectionManagement
-        /// <summary>
-        /// Adjusts the player count in the lobby. This should be called on the server when the player count needs to be updated. <br/>
-        /// The delta parameter indicates how much to adjust the player count by (positive to add players, negative to remove players). <br/>
-        /// <b>Important:</b> <br/>
-        /// LobbyManager and LobbyNetController could still be null when a new connection is established, or when a connection is lost. This method allows to adjust the player count when they become available.
-        /// </summary>
-        /// <param name="delta"></param>
         [Server]
         public void AdjustPlayerCount(int delta)
         {
@@ -217,7 +259,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         /// </summary>
         /// <param name="conn"></param>
         [ServerRpc(RequireOwnership = false)]
-        public void RequestNetDataSnapshot_ServerRpc(NetworkConnection conn = null)
+        private void RequestNetDataSnapshot_ServerRpc(NetworkConnection conn = null)
         {
             if (conn == null)
                 return;
@@ -243,7 +285,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         #region LobbyInfo
         private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
-        public void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer) =>
+        private void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer) =>
             _lobbyManager.SetLobbyInfo_Response(next);
         #endregion
 
@@ -309,16 +351,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
         #endregion
-
-        // #region LobbyIP
-        // private readonly SyncVar<string> _lobbyIP = new("Not connected");
-        // private void OnLobbyIPChanged(string prev, string next, bool asServer)
-        // {
-        //     if (asServer)
-        //         return;
-        //     _lobbyManager.SetLobbyIP_Response(next);
-        // }
-        // #endregion
 
         #region PlayerCount
         private readonly SyncVar<int> _playerCount = new(0);

@@ -6,15 +6,18 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     public class LobbySceneBootstrapper : SceneBootstrapper
     {
+        /// <summary>
+        /// Avoid subscribing to this event directly. Instead, subscribe to FishNetSceneAdapter.OnSceneInitialized and check for SceneName to determine when a scene is initialized.
+        /// </summary>
         public static event Action OnLobbySceneInitialized;
 
         [SerializeField] private InterfaceSerializer<LobbyBindTarget, ILobbyBindTarget>[] _bindTargets;
         private ILobbyBindTarget[] _coercedTargets;
 
         private void OnDisable() =>
-            LobbyManager.OnLobbyManagerSpawned -= OnLobbyManagerSpawned;
+            LobbyManager.OnLobbyManagerReady -= OnLobbyManagerReady;
 
-        private void Bind(LobbyManager manager)
+        private void Bind(ILobbyManager_Bootstrapper manager)
         {
             if (_coercedTargets == null)
             {
@@ -25,10 +28,16 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             OnLobbySceneInitialized?.Invoke();
         }
 
-        private void OnLobbyManagerSpawned(LobbyManager manager)
+        private void OnLobbyManagerReady(ILobbyManager manager)
         {
+            if (manager == null || manager is not ILobbyManager_Bootstrapper manager_Bootstrapper)
+            {
+                Log.ELazy(() => "LobbyManager reference is not of type ILobbyManager_Bootstrapper. Cannot bind lobby.", this);
+                return;
+            }
+
             TryInitialize();
-            Bind(manager);
+            Bind(manager_Bootstrapper);
         }
 
         protected override void Initialize()
@@ -47,9 +56,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
             _suppressAutoInitialize = true;
 
-            LobbyManager lobbyManager = GameServices.Instance.LobbyManager;
+            var lobbyManager = GameServices.Instance.LobbyManager as ILobbyManager_Bootstrapper;
             if (lobbyManager == null)
-                LobbyManager.OnLobbyManagerSpawned += OnLobbyManagerSpawned;
+                LobbyManager.OnLobbyManagerReady += OnLobbyManagerReady;
             else
                 Bind(lobbyManager);
         }

@@ -1,5 +1,6 @@
 using System;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet;
 using FishNet.Managing.Scened;
@@ -24,12 +25,16 @@ namespace BeMyShotgunSir.Scripts.Core
             _fishNetSceneManager = InstanceFinder.SceneManager;
             _fishNetSceneManager.OnLoadEnd += HandleSceneLoadEnd;
             _fishNetSceneManager.OnUnloadEnd += HandleSceneUnloadEnd;
+
             LobbySceneBootstrapper.OnLobbySceneInitialized += HandleLobbySceneInitialized;
+            RaceSceneBootstrapper.OnRaceSceneInitialized += HandleRaceSceneInitialized;
             _isInitialized = true;
         }
 
         private void HandleLobbySceneInitialized() =>
             OnSceneInitialized?.Invoke(SceneName.Lobby);
+        private void HandleRaceSceneInitialized() =>
+            OnSceneInitialized?.Invoke(SceneName.Race);
 
         private void HandleSceneUnloadEnd(SceneUnloadEndEventArgs args) //TODO test it
         {

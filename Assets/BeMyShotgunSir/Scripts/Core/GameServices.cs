@@ -7,6 +7,7 @@ using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
+using BeMyShotgunSir.Scripts.Utils;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
@@ -28,8 +29,8 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void Start()
         {
-            LobbyManager.OnLobbyManagerSpawned += HandleLobbyManagerSpawned;
-            LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
+            Lobby.LobbyManager.OnLobbyManagerReady += HandleLobbyManagerReady;
+            Lobby.LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
 
             TryGetComponent(out _sceneCoordinator);
 
@@ -37,11 +38,11 @@ namespace BeMyShotgunSir.Scripts.Core
             ConnectionManager.Initialize();
         }
 
-        private void HandleLobbyManagerSpawned(LobbyManager lobby)
+        private void HandleLobbyManagerReady(ILobbyManager lobby)
         {
             if (LobbyManager != null && LobbyManager != lobby)
             {
-                Debug.LogError($"GameServices: Duplicate LobbyManager detected. Keeping '{LobbyManager.name}' and ignoring '{lobby.name}'.", this);
+                Log.ELazy(() => $"GameServices: Duplicate LobbyManager detected.", this);
                 return;
             }
 
@@ -51,8 +52,8 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void OnDisable()
         {
-            LobbyManager.OnLobbyManagerSpawned -= HandleLobbyManagerSpawned;
-            LobbyManager.OnLobbyManagerDespawned -= HandleLobbyManagerDespawned;
+            Lobby.LobbyManager.OnLobbyManagerReady -= HandleLobbyManagerReady;
+            Lobby.LobbyManager.OnLobbyManagerDespawned -= HandleLobbyManagerDespawned;
         }
 
         #region Local
@@ -71,7 +72,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
         #region Network
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
-        public LobbyManager LobbyManager { get; private set; }
+        public ILobbyManager LobbyManager { get; private set; }
         public RaceManager RaceManager { get; private set; }
         #endregion
     }
