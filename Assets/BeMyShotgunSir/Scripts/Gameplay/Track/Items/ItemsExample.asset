@@ -13,21 +13,20 @@ MonoBehaviour:
   m_Name: ItemsExample
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.SOItem
   <NumberOfAreaGroupPerChunk>k__BackingField: 2
-  <NumberOfItemSpawnAreaPerAreaGroup>k__BackingField: 0
+  <NumberOfItemSpawnAreaPerAreaGroup>k__BackingField: 3
   <ChanceToSpawnPowerUpPerAreaGroup>k__BackingField: 1
   <MaxNumberOfPowerUpPerSplit>k__BackingField: 5
   <ChanceToSpawnObstaclePerAreaGroup>k__BackingField: 1
-  <MaxAreaGroupsWithObstaclePerRoadChunk>k__BackingField: 1
+  <MaxAreaGroupsWithObstaclePerRoadChunk>k__BackingField: 2
+  <ChanceToSpawnTwoObstaclesInAreaGroup>k__BackingField: 0.2
   <ObstacleItems>k__BackingField:
-  - {fileID: 6967192216121136336, guid: 845207c28ca4fe6458776776045c4625, type: 3}
-  - {fileID: 3639257260936602934, guid: ea95c11283fabda428eef0c646fe3517, type: 3}
   - {fileID: 5707725378427653303, guid: eb50b5446d4c0ec4d87a90d0fe47826d, type: 3}
   - {fileID: 995637268769219532, guid: b53c4faed37e33a43a60d754afd796d3, type: 3}
-  - {fileID: 2840455615293678927, guid: 61663acb6a84a614087e2c85fab372bb, type: 3}
-  - {fileID: -7590213016651367565, guid: 7ed4c44f0804f6d4d8a563fb5c1ddcae, type: 3}
+  - {fileID: 3639257260936602934, guid: ea95c11283fabda428eef0c646fe3517, type: 3}
+  - {fileID: 5806358214641337707, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
   <PowerUpItems>k__BackingField:
-  - {fileID: 833759560563234910, guid: bf70865ccfe20f741a9a348f504b7585, type: 3}
+  - {fileID: 3927281580264678353, guid: 0437e1c6d6de1f949802d3192a987eb0, type: 3}
+  - {fileID: 8448733712509413287, guid: dca4a3d9f5ed3af40ace7b50436a205a, type: 3}
+  - {fileID: 1229903610710034417, guid: 364bf66b6769fb6429822a9493b45224, type: 3}
   - {fileID: -2162092322452692106, guid: 5bd14074192f0dc418bb0ff06ef70ed8, type: 3}
-  - {fileID: 3715735447578075885, guid: 819335f3d608a1046b99a522ebf490f0, type: 3}
-  - {fileID: 6710673095025724361, guid: 19f387cc1d1a4364a8140bac955986b0, type: 3}
-  - {fileID: 969796967757081051, guid: 766db9a02735660498e8c1d446bb7abe, type: 3}
+  - {fileID: 4167744586316988463, guid: 347d5303f78a71c4a80eecb5563118d9, type: 3}
