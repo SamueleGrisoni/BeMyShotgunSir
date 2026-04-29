@@ -14,6 +14,7 @@ namespace BeMyShotgunSir.Scripts.Core
     /// </summary>
     public sealed class FishNetSceneAdapter
     {
+        private bool _log = true;
         public static event Action<SceneName> OnSceneLoaded;
         public static event Action<SceneName> OnSceneUnloaded;
         public static event Action<SceneName> OnSceneInitialized;
@@ -33,12 +34,12 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void HandleLobbySceneInitialized()
         {
-            Log.DLazy(() => "Lobby scene initialized.", this);
+            Log.DLazy(() => "Lobby scene initialized.", this, _log);
             OnSceneInitialized?.Invoke(SceneName.Lobby);
         }
         private void HandleRaceSceneInitialized()
         {
-            Log.DLazy(() => "Race scene initialized.", this);
+            Log.DLazy(() => "Race scene initialized.", this, _log);
             OnSceneInitialized?.Invoke(SceneName.Race);
         }
 

@@ -1,4 +1,5 @@
 using System;
+using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Events;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
@@ -14,13 +15,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         /// <param name="targets"></param>
         void BindLobby(IRaceBindTarget[] targets);
     }
+    public interface IRaceManager_LobbyManager
+    {
+        void InitViewModelData(LobbyViewModel viewModel);
+    }
     public interface IRaceManager_NetController : IManager_NetController { }
-    public interface IRaceManager : IManager, IRaceManager_Bootstrapper, IRaceManager_NetController { }
+    public interface IRaceManager : IManager, IRaceManager_Bootstrapper, IRaceManager_NetController, IRaceManager_LobbyManager { }
 
 
     [RequireComponent(typeof(RaceNetController))]
     public class RaceManager : NetworkBehaviour, IEventSender, IRaceManager
     {
+        private bool _log = true;
         public string SenderName => name;
         public static event Action<IRaceManager> OnRaceManagerStarted;
         public static event Action<IRaceManager> OnRaceManagerReady;
@@ -69,9 +75,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void Start()
         {
-            Log.DLazy(() => "RaceManager started.", this);
+            Log.DLazy(() => "RaceManager started.", this, _log);
             OnRaceManagerStarted?.Invoke(this);
         }
+
+
+        public void InitViewModelData(LobbyViewModel viewModel) =>
+            _viewModel.InitData(viewModel);
+
 
         private void OnRaceNetControllerReady(IRaceNetController netController)
         {
@@ -82,10 +93,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _raceCommand = new RaceCommand(netController_Command);
             _binder = new RaceBinder(_raceCommand, _viewModel);
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
-            _viewModel.InitData();
 
             _isReady = true;
-            Log.DLazy(() => "RaceManager is ready.", this);
+            Log.DLazy(() => "RaceManager is ready.", this, _log);
             OnRaceManagerReady?.Invoke(this);
 
             if (!IsServerInitialized) //server instructions below
@@ -117,7 +127,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             base.OnStopNetwork();
             OnRaceNetControllerDespawned();
             UnsubscribeEvents();
-            Log.DLazy(() => "RaceManager despawned from the network.", this);
+            Log.DLazy(() => "RaceManager despawned from the network.", this, _log);
             OnRaceManagerDespawned?.Invoke();
         }
 
@@ -129,5 +139,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             RaceNetController.OnRaceNetControllerDespawned -= OnRaceNetControllerDespawned;
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
         }
+
     }
 }

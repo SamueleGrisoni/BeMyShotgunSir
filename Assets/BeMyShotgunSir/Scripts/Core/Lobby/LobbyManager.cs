@@ -35,6 +35,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     [RequireComponent(typeof(LobbyNetController))]
     public class LobbyManager : NetworkBehaviour, ILobbyManager, IEventSender
     {
+        private bool _log = true;
         string IEventSender.SenderName => name;
         /// <summary>
         /// Raised when a LobbyManager is spawned, regardless of whether it's ready to be used.
@@ -88,12 +89,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             LobbyNetController.OnLobbyNetControllerReady += OnLobbyNetControllerReady;
             LobbyNetController.OnLobbyNetControllerDespawned += OnLobbyNetControllerDespawned;
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
-            RaceManager.OnRaceManagerReady += OnRaceManagerReady;
+            RaceManager.OnRaceManagerStarted += OnRaceManagerStarted;
         }
 
         private void Start()
         {
-            Log.DLazy(() => "LobbyManager started.", this);
+            Log.DLazy(() => "LobbyManager started.", this, _log);
             OnLobbyManagerStarted?.Invoke(this);
         }
 
@@ -109,7 +110,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _viewModel.InitData();
 
             _isReady = true;
-            Log.DLazy(() => "LobbyManager is ready.", this);
+            Log.DLazy(() => "LobbyManager is ready.", this, _log);
             OnLobbyManagerReady?.Invoke(this);
 
             if (!IsServerInitialized) //server instructions below
@@ -127,9 +128,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 _audioRequestEvent.RaiseEvent(this, new AudioRequest(_sounds.JoinLobbyClip, 1f).As2D(), null);
         }
 
-        private void OnRaceManagerReady(IRaceManager manager)
+        private void OnRaceManagerStarted(IRaceManager manager)
         {
-
+            if (manager is not IRaceManager_LobbyManager manager_LobbyManager)
+                return;
+            manager_LobbyManager.InitViewModelData(_viewModel);
         }
 
         private void OnLobbyNetControllerDespawned()
@@ -150,7 +153,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             OnLobbyNetControllerDespawned();
             UnsubscribeEvents();
 
-            Log.DLazy(() => "LobbyManager despawned from the network.", this);
+            Log.DLazy(() => "LobbyManager despawned from the network.", this, _log);
             OnLobbyManagerDespawned?.Invoke();
         }
 
@@ -161,7 +164,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             LobbyNetController.OnLobbyNetControllerReady -= OnLobbyNetControllerReady;
             LobbyNetController.OnLobbyNetControllerDespawned -= OnLobbyNetControllerDespawned;
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
-            RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
+            RaceManager.OnRaceManagerReady -= OnRaceManagerStarted;
         }
 
         public void InitNetData_Response(ILobbyNetData data) => _viewModel.InitNetData(data);

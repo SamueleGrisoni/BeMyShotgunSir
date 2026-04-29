@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
@@ -23,14 +24,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public class LobbyViewModel : ViewModel<ILobbyData, ILobbyNetData>, ILobbyDataView
     {
+        private bool _log = true;
         public override void InitData(ILobbyData data = null)
         {
+            Log.DLazy(() => "Initializing LobbyViewModel.", this, _log);
             LobbyIP = "127.0.0.1";
             PlayerCount = 0;
         }
 
         public override void InitNetData(ILobbyNetData data)
         {
+            Log.DLazy(() => "Initializing LobbyViewModel net data.", this, _log);
             //no setters to allow a real refresh even for unchanged values
             LobbyInfo = data.LobbyInfo;
             OnLobbyInfoChanged?.Invoke();

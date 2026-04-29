@@ -17,6 +17,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     [RequireComponent(typeof(RaceManager))]
     public class RaceNetController : NetController, IRaceNetController
     {
+        private bool _log = true;
         private ServerManager _serverManager;
         private IRaceManager_NetController _raceManager;
         public static event Action<IRaceNetController> OnRaceNetControllerReady;
@@ -41,7 +42,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             _raceManager = manager_NetController;
 
-            Log.DLazy(() => "RaceNetController is ready.", this);
+            Log.DLazy(() => "RaceNetController is ready.", this, _log);
             OnRaceNetControllerReady?.Invoke(this);
         }
 
@@ -70,7 +71,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             base.OnStopNetwork();
             UnsubscribeEvents();
-            Log.DLazy(() => "RaceNetController despawned from the network.", this);
+            Log.DLazy(() => "RaceNetController despawned from the network.", this, _log);
             OnRaceNetControllerDespawned?.Invoke();
         }
 

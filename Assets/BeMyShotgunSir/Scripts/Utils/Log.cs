@@ -52,17 +52,44 @@ namespace BeMyShotgunSir.Scripts.Utils
         public static void DLazy<T>(Func<string> messageFactory, T sender) =>
             LogToUnity(messageFactory(), LogTypeEnum.Default, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Instance-based Lazy Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void DLazy<T>(Func<string> messageFactory, T sender, bool enabled)
+        {
+            if (!enabled) return;
+            DLazy(messageFactory, sender);
+        }
+
         /// <summary> Static-based Lazy Log. Usage: Log.DLazy<ClassName>(() => "message"); </summary>
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void DLazy<T>(Func<string> messageFactory) =>
             LogToUnity(messageFactory(), LogTypeEnum.Default, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Static-based Lazy Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void DLazy<T>(Func<string> messageFactory, bool enabled)
+        {
+            if (!enabled) return;
+            DLazy<T>(messageFactory);
+        }
+
         /// <summary> Manual Log with custom tag and color. </summary>
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void D(object message, string contextTag, string customColor = _DEFAULT_COLOR) =>
             LogToUnity(message.ToString(), LogTypeEnum.Default, customColor, $"{contextTag}");
+
+        /// <summary> Manual Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void D(object message, string contextTag, bool enabled, string customColor = _DEFAULT_COLOR)
+        {
+            if (!enabled) return;
+            D(message, contextTag, customColor);
+        }
 
         // --- WARNING LOGS (W) ---
 
@@ -71,15 +98,42 @@ namespace BeMyShotgunSir.Scripts.Utils
         public static void WLazy<T>(Func<string> messageFactory, T sender) =>
             LogToUnity(messageFactory(), LogTypeEnum.Warning, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Instance-based Lazy Warning Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void WLazy<T>(Func<string> messageFactory, T sender, bool enabled)
+        {
+            if (!enabled) return;
+            WLazy(messageFactory, sender);
+        }
+
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void WLazy<T>(Func<string> messageFactory) =>
             LogToUnity(messageFactory(), LogTypeEnum.Warning, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Static-based Lazy Warning Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void WLazy<T>(Func<string> messageFactory, bool enabled)
+        {
+            if (!enabled) return;
+            WLazy<T>(messageFactory);
+        }
+
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void W(object message, string contextTag, string customColor = _DEFAULT_COLOR) =>
             LogToUnity(message.ToString(), LogTypeEnum.Warning, customColor, $"{contextTag}");
+
+        /// <summary> Manual Warning Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void W(object message, string contextTag, bool enabled, string customColor = _DEFAULT_COLOR)
+        {
+            if (!enabled) return;
+            W(message, contextTag, customColor);
+        }
 
         // --- ERROR LOGS (E) ---
 
@@ -88,15 +142,42 @@ namespace BeMyShotgunSir.Scripts.Utils
         public static void ELazy<T>(Func<string> messageFactory, T sender) =>
             LogToUnity(messageFactory(), LogTypeEnum.Error, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Instance-based Lazy Error Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void ELazy<T>(Func<string> messageFactory, T sender, bool enabled)
+        {
+            if (!enabled) return;
+            ELazy(messageFactory, sender);
+        }
+
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void ELazy<T>(Func<string> messageFactory) =>
             LogToUnity(messageFactory(), LogTypeEnum.Error, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Static-based Lazy Error Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void ELazy<T>(Func<string> messageFactory, bool enabled)
+        {
+            if (!enabled) return;
+            ELazy<T>(messageFactory);
+        }
+
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void E(object message, string contextTag, string customColor = _DEFAULT_COLOR) =>
             LogToUnity(message.ToString(), LogTypeEnum.Error, customColor, $"{contextTag}");
+
+        /// <summary> Manual Error Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void E(object message, string contextTag, bool enabled, string customColor = _DEFAULT_COLOR)
+        {
+            if (!enabled) return;
+            E(message, contextTag, customColor);
+        }
 
         // --- TASK LOGS (T) ---
 
@@ -105,15 +186,42 @@ namespace BeMyShotgunSir.Scripts.Utils
         public static void TLazy<T>(Func<string> messageFactory, T sender) =>
             LogToUnity(messageFactory(), LogTypeEnum.Task, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Instance-based Lazy Task Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void TLazy<T>(Func<string> messageFactory, T sender, bool enabled)
+        {
+            if (!enabled) return;
+            TLazy(messageFactory, sender);
+        }
+
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void TLazy<T>(Func<string> messageFactory) =>
             LogToUnity(messageFactory(), LogTypeEnum.Task, TypeData<T>.Color, $"{TypeData<T>.Name}");
 
+        /// <summary> Static-based Lazy Task Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void TLazy<T>(Func<string> messageFactory, bool enabled)
+        {
+            if (!enabled) return;
+            TLazy<T>(messageFactory);
+        }
+
         [Conditional("UNITY_EDITOR")]
         [Conditional("DEVELOPMENT_BUILD")]
         public static void T(object message, string contextTag, string customColor = _TASK_COLOR) =>
             LogToUnity(message.ToString(), LogTypeEnum.Task, customColor, $"{contextTag}");
+
+        /// <summary> Manual Task Log con flag abilitazione. </summary>
+        [Conditional("UNITY_EDITOR")]
+        [Conditional("DEVELOPMENT_BUILD")]
+        public static void T(object message, string contextTag, bool enabled, string customColor = _TASK_COLOR)
+        {
+            if (!enabled) return;
+            T(message, contextTag, customColor);
+        }
 
         // --- INTERNAL CORE LOGIC ---
 

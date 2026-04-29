@@ -66,6 +66,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     [RequireComponent(typeof(ILobbyManager))]
     public class LobbyNetController : NetController, ILobbyNetController
     {
+        private bool _log = true;
+
         #region Lifecycle
         public static event Action<ILobbyNetController> OnLobbyNetControllerReady;
         public static event Action OnLobbyNetControllerDespawned;
@@ -99,7 +101,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             _lobbyManager = manager_NetController;
 
-            Log.DLazy(() => "LobbyNetController is ready!", this);
+            Log.DLazy(() => "LobbyNetController is ready!", this, _log);
             OnLobbyNetControllerReady?.Invoke(this);
         }
 
@@ -154,7 +156,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             base.OnStopNetwork();
             UnsubscribeEvents();
-            Log.DLazy(() => "LobbyNetController despawned from the network.", this);
+            Log.DLazy(() => "LobbyNetController despawned from the network.", this, _log);
             OnLobbyNetControllerDespawned?.Invoke();
         }
 
@@ -197,7 +199,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         [Server]
         private void StartRace()
         {
-            Log.DLazy(() => "All players ready, starting race!", this);
+            Log.DLazy(() => "All players ready, starting race!", this, _log);
             if (_activeRaceManager != null)
             {
                 Log.ELazy(() => "Active RaceManager already exists.", this);

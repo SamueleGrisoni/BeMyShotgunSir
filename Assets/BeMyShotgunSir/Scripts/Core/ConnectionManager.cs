@@ -25,6 +25,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
     public class ConnectionManager : MonoBehaviour
     {
+        private bool _log = true;
         private bool _isInitialized = false;
         private bool _isHostSession = false;
 
@@ -68,7 +69,7 @@ namespace BeMyShotgunSir.Scripts.Core
             _serverManager.OnServerConnectionState += OnServerConnectionState;
             _clientManager.OnClientConnectionState += OnClientConnectionState;
 
-            Log.DLazy(() => "ConnectionManager initialized.", this);
+            Log.DLazy(() => "ConnectionManager initialized.", this, _log);
 
             HandleInit();
 
@@ -80,7 +81,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (!_isInitialized)
                 Initialize();
 
-            Log.DLazy(() => "Starting host session.", this);
+            Log.DLazy(() => "Starting host session.", this, _log);
             _isHostSession = true;
             _connectionFlowState = ConnectionFlowState.Hosting;
 
@@ -100,13 +101,13 @@ namespace BeMyShotgunSir.Scripts.Core
                 ipAddress = "127.0.0.1";
             GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ipAddress);
 
-            Log.DLazy(() => $"Starting join session to {ipAddress}.", this);
+            Log.DLazy(() => $"Starting join session to {ipAddress}.", this, _log);
             _clientManager.StartConnection();
         }
 
         public void QuitLobby()
         {
-            Log.DLazy(() => "Quitting lobby", this);
+            Log.DLazy(() => "Quitting lobby", this, _log);
             HandleInit();
         }
 
@@ -115,7 +116,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_currentAppFlow == AppFlowState.Startup)
                 return;
 
-            Log.DLazy(() => "Start Up State", this);
+            Log.DLazy(() => "Start Up State", this, _log);
             _currentAppFlow = AppFlowState.Startup;
         }
 
@@ -124,7 +125,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_currentAppFlow == AppFlowState.Init)
                 return;
 
-            Log.DLazy(() => "Init State", this);
+            Log.DLazy(() => "Init State", this, _log);
             _currentAppFlow = AppFlowState.Init;
 
             if (_spawnedLobbyManagerInstance != null)
@@ -143,7 +144,7 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_currentAppFlow == AppFlowState.Lobby)
                 return;
 
-            Log.DLazy(() => "Lobby State", this);
+            Log.DLazy(() => "Lobby State", this, _log);
             _currentAppFlow = AppFlowState.Lobby;
 
             if (!_isHostSession)
@@ -166,7 +167,7 @@ namespace BeMyShotgunSir.Scripts.Core
                 if (_connectionFlowState == ConnectionFlowState.Hosting)
                     _connectionFlowState = ConnectionFlowState.Idle;
 
-                Log.DLazy(() => "Server connection started.", this);
+                Log.DLazy(() => "Server connection started.", this, _log);
                 HandleLobby();
                 return;
             }
@@ -188,7 +189,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Started)
             {
-                Log.DLazy(() => "Client connection started.", this);
+                Log.DLazy(() => "Client connection started.", this, _log);
                 _connectionFlowState = ConnectionFlowState.Idle;
                 HandleLobby();
                 return;
