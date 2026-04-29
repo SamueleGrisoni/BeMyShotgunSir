@@ -36,7 +36,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             if (_trackSeed == null || _itemData == null)
             {
                 Debug.LogError("TrackManager: Missing TrackSeed or SOItem reference.");
-                return;
             }
         }
 
@@ -46,6 +45,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             {
                 if (!_isInCommonRoad)
                 {
+                    //Debug.Log("Entering COMMON ROAD");
                     _isInCommonRoad = true;
                     _numOfPowerUpSpawnedInLeftSplit = 0;
                     _numOfPowerUpSpawnedInRightSplit = 0;
@@ -54,6 +54,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             }
             if (_isInCommonRoad)
             {
+                //Debug.Log("Entering SPLIT ROAD");
                 _isInCommonRoad = false;
             }
             return GeneratePowerUp(roadChunkPosition);
@@ -64,12 +65,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             List<GeneratedItemInfo> generatedObstacles = new List<GeneratedItemInfo>();
             int numOfAreaGroupWithObstacle = 0;
 
-            for (int areaGroupIndex = 0; areaGroupIndex < _itemData.NumberOfAreaGroupPerChunk; areaGroupIndex++)
+            for (int areaGroupIndex = 0; areaGroupIndex < _itemData.NumberOfAreaGroupPerChunk; areaGroupIndex++, numOfAreaGroupWithObstacle++)
             {
                 if (Rng.NextDouble() < _itemData.ChanceToSpawnObstaclePerAreaGroup && numOfAreaGroupWithObstacle < _itemData.MaxAreaGroupsWithObstaclePerRoadChunk)
                 {
-                    generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, Rng.Next(0, _itemData.NumberOfItemSpawnAreaPerAreaGroup)));
-                    numOfAreaGroupWithObstacle++;
+                    if(Rng.NextDouble() < _itemData.ChanceToSpawnTwoObstaclesInAreaGroup)
+                    {
+                        generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, 0));
+                        generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, _itemData.NumberOfItemSpawnAreaPerAreaGroup-1));
+                    }
+                    else
+                    {
+                        generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, Rng.Next(0, _itemData.NumberOfItemSpawnAreaPerAreaGroup)));
+                    }
                 }
             }
 
