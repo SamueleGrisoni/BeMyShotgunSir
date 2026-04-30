@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &41096523
 Transform:
   m_ObjectHideFlags: 0
@@ -187,10 +187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe93d9fd8b904e10afc5071f239e348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.LobbyMenuController
-  _uIManager: {fileID: 5220024374106971504}
-  _lobbyMenuDocument: {fileID: 41096524}
-  _lobbyData:
-    _interfaceOwner: {fileID: 11400000, guid: cd6fd6aa7b0cc384ba9dbeda268b2434, type: 2}
+  _uiControllerLobby: {fileID: 0}
+  _lobbyDocument: {fileID: 0}
 --- !u!1 &314851211077089901
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2033581459159208750
 Transform:
   m_ObjectHideFlags: 0
@@ -261,7 +259,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8896755781282162750}
-  - component: {fileID: 5220024374106971504}
   m_Layer: 0
   m_Name: UIManager Local
   m_TagString: Untagged
@@ -296,6 +293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3917470911089410723}
   - component: {fileID: 6735338891503217744}
+  - component: {fileID: 6735338891503217745}
   - component: {fileID: 4204155971206586120}
   m_Layer: 0
   m_Name: Driver
@@ -348,22 +346,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &5220024374106971504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2505216098958130270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b3c7e85696b14b9691a563b6834c990, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  _centralHubController: {fileID: 7306081344984030709}
-  _lobbyViewController: {fileID: 41096525}
-  _hudController: {fileID: 1739245695443324553}
+  m_IsActive: 1
 --- !u!114 &5596779982308326735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,6 +423,21 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &6735338891503217745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3588279254814670486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80d141806fb746608f5032e52696e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.EarlyCommitmentController
+  _hudDocument: {fileID: 6735338891503217744}
+  CommitmentValue: 0
+  Show: 0
 --- !u!1 &6965328020733012329
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,7 +466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73677783e4f344cc6a10e97fbad871c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleMenuController
-  _uIManager: {fileID: 5220024374106971504}
+  _uiControllerInit: {fileID: 0}
   _centralHubDocument: {fileID: 5596779982308326735}
 --- !u!4 &8896755781282162750
 Transform:
