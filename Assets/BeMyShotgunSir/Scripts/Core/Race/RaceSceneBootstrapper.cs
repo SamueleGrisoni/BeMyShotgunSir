@@ -1,4 +1,5 @@
 using System;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         [SerializeField] private InterfaceSerializer<RaceBindTarget, IRaceBindTarget>[] _bindTargets;
         private IRaceBindTarget[] _coercedTargets;
+        [SerializeField] private RoadManager _roadManager;
 
         private void OnDisable() =>
             RaceManager.OnRaceManagerReady -= OnRaceManagerSpawned;
@@ -25,6 +27,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             }
             manager.BindLobby(_coercedTargets);
+            manager.SetRoadManager(_roadManager);
             OnRaceSceneInitialized?.Invoke();
         }
 

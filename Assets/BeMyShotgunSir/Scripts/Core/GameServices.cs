@@ -29,8 +29,10 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void Start()
         {
-            Lobby.LobbyManager.OnLobbyManagerReady += HandleLobbyManagerReady;
-            Lobby.LobbyManager.OnLobbyManagerDespawned += HandleLobbyManagerDespawned;
+            Lobby.LobbyManager.OnLobbyManagerReady += OnLobbyManagerReady;
+            Lobby.LobbyManager.OnLobbyManagerDespawned += OnLobbyManagerDespawned;
+            Race.RaceManager.OnRaceManagerReady += OnRaceManagerReady;
+            Race.RaceManager.OnRaceManagerDespawned += OnRaceManagerDespawned;
 
             TryGetComponent(out _sceneCoordinator);
 
@@ -38,7 +40,7 @@ namespace BeMyShotgunSir.Scripts.Core
             ConnectionManager.Initialize();
         }
 
-        private void HandleLobbyManagerReady(ILobbyManager lobby)
+        private void OnLobbyManagerReady(ILobbyManager lobby)
         {
             if (LobbyManager != null && LobbyManager != lobby)
             {
@@ -48,12 +50,24 @@ namespace BeMyShotgunSir.Scripts.Core
 
             LobbyManager = lobby;
         }
-        private void HandleLobbyManagerDespawned() => LobbyManager = null;
+        private void OnLobbyManagerDespawned() => LobbyManager = null;
+        private void OnRaceManagerReady(IRaceManager manager)
+        {
+            if (RaceManager != null && RaceManager != manager)
+            {
+                Log.ELazy(() => $"GameServices: Duplicate RaceManager detected.", this);
+                return;
+            }
+            RaceManager = manager;
+        }
+        private void OnRaceManagerDespawned() => RaceManager = null;
 
         private void OnDisable()
         {
-            Lobby.LobbyManager.OnLobbyManagerReady -= HandleLobbyManagerReady;
-            Lobby.LobbyManager.OnLobbyManagerDespawned -= HandleLobbyManagerDespawned;
+            Lobby.LobbyManager.OnLobbyManagerReady -= OnLobbyManagerReady;
+            Lobby.LobbyManager.OnLobbyManagerDespawned -= OnLobbyManagerDespawned;
+            Race.RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
+            Race.RaceManager.OnRaceManagerDespawned -= OnRaceManagerDespawned;
         }
 
         #region Local
@@ -72,8 +86,10 @@ namespace BeMyShotgunSir.Scripts.Core
 
         #region Network
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
+        //NOTE now full interfaces, but this should only be used by bootstrapper.
+        //So we will probably add an ad hoc bootstrapp instance locator service
         public ILobbyManager LobbyManager { get; private set; }
-        public RaceManager RaceManager { get; private set; }
+        public IRaceManager RaceManager { get; private set; }
         #endregion
     }
 }

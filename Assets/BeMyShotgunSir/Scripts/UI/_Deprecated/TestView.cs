@@ -29,7 +29,7 @@ namespace BeMyShotgunSir.Scripts.UI
             if (_testText == null || _viewModel == null)
                 return;
 
-            Dictionary<int, PlayerLobbyState> states = _viewModel.PlayerStates;
+            Dictionary<int, LobbyPlayerState> states = _viewModel.PlayerStates;
             if (states == null || states.Count == 0)
             {
                 _testText.text = "No players";
@@ -37,9 +37,9 @@ namespace BeMyShotgunSir.Scripts.UI
             }
 
             var sb = new System.Text.StringBuilder();
-            foreach (KeyValuePair<int, PlayerLobbyState> kvp in states)
+            foreach (KeyValuePair<int, LobbyPlayerState> kvp in states)
             {
-                PlayerLobbyState s = kvp.Value;
+                LobbyPlayerState s = kvp.Value;
                 sb.AppendLine($"[{kvp.Key}] Id={s.ConnectionId} Name={s.PlayerName} Ready={s.IsReady}");
             }
 

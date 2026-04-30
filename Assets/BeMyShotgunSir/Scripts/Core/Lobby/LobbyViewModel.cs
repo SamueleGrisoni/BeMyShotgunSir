@@ -9,7 +9,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     {
         LobbyInfo LobbyInfo { get; }
         int PlayerCount { get; }
-        Dictionary<int, PlayerLobbyState> PlayerStates { get; }
+        Dictionary<int, LobbyPlayerState> PlayerStates { get; }
     }
 
     public interface ILobbyData : IData { }
@@ -76,9 +76,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
         }
 
-        public Dictionary<int, PlayerLobbyState> PlayerStates { get; private set; } = new Dictionary<int, PlayerLobbyState>();
+        public Dictionary<int, LobbyPlayerState> PlayerStates { get; private set; } = new Dictionary<int, LobbyPlayerState>();
         public event Action OnPlayerStatesChanged;
-        public void SetPlayerStates(SyncDictionaryOperation op, int key, PlayerLobbyState value)
+        public void SetPlayerStates(SyncDictionaryOperation op, int key, LobbyPlayerState value)
         {
             switch (op)
             {

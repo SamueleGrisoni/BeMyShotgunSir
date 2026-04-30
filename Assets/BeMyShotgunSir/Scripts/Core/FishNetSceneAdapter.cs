@@ -12,14 +12,14 @@ namespace BeMyShotgunSir.Scripts.Core
     /// Project-level adapter around FishNet scene APIs to keep naming conventions consistent
     /// without modifying package code.
     /// </summary>
-    public sealed class FishNetSceneAdapter
+    public class FishNetSceneAdapter
     {
         private bool _log = true;
         public static event Action<SceneName> OnSceneLoaded;
         public static event Action<SceneName> OnSceneUnloaded;
         public static event Action<SceneName> OnSceneInitialized;
 
-        private SceneManager _fishNetSceneManager;
+        public SceneManager _fishNetSceneManager;
         private bool _isInitialized = false;
         private void Initialize()
         {

@@ -49,7 +49,6 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 3414248990729970632}
   _networkObjectCache: {fileID: 3414248990729970632}
-  _netController: {fileID: 5203953104048775530}
   _sounds: {fileID: 11400000, guid: 9f0395a972e876e439ae794cb046e9d9, type: 2}
 --- !u!114 &5203953104048775530
 MonoBehaviour:
@@ -66,6 +65,8 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3414248990729970632}
   _networkObjectCache: {fileID: 3414248990729970632}
+  _spawnPoints: []
+  _playerPrefab: {fileID: 4726359609289288218, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
 --- !u!114 &3414248990729970632
 MonoBehaviour:
   m_ObjectHideFlags: 0

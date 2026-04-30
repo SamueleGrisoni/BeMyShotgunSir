@@ -38,11 +38,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private int _leftWeight = -1;
         private int _rightWeight = 1;
-        private List<int> _possibleTurnWeights = new List<int>() {-4, -3, -2, -1, 0, 1, 2, 3, 4 };
+        private List<int> _possibleTurnWeights = new List<int>() { -4, -3, -2, -1, 0, 1, 2, 3, 4 };
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
 
-        private void Start()
+        private void Mute_Start()
         {
             if (_trackSeed == null || _trackData == null)
             {
@@ -127,7 +127,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
             else
             {
-               _trackBits.Enqueue(GenerateCommonChunkInfo());
+                _trackBits.Enqueue(GenerateCommonChunkInfo());
             }
         }
 

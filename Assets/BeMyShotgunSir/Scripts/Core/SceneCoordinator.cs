@@ -17,6 +17,7 @@ namespace BeMyShotgunSir.Scripts.Core
     {
         private bool _log = true;
         public readonly FishNetSceneAdapter FishnetSceneManager = new FishNetSceneAdapter();
+        public SceneManager SceneManager;
 
         public void LoadInitScene()
         {

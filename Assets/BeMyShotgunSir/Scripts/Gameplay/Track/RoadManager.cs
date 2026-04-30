@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -19,7 +20,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private Transform _lastPlacedNormalAnchor;
         private Transform _lastPlacedRightAnchor;
 
-        private void Start()
+        public void InitRoadManager(int seed, bool isServer = false)
+        {
+            Log.DLazy(() => $"-----", this);
+            Log.DLazy(() => $"Initializing RoadManager with seed {seed} (isServer: {isServer})", this);
+            //TODO triggers RoadManager's logic
+        }
+        private void Mute_Start()
         {
             _trackPooler.SetTrackData(_trackData);
             _activeRoadChunks = new LinkedList<PooledRoadChunk>();
@@ -48,7 +55,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         }
 
-        private void Update()
+        private void Mute_Update()
         {
             if (_driver == null || _activeRoadChunks.Count == 0)
                 return;

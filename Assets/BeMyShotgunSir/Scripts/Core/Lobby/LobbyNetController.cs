@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
@@ -11,17 +12,19 @@ using UnityEngine;
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     #region DataStructures
-    public struct PlayerLobbyState
+    public struct LobbyPlayerState
     {
         public int ConnectionId;
         public string PlayerName;
+        public int TeamId;
         public bool IsReady;
 
-        public PlayerLobbyState(NetworkConnection connection, string playerName)
+        public LobbyPlayerState(NetworkConnection connection, string playerName, int teamId = 0, bool isReady = false)
         {
             ConnectionId = connection.ClientId;
             PlayerName = playerName;
-            IsReady = false;
+            TeamId = teamId;
+            IsReady = isReady;
         }
     }
 
@@ -41,13 +44,27 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     {
         public LobbyInfo LobbyInfo { get; set; }
         public int PlayerCount { get; set; }
-        public Dictionary<int, PlayerLobbyState> PlayerStates { get; set; }
+        public Dictionary<int, LobbyPlayerState> PlayerStates { get; set; }
 
-        public LobbyNetDataSnapshot(int playerCount, Dictionary<int, PlayerLobbyState> playerStates, LobbyInfo lobbyInfo)
+        public LobbyNetDataSnapshot(int playerCount, Dictionary<int, LobbyPlayerState> playerStates, LobbyInfo lobbyInfo)
         {
             PlayerCount = playerCount;
-            PlayerStates = new Dictionary<int, PlayerLobbyState>(playerStates);
+            PlayerStates = new Dictionary<int, LobbyPlayerState>(playerStates);
             LobbyInfo = lobbyInfo;
+        }
+    }
+
+    public struct LobbyTeamInfo
+    {
+        public int TeamId;
+        public int DriverConnectionId;
+        public int ShotgunConnectionId;
+
+        public LobbyTeamInfo(int teamId, int driverConnectionId, int shotgunConnectionId)
+        {
+            TeamId = teamId;
+            DriverConnectionId = driverConnectionId;
+            ShotgunConnectionId = shotgunConnectionId;
         }
     }
     #endregion
@@ -59,7 +76,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
         void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null);
     }
-    public interface ILobbyNetController : INetController, ILobbyNetController_Command { }
+    public interface ILobbyNetController_RaceNetController
+    {
+        LobbyInfo LobbyInfo { get; }
+        IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates { get; }
+        IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos { get; }
+        int PlayerCount { get; }
+    }
+    public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetController_RaceNetController { }
 
     #endregion
 
@@ -77,15 +101,22 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         [SerializeField] private NetworkObject _raceManager;
         private NetworkObject _activeRaceManager;
 
-        private void OnEnable() =>
+        private void OnEnable()
+        {
             LobbyManager.OnLobbyManagerStarted += OnLobbyManagerStarted;
+            RaceNetController.OnRaceNetControllerReady += OnRaceNetControllerReady;
+        }
+
+        private void OnRaceNetControllerReady(IRaceNetController controller) => controller.SetLobbyNetController(this);
 
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
-            // _lobbyIP.OnChange += OnLobbyIPChanged;
-            _playerCount.OnChange += OnPlayerCountChanged;
+
+            _lobbyInfo.OnChange += OnLobbyInfoChanged;
             _playerStates.OnChange += OnPlayerStatesChanged;
+            _teamInfos.OnChange += OnTeamInfosChanged;
+            _playerCount.OnChange += OnPlayerCountChanged;
         }
 
         private void OnLobbyManagerStarted(ILobbyManager manager)
@@ -127,7 +158,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
 
             int localId = localConnection.ClientId;
-            if (!_playerStates.TryGetValue(localId, out PlayerLobbyState state))
+            if (!_playerStates.TryGetValue(localId, out LobbyPlayerState state))
                 return;
 
             string hostName = "PlayerHost " + localId;
@@ -185,7 +216,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 {
                     _playerCount.Value++;
                     string defaultName = "Player " + connection.ClientId;
-                    _playerStates[connection.ClientId] = new PlayerLobbyState(connection, defaultName);
+                    _playerStates[connection.ClientId] = new LobbyPlayerState(connection, defaultName);
                 }
             }
             else if (args.ConnectionState == RemoteConnectionState.Stopped)
@@ -268,6 +299,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         #region LobbyInfo
         private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
+        public LobbyInfo LobbyInfo => _lobbyInfo.Value;
         private void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer)
         {
             if (asServer || _lobbyManager == null)
@@ -277,12 +309,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         #endregion
 
         #region PlayerStates
-        private readonly SyncDictionary<int, PlayerLobbyState> _playerStates = new();
-        private void OnPlayerStatesChanged(SyncDictionaryOperation op, int key, PlayerLobbyState value, bool asServer)
+        private readonly SyncDictionary<int, LobbyPlayerState> _playerStates = new();
+        public IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates => _playerStates;
+        private void OnPlayerStatesChanged(SyncDictionaryOperation op, int key, LobbyPlayerState value, bool asServer)
         {
             if (asServer || _lobbyManager == null)
                 return;
-            var playerStates = new Dictionary<int, PlayerLobbyState>(_playerStates.Collection);
+            var playerStates = new Dictionary<int, LobbyPlayerState>(_playerStates.Collection);
             switch (op)
             {
                 case SyncDictionaryOperation.Add:
@@ -304,7 +337,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
 
             int connectionId = conn.ClientId;
-            PlayerLobbyState state = _playerStates[connectionId];
+            LobbyPlayerState state = _playerStates[connectionId];
             state.PlayerName = newName;
             _playerStates[connectionId] = state;
         }
@@ -316,14 +349,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
 
             int connectionId = conn.ClientId;
-            PlayerLobbyState state = _playerStates[connectionId];
+            LobbyPlayerState state = _playerStates[connectionId];
             state.IsReady = isReady;
             _playerStates[connectionId] = state;
 
             if (isReady)
             {
                 bool allReady = true;
-                foreach (KeyValuePair<int, PlayerLobbyState> kvp in _playerStates.Collection)
+                foreach (KeyValuePair<int, LobbyPlayerState> kvp in _playerStates.Collection)
                 {
                     if (!kvp.Value.IsReady)
                     {
@@ -339,8 +372,32 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
         #endregion
 
+        #region TeamInfo
+        private readonly SyncDictionary<int, LobbyTeamInfo> _teamInfos = new();
+        public IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos => _teamInfos;
+        private void OnTeamInfosChanged(SyncDictionaryOperation op, int key, LobbyTeamInfo value, bool asServer)
+        {
+            if (asServer || _lobbyManager == null)
+                return;
+            var teamInfos = new Dictionary<int, LobbyTeamInfo>(_teamInfos.Collection);
+            switch (op)
+            {
+                case SyncDictionaryOperation.Add:
+                case SyncDictionaryOperation.Set:
+                case SyncDictionaryOperation.Remove:
+                case SyncDictionaryOperation.Clear:
+                case SyncDictionaryOperation.Complete:
+                    // _lobbyManager.SetTeamInfos_Response(op, key, value);
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+
         #region PlayerCount
         private readonly SyncVar<int> _playerCount = new(0);
+        public int PlayerCount => _playerCount.Value;
         private void OnPlayerCountChanged(int prev, int next, bool asServer)
         {
             if (asServer || _lobbyManager == null)
