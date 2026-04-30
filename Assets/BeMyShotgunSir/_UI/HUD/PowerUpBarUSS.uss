@@ -1,0 +1,58 @@
+:root {
+}
+
+.uiroot {
+    flex-grow: 1;
+}
+
+.content-area {
+    flex-grow: 1;
+}
+
+.frame {
+    display: none;
+    aspect-ratio: 1;
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Frame.png?fileID=2800000&guid=0ac8cf48860fa4ab4b455078ecc7d34a&type=3#PowerUp_Frame");
+    -unity-background-scale-mode: scale-to-fit;
+    align-self: center;
+    position: absolute;
+    height: 100%;
+}
+
+.icon {
+    -unity-background-scale-mode: scale-to-fit;
+    height: 100%;
+    position: absolute;
+    align-self: center;
+    aspect-ratio: 1;
+}
+
+.power-up {
+    height: 100%;
+    position: relative;
+    flex-grow: 1;
+}
+
+.power-up-3 .frame {
+    display: flex;
+}
+
+.power-up-1 .icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Armor.png?fileID=2800000&guid=8b0a2e8130b6a4a15bfb4c4e4cb71000&type=3#PowerUp_Armor");
+}
+
+.power-up-2 .icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_RoadBlock.png?fileID=2800000&guid=480c96efec2a4463d849fa83eb0c8bee&type=3#PowerUp_RoadBlock");
+}
+
+.power-up-3 .icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Spear.png?fileID=2800000&guid=3d1cd456b13f343aaa1f688ad96f9015&type=3#PowerUp_Spear");
+}
+
+.power-up-4 .icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Shield.png?fileID=2800000&guid=7ef0aac922f9b4d28aed5c01ad4f163b&type=3#PowerUp_Shield");
+}
+
+.power-up-5 .icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Lasso.png?fileID=2800000&guid=7793ab32979194a4aab956451f016286&type=3#PowerUp_Lasso");
+}

@@ -1,0 +1,29 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/PowerUpBarUSS.uss?fileID=7433441132597879392&amp;guid=52556431bb561463894cd4db5cec4325&amp;type=3#PowerUpBarUSS"/>
+    <ui:VisualElement name="UIRoot" class="uiroot">
+        <ui:VisualElement name="ContentArea" class="content-area">
+            <ui:VisualElement name="PowerUpBar" class="earlycommitment-container" style="flex-direction: row; align-items: center; justify-content: center; flex-grow: 1;">
+                <ui:VisualElement name="PowerUp1" class="power-up power-up-1">
+                    <ui:VisualElement name="Frame" class="frame"/>
+                    <ui:VisualElement name="Icon" class="icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="PowerUp2" class="power-up power-up-2">
+                    <ui:VisualElement name="Frame" class="frame"/>
+                    <ui:VisualElement name="Icon" class="icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="PowerUp3" class="power-up power-up-3">
+                    <ui:VisualElement name="Frame" class="frame"/>
+                    <ui:VisualElement name="Icon" class="icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="PowerUp4" class="power-up power-up-4">
+                    <ui:VisualElement name="Frame" class="frame"/>
+                    <ui:VisualElement name="Icon" class="icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="PowerUp5" class="power-up power-up-5">
+                    <ui:VisualElement name="Frame" class="frame"/>
+                    <ui:VisualElement name="Icon" class="icon"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
