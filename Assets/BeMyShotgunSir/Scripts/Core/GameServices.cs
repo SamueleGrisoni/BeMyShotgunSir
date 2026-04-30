@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using FishNet.Managing;
-using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
@@ -81,7 +80,6 @@ namespace BeMyShotgunSir.Scripts.Core
         [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
         [field: SerializeField] public SOChannels Channels { get; private set; }
         [field: SerializeField] public AudioManager AudioManager { get; private set; }
-        public TrackManager TrackManager { get; private set; }
         #endregion
 
         #region Network

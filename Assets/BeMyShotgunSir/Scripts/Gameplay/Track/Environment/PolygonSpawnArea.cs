@@ -5,7 +5,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
     public class PolygonSpawnArea : MonoBehaviour
     {
-        [SerializeField] public List<Vector3> _points = new List<Vector3>()
+        [SerializeField]
+        public List<Vector3> _points = new List<Vector3>()
         {
             new Vector3(-5, 0, -5),
             new Vector3(5, 0, -5),
@@ -20,7 +21,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         public List<Vector3> GetWorldPoints()
         {
             var world = new List<Vector3>(_points.Count);
-            foreach (var p in _points)
+            foreach (Vector3 p in _points)
             {
                 world.Add(transform.TransformPoint(p));
             }
@@ -49,7 +50,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 float len2 = abx * abx + abz * abz;
 
                 float t = Mathf.Clamp01(((point.x - a.x) * abx + (point.z - a.z) * abz) / len2);
-                Vector3 closestOnSegment = new Vector3(a.x + t * abx, point.y, a.z + t * abz);
+                var closestOnSegment = new Vector3(a.x + t * abx, point.y, a.z + t * abz);
 
                 float dist = Vector3.Distance(point, closestOnSegment);
                 if (dist < minDist)
@@ -69,9 +70,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             {
                 _worldPoints = GetWorldPoints();
             }
-            Bounds b = new Bounds(new Vector3(_worldPoints[0].x, 0f, _worldPoints[0].z),
+            var b = new Bounds(new Vector3(_worldPoints[0].x, 0f, _worldPoints[0].z),
                 Vector3.zero);
-            foreach (var p in _worldPoints)
+            foreach (Vector3 p in _worldPoints)
                 b.Encapsulate(new Vector3(p.x, 0f, p.z));
             return b;
         }
@@ -81,21 +82,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             Vector3 min = b.min;
             Vector3 max = b.max;
 
-            Vector3[] corners = new Vector3[]
+            var corners = new Vector3[]
             {
-                new Vector3(min.x, 0f, min.z),
-                new Vector3(max.x, 0f, min.z),
-                new Vector3(max.x, 0f, max.z),
-                new Vector3(min.x, 0f, max.z),
+                new(min.x, 0f, min.z),
+                new(max.x, 0f, min.z),
+                new(max.x, 0f, max.z),
+                new(min.x, 0f, max.z),
             };
 
-            foreach (var corner in corners)
+            foreach (Vector3 corner in corners)
             {
                 if (!IsPointInsidePolygon(corner)) return false;
                 if (DistanceToPolygonEdge(corner) < offset) return false;
             }
 
-            Vector3[][] boxEdges = new Vector3[][]
+            var boxEdges = new Vector3[][]
             {
                 new[] { corners[0], corners[1] },
                 new[] { corners[1], corners[2] },
@@ -109,7 +110,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                 Vector3 polyA = _worldPoints[i];
                 Vector3 polyB = _worldPoints[(i + 1) % n];
 
-                foreach (var edge in boxEdges)
+                foreach (Vector3[] edge in boxEdges)
                 {
                     if (SegmentsIntersect2D(edge[0], edge[1], polyA, polyB))
                         return false;
@@ -205,8 +206,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             Gizmos.color = _gizmoColor;
             Vector3 centroid = Vector3.zero;
             //todo use cached world points
-            var wp = GetWorldPoints();
-            foreach (var p in wp)
+            List<Vector3> wp = GetWorldPoints();
+            foreach (Vector3 p in wp)
             {
                 centroid += p;
             }
@@ -215,8 +216,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
             for (int i = 0; i < wp.Count; i++)
             {
-                Vector3 a = new Vector3(wp[i].x, y, wp[i].z);
-                Vector3 b = new Vector3(wp[(i + 1) % wp.Count].x, y, wp[(i + 1) % wp.Count].z);
+                var a = new Vector3(wp[i].x, y, wp[i].z);
+                var b = new Vector3(wp[(i + 1) % wp.Count].x, y, wp[(i + 1) % wp.Count].z);
                 Gizmos.DrawLine(centroid, a);
                 Gizmos.DrawLine(centroid, b);
             }
@@ -224,8 +225,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             Gizmos.color = _gizmoOutlineColor;
             for (int i = 0; i < wp.Count; i++)
             {
-                Vector3 a = new Vector3(wp[i].x, y, wp[i].z);
-                Vector3 b = new Vector3(wp[(i + 1) % wp.Count].x, y, wp[(i + 1) % wp.Count].z);
+                var a = new Vector3(wp[i].x, y, wp[i].z);
+                var b = new Vector3(wp[(i + 1) % wp.Count].x, y, wp[(i + 1) % wp.Count].z);
                 Gizmos.DrawLine(a, b);
                 Gizmos.DrawSphere(a, 0.18f);
             }

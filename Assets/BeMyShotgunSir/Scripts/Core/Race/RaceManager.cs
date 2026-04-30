@@ -130,7 +130,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public void InitRace_Response(int seed, bool isServer = false)
         {
-            _roadManager.InitRoadManager(seed, isServer);
+            //TODO
+
+            // _roadManager.InitRoadManager(seed, isServer);
         }
 
 

@@ -29,7 +29,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         private int _numOfPowerUpSpawnedInRightSplit = 0;
         private int _numOfPowerUpSpawnedInLeftSplit = 0;
 
-        private Random Rng => _trackSeed.Rng;
+        private Random _rng => _trackSeed.Rng;
 
         private void Start()
         {
@@ -62,21 +62,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 
         private List<GeneratedItemInfo> GenerateObstacle()
         {
-            List<GeneratedItemInfo> generatedObstacles = new List<GeneratedItemInfo>();
+            var generatedObstacles = new List<GeneratedItemInfo>();
             int numOfAreaGroupWithObstacle = 0;
 
             for (int areaGroupIndex = 0; areaGroupIndex < _itemData.NumberOfAreaGroupPerChunk; areaGroupIndex++, numOfAreaGroupWithObstacle++)
             {
-                if (Rng.NextDouble() < _itemData.ChanceToSpawnObstaclePerAreaGroup && numOfAreaGroupWithObstacle < _itemData.MaxAreaGroupsWithObstaclePerRoadChunk)
+                if (_rng.NextDouble() < _itemData.ChanceToSpawnObstaclePerAreaGroup && numOfAreaGroupWithObstacle < _itemData.MaxAreaGroupsWithObstaclePerRoadChunk)
                 {
-                    if(Rng.NextDouble() < _itemData.ChanceToSpawnTwoObstaclesInAreaGroup)
+                    if (_rng.NextDouble() < _itemData.ChanceToSpawnTwoObstaclesInAreaGroup)
                     {
-                        generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, 0));
-                        generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, _itemData.NumberOfItemSpawnAreaPerAreaGroup-1));
+                        generatedObstacles.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, 0));
+                        generatedObstacles.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, _itemData.NumberOfItemSpawnAreaPerAreaGroup - 1));
                     }
                     else
                     {
-                        generatedObstacles.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, Rng.Next(0, _itemData.NumberOfItemSpawnAreaPerAreaGroup)));
+                        generatedObstacles.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.ObstacleItems.Length), ItemType.OBSTACLE, areaGroupIndex, _rng.Next(0, _itemData.NumberOfItemSpawnAreaPerAreaGroup)));
                     }
                 }
             }
@@ -86,19 +86,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 
         private List<GeneratedItemInfo> GeneratePowerUp(RoadChunkPosition position)
         {
-            List<GeneratedItemInfo> generatedPowerUps = new List<GeneratedItemInfo>();
+            var generatedPowerUps = new List<GeneratedItemInfo>();
             for (int areaGroupIndex = 0; areaGroupIndex < _itemData.NumberOfAreaGroupPerChunk; areaGroupIndex++)
             {
-                if (Rng.NextDouble() < _itemData.ChanceToSpawnPowerUpPerAreaGroup)
+                if (_rng.NextDouble() < _itemData.ChanceToSpawnPowerUpPerAreaGroup)
                 {
                     if (position == RoadChunkPosition.LEFT && _numOfPowerUpSpawnedInLeftSplit < _itemData.MaxNumberOfPowerUpPerSplit)
                     {
-                        generatedPowerUps.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
+                        generatedPowerUps.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
                         _numOfPowerUpSpawnedInLeftSplit++;
                     }
                     else if (position == RoadChunkPosition.RIGHT && _numOfPowerUpSpawnedInRightSplit < _itemData.MaxNumberOfPowerUpPerSplit)
                     {
-                        generatedPowerUps.Add(new GeneratedItemInfo(Rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
+                        generatedPowerUps.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
                         _numOfPowerUpSpawnedInRightSplit++;
                     }
                 }

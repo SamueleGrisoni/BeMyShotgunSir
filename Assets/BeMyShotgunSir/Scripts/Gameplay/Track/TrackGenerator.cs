@@ -41,7 +41,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private ItemGenerator _itemGenerator;
 
         private Queue<GeneratedRoadChunkInfoWithItems> _trackBits = new Queue<GeneratedRoadChunkInfoWithItems>();
-        private Random Rng => _trackSeed.Rng;
+        private Random _rng => _trackSeed.Rng;
 
         private bool _isGeneratingSplit = false;
         private int _chunksRemainingInCurrentState = 0;
@@ -75,7 +75,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 new List<GeneratedItemInfo>()));
 
             _isGeneratingSplit = false;
-            _chunksRemainingInCurrentState = Rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
+            _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
 
             while (_trackBits.Count < _trackData.QueueBufferSize)
             {
@@ -97,7 +97,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public List<GeneratedRoadChunkInfoWithItems> GetGeneratedRoadChunkInfoWithItems()
         {
-            List<GeneratedRoadChunkInfoWithItems> result = new List<GeneratedRoadChunkInfoWithItems>();
+            var result = new List<GeneratedRoadChunkInfoWithItems>();
             if (_trackBits.Count == 0) return result;
 
             GeneratedRoadChunkInfoWithItems nextChunk = _trackBits.Dequeue();
@@ -116,7 +116,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public int GetRandomNumberInRange(int min, int max)
         {
-            return Rng.Next(min, max);
+            return _rng.Next(min, max);
         }
 
         private void EnqueueNextSegment()
@@ -132,7 +132,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                                 RoadChunkType.STARTING_CROSSROAD,
                                 RoadChunkPosition.MIDDLE),
                             new List<GeneratedItemInfo>()));
-                    _chunksRemainingInCurrentState = Rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
+                    _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
                 }
                 else // Split -> Common
                 {
@@ -142,7 +142,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                                 RoadChunkType.ENDING_CROSSROAD,
                                 RoadChunkPosition.MIDDLE),
                         new List<GeneratedItemInfo>()));
-                    _chunksRemainingInCurrentState = Rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
+                    _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
                     _leftWeight = -1;
                     _rightWeight = 1;
                 }
@@ -168,10 +168,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private GeneratedRoadChunkInfo GenerateCommonChunkInfo()
         {
-            GeneratedRoadChunkInfo result = new GeneratedRoadChunkInfo();
-            if (Rng.Next(0, 100) < _trackData.StraightPercentage)
+            var result = new GeneratedRoadChunkInfo();
+            if (_rng.Next(0, 100) < _trackData.StraightPercentage)
             {
-                switch (Rng.Next(0, 4))
+                switch (_rng.Next(0, 4))
                 {
                     case 0:
                         result.index = (int)SpecialRoadChunkIndex.STRAIGHT;
@@ -189,11 +189,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                         result.index = (int)SpecialRoadChunkIndex.AUSTIN_SNAKE;
                         result.type = RoadChunkType.STRAIGHT;
                         break;
+                    default:
+                        break;
                 }
             }
             else
             {
-                result.index = Rng.Next(0, _trackData.RoadChunks.Length);
+                result.index = _rng.Next(0, _trackData.RoadChunks.Length);
                 result.type = RoadChunkType.TURN;
             }
             result.position = RoadChunkPosition.MIDDLE;
@@ -206,8 +208,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             int targetWeight = (position == RoadChunkPosition.LEFT) ? -1 : 1;
             int maxWeightChangePossible = _chunksRemainingInCurrentState * _maxWeight;
 
-            List<int> possibleWeights = new List<int>();
-            foreach (var w in _possibleTurnWeights)
+            var possibleWeights = new List<int>();
+            foreach (int w in _possibleTurnWeights)
             {
                 int projectedWeight = currentWeight + w;
                 bool isMergeSafe = (position == RoadChunkPosition.LEFT) ? (projectedWeight <= -1) : (projectedWeight >= 1);
@@ -222,7 +224,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Debug.LogError("TrackManager: No possible weights to choose from. This should never happen");
             }
 
-            int selectedWeight = possibleWeights[Rng.Next(0, possibleWeights.Count)];
+            int selectedWeight = possibleWeights[_rng.Next(0, possibleWeights.Count)];
             if (position == RoadChunkPosition.LEFT)
             {
                 _leftWeight += selectedWeight;

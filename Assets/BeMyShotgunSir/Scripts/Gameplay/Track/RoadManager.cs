@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
-using BeMyShotgunSir.Scripts.Utils;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using UnityEngine;
 
