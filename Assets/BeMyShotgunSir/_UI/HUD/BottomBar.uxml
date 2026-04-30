@@ -7,7 +7,7 @@
                     <ui:VisualElement name="DriftOrigin" class="drift-origin"/>
                     <ui:VisualElement name="DriftJoystick" class="drift-joystick"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="FeedbackButtonContainer" class="feedback-container">
+                <ui:VisualElement name="FeedbackContainer" class="feedback-container">
                     <ui:VisualElement name="ThumbDownButton" class="feedback-button thumb-down"/>
                     <ui:VisualElement name="ThumbUpButton" class="feedback-button thumb-up"/>
                 </ui:VisualElement>
@@ -17,9 +17,10 @@
                     <ui:VisualElement name="SteerJoystick" class="steer-joystick"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="BoostControl" class="boost-control">
-                    <ui:VisualElement name="BoostButtonContainer" class="boost-container">
-                        <ui:VisualElement name="BoostIcon" class="boost-icon"/>
-                        <ui:Button name="BoostButton" class="boost-button"/>
+                    <ui:VisualElement name="BoostContainer" class="boost-container">
+                        <ui:VisualElement name="BoostBar" class="boost-bar"/>
+                        <ui:VisualElement name="OverboostBar" class="overboost-bar"/>
+                        <ui:VisualElement name="BoostButton" class="boost-button"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

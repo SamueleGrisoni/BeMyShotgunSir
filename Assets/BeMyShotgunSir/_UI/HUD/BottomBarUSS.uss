@@ -23,17 +23,17 @@
 }
 
 .steer-control {
-    width: 100%;
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0);
+    width: 100%;
 }
 
 .editor-debug {
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
     border-left-color: rgb(255, 0, 0);
     border-right-color: rgb(255, 0, 0);
     border-top-color: rgb(255, 0, 0);
@@ -94,6 +94,7 @@
     flex-direction: row;
     align-items: center;
     width: 100%;
+    justify-content: center;
 }
 
 .boost-control {
@@ -109,14 +110,21 @@
     height: 250px;
     left: 150px;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
-.boost-icon {
+.boost-bar {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_BoostFill.png?fileID=2800000&guid=cad6cdf9c9b47459fb182996e871286a&type=3#HUD_BoostFill");
+}
+
+.overboost-bar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_OverBoostFill.png?fileID=2800000&guid=b9fc2571f65a34853b0d5106020b5c81&type=3#HUD_OverBoostFill");
 }
 
 .boost-button {
