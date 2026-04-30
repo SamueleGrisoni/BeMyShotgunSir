@@ -1,0 +1,4 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/ShoutBoxUSS.uss?fileID=7433441132597879392&amp;guid=e378e33d1dc344ab1a9d9803c5ca55fa&amp;type=3#ShoutBoxUSS"/>
+    <ui:VisualElement name="ShoutElement" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Left.png?fileID=2800000&amp;guid=55bd7964c4945426b84ac8825a22251e&amp;type=3#ShoutWheel_Left&quot;); -unity-background-scale-mode: scale-to-fit; margin-top: 50px; margin-right: 50px; margin-bottom: 50px; margin-left: 50px;"/>
+</ui:UXML>
