@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.DriftingState, data);
                 return;
             }
-            if (data.IsBoosting)
+            if (data.IsBoosting && controller.CurrentBatteryCharge > 0)
             {
                 controller.ChangeState(controller.BoostState, data);
                 return;

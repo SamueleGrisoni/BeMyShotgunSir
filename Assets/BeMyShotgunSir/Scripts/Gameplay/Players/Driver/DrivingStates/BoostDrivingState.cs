@@ -6,6 +6,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
+            Debug.Log("Enter boost state");
             if (controller.CurrentBatteryCharge <= 0)
             {
                 controller.ChangeState(controller.NormalState, data);
@@ -35,6 +36,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             {
                 controller.ChangeState(controller.DriftingState, data);
             }
+            Debug.Log($"Current battery charge: {controller.CurrentBatteryCharge}");
         }
         public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
@@ -43,6 +45,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.Stats.SteerAngularRotation, 0));
             controller.ApplyLateralGrip();
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data) { }
+        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        {
+            Debug.Log("Exit boost state");
+        }
     }
 }
