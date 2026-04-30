@@ -6,21 +6,26 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
+            Debug.Log("Enter drift state");
             controller.SetMaxSpeed(controller.Stats.MaxSpeed);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
 
-            if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
-                controller.BatteryChargeTimer = 0f;
+            //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
+            controller.BatteryChargeTimer = 0f;
         }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if ((controller.IsOnwer || controller.IsServer) && controller.CurrentBatteryCharge < controller.Stats.MaxBatteryCharge)
+            if ( /*(controller.IsOnwer || controller.IsServer) && */ controller.CurrentBatteryCharge < controller.Stats.MaxBatteryCharge)
             {
                 controller.BatteryChargeTimer += controller.TickDelta();
                 if (controller.BatteryChargeTimer >= controller.Stats.ChargeBatteryTimeRate)
                 {
                     controller.CurrentBatteryCharge += controller.Stats.ChargeBatterAmountRate;
-                    controller.BatteryChargeTimer = 0f;
+
+                    if (controller.CurrentBatteryCharge > controller.Stats.MaxBatteryCharge)
+                    {
+                        controller.CurrentBatteryCharge = controller.Stats.ChargeBatterAmountRate;
+                    }
                 }
             }
             if (!data.IsDrifting)
@@ -43,6 +48,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 : Mathf.Lerp(2f, 0.5f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.Stats.SteerAngularRotation, 0));
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data) { }
+        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        {
+            Debug.Log("Exit drift state");
+        }
     }
 }

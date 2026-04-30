@@ -1,8 +1,10 @@
+using System;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using GameKit.Dependencies.Utilities;
+using UnityEditor.Rendering.PostProcessing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -105,6 +107,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private float _driftDirection;
         private bool _isStarting;
 
+        private ReplicateData _lastValidData;
+
         Vector3 IDriverControllerContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDriverControllerContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
         SOSidecarStats IDriverControllerContext.Stats => _stats;
@@ -154,9 +158,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
             _predictionRigidbody.Initialize(_sphere);
+            _currentMaxSpeed = _stats.MaxSpeed;
             _parentRotation = _parent.rotation;
             _sidecarLocalRotation = _sidecar.localRotation;
-            _currentMaxSpeed = _stats.MaxSpeed;
             _currentDrivingState = _idleState;
             _currentStateType = DrivingStateType.Idle;
         }
@@ -172,14 +176,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
         }
-        private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
+        private void TimeManager_OnTick()
+        {
+            RunInputs(CreateReplicateData());
+
+        }
         private ReplicateData CreateReplicateData()
         {
-            if (!IsOwner)
+            if (!base.IsOwner)
                 return default;
-
-            var md = new ReplicateData(_steerInput, _isDrifting, _isBoosting, _isStarting);
-            return md;
+            return new ReplicateData(_steerInput, _isDrifting, _isBoosting, _isStarting);
         }
         [Replicate]
         /*
@@ -198,11 +204,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private void TimeManager_OnPostTick() => CreateReconcile();
         public override void CreateReconcile()
         {
-            if (!IsServerInitialized)
-                return;
-
             var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _driftDirection, _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType);
-            ReconcileState(rd, Channel.Reliable);
+            ReconcileState(rd);
         }
         [Reconcile]
         /*
@@ -240,7 +243,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
             // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
             _parent.position = _sphere.transform.position;
-            //if (!IsOwner && !IsServerInitialized) return;
             _parent.rotation = _parentRotation;
             _sidecar.localRotation = _sidecarLocalRotation;
         }
