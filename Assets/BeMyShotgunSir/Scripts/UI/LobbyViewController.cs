@@ -69,8 +69,8 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             // TODO: Implement start
             Debug.Log("Start Race button clicked");
-            // _command.SetPlayerReady_Request(true);
-            _command.SelectTeamMate_Request(1);
+            _command.SetPlayerReady_Request(true);
+            // _command.SelectTeamMate_Request(1);
             // GameServices.Instance.ConnectionManager.StartGame();
         }
 
@@ -89,8 +89,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void CloseConnection()
         {
-            _command.LeaveTeam_Request();
-            // _command.QuitLobby_CMRequest();
+            // _command.LeaveTeam_Request();
+            _command.QuitLobby_CMRequest();
         }
 
 
