@@ -22,20 +22,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 
     public class ItemGenerator : MonoBehaviour
     {
-        [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOItem _itemData;
 
         private bool _isInCommonRoad = true;
         private int _numOfPowerUpSpawnedInRightSplit = 0;
         private int _numOfPowerUpSpawnedInLeftSplit = 0;
 
-        private Random _rng => _trackSeed.Rng;
+        private Random _rng;
 
-        private void Start()
+
+        public void Init(int seed)
         {
-            if (_trackSeed == null || _itemData == null)
+            _rng = new Random(seed);
+            Initialize();
+        }
+        private void Initialize()
+        {
+            if (_itemData == null)
             {
-                Debug.LogError("TrackManager: Missing TrackSeed or SOItem reference.");
+                Debug.LogError("TrackManager: Missing SOItem reference.");
             }
         }
 

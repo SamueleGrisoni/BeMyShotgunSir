@@ -20,13 +20,13 @@ MonoBehaviour:
   <MaxAreaGroupsWithObstaclePerRoadChunk>k__BackingField: 2
   <ChanceToSpawnTwoObstaclesInAreaGroup>k__BackingField: 0.2
   <ObstacleItems>k__BackingField:
-  - {fileID: 5707725378427653303, guid: eb50b5446d4c0ec4d87a90d0fe47826d, type: 3}
-  - {fileID: 995637268769219532, guid: b53c4faed37e33a43a60d754afd796d3, type: 3}
-  - {fileID: 3639257260936602934, guid: ea95c11283fabda428eef0c646fe3517, type: 3}
-  - {fileID: 5806358214641337707, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
+  - {fileID: 2711377419203670080, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
+  - {fileID: -2633040348531333334, guid: f53e082efa8111d418823074d2130afe, type: 3}
+  - {fileID: -1607838415795212066, guid: a07bae870490926419b7e1400e2a8c1c, type: 3}
+  - {fileID: -4340163266048404220, guid: 18c6e78af06956e4ca0fef1acd46414f, type: 3}
   <PowerUpItems>k__BackingField:
-  - {fileID: 3927281580264678353, guid: 0437e1c6d6de1f949802d3192a987eb0, type: 3}
-  - {fileID: 8448733712509413287, guid: dca4a3d9f5ed3af40ace7b50436a205a, type: 3}
-  - {fileID: 1229903610710034417, guid: 364bf66b6769fb6429822a9493b45224, type: 3}
-  - {fileID: -2162092322452692106, guid: 5bd14074192f0dc418bb0ff06ef70ed8, type: 3}
-  - {fileID: 4167744586316988463, guid: 347d5303f78a71c4a80eecb5563118d9, type: 3}
+  - {fileID: 9062041027473337559, guid: 0437e1c6d6de1f949802d3192a987eb0, type: 3}
+  - {fileID: 3638587838688957924, guid: dca4a3d9f5ed3af40ace7b50436a205a, type: 3}
+  - {fileID: 4623139604264403000, guid: 364bf66b6769fb6429822a9493b45224, type: 3}
+  - {fileID: 1696558884476080068, guid: 5bd14074192f0dc418bb0ff06ef70ed8, type: 3}
+  - {fileID: 8526612701864604738, guid: 347d5303f78a71c4a80eecb5563118d9, type: 3}

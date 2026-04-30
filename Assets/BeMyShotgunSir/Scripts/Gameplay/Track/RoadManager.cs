@@ -7,28 +7,37 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public class RoadManager : MonoBehaviour
     {
+        private bool _isInitialized = false;
+        private bool _started = false;
         [Header("Data References")]
-        [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
         [Header("Generators References")]
         [Tooltip("Generator are responsible for generating the data of the track and items to spawn")]
         [SerializeField] private TrackGenerator _trackGenerator;
-        [SerializeField] private ItemGenerator _itemGenerator;
         [Header("Spawner References")]
         [Tooltip("Spawners are responsible for spawning the actual gameobjects in the scene")]
         [SerializeField] private RoadSpawner _roadSpawner;
         [SerializeField] private EnvironmentSpawner _environmentSpawner;
         [SerializeField] private ItemSpawner _itemSpawner;
         [Header("Other References")]
-        [SerializeField] private Transform _startingPoint;
         [SerializeField] private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
-        private void Start()
+        public void Init(int seed, bool isServer = false)
         {
+            _environmentSpawner.Init(seed);
+            _trackGenerator.Init(seed);
+            Initialize(isServer);
+        }
+
+        private void Initialize(bool isServer = false)
+        {
+            if (_isInitialized)
+                return;
+
             _trackPooler.SetTrackData(_trackData);
             _activeRoadChunks = new LinkedList<PooledRoadChunk>();
 
@@ -55,10 +64,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Debug.LogError("RoadManager: Driver reference is missing");
             }
 
+            _isInitialized = true;
         }
 
-        private void Mute_Update()
+        public void StartRace() => _started = true;
+
+        private void Update()
         {
+            if (!_started)
+                return;
+
             if (_driver == null || _activeRoadChunks.Count == 0)
                 return;
 

@@ -128,12 +128,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _netController.InitRace(_roadManager);
         }
 
-        public void InitRace_Response(int seed, bool isServer = false)
-        {
-            //TODO
+        public void InitRace_Response(int seed, bool isServer = false) =>
+            _roadManager.Init(seed, isServer);
 
-            // _roadManager.InitRoadManager(seed, isServer);
-        }
 
 
         private void OnRaceNetControllerDespawned()

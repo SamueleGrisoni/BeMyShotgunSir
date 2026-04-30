@@ -113,7 +113,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             _seed = DateTime.Now.Ticks.ToString().GetHashCode();
             // TODO: waiting interfaces from @SamueleGrisoni here
-            // _raceManager.InitRace_Response(rng, isController);
+            _raceManager.InitRace_Response(_seed, true);
             // var playerSpanws = _roadManager.GetStartingPositions();
             InitSyncValues();
         }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
@@ -24,6 +22,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     break;
                 case RoadChunkType.ENDING_CROSSROAD:
                     PlaceEndingCrossroad(chunk);
+                    break;
+                default:
                     break;
             }
             chunk.gameObject.SetActive(true);

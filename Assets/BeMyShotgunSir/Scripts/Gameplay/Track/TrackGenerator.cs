@@ -8,6 +8,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public enum RoadChunkPosition { LEFT, MIDDLE, RIGHT }
 
+    #region TrackGenerator Structs
     public struct GeneratedRoadChunkInfo
     {
         public int index;
@@ -31,17 +32,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             this.itemsToSpawn = itemsToSpawn;
         }
     }
+    #endregion
 
     public class TrackGenerator : MonoBehaviour
     {
         private enum SpecialRoadChunkIndex { STARTING_CROSSROAD = 0, ENDING_CROSSROAD = 1, START_LINE = 2, STRAIGHT = 3, LEFT_HALF_CIRCLE = 4, RIGHT_HALF_CIRCLE = 5, AUSTIN_SNAKE = 6 }
 
-        [SerializeField] private TrackSeed _trackSeed;
         [SerializeField] private SOTrack _trackData;
         [SerializeField] private ItemGenerator _itemGenerator;
 
         private Queue<GeneratedRoadChunkInfoWithItems> _trackBits = new Queue<GeneratedRoadChunkInfoWithItems>();
-        private Random _rng => _trackSeed.Rng;
+        private Random _rng;
 
         private bool _isGeneratingSplit = false;
         private int _chunksRemainingInCurrentState = 0;
@@ -52,11 +53,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
 
-        private void Mute_Start()
+        public void Init(int seed)
         {
-            if (_trackSeed == null || _trackData == null)
+            _rng = new Random(seed);
+            _itemGenerator.Init(seed);
+            Initialize();
+        }
+        private void Initialize()
+        {
+            if (_trackData == null)
             {
-                Debug.LogError("TrackManager: Missing TrackSeed or SOTrack reference.");
+                Debug.LogError("TrackManager: Missing SOTrack reference.");
                 return;
             }
 
@@ -114,10 +121,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             return result;
         }
 
-        public int GetRandomNumberInRange(int min, int max)
-        {
-            return _rng.Next(min, max);
-        }
+        public int GetRandomNumberInRange(int min, int max) => _rng.Next(min, max);
 
         private void EnqueueNextSegment()
         {

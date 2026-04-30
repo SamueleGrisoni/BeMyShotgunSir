@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Scripts.Gameplay.Track
+namespace BeMyShotgunSir.Scripts.Gameplay.Track.Deprecated
 {
     public class TrackSeed : MonoBehaviour
     {

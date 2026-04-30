@@ -1,11 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Random = System.Random;
+using BeMyShotgunSir.Scripts.Utils;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 {
     public class EnvironmentSpawner : MonoBehaviour
     {
+        private bool _log = true;
         private PolygonSpawnArea _currentSpawnArea;
 
         [Header("Building Prefabs")]
@@ -14,9 +16,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         [SerializeField] private List<Building> _smallBuildingPrefabs;
         [SerializeField] private List<CityProps> _propsPrefabs;
         [SerializeField] private SOEnvironment _environmentData;
-        [SerializeField] private TrackSeed _trackSeed;
         private List<Bounds> _spawnPrefabsBounds = new List<Bounds>();
-        private Random _rng => _trackSeed.Rng;
+        private Random _rng;
+
+        public void Init(int seed) =>
+            _rng = new Random(seed);
+
         public void PopulateChunk(RoadChunk chunk)
         {
             if (!ValidateInspectorData(chunk))
@@ -57,7 +62,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         {
             if (chunk.PolygonSpawnArea == null || chunk.PolygonSpawnArea.Length == 0)
             {
-                Debug.LogError("[EnvironmentSpawnerSpanwer] No spawn areas assigned to chunk: " + chunk.name);
+                Log.WLazy(() => "[EnvironmentSpawnerSpanwer] No spawn areas assigned to chunk: " + chunk.name, this);
                 return false;
             }
             return true;
@@ -75,7 +80,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             }
             if (_rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
             {
-                Debug.Log("Something funny spawned!");
+                Log.DLazy(() => "Something funny spawned!", this, _log);
                 Instantiate(_propsPrefabs[^1].gameObject,
                     _currentSpawnArea.transform.position + Vector3.up * 50f, default,
                     _currentSpawnArea.transform);
@@ -173,17 +178,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             }
             if (_bigBuildingPrefabs == null || _bigBuildingPrefabs.Count == 0)
             {
-                Debug.LogWarning("[EnvironmentSpawnerEnvironmentSpanwer] No big building prefabs assigned.");
+                Log.WLazy(() => "[EnvironmentSpawnerEnvironmentSpanwer] No big building prefabs assigned.", this);
                 return false;
             }
             if (_mediumBuildingPrefabs == null || _mediumBuildingPrefabs.Count == 0)
             {
-                Debug.LogWarning("[EnvironmentSpawnerEnvironmentSpanwer] No medium building prefabs assigned.");
+                Log.WLazy(() => "[EnvironmentSpawnerEnvironmentSpanwer] No medium building prefabs assigned.", this);
                 return false;
             }
             if (_smallBuildingPrefabs == null || _smallBuildingPrefabs.Count == 0)
             {
-                Debug.LogWarning("[EnvironmentSpawnerEnvironmentSpanwer] No small building prefabs assigned.");
+                Log.WLazy(() => "[EnvironmentSpawnerEnvironmentSpanwer] No small building prefabs assigned.", this);
                 return false;
             }
             return true;
