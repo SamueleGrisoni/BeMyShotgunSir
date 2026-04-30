@@ -2,19 +2,21 @@
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/EarlyCommitmentUSS.uss?fileID=7433441132597879392&amp;guid=93b4c11e626ad40ccb585301c5324615&amp;type=3#EarlyCommitmentUSS"/>
     <ui:VisualElement name="UIRoot" class="uiroot">
         <ui:VisualElement name="ContentArea" class="content-area">
-            <ui:VisualElement name="EarlyCommitmentContainer" class="earlycommitment-container">
-                <ui:VisualElement name="EarlyCommitment" class="earlycommitment">
+                <ui:VisualElement name="EarlyCommitmentLabel" class="earlycommitment-label">
                     <ui:Label text=" Early Commitment BOOST! " class="boost-label"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="CommitmentChoice" class="commitment-choice">
-                    <ui:Button name="ArrowLeft" class="choice-arrow left-arrow">
-                        <ui:VisualElement name="CommitGaugeBar" class="commit-gauge-bar gauge-bar-left"/>
-                    </ui:Button>
-                    <ui:Button name="ArrowRight" class="choice-arrow right-arrow">
-                        <ui:VisualElement name="CommitGaugeBar" class="commit-gauge-bar gauge-bar-right"/>
-                    </ui:Button>
+                    <ui:VisualElement name="ArrowLeft" class="choice-arrow left-arrow">
+                        <ui:VisualElement name="CommitBarMaskLeft" class="commit-bar-mask">
+                            <ui:VisualElement name="CommitBarLeft" class="commit-bar gauge-bar-left"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ArrowRight" class="choice-arrow right-arrow">
+                        <ui:VisualElement name="CommitBarMaskRight" class="commit-bar-mask">
+                            <ui:VisualElement name="CommitBarRight" class="commit-bar gauge-bar-right"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
                 </ui:VisualElement>
-            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

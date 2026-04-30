@@ -26,7 +26,7 @@
     transition-timing-function: ease-out;
 }
 
-.earlycommitment {
+.earlycommitment-label {
     height: 35%;
     border-radius: 40px;
     border-width: 0;
@@ -48,12 +48,11 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    pointer-events: none;
 }
 
 .choice-arrow {
-    width: 235px;
-    height: 100%;
+    width: 240px;
+    height: 285px;
     padding: 12px;
     margin-top: 50px;
     margin-bottom: 50px;
@@ -61,16 +60,15 @@
     border-width: 1.5px;
     border-color: rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     background-color: rgba(0, 0, 0, 0);
     border-left-color: rgba(255, 255, 255, 0);
     border-right-color: rgba(255, 255, 255, 0);
     border-top-color: rgba(255, 255, 255, 0);
     border-bottom-color: rgba(255, 255, 255, 0);
+    align-content: flex-end;
 }
-
-
 
 .commit-label {
     color: white;
@@ -85,13 +83,38 @@
     margin-right: 10%;
 }
 
-.commit-gauge-bar {
+.commit-bar-mask {
     position: absolute;
-    top: 0;
     left: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
-    border-radius: 10px;
+    overflow: hidden;
+}
+
+.commit-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 285px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.left-arrow {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_LeftArrow.png?fileID=2800000&guid=8cc4d4e79af03432aab4a2d88a213ca1&type=3#EarlyCommitment_LeftArrow");
+}
+
+.right-arrow {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_RightArrow.png?fileID=2800000&guid=4506c8a11158147889f97ef740e25090&type=3#EarlyCommitment_RightArrow");
+}
+
+.gauge-bar-left {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_LeftArrowFull.png?fileID=2800000&guid=4569d5a84595149b98d1e7470f1131b2&type=3#EarlyCommitment_LeftArrowFull");
+}
+
+.gauge-bar-right {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_RightArrowFull.png?fileID=2800000&guid=1bb82c271aae84c138adcd6e7c82884f&type=3#EarlyCommitment_RightArrowFull");
 }
 
 .boost-label {
@@ -121,24 +144,4 @@
 }
 
 .mobile-landscape {
-}
-
-.left-arrow {
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_LeftArrow.png?fileID=2800000&guid=8cc4d4e79af03432aab4a2d88a213ca1&type=3#EarlyCommitment_LeftArrow");
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.right-arrow {
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_RightArrow.png?fileID=2800000&guid=4506c8a11158147889f97ef740e25090&type=3#EarlyCommitment_RightArrow");
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.gauge-bar-left {
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_LeftArrowFull.png?fileID=2800000&guid=4569d5a84595149b98d1e7470f1131b2&type=3#EarlyCommitment_LeftArrowFull");
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.gauge-bar-right {
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_RightArrowFull.png?fileID=2800000&guid=1bb82c271aae84c138adcd6e7c82884f&type=3#EarlyCommitment_RightArrowFull");
-    -unity-background-scale-mode: scale-to-fit;
 }
