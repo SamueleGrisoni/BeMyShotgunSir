@@ -1,3 +1,5 @@
+using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Connection;
 using FishNet.Object;
 
 namespace BeMyShotgunSir.Scripts.Core
@@ -18,5 +20,27 @@ namespace BeMyShotgunSir.Scripts.Core
     /// <summary>
     /// Base class for NetControllers.
     /// </summary>
-    public abstract class NetController : NetworkBehaviour, INetController { }
+    public abstract class NetController : NetworkBehaviour, INetController
+    {
+
+        [TargetRpc]
+        protected void LogMessage_TargetRpc(NetworkConnection connection, string message, int type = 0)
+        {
+            switch (type)
+            {
+                case 0:
+                    Log.DLazy(() => $"Server message: {message}", this);
+                    break;
+                case 1:
+                    Log.WLazy(() => $"Server warning: {message}", this);
+                    break;
+                case 2:
+                    Log.ELazy(() => $"Server error: {message}", this);
+                    break;
+                default:
+                    Log.DLazy(() => $"Server message: {message}", this);
+                    break;
+            }
+        }
+    }
 }

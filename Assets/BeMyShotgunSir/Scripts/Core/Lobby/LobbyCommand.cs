@@ -20,5 +20,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public void SetPlayerReady_Request(bool isReady) =>
             _netController.UpdatePlayerReady_ServerRpc(isReady);
 
+        public void SelectTeamMate_Request(int teammateConnectionId) =>
+            _netController.SelectTeamMate_ServerRpc(teammateConnectionId);
+
+        public void LeaveTeam_Request() =>
+            _netController.LeaveTeam_ServerRpc();
+
     }
 }

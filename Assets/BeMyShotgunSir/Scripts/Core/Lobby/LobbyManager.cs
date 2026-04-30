@@ -26,6 +26,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void SetLobbyInfo_Response(LobbyInfo info);
         void SetPlayerCount_Response(int prev, int next);
         void SetPlayerStates_Response(SyncDictionaryOperation op, int key, LobbyPlayerState value);
+        void SetTeamInfos_Response(SyncDictionaryOperation op, long key, LobbyTeamInfo value);
     }
 
     public interface ILobbyManager : IManager, ILobbyManager_Bootstrapper, ILobbyManager_NetController { }
@@ -185,5 +186,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _viewModel.SetPlayerCount(next);
         }
         public void SetPlayerStates_Response(SyncDictionaryOperation op, int key, LobbyPlayerState value) => _viewModel.SetPlayerStates(op, key, value);
+
+        public void SetTeamInfos_Response(SyncDictionaryOperation op, long key, LobbyTeamInfo value) => _viewModel.SetTeamInfos(op, key, value);
     }
 }

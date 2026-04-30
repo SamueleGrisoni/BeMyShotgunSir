@@ -9,6 +9,7 @@ using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using UnityEngine;
 
+
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     #region DataStructures
@@ -16,16 +17,19 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     {
         public int ConnectionId;
         public string PlayerName;
-        public int TeamId;
+        public long TeamId;
         public bool IsReady;
 
-        public LobbyPlayerState(NetworkConnection connection, string playerName, int teamId = 0, bool isReady = false)
+        public LobbyPlayerState(NetworkConnection connection, string playerName, long teamId = -1, bool isReady = false)
         {
             ConnectionId = connection.ClientId;
             PlayerName = playerName;
             TeamId = teamId;
             IsReady = isReady;
         }
+
+        public override string ToString() =>
+            $"LobbyPlayerState: ConnectionId: {ConnectionId}, PlayerName: {PlayerName}, TeamId: {TeamId}, IsReady: {IsReady}";
     }
 
     public struct LobbyInfo
@@ -38,6 +42,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             //CONST VALUES DOWN
             MaxPlayers = 4;
         }
+        public override string ToString() =>
+            $"LobbyInfo: IP: {LobbyIP}, Max Players: {MaxPlayers}";
+
     }
 
     public struct LobbyNetDataSnapshot : ILobbyNetData
@@ -45,27 +52,34 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public LobbyInfo LobbyInfo { get; set; }
         public int PlayerCount { get; set; }
         public Dictionary<int, LobbyPlayerState> PlayerStates { get; set; }
+        public Dictionary<long, LobbyTeamInfo> TeamInfos { get; set; }
 
-        public LobbyNetDataSnapshot(int playerCount, Dictionary<int, LobbyPlayerState> playerStates, LobbyInfo lobbyInfo)
+        public LobbyNetDataSnapshot(int playerCount, Dictionary<int, LobbyPlayerState> playerStates, LobbyInfo lobbyInfo, Dictionary<long, LobbyTeamInfo> teamInfos)
         {
             PlayerCount = playerCount;
             PlayerStates = new Dictionary<int, LobbyPlayerState>(playerStates);
             LobbyInfo = lobbyInfo;
+            TeamInfos = new Dictionary<long, LobbyTeamInfo>(teamInfos);
         }
+
+        public override string ToString() =>
+            $"LobbyNetDataSnapshot: {LobbyInfo}, PlayerCount: {PlayerCount}, PlayerStates: {string.Join(", ", PlayerStates)}, TeamInfos: {string.Join(", ", TeamInfos)}";
     }
 
     public struct LobbyTeamInfo
     {
-        public int TeamId;
+        public long TeamId;
         public int DriverConnectionId;
         public int ShotgunConnectionId;
 
-        public LobbyTeamInfo(int teamId, int driverConnectionId, int shotgunConnectionId)
+        public LobbyTeamInfo(long teamId, int driverConnectionId = -1, int shotgunConnectionId = -1)
         {
             TeamId = teamId;
             DriverConnectionId = driverConnectionId;
             ShotgunConnectionId = shotgunConnectionId;
         }
+        public override string ToString() =>
+            $"LobbyTeamInfo: TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}";
     }
     #endregion
 
@@ -75,12 +89,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void HandleRefresh();
         void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
         void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null);
+        void SelectTeamMate_ServerRpc(int teammateConnectionId, NetworkConnection conn = null);
+        void LeaveTeam_ServerRpc(NetworkConnection conn = null);
     }
     public interface ILobbyNetController_RaceNetController
     {
         LobbyInfo LobbyInfo { get; }
         IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates { get; }
-        IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos { get; }
+        IReadOnlyDictionary<long, LobbyTeamInfo> TeamInfos { get; }
         int PlayerCount { get; }
     }
     public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetController_RaceNetController { }
@@ -260,7 +276,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (IsController)
             {
-                _lobbyManager.InitNetData_Response(new LobbyNetDataSnapshot(_playerCount.Value, _playerStates.Collection, _lobbyInfo.Value));
+                _lobbyManager.InitNetData_Response(new LobbyNetDataSnapshot(_playerCount.Value, _playerStates.Collection, _lobbyInfo.Value, _teamInfos.Collection));
                 return; // without this the host would also call RequestNetDataSnapshot_ServerRpc
             }
             if (IsClientInitialized)
@@ -278,7 +294,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (conn == null)
                 return;
 
-            var snapshot = new LobbyNetDataSnapshot(_playerCount.Value, _playerStates.Collection, _lobbyInfo.Value);
+            var snapshot = new LobbyNetDataSnapshot(_playerCount.Value, _playerStates.Collection, _lobbyInfo.Value, _teamInfos.Collection);
 
             InitNetData_TargetRpc(conn, snapshot);
         }
@@ -319,11 +335,18 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             switch (op)
             {
                 case SyncDictionaryOperation.Add:
-                case SyncDictionaryOperation.Set:
-                case SyncDictionaryOperation.Remove:
-                case SyncDictionaryOperation.Clear:
-                case SyncDictionaryOperation.Complete:
                     _lobbyManager.SetPlayerStates_Response(op, key, value);
+                    break;
+                case SyncDictionaryOperation.Set:
+                    _lobbyManager.SetPlayerStates_Response(op, key, value);
+                    break;
+                case SyncDictionaryOperation.Remove:
+                    _lobbyManager.SetPlayerStates_Response(op, key, value);
+                    break;
+                case SyncDictionaryOperation.Clear:
+                    _lobbyManager.SetPlayerStates_Response(op, key, value);
+                    break;
+                case SyncDictionaryOperation.Complete:
                     break;
                 default:
                     break;
@@ -373,24 +396,101 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         #endregion
 
         #region TeamInfo
-        private readonly SyncDictionary<int, LobbyTeamInfo> _teamInfos = new();
-        public IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos => _teamInfos;
-        private void OnTeamInfosChanged(SyncDictionaryOperation op, int key, LobbyTeamInfo value, bool asServer)
+        private readonly SyncDictionary<long, LobbyTeamInfo> _teamInfos = new();
+        public IReadOnlyDictionary<long, LobbyTeamInfo> TeamInfos => _teamInfos;
+        private void OnTeamInfosChanged(SyncDictionaryOperation op, long key, LobbyTeamInfo value, bool asServer)
         {
             if (asServer || _lobbyManager == null)
                 return;
-            var teamInfos = new Dictionary<int, LobbyTeamInfo>(_teamInfos.Collection);
+            var teamInfos = new Dictionary<long, LobbyTeamInfo>(_teamInfos.Collection);
             switch (op)
             {
                 case SyncDictionaryOperation.Add:
+                    _lobbyManager.SetTeamInfos_Response(op, key, value);
+                    break;
                 case SyncDictionaryOperation.Set:
+                    _lobbyManager.SetTeamInfos_Response(op, key, value);
+                    break;
                 case SyncDictionaryOperation.Remove:
+                    _lobbyManager.SetTeamInfos_Response(op, key, value);
+                    break;
                 case SyncDictionaryOperation.Clear:
+                    _lobbyManager.SetTeamInfos_Response(op, key, value);
+                    break;
                 case SyncDictionaryOperation.Complete:
-                    // _lobbyManager.SetTeamInfos_Response(op, key, value);
                     break;
                 default:
                     break;
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)] //TODO test it
+        public void SelectTeamMate_ServerRpc(int teammateConnectionId, NetworkConnection conn = null)
+        {
+            if (conn == null)
+                return;
+            int clientId = conn.ClientId;
+            if (_playerStates.TryGetValue(clientId, out LobbyPlayerState playerState))
+            {
+                if (_playerStates.TryGetValue(teammateConnectionId, out LobbyPlayerState teammateState))
+                {
+                    if (teammateState.TeamId != -1)
+                    {
+                        LogMessage_TargetRpc(conn, "Selected teammate is already in a team.", 1);
+                        return;
+                    }
+                }
+                else
+                {
+                    LogMessage_TargetRpc(conn, "Selected teammate connection ID does not exist.", 2);
+                    return;
+                }
+
+                long currentTeamId = TeamIdGenerator.GetTeamKey(clientId, teammateConnectionId);
+                _teamInfos[currentTeamId] = new LobbyTeamInfo(currentTeamId, clientId, teammateConnectionId);
+                _playerStates[clientId] = new LobbyPlayerState(conn, playerState.PlayerName, currentTeamId, false);
+                _playerStates[teammateConnectionId] = new LobbyPlayerState(conn, teammateState.PlayerName, currentTeamId, false);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)] //TODO test it
+        public void LeaveTeam_ServerRpc(NetworkConnection conn = null)
+        {
+            if (conn == null)
+                return;
+            int clientId = conn.ClientId;
+            if (_playerStates.TryGetValue(clientId, out LobbyPlayerState playerState))
+            {
+                if (playerState.TeamId != -1)
+                {
+                    long teamId = playerState.TeamId;
+                    if (_teamInfos.TryGetValue(teamId, out LobbyTeamInfo teamInfo))
+                    {
+                        int teammateConnectionId = teamInfo.DriverConnectionId == clientId ? teamInfo.ShotgunConnectionId : teamInfo.DriverConnectionId;
+                        _teamInfos.Remove(teamId);
+                        _playerStates[clientId] = new LobbyPlayerState(conn, playerState.PlayerName, -1, false);
+                        if (_playerStates.ContainsKey(teammateConnectionId))
+                        {
+                            LobbyPlayerState teammateState = _playerStates[teammateConnectionId];
+                            _playerStates[teammateConnectionId] = new LobbyPlayerState(conn, teammateState.PlayerName, -1, false);
+                        }
+                        else
+                        {
+                            LogMessage_TargetRpc(conn, "Teammate connection ID does not exist.", 2);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        LogMessage_TargetRpc(conn, "Player team info not found.", 2);
+                        return;
+                    }
+                }
+                else
+                {
+                    LogMessage_TargetRpc(conn, "Player is not in a team.", 1);
+                    return;
+                }
             }
         }
         #endregion
