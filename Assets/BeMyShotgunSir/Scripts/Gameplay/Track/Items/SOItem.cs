@@ -24,8 +24,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         [field: SerializeField] public float ChanceToSpawnTwoObstaclesInAreaGroup { get; private set; }
 
         [Header("Item Prefabs")]
-        [field: SerializeField] public Item[] ObstacleItems { get; private set; }
+        [field: SerializeField] public Obstacle[] ObstacleItems { get; private set; }
 
-        [field: SerializeField] public Item[] PowerUpItems { get; private set; }
+        [field: SerializeField] public PowerUp[] PowerUpItems { get; private set; }
     }
 }

@@ -1105,7 +1105,6 @@ MonoBehaviour:
   _trackSeed: {fileID: 743278065}
   _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
   _trackGenerator: {fileID: 204120561}
-  _itemGenerator: {fileID: 0}
   _roadSpawner: {fileID: 47903829}
   _environmentSpawner: {fileID: 2128947564}
   _itemSpawner: {fileID: 218090104}
