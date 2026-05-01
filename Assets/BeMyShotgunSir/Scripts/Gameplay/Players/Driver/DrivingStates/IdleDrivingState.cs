@@ -12,7 +12,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.NormalState, data);
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data) { }
+        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        {
+            controller.ApplyGravity(controller.NormalStats.Gravity);
+        }
         public void Exit(IDriverControllerContext controller, ReplicateData data) { }
     }
 }

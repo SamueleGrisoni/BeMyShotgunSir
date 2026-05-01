@@ -18,6 +18,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Normal,
         Drifting,
         Boost,
+        Grass,
     }
 
     /*  This struct contains the inputs of the owner client required to calculate the next state of the
@@ -82,6 +83,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     {
         [SerializeField] private SOSidecarStats _sidecarStatsNormal;
         [SerializeField] private SOSidecarStats _sidecarStatsBoost;
+        [SerializeField] private SOSidecarStats _sidecarStatsGrass;
         [SerializeField] private SOBatteryStats _batteryStats;
         [SerializeField] private Rigidbody _sphere;
         [SerializeField] private Transform _parent;
@@ -97,7 +99,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _normalState = new NormalDrivingState();
         private IDrivingState _driftingState = new DriftingDrivingState();
         private IDrivingState _boostState = new BoostDrivingState();
-        private IDrivingState _bumpedState = new BumpDrivingState();
+        private IDrivingState _grassState = new GrassDrivingState();
         private float _currentMaxSpeed;
         private float _steerInput;
         private bool _isDrifting;
@@ -111,14 +113,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Vector3 IDriverControllerContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDriverControllerContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
         SOSidecarStats IDriverControllerContext.NormalStats => _sidecarStatsNormal;
-
         SOSidecarStats IDriverControllerContext.BoostStats => _sidecarStatsBoost;
-
+        SOSidecarStats IDriverControllerContext.GrassStats => _sidecarStatsGrass;
         SOBatteryStats IDriverControllerContext.BatteryStats => _batteryStats;
         IDrivingState IDriverControllerContext.IdleState => _idleState;
         IDrivingState IDriverControllerContext.NormalState => _normalState;
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
         IDrivingState IDriverControllerContext.BoostState => _boostState;
+        IDrivingState IDriverControllerContext.GrassState => _grassState;
         float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
         bool IDriverControllerContext.IsGrounded => throw new System.NotImplementedException();
         bool IDriverControllerContext.IsDriftingButtonPressed => throw new System.NotImplementedException();
@@ -157,6 +159,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             }
         }
+
         private void Awake()
         {
             _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
@@ -166,8 +169,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _sidecarLocalRotation = _sidecar.localRotation;
             _currentDrivingState = _idleState;
             _currentStateType = DrivingStateType.Idle;
+            _currentLinearVelocity = Vector3.zero;
         }
+
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
+
         public override void OnStartNetwork()
         {
             TimeManager.OnTick += TimeManager_OnTick;
@@ -179,17 +185,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
         }
+
         private void TimeManager_OnTick()
         {
             RunInputs(CreateReplicateData());
 
         }
+
         private ReplicateData CreateReplicateData()
         {
             if (!base.IsOwner)
                 return default;
             return new ReplicateData(_steerInput, _isDrifting, _isBoosting, _isStarting);
         }
+
         [Replicate]
         /*
         Questo metodo viene eseguito sia sul Client che sul Server per ridurre i problemi di latenza.
@@ -204,12 +213,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _predictionRigidbody.Velocity(_currentLinearVelocity);
             _predictionRigidbody.Simulate();
         }
+
         private void TimeManager_OnPostTick() => CreateReconcile();
+
         public override void CreateReconcile()
         {
             var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _driftDirection, _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType);
             ReconcileState(rd);
         }
+
         [Reconcile]
         /*
         Dopo ogni tick, il server invia al client un pacchetto ReconcileData che contiene lo stato ufficiale.
@@ -234,6 +246,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 case DrivingStateType.Normal: _currentDrivingState = _normalState; break;
                 case DrivingStateType.Drifting: _currentDrivingState = _driftingState; break;
                 case DrivingStateType.Boost: _currentDrivingState = _boostState; break;
+                case DrivingStateType.Grass: _currentDrivingState = _grassState; break;
                 default:
                     break;
             }
@@ -252,11 +265,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _sphere.transform.forward = _sidecar.forward;
             Debug.Log($"Current battery level: {_currentBatteryCharge}");
         }
+
         void IDriverControllerContext.ApplySteering(float steerAmount, float steeringForce)
         {
             float steerAngle = steerAmount * steeringForce * (float)TimeManager.TickDelta;
             var steerRotation = Quaternion.AngleAxis(steerAngle, _parent.up);
             _parentRotation *= steerRotation;
+
         }
         void IDriverControllerContext.ApplyAcceleration(Vector3 direction, float accelerationForce)
         {
@@ -269,8 +284,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             _currentLinearVelocity = predictedVelocity;
         }
+
         // TODO implementare gravità
-        void IDriverControllerContext.ApplyGravity(float gravity) => _predictionRigidbody.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
+        void IDriverControllerContext.ApplyGravity(float gravity)
+        {
+            _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
+        }
+
         void IDriverControllerContext.ApplyLateralGrip(float lateralGripFactor)
         {
             Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
@@ -281,6 +301,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             var newHorizontalVel = Vector3.MoveTowards(horizontalVel, targetHorizontalVel, lateralGripFactor * (float)TimeManager.TickDelta);
             _currentLinearVelocity = new Vector3(newHorizontalVel.x, _currentLinearVelocity.y, newHorizontalVel.z);
         }
+
         void IDriverControllerContext.ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp)
         {
             _sidecarLocalRotation = Quaternion.RotateTowards(
@@ -289,7 +310,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 steerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
         }
+
         void IDriverControllerContext.AnimateSidecar() => throw new System.NotImplementedException();
+
         void IDriverControllerContext.ChangeState(IDrivingState state, ReplicateData data)
         {
             _currentDrivingState?.Exit(this, data);
@@ -299,13 +322,37 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             else if (state == _normalState) _currentStateType = DrivingStateType.Normal;
             else if (state == _driftingState) _currentStateType = DrivingStateType.Drifting;
             else if (state == _boostState) _currentStateType = DrivingStateType.Boost;
+            else if (state == _grassState) _currentStateType = DrivingStateType.Grass;
             _currentDrivingState?.Enter(this, data);
         }
+        bool IDriverControllerContext.IsOnGrass()
+        {
+            if (Physics.Raycast(_sphere.position, Vector3.down, out RaycastHit hit, 0.6f))
+            {
+                if (hit.collider.CompareTag("Grass"))
+                {
+                    Debug.Log("Colpito l'erba");
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Colpito altro");
+                }
+            }
+            return false;
+
+        }
+
         void IDriverControllerContext.SetMaxSpeed(float maxSpeed) => _currentMaxSpeed = maxSpeed;
+
         void IDriverControllerContext.SetDriftDirection(float driftDirection) => _driftDirection = driftDirection;
+
         float IDriverControllerContext.TickDelta() => (float)TimeManager.TickDelta;
+
         bool IDriverControllerContext.IsOnwer => IsOwner;
+
         bool IDriverControllerContext.IsServer => IsServerInitialized;
+
 
 
         // TODO aggiungere controlli sull'input (forse)

@@ -15,7 +15,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if ( /*(controller.IsOnwer || controller.IsServer) && */ controller.CurrentBatteryCharge < controller.BatteryStats.MaxBatteryCharge)
+            if (controller.IsOnGrass())
+            {
+                controller.ChangeState(controller.GrassState, data);
+                return;
+            }
+            if (controller.CurrentBatteryCharge < controller.BatteryStats.MaxBatteryCharge)
             {
                 controller.BatteryChargeTimer += controller.TickDelta();
                 if (controller.BatteryChargeTimer >= controller.BatteryStats.ChargeBatteryTimeRate)

@@ -16,6 +16,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
+            if (controller.IsOnGrass())
+            {
+                controller.ChangeState(controller.GrassState, data);
+                return;
+            }
             if (controller.IsOnwer || controller.IsServer)
             {
                 controller.BoostTimer += controller.TickDelta();
