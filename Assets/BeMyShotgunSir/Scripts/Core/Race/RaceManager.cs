@@ -27,7 +27,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     }
     public interface IRaceManager_NetController : IManager_NetController
     {
-        void InitRace_Response(int seed, bool isServer = false);
+        void InitRace_Response(int seed, bool isServer = false, Transform driver = null);
     }
     public interface IRaceManager : IManager, IRaceManager_Bootstrapper, IRaceManager_NetController, IRaceManager_LobbyManager { }
 
@@ -46,8 +46,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private RaceCommand _raceCommand;
         private RaceViewModel _viewModel;
         private SOAudioRequestEvent _audioRequestEvent;
-        private RoadManager _roadManager;
         [SerializeField] private SORaceSounds _sounds;
+        private RoadManager _roadManager;
 
         public void BindLobby(IRaceBindTarget[] targets)
         {
@@ -128,8 +128,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _netController.InitRace(_roadManager);
         }
 
-        public void InitRace_Response(int seed, bool isServer = false) =>
-            _roadManager.Init(seed, isServer);
+        public void InitRace_Response(int seed, bool isServer = false, Transform driver = null) =>
+            _roadManager.Init(seed, isServer, driver);
 
 
 

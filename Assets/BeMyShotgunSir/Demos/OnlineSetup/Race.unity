@@ -700,7 +700,7 @@ Transform:
   m_GameObject: {fileID: 669440505}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 697.86, y: -577, z: 2679.8}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 430159.75, y: 430159.75, z: 430159.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1161,7 +1161,6 @@ MonoBehaviour:
   _roadSpawner: {fileID: 378898220}
   _environmentSpawner: {fileID: 659442362}
   _itemSpawner: {fileID: 1897153300}
-  _driver: {fileID: 0}
   _trackPooler: {fileID: 1593424843}
   _despawnBufferDistance: 20
 --- !u!4 &1891839854

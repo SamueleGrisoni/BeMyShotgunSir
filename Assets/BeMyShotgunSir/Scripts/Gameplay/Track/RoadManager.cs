@@ -20,17 +20,22 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private EnvironmentSpawner _environmentSpawner;
         [SerializeField] private ItemSpawner _itemSpawner;
         [Header("Other References")]
-        [SerializeField] private GameObject _driver;
+        private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
-        public void Init(int seed, bool isServer = false)
+        public void Init(int seed, bool isServer = false, Transform driver = null)
         {
+            if (driver == null)
+                return;
+
+            _driver = driver.gameObject;
             _environmentSpawner.Init(seed);
             _trackGenerator.Init(seed);
             Initialize(isServer);
+            StartRace();
         }
 
         private void Initialize(bool isServer = false)

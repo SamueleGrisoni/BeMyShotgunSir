@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
@@ -109,11 +110,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Server]
         public void InitRace(RoadManager roadManager)
         {
-            //DANGER: this gets called before OnClientPresenceChangeStart only if the events gets triggered after the start methods of the objs in the loaded scene. Meaning the bootstrapper has completed the initialization.
+            //MEMO: this gets called before OnClientPresenceChangeStart
 
             _seed = DateTime.Now.Ticks.ToString().GetHashCode();
             // TODO: waiting interfaces from @SamueleGrisoni here
-            _raceManager.InitRace_Response(_seed, true);
             // var playerSpanws = _roadManager.GetStartingPositions();
             InitSyncValues();
         }
@@ -130,7 +130,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 {
                     Log.ELazy(() => "No spawn points assigned to RaceNetController. Spawning player at origin.", this);
                     spawnPoint = new GameObject("DefaultSpawnPoint").transform;
-                    spawnPoint.position = Vector3.zero;
+                    spawnPoint.position = Vector3.zero + Vector3.up * 1f;
                 }
                 else
                 {
@@ -138,19 +138,26 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 }
                 NetworkObject player = Instantiate(_playerPrefab, spawnPoint.position, spawnPoint.rotation);
                 Spawn(player.gameObject, args.Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
-                InitRace_TargetRpc(args.Connection, _seed);
+                InitRace_TargetRpc(args.Connection, _seed, player);
             }
         }
 
 
         [TargetRpc]
-        private void InitRace_TargetRpc(NetworkConnection connection, int seed)
+        private void InitRace_TargetRpc(NetworkConnection connection, int seed, NetworkObject player)
         {
-            //NOTE filter to avoid duplicating logic on the host, for which race server logic is sufficient
-            if (IsHostInitialized)
-                return;
-
-            _raceManager.InitRace_Response(seed);
+            MovingDriver driver = player.GetComponentInChildren<MovingDriver>();
+            if (driver != null)
+            {
+                //NOTE filter to avoid duplicating logic on the host, for which race server logic is sufficient
+                if (IsHostInitialized)
+                    _raceManager.InitRace_Response(_seed, true, driver.transform);
+                else _raceManager.InitRace_Response(seed, false, driver.transform);
+            }
+            else
+            {
+                Log.ELazy(() => $"Player prefab {player.name} is missing a driver component. Cannot initialize race for this player.", this);
+            }
         }
 
         private void InitSyncValues() { }

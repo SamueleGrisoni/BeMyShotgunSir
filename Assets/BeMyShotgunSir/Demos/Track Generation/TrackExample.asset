@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TrackExample
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.SOTrack
   <TrackName>k__BackingField: Test Track
-  <QueueBufferSize>k__BackingField: 20
+  <QueueBufferSize>k__BackingField: 5
   <MaxPoolSize>k__BackingField: 1000
-  <MaxActiveChunks>k__BackingField: 20
+  <MaxActiveChunks>k__BackingField: 5
   <RoadChunks>k__BackingField:
   - {fileID: 467382414403310077, guid: 8228d100643abb14489af8db807c95c4, type: 3}
   - {fileID: 5938494622761989798, guid: 1b15cd8243ff3a54192aaee590f06d42, type: 3}
