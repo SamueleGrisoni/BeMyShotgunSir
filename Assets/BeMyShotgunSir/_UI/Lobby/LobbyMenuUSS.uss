@@ -19,7 +19,7 @@
 
 .title-label {
     white-space: pre-wrap;
-    font-size: 200px;
+    font-size: 150px;
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
     color: rgb(255, 255, 255);
     -unity-text-align: upper-center;
@@ -35,8 +35,6 @@
     align-items: center;
     margin-top: 100px;
 }
-
-
 
 .menu-button {
     width: 80%;
@@ -77,11 +75,78 @@
     -unity-text-align: upper-center;
     -unity-text-generator: advanced;
     -unity-text-auto-size: best-fit 10px 100px;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
 }
 
 .back-button {
     align-self: center;
     position: absolute;
     bottom: 0;
+}
+
+.ready-label {
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    -unity-text-align: upper-center;
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 191, 99);
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    font-size: 80px;
+}
+
+.ready {
+    flex-grow: 0;
+    width: 25%;
+}
+
+.player-name {
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 80px;
+    color: rgb(255, 255, 255);
+    width: 50%;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    padding-left: 20px;
+}
+
+.player-row {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.players-info {
+    flex-grow: 1;
+    width: 60%;
+}
+
+.header-text {
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    color: rgb(255, 255, 255);
+    font-size: 100px;
+}
+
+.player-team {
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 80px;
+    color: rgb(255, 255, 255);
+    width: 10%;
+    -unity-text-align: upper-center;
+}
+
+.player-in-team {
+    background-color: rgba(255, 255, 255, 0.15);
 }

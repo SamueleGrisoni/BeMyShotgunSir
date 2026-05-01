@@ -1,27 +1,67 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <ui:Template name="SelectRole" src="project://database/Assets/BeMyShotgunSir/_UI/Lobby/SelectRole.uxml?fileID=9197481963319205126&amp;guid=cbbb460740f204e80b6f077f32ef1c1d&amp;type=3#SelectRole"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/Lobby/LobbyMenuUSS.uss?fileID=7433441132597879392&amp;guid=11a3e6b0f26aa43f5beb6b974e6fe729&amp;type=3#LobbyMenuUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Lobby/SelectRoleUSS.uss?fileID=7433441132597879392&amp;guid=574b658b47a464b1cb38088905acdaf0&amp;type=3#SelectRoleUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
     <ui:VisualElement name="LobbyRoot" class="lobby-root" style="flex-grow: 1;">
         <ui:VisualElement name="LobbyBackground" class="lobby-background" style="flex-grow: 1; position: absolute;"/>
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:VisualElement name="TitleContainer" class="title-container">
                 <ui:Label text="Host or join&#10;a race:" name="Title" class="title-label"/>
             </ui:VisualElement>
-            <ui:VisualElement name="ButtonContainer" class="button-container">
-                <ui:VisualElement name="LobbyInfoContainer" class="lobby-info-container">
-                    <ui:Label text="LOBBY ADDRESS: localhost:7770" name="LobbyIPAddress" class="lobby-info-label"/>
-                    <ui:Label text="PLAYERS IN LOBBY: 1/4" name="PlayersInLobby" class="lobby-info-label"/>
-                    <ui:Button name="StartRaceButton" class="menu-button start-race-button">
-                        <ui:Label text="START RACE!" class="button-label"/>
-                    </ui:Button>
-                    <ui:Button name="LeaveLobbyButton" class="menu-button leave-lobby-button">
-                        <ui:Label text="LEAVE LOBBY" class="button-label"/>
-                    </ui:Button>
+            <ui:VisualElement name="LobbyInfoContainer" class="lobby-info-container">
+                <ui:Label text="LOBBY ADDRESS: localhost:7770" name="LobbyIPAddress" class="lobby-info-label"/>
+                <ui:Label text="PLAYERS IN LOBBY: 1/4" name="PlayersInLobby" class="lobby-info-label"/>
+                <ui:VisualElement name="PlayersInfo" class="players-info" style="margin-bottom: 50px; display: flex; width: 90%; margin-top: 50px;">
+                    <ui:VisualElement name="PlayersHeader" class="player-row header">
+                        <ui:Label text="NAME" name="Name" class="header-text header-name" style="width: 50%;"/>
+                        <ui:Label text="TEAM" name="Team" class="header-text header-team" style="-unity-text-align: upper-center;"/>
+                        <ui:Label text="READY" name="Ready" class="player-ready-text header-text header-ready" style="width: 25%; -unity-text-align: upper-center;"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Player1" class="player-row">
+                        <ui:Label text="Player 1" name="Name" class="player-name"/>
+                        <ui:Label text="-" name="Team" class="player-team"/>
+                        <ui:VisualElement name="Ready" class="ready">
+                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Player2" class="player-row">
+                        <ui:Label text="Player 2" name="Name" class="player-name"/>
+                        <ui:Label text="-" name="Team" class="player-team"/>
+                        <ui:VisualElement name="Ready" class="ready">
+                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Player3" class="player-row">
+                        <ui:Label text="Player 3" name="Name" class="player-name"/>
+                        <ui:Label text="-" name="Team" class="player-team"/>
+                        <ui:VisualElement name="Ready" class="ready">
+                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Player4" class="player-row">
+                        <ui:Label text="Player 4" name="Name" class="player-name"/>
+                        <ui:Label text="-" name="Team" class="player-team"/>
+                        <ui:VisualElement name="Ready" class="ready">
+                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:Button name="BackButton" class="menu-button back-button">
+            <ui:VisualElement name="ButtonContainer" class="button-container" style="align-items: center; position: absolute; bottom: 300px; top: auto; width: 100%;">
+                <ui:Button name="ReadyButton" class="menu-button ready-button">
+                    <ui:Label text="READY!" class="button-label"/>
+                </ui:Button>
+                <ui:Button name="LeaveLobbyButton" class="menu-button leave-lobby-button">
+                    <ui:Label text="LEAVE LOBBY" class="button-label"/>
+                </ui:Button>
+            </ui:VisualElement>
+            <ui:Button name="BackButton" class="menu-button back-button" style="margin-bottom: 0;">
                 <ui:Label text="BACK TO TITLE" class="button-label"/>
             </ui:Button>
+            <ui:VisualElement name="SelectRoleContainer" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.78); display: none;">
+                <ui:Instance template="SelectRole" name="SelectRole" style="position: absolute; align-self: center; width: 1000px; height: 1000px; bottom: 25%;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
