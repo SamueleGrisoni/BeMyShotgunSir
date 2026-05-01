@@ -11,7 +11,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             {
                 controller.ChangeState(controller.NormalState, data);
             }
-            controller.SetMaxSpeed(controller.Stats.MaxSpeedWithBoost);
+            controller.SetMaxSpeed(controller.BoostStats.MaxSpeed);
             controller.BoostTimer = 0f;
         }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
@@ -19,9 +19,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             if (controller.IsOnwer || controller.IsServer)
             {
                 controller.BoostTimer += controller.TickDelta();
-                if (controller.BoostTimer >= controller.Stats.ConsumeBatteryTimeRate)
+                if (controller.BoostTimer >= controller.BatteryStats.ConsumeBatteryTimeRate)
                 {
-                    controller.CurrentBatteryCharge -= controller.Stats.ConsumeBatteryAmountRate;
+                    controller.CurrentBatteryCharge -= controller.BatteryStats.ConsumeBatteryAmountRate;
                     controller.BoostTimer = 0;
                 }
 
@@ -32,7 +32,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                     return;
                 }
             }
-            if (data.IsDrifting)
+            if (data.IsDrifting && data.SteerInput != 0)
             {
                 controller.ChangeState(controller.DriftingState, data);
             }
@@ -40,10 +40,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.SidecarForward);
-            controller.ApplySteering(data.SteerInput);
-            controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.Stats.SteerAngularRotation, 0));
-            controller.ApplyLateralGrip();
+            controller.ApplyAcceleration(controller.SidecarForward, controller.BoostStats.AccelerationForce);
+            controller.ApplySteering(data.SteerInput, controller.BoostStats.SteeringForce);
+            controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.BoostStats.SteerAngularRotation, 0), controller.BoostStats.SteerAngularRotationSlerp);
+            controller.ApplyLateralGrip(controller.BoostStats.LateralGripFactor);
         }
         public void Exit(IDriverControllerContext controller, ReplicateData data)
         {

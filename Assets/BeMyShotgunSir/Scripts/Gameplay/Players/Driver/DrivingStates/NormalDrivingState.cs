@@ -4,10 +4,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data) => controller.SetMaxSpeed(controller.Stats.MaxSpeed);
+        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        {
+            controller.SetMaxSpeed(controller.NormalStats.MaxSpeed);
+        }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if (data.IsDrifting)
+            if (data.IsDrifting && data.SteerInput != 0)
             {
                 controller.ChangeState(controller.DriftingState, data);
                 return;
@@ -20,11 +23,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.SidecarForward);
-            controller.ApplySteering(data.SteerInput);
-            controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.Stats.SteerAngularRotation, 0));
-            controller.ApplyLateralGrip();
+            controller.ApplyAcceleration(controller.SidecarForward, controller.NormalStats.AccelerationForce);
+            controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
+            controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
+            controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data) { }
+        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        {
+        }
     }
 }
