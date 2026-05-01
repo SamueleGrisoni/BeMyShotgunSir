@@ -10,6 +10,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
+            if (controller.IsOnGrass())
+            {
+                controller.ChangeState(controller.GrassState, data);
+                return;
+            }
             if (data.IsDrifting && data.SteerInput != 0)
             {
                 controller.ChangeState(controller.DriftingState, data);
@@ -27,6 +32,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
+            controller.ApplyGravity(controller.NormalStats.Gravity);
         }
         public void Exit(IDriverControllerContext controller, ReplicateData data)
         {
