@@ -401,6 +401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.LobbyViewController
   _uiControllerLobby: {fileID: 301446557}
   _lobbyDocument: {fileID: 1701470601}
+  ShowSelectRole: 0
 --- !u!114 &1701470601
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,22 +13,34 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private UIController_Lobby _uiControllerLobby;
         [SerializeField] private UIDocument _lobbyDocument;
 
-        public override void OnBindComplete()
+        #region Bindings
+        // INITIAL BINDING
+        private LobbyCommand _command;
+        private LobbyViewModel _viewModel;
+        /// FINAL BINDING
+        #endregion
+
+        public override void OnInitialBindComplete()
         {
-            if (_command == null)
+            if (_initialBindSource == null)
             {
-                Debug.LogError("LobbyCommand not bound to LobbyViewController!");
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
                 return;
             }
-            if (_viewModel == null)
-            {
-                Debug.LogError("LobbyDataView not bound to LobbyViewController!");
-                return;
-            }
+            _command = _initialBindSource.Command;
+            _viewModel = _initialBindSource.ViewModel;
 
             _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
             _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
             _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
+        }
+        public override void OnFinalBindComplete()
+        {
+            if (_finalBindSource == null)
+            {
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                return;
+            }
         }
 
 
@@ -293,5 +306,6 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+
     }
 }

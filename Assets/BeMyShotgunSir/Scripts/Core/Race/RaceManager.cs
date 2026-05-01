@@ -33,10 +33,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
 
     [RequireComponent(typeof(RaceNetController))]
-    public class RaceManager : NetworkBehaviour, IEventSender, IRaceManager
+    public class RaceManager : NetworkBehaviour, IEventSender, IRaceManager, IRaceBindSources
     {
         private bool _log = true;
         public string SenderName => name;
+
+
         public static event Action<IRaceManager> OnRaceManagerStarted;
         public static event Action<IRaceManager> OnRaceManagerReady;
         public static event Action OnRaceManagerDespawned;
@@ -44,7 +46,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRaceNetController_Manager _netController;
         private RaceBinder _binder;
         private RaceCommand _raceCommand;
+        RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         private RaceViewModel _viewModel;
+        RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
         private SOAudioRequestEvent _audioRequestEvent;
         [SerializeField] private SORaceSounds _sounds;
         private RoadManager _roadManager;
@@ -66,7 +70,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => "No RaceViewModel found. Cannot bind race data.", this);
                 return;
             }
-            _binder.Bind(targets);
+            _binder.ExecuteInitialBind(targets);
             _raceCommand.GetInitSnapshot_Request();
         }
 
@@ -104,7 +108,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _netController = netController_NetController;
             if (netController is IRaceNetController_Command netController_Command)
                 _raceCommand = new RaceCommand(netController_Command);
-            _binder = new RaceBinder(_raceCommand, _viewModel);
+            _binder = new RaceBinder(this, this);
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
 
             _isReady = true;

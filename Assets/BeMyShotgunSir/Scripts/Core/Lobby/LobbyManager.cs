@@ -34,10 +34,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     #endregion
 
     [RequireComponent(typeof(LobbyNetController))]
-    public class LobbyManager : NetworkBehaviour, ILobbyManager, IEventSender
+    public class LobbyManager : NetworkBehaviour, ILobbyManager, ILobbyBindSources, IEventSender
     {
         private bool _log = true;
         string IEventSender.SenderName => name;
+
+
         /// <summary>
         /// Raised when a LobbyManager is spawned, regardless of whether it's ready to be used.
         /// </summary>
@@ -52,13 +54,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public static event Action OnLobbyManagerDespawned;
         private bool _isReady = false;
         private LobbyBinder _binder;
+        private ILobbyBindTarget[] _bindTargets;
         private LobbyCommand _lobbyCommand;
+        LobbyCommand ILobbyInitialBindSource.Command => _lobbyCommand;
         private LobbyViewModel _viewModel;
+        LobbyViewModel ILobbyInitialBindSource.ViewModel => _viewModel;
         [SerializeField] private SOLobbySounds _sounds;
         private SOAudioRequestEvent _audioRequestEvent;
 
         public void BindLobby(ILobbyBindTarget[] targets)
         {
+            _bindTargets = targets;
             if (_binder == null)
             {
                 Log.ELazy(() => "No LobbyBinder found. Cannot bind lobby commands.", this);
@@ -75,7 +81,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
             }
 
-            _binder.Bind(targets);
+            _binder.ExecuteInitialBind(targets);
             _lobbyCommand.GetInitSnapshot_Request();
         }
 
@@ -106,7 +112,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             if (netController is ILobbyNetController_Command netController_Command)
                 _lobbyCommand = new LobbyCommand(netController_Command);
-            _binder = new LobbyBinder(_lobbyCommand, _viewModel);
+            _binder = new LobbyBinder(this, this);
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
             _viewModel.InitData();
 
