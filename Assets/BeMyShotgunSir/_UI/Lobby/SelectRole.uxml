@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Lobby/SelectRoleUSS.uss?fileID=7433441132597879392&amp;guid=574b658b47a464b1cb38088905acdaf0&amp;type=3#SelectRoleUSS"/>
+    <ui:VisualElement name="ContentArea" class="content-area">
+        <ui:Label text="Pick your preference, sir!" name="Title" style="-unity-font-definition: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&amp;guid=7ef7c4949f3504cc4810fcd3922630c5&amp;type=3#Edo_new&quot;); font-size: 100px; -unity-text-align: upper-center; white-space: normal; width: 90%; align-self: center; color: rgb(255, 255, 255); margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px;"/>
+        <ui:VisualElement name="CentralContainer" style="flex-grow: 1; flex-direction: row; width: 90%;">
+            <ui:VisualElement name="Driver" style="flex-grow: 1;">
+                <ui:VisualElement name="DriverIcon" class="driver-icon icon"/>
+                <ui:Button text="Driver" name="DriverButton" class="button"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="DivBarIcon" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/SelectRole_DivBar.png?fileID=2800000&amp;guid=f77db2a6a7de74893a0588eb50fce952&amp;type=3#SelectRole_DivBar&quot;); -unity-background-scale-mode: scale-to-fit; width: 100px; height: 700px;"/>
+            <ui:VisualElement name="Shotgun" style="flex-grow: 1;">
+                <ui:VisualElement name="ShotgunIcon" class="shotgun-icon icon"/>
+                <ui:Button text="Shotgun" name="ShotgunButton" class="button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ButtonContainer" style="flex-grow: 1;"/>
+    </ui:VisualElement>
+</ui:UXML>

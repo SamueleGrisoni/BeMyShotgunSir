@@ -1,0 +1,56 @@
+:root {
+}
+
+.driver-icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/SelectRole_Driver.png?fileID=2800000&guid=e1f1793bcc6fc414097dc03a4cc901a9&type=3#SelectRole_Driver");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+    margin-left: 50px;
+}
+
+.shotgun-icon {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/SelectRole_Shotgun.png?fileID=2800000&guid=9a71f1891cf49495687122cb01e3d03d&type=3#SelectRole_Shotgun");
+}
+
+.button {
+    -unity-text-auto-size: best-fit 10px 80px;
+    -unity-text-generator: advanced;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    color: rgb(255, 255, 255);
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    width: 340px;
+    height: 150px;
+}
+
+.content-area {
+    flex-grow: 1;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    padding-bottom: 50px;
+}
