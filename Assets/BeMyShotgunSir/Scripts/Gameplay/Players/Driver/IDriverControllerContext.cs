@@ -6,7 +6,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     {
         Vector3 ParentForward { get; }
         Vector3 SidecarForward { get; }
-        SOSidecarStats Stats { get; }
+        SOSidecarStats NormalStats { get; }
+        SOSidecarStats BoostStats { get; }
+        SOBatteryStats BatteryStats { get; }
         IDrivingState IdleState { get; }
         IDrivingState NormalState { get; }
         IDrivingState DriftingState { get; }
@@ -25,11 +27,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void ChangeState(IDrivingState state, ReplicateData data);
         void SetMaxSpeed(float maxSpeed); // TODO spostare in CUrrentMaxSpeed 
         void SetDriftDirection(float driftDirection);
-        void ApplyAcceleration(Vector3 direction);
+        void ApplyAcceleration(Vector3 direction, float accelerationForce);
         void ApplyGravity(float gravity);
-        void ApplySteering(float steerAmount);
-        void ApplyVisualRotation(Quaternion targetRot);
-        void ApplyLateralGrip();
+        void ApplySteering(float steerAmount, float steeringForce);
+        void ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp);
+        void ApplyLateralGrip(float lateralGripFactor);
         void AnimateSidecar();
         float TickDelta();
         bool IsOnwer { get; }

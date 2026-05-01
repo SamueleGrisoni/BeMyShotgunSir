@@ -1,10 +1,8 @@
-using System;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using GameKit.Dependencies.Utilities;
-using UnityEditor.Rendering.PostProcessing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -82,7 +80,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     }
     public class DriverController : NetworkBehaviour, IDriverControllerContext
     {
-        [SerializeField] private SOSidecarStats _stats;
+        [SerializeField] private SOSidecarStats _sidecarStatsNormal;
+        [SerializeField] private SOSidecarStats _sidecarStatsBoost;
+        [SerializeField] private SOBatteryStats _batteryStats;
         [SerializeField] private Rigidbody _sphere;
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
@@ -97,6 +97,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _normalState = new NormalDrivingState();
         private IDrivingState _driftingState = new DriftingDrivingState();
         private IDrivingState _boostState = new BoostDrivingState();
+        private IDrivingState _bumpedState = new BumpDrivingState();
         private float _currentMaxSpeed;
         private float _steerInput;
         private bool _isDrifting;
@@ -107,11 +108,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private float _driftDirection;
         private bool _isStarting;
 
-        private ReplicateData _lastValidData;
-
         Vector3 IDriverControllerContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDriverControllerContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-        SOSidecarStats IDriverControllerContext.Stats => _stats;
+        SOSidecarStats IDriverControllerContext.NormalStats => _sidecarStatsNormal;
+
+        SOSidecarStats IDriverControllerContext.BoostStats => _sidecarStatsBoost;
+
+        SOBatteryStats IDriverControllerContext.BatteryStats => _batteryStats;
         IDrivingState IDriverControllerContext.IdleState => _idleState;
         IDrivingState IDriverControllerContext.NormalState => _normalState;
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
@@ -158,7 +161,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
             _predictionRigidbody.Initialize(_sphere);
-            _currentMaxSpeed = _stats.MaxSpeed;
+            _currentMaxSpeed = _sidecarStatsNormal.MaxSpeed;
             _parentRotation = _parent.rotation;
             _sidecarLocalRotation = _sidecar.localRotation;
             _currentDrivingState = _idleState;
@@ -245,16 +248,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parent.position = _sphere.transform.position;
             _parent.rotation = _parentRotation;
             _sidecar.localRotation = _sidecarLocalRotation;
+
+            _sphere.transform.forward = _sidecar.forward;
+            Debug.Log($"Current battery level: {_currentBatteryCharge}");
         }
-        void IDriverControllerContext.ApplySteering(float steerAmount)
+        void IDriverControllerContext.ApplySteering(float steerAmount, float steeringForce)
         {
-            float steerAngle = steerAmount * _stats.SteeringForce * (float)TimeManager.TickDelta;
+            float steerAngle = steerAmount * steeringForce * (float)TimeManager.TickDelta;
             var steerRotation = Quaternion.AngleAxis(steerAngle, _parent.up);
             _parentRotation *= steerRotation;
         }
-        void IDriverControllerContext.ApplyAcceleration(Vector3 direction)
+        void IDriverControllerContext.ApplyAcceleration(Vector3 direction, float accelerationForce)
         {
-            Vector3 predictedVelocity = _predictionRigidbody.Rigidbody.linearVelocity + direction * (_stats.AccelerationForce * (float)TimeManager.TickDelta);
+            Vector3 predictedVelocity = _predictionRigidbody.Rigidbody.linearVelocity + direction * (accelerationForce * (float)TimeManager.TickDelta);
             Vector3 horrizontalLinearVelocity = new(predictedVelocity.x, 0, predictedVelocity.z);
             if (horrizontalLinearVelocity.magnitude > _currentMaxSpeed)
             {
@@ -265,22 +271,22 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         // TODO implementare gravità
         void IDriverControllerContext.ApplyGravity(float gravity) => _predictionRigidbody.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
-        void IDriverControllerContext.ApplyLateralGrip()
+        void IDriverControllerContext.ApplyLateralGrip(float lateralGripFactor)
         {
             Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
             Vector3 flatForwardDir = new Vector3(forwardDir.x, 0, forwardDir.z).normalized;
 
             Vector3 horizontalVel = new(_currentLinearVelocity.x, 0, _currentLinearVelocity.z);
             Vector3 targetHorizontalVel = flatForwardDir * horizontalVel.magnitude;
-            var newHorizontalVel = Vector3.MoveTowards(horizontalVel, targetHorizontalVel, _stats.LateralGripFactor * (float)TimeManager.TickDelta);
+            var newHorizontalVel = Vector3.MoveTowards(horizontalVel, targetHorizontalVel, lateralGripFactor * (float)TimeManager.TickDelta);
             _currentLinearVelocity = new Vector3(newHorizontalVel.x, _currentLinearVelocity.y, newHorizontalVel.z);
         }
-        void IDriverControllerContext.ApplyVisualRotation(Quaternion targetRot)
+        void IDriverControllerContext.ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp)
         {
             _sidecarLocalRotation = Quaternion.RotateTowards(
                 _sidecarLocalRotation,
                 targetRot,
-                _stats.SteerAngularRotationSlerp * (float)TimeManager.TickDelta
+                steerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
         }
         void IDriverControllerContext.AnimateSidecar() => throw new System.NotImplementedException();
@@ -300,6 +306,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         float IDriverControllerContext.TickDelta() => (float)TimeManager.TickDelta;
         bool IDriverControllerContext.IsOnwer => IsOwner;
         bool IDriverControllerContext.IsServer => IsServerInitialized;
+
 
         // TODO aggiungere controlli sull'input (forse)
         private void OnSteer(InputValue value) => _steerInput = value.Get<float>();
