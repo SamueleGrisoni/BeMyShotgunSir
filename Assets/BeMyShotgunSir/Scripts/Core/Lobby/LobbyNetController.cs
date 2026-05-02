@@ -192,7 +192,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void InitSyncValues()
         {
             _playerCount.Value = 0;
-            string lobbyIP = GameServices.Instance.NetworkManager.TransportManager.Transport.GetClientAddress() + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort();
+            string lobbyIP = GameServices.Instance.NetworkManager.TransportManager.Transport.GetServerBindAddress(IPAddressType.IPv4) + ":" + GameServices.Instance.NetworkManager.TransportManager.Transport.GetPort();
             _lobbyInfo.Value = new LobbyInfo(lobbyIP);
             _playerStates.Collection.Clear();
         }

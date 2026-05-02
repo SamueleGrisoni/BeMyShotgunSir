@@ -1,3 +1,4 @@
+using System;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Managing.Client;
 using FishNet.Managing.Server;
@@ -76,15 +77,49 @@ namespace BeMyShotgunSir.Scripts.Core
             _isInitialized = true;
         }
 
-        public void StartHost()
+        private string GetIp(string ipAddress)
+        {
+            if (string.IsNullOrEmpty(ipAddress) || string.Equals(ipAddress, "localhost", StringComparison.OrdinalIgnoreCase))
+                return "127.0.0.1";
+            else if (ipAddress.Split(':').Length > 1) //Handles case where user inputs "ip:port"
+                return ipAddress.Split(':')[0];
+            else
+                return ipAddress;
+        }
+
+        private ushort GetPort(string ipAddress)
+        {
+            if (string.IsNullOrEmpty(ipAddress) || string.Equals(ipAddress, "localhost", StringComparison.OrdinalIgnoreCase))
+                return 7777;
+            else if (ipAddress.Split(':').Length > 1) //Handles case where user inputs "ip:port"
+            {
+                if (ushort.TryParse(ipAddress.Split(':')[1], out ushort port))
+                    return port;
+                else
+                {
+                    Log.WLazy(() => $"Failed to parse port from IP address input '{ipAddress}', defaulting to 7777.", this);
+                    return 7777;
+                }
+            }
+            else
+                return 7777;
+        }
+
+        public void StartHost(string ipAddress)
         {
             if (!_isInitialized)
                 Initialize();
 
-            Log.DLazy(() => "Starting host session.", this, _log);
             _isHostSession = true;
             _connectionFlowState = ConnectionFlowState.Hosting;
 
+            string ip = GetIp(ipAddress);
+            ushort portValue = GetPort(ipAddress);
+            Log.DLazy(() => $"Setting server bind address to {ip} on port {portValue}", this, _log);
+            GameServices.Instance.NetworkManager.TransportManager.Transport.SetServerBindAddress(ip, IPAddressType.IPv4);
+            GameServices.Instance.NetworkManager.TransportManager.Transport.SetPort(portValue);
+
+            Log.DLazy(() => "Starting host session.", this, _log);
             _serverManager.StartConnection();
             _clientManager.StartConnection();
         }
@@ -97,11 +132,12 @@ namespace BeMyShotgunSir.Scripts.Core
             _isHostSession = false;
             _connectionFlowState = ConnectionFlowState.Joining;
 
-            if (string.Equals(ipAddress, "localhost", System.StringComparison.OrdinalIgnoreCase))
-                ipAddress = "127.0.0.1";
-            GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ipAddress);
+            string ip = GetIp(ipAddress);
+            ushort portValue = GetPort(ipAddress);
+            Log.DLazy(() => $"Setting client address to {ip}.", this, _log);
+            GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ip);
 
-            Log.DLazy(() => $"Starting join session to {ipAddress}.", this, _log);
+            Log.DLazy(() => $"Starting join session to {ip}.", this, _log);
             _clientManager.StartConnection();
         }
 
@@ -122,11 +158,6 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void HandleInit()
         {
-            if (_currentAppFlow == AppFlowState.Init)
-                return;
-
-            Log.DLazy(() => "Init State", this, _log);
-            _currentAppFlow = AppFlowState.Init;
 
             if (_spawnedLobbyManagerInstance != null)
             {
@@ -134,8 +165,17 @@ namespace BeMyShotgunSir.Scripts.Core
                 _spawnedLobbyManagerInstance = null;
             }
 
-            _serverManager.StopConnection(true);
+            Log.DLazy(() => "Stopping all connections", this, _log);
+
             _clientManager.StopConnection();
+            _serverManager.StopConnection(true);
+
+            if (_currentAppFlow == AppFlowState.Init)
+                return;
+
+            Log.DLazy(() => "Init State", this, _log);
+            _currentAppFlow = AppFlowState.Init;
+
             GameServices.Instance.SceneCoordinator.LoadInitScene();
         }
 
@@ -156,7 +196,6 @@ namespace BeMyShotgunSir.Scripts.Core
                 NetworkObject instance = Instantiate(_lobbyManagerPrefab);
                 instance.gameObject.name = instance.gameObject.name.Replace("(Clone)", " Server");
                 _serverManager.Spawn(instance);
-                _spawnedLobbyManagerInstance = instance;
             }
         }
 

@@ -48,7 +48,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _joinIPAddress.value = "localhost";
         }
 
-        private void HostButtonHandler() => GameServices.Instance.ConnectionManager.StartHost();
+        private void HostButtonHandler() => GameServices.Instance.ConnectionManager.StartHost(_joinIPAddress.value);
 
         private void JoinButtonHandler() => GameServices.Instance.ConnectionManager.StartJoin(_joinIPAddress.value);
 
