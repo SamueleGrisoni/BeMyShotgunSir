@@ -132,8 +132,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _netController.InitRace(_roadManager);
         }
 
-        public void InitRace_Response(int seed, bool isServer = false, Transform driver = null) =>
+        public void InitRace_Response(int seed, bool isServer = false, Transform driver = null)
+        {
+            //MEMO: here must occur the final initialization of the race scene passing all the data
             _roadManager.Init(seed, isServer, driver);
+        }
 
 
 

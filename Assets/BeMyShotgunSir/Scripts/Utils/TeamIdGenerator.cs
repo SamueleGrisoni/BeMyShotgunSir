@@ -4,7 +4,7 @@ namespace BeMyShotgunSir.Scripts.Utils
 {
     public static class TeamIdGenerator
     {
-        public static long GetTeamKey(int id1, int id2)
+        public static long GetTeamIdBP(int id1, int id2)
         {
             uint min = (uint)Math.Min(id1, id2);
             uint max = (uint)Math.Max(id1, id2);
@@ -12,7 +12,9 @@ namespace BeMyShotgunSir.Scripts.Utils
             return ((long)min << 32) | max;
         }
 
-        public static (int id1, int id2) DeconstructTeamKey(long key)
+        public static int GetTeamId(int id1, int id2) => id1;
+
+        public static (int id1, int id2) DeconstructTeamIdBP(long key)
         {
             int id1 = (int)(key >> 32);
             int id2 = (int)(key & 0xFFFFFFFF);
