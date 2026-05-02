@@ -4,7 +4,7 @@
     <ui:Template name="PowerUpBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/PowerUpBar.uxml?fileID=9197481963319205126&amp;guid=55955954431934b96911c85a2d75db28&amp;type=3#PowerUpBar"/>
     <ui:Template name="ShoutBox" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/ShoutBox.uxml?fileID=9197481963319205126&amp;guid=5a38ca79b21ce41c899ef938d131f959&amp;type=3#ShoutBox"/>
     <ui:Template name="TopBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBar.uxml?fileID=9197481963319205126&amp;guid=2844772360ef641b18534d407b497b36&amp;type=3#TopBar"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/HudUSS.uss?fileID=7433441132597879392&amp;guid=ad7ed1cd4669f4ae99603cc9d091a54e&amp;type=3#HudUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/HudDriverUSS.uss?fileID=7433441132597879392&amp;guid=ad7ed1cd4669f4ae99603cc9d091a54e&amp;type=3#HudDriverUSS"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/EarlyCommitmentUSS.uss?fileID=7433441132597879392&amp;guid=93b4c11e626ad40ccb585301c5324615&amp;type=3#EarlyCommitmentUSS"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBarUSS.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBarUSS"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
@@ -12,15 +12,15 @@
     <ui:VisualElement name="Root" style="width: 100%; height: 100%;">
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:Instance template="TopBar" name="TopBar"/>
-            <ui:VisualElement name="PowerUpBarContainer" style="height: 160px; align-self: center; margin-top: 50px; width: 80%;">
-                <ui:Instance template="PowerUpBar" name="PowerUpBar" style="flex-grow: 1;"/>
+            <ui:VisualElement name="PowerUpBarContainer" class="power-up-bar-container">
+                <ui:Instance template="PowerUpBar" name="PowerUpBar" class="power-up-bar"/>
             </ui:VisualElement>
-            <ui:Instance template="ShoutBox" name="ShoutBox" style="width: 400px; height: 400px; align-self: center;"/>
-            <ui:VisualElement name="BottomBarContainer" style="flex-grow: 1; position: absolute; width: 100%; height: 1200px; bottom: 0;">
-                <ui:Instance template="BottomBar" name="BottomBar" class="mobile-portrait" style="bottom: 0%; flex-grow: 1;"/>
+            <ui:Instance template="ShoutBox" name="ShoutBox" class="shout-box"/>
+            <ui:VisualElement name="BottomBarContainer" class="bottom-bar-container">
+                <ui:Instance template="BottomBar" name="BottomBar" class="mobile-portrait bottom-bar"/>
             </ui:VisualElement>
-            <ui:VisualElement name="EarlyCommitmentContainer" style="flex-grow: 1; position: absolute; width: 100%; bottom: 650px;">
-                <ui:Instance template="EarlyCommitment" name="EarlyCommitment" class="mobile-landscape" style="bottom: 0; height: 500px;"/>
+            <ui:VisualElement name="EarlyCommitmentContainer" class="early-commitment-container">
+                <ui:Instance template="EarlyCommitment" name="EarlyCommitment" class="mobile-landscape early-commitment"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
