@@ -12,7 +12,6 @@ namespace BeMyShotgunSir.Scripts.UI
         #region Visual Elements
         private VisualElement _root;
         private VisualElement _bottomBar;
-
         private VisualElement _steerControl;
         private VisualElement _steerJoystick;
 
@@ -47,6 +46,7 @@ namespace BeMyShotgunSir.Scripts.UI
         #region Public Properties
         public float SteerValue { get; private set; }  // -1 → +1
         public float DriftValue { get; private set; }  // -1 → +1
+        public bool IsDrifting { get; private set; }
         public float BoostValue { get; private set; }  // 0 → 1 (or more if overboost)
         #endregion
 
@@ -134,6 +134,8 @@ namespace BeMyShotgunSir.Scripts.UI
             ShowDriftGhost(e.localPosition);
             DriftValue = 0f;
             e.StopPropagation();
+
+            IsDrifting = true;
         }
 
         private void DriftMoveHandler(PointerMoveEvent e)
@@ -149,8 +151,16 @@ namespace BeMyShotgunSir.Scripts.UI
 
             e.StopPropagation();
         }
-        private void DriftUpHandler(PointerUpEvent e) => ResetDrift(e.pointerId);
-        private void DriftCancelHandler(PointerCancelEvent e) => ResetDrift(e.pointerId);
+        private void DriftUpHandler(PointerUpEvent e)
+        {
+            IsDrifting = false;
+            ResetDrift(e.pointerId);
+        }
+        private void DriftCancelHandler(PointerCancelEvent e)
+        {
+            IsDrifting = false;
+            ResetDrift(e.pointerId);
+        }
         private void SteerDownHandler(PointerDownEvent e)
         {
             // Debug.Log($"[Steer] PointerDown — pointerId={e.pointerId} pos={e.position}");
@@ -180,16 +190,19 @@ namespace BeMyShotgunSir.Scripts.UI
         private void BoostDownHandler(PointerDownEvent e)
         {
             Debug.Log("[Boost] Pressed");
+            // TODO: Boost command
         }
 
         private void ThumbDownDownHandler(PointerDownEvent e)
         {
             Debug.Log("[Feedback] Thumbs Down");
+            // TODO: Feedback command
         }
 
         private void ThumbUpDownHandler(PointerDownEvent e)
         {
             Debug.Log("[Feedback] Thumbs Up");
+            // TODO: Feedback command
         }
 
         #endregion
