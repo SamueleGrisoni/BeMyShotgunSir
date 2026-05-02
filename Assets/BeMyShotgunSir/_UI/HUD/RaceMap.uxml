@@ -1,0 +1,19 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/RaceMapUSS.uss?fileID=7433441132597879392&amp;guid=d22199f50fb33496faa57a62fc268c35&amp;type=3#RaceMapUSS"/>
+    <ui:VisualElement name="UIRoot" class="uiroot" style="flex-grow: 1;">
+        <ui:VisualElement name="ContentArea" class="content-area" style="height: 100%; justify-content: center;">
+            <ui:VisualElement name="MapBase" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_Map.png?fileID=2800000&amp;guid=07a897c43306d4133987c4a16a884167&amp;type=3#HUD_Shotgun_Map&quot;);"/>
+            <ui:VisualElement name="MapDiv" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_MapDiv.png?fileID=2800000&amp;guid=51f7e41d0956149d094601af72578b12&amp;type=3#HUD_Shotgun_MapDiv&quot;); -unity-background-scale-mode: scale-to-fit; height: 95%; position: absolute; align-self: center; width: 40px;"/>
+            <ui:VisualElement name="PowerUpArea" style="height: 350px; position: absolute; width: 90%; align-self: center; flex-direction: row; justify-content: space-between; top: 154px;">
+                <ui:VisualElement name="LeftColumn" class="power-up-column">
+                    <ui:VisualElement name="LeftPowerUp1" class="power-up-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Armor.png?fileID=2800000&amp;guid=8b0a2e8130b6a4a15bfb4c4e4cb71000&amp;type=3#PowerUp_Armor&quot;);"/>
+                    <ui:VisualElement name="LeftPowerUp2" class="power-up-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Lasso.png?fileID=2800000&amp;guid=7793ab32979194a4aab956451f016286&amp;type=3#PowerUp_Lasso&quot;);"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="RightColumn" class="power-up-column">
+                    <ui:VisualElement name="RightPowerUp1" class="power-up-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_RoadBlock.png?fileID=2800000&amp;guid=480c96efec2a4463d849fa83eb0c8bee&amp;type=3#PowerUp_RoadBlock&quot;);"/>
+                    <ui:VisualElement name="RightPowerUp2" class="power-up-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Shield.png?fileID=2800000&amp;guid=7ef0aac922f9b4d28aed5c01ad4f163b&amp;type=3#PowerUp_Shield&quot;);"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

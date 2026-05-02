@@ -1,0 +1,12 @@
+:root {
+}
+
+.power-up-icon {
+    width: 155px;
+    aspect-ratio: 1;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.power-up-column {
+    justify-content: space-between;
+}

@@ -1,0 +1,19 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/InfoBarUSS.uss?fileID=7433441132597879392&amp;guid=b789bbd2d14744bb4a9c2c400bc857ba&amp;type=3#InfoBarUSS"/>
+    <ui:VisualElement name="ContentArea" style="flex-grow: 0; justify-content: center; height: 100%; width: 100%;">
+        <ui:VisualElement name="BoostControl" class="boost-control">
+            <ui:VisualElement name="BoostContainer" class="boost-container">
+                <ui:VisualElement name="BoostBar" class="boost-bar"/>
+                <ui:VisualElement name="OverboostBar" class="overboost-bar"/>
+                <ui:VisualElement name="BoostButton" class="boost-button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="EarlyCommitmentDirection" style="align-self: center;">
+            <ui:VisualElement name="Arrow" class="choice-arrow">
+                <ui:VisualElement name="CommitBarMask" class="commit-bar-mask">
+                    <ui:VisualElement name="CommitBar" class="commit-bar gauge-bar-left"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

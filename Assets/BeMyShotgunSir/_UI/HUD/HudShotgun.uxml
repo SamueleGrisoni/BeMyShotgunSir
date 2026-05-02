@@ -1,18 +1,27 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="BottomBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/BottomBar.uxml?fileID=9197481963319205126&amp;guid=da15384d80eba4927a3ed1800fa07c89&amp;type=3#BottomBar"/>
-    <ui:Template name="DialogWheel" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/DialogWheel.uxml?fileID=9197481963319205126&amp;guid=b50a53239844848d6bfc2fd90788999a&amp;type=3#DialogWheel"/>
+    <ui:Template name="InfoBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/InfoBar.uxml?fileID=9197481963319205126&amp;guid=6a1fd2b10bf8b4296a846439ea80948a&amp;type=3#InfoBar"/>
+    <ui:Template name="PowerUpBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/PowerUpBar.uxml?fileID=9197481963319205126&amp;guid=55955954431934b96911c85a2d75db28&amp;type=3#PowerUpBar"/>
+    <ui:Template name="ShoutWheel" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/ShoutWheel.uxml?fileID=9197481963319205126&amp;guid=b50a53239844848d6bfc2fd90788999a&amp;type=3#ShoutWheel"/>
     <ui:Template name="TopBar" src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBar.uxml?fileID=9197481963319205126&amp;guid=2844772360ef641b18534d407b497b36&amp;type=3#TopBar"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/HUD.uss?fileID=7433441132597879392&amp;guid=ad7ed1cd4669f4ae99603cc9d091a54e&amp;type=3#HUD"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBar.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBar"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeArea.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeArea"/>
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/BottomBar.uss?fileID=7433441132597879392&amp;guid=ba1dfd0e60ae446c4a8e467c30a92ca0&amp;type=3#BottomBar"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/HudShotgunUSS.uss?fileID=7433441132597879392&amp;guid=55a42b97918524c859bab4b209e01951&amp;type=3#HudShotgunUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBarUSS.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBarUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/InfoBarUSS.uss?fileID=7433441132597879392&amp;guid=b789bbd2d14744bb4a9c2c400bc857ba&amp;type=3#InfoBarUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/ShoutWheelUSS.uss?fileID=7433441132597879392&amp;guid=6eb86571c6b1e468f9377272b5921a56&amp;type=3#ShoutWheelUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
     <ui:VisualElement name="Root" style="width: 100%; height: 100%;">
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:Instance template="TopBar" name="TopBar"/>
-            <ui:VisualElement name="MainContent" style="flex-grow: 1;">
-                <!-- <ui:Instance template="DialogWheel" name="DialogWheel"/> -->
+            <ui:Instance template="InfoBar" name="InfoBar" class="info-bar"/>
+            <ui:VisualElement name="ShoutWheelContainer" style="width: 1100px; height: 1400px; align-self: center; position: absolute; top: 400px; display: flex;">
+                <ui:Instance template="ShoutWheel" name="ShoutWheel" style="flex-grow: 1;"/>
             </ui:VisualElement>
-            <ui:Instance template="BottomBar" name="BottomBar" class="mobile-portrait"/>
+            <ui:VisualElement name="ButtonContainer" class="button-container">
+                <ui:Button name="ShoutWheelButton" class="shotgun-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_ShoutWheelButton.png?fileID=2800000&amp;guid=f39a05480cd29405290870ff935e875a&amp;type=3#HUD_Shotgun_ShoutWheelButton&quot;);"/>
+                <ui:Button name="MapButton" class="shotgun-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_MapButton.png?fileID=2800000&amp;guid=049ba58e775934b7491fcb63bc2fc82e&amp;type=3#HUD_Shotgun_MapButton&quot;);"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="PowerUpBarContainer" class="power-up-bar-container">
+                <ui:Instance template="PowerUpBar" name="PowerUpBar" class="power-up-bar"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

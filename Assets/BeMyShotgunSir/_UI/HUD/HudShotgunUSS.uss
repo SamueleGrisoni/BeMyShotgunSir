@@ -1,0 +1,71 @@
+:root {
+}
+
+.power-up-bar-container {
+    height: 200px;
+    align-self: center;
+    margin-top: 50px;
+    width: 90%;
+    position: absolute;
+    bottom: 0;
+}
+
+.power-up-bar {
+    flex-grow: 1;
+}
+
+.shout-box {
+    width: 400px;
+    height: 400px;
+    align-self: center;
+}
+
+.bottom-bar-container {
+    flex-grow: 1;
+    position: absolute;
+    width: 100%;
+    height: 1200px;
+    bottom: 0;
+}
+
+.bottom-bar {
+    bottom: 0%;
+    flex-grow: 1;
+}
+
+.early-commitment-container {
+    flex-grow: 1;
+    position: absolute;
+    width: 100%;
+    bottom: 650px;
+}
+
+.early-commitment {
+    bottom: 0;
+    height: 500px;
+}
+
+.shotgun-button {
+    width: 250px;
+    aspect-ratio: 1;
+    background-color: rgba(188, 188, 188, 0);
+    -unity-background-scale-mode: scale-to-fit;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.info-bar {
+    top: 50px;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 300px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 100px;
+    padding-left: 100px;
+}
