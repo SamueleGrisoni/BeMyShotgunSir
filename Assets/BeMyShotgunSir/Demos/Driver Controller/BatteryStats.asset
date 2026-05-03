@@ -17,3 +17,5 @@ MonoBehaviour:
   <ChargeBatterAmountRate>k__BackingField: 2
   <ConsumeBatteryTimeRate>k__BackingField: 0.1
   <ConsumeBatteryAmountRate>k__BackingField: 2
+  <OilAnimationDuration>k__BackingField: 1
+  <OilTotalRotation>k__BackingField: 720

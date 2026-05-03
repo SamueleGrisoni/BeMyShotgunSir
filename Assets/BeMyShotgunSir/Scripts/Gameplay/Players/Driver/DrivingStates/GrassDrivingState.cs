@@ -3,20 +3,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class GrassDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public override void Enter(IDrivingState previousState, IDriverControllerContext controller, ReplicateData data)
         {
+            _previousState = previousState;
             controller.SetMaxSpeed(controller.GrassStats.MaxSpeed);
-            Debug.Log("Enter grass state");
+            Debug.Log($"Enter grass state. I am arriving from {_previousState.GetType().Name}");
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public override void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if (!controller.IsOnGrass())
+            GroundType groundType = controller.CheckGround();
+            if (groundType != GroundType.Grass)
             {
-                controller.ChangeState(controller.NormalState, data);
+                // If you enter grass while you were in boost mode, you return to boost mode when you exit grass
+                controller.ChangeState(_previousState, data);
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public override void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.SidecarForward, controller.GrassStats.AccelerationForce);
             controller.ApplySteering(data.SteerInput, controller.GrassStats.SteeringForce);
@@ -24,7 +27,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.GrassStats.LateralGripFactor);
             controller.ApplyGravity(controller.GrassStats.Gravity);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public override void Exit(IDriverControllerContext controller, ReplicateData data)
         {
             Debug.Log("Exit grass state");
         }

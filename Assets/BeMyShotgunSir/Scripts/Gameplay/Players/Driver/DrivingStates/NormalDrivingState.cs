@@ -4,16 +4,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public override void Enter(IDrivingState previousState, IDriverControllerContext controller, ReplicateData data)
         {
+            _previousState = previousState;
             controller.SetMaxSpeed(controller.NormalStats.MaxSpeed);
+            Debug.Log($"Enter normal state. I am arriving from {_previousState.GetType().Name}");
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public override void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if (controller.IsOnGrass())
+            GroundType groundType = controller.CheckGround();
+            if (groundType == GroundType.Grass)
             {
                 controller.ChangeState(controller.GrassState, data);
                 return;
+            }
+            else if (groundType == GroundType.Oil)
+            {
+                controller.ChangeState(controller.OilState, data);
             }
             if (data.IsDrifting && data.SteerInput != 0)
             {
@@ -26,7 +33,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public override void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.SidecarForward, controller.NormalStats.AccelerationForce);
             controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
@@ -34,8 +41,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public override void Exit(IDriverControllerContext controller, ReplicateData data)
         {
         }
+
     }
 }

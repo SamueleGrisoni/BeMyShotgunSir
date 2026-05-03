@@ -6,6 +6,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     {
         Vector3 ParentForward { get; }
         Vector3 SidecarForward { get; }
+        Quaternion SidecarLocalRotation { get; set; }
         SOSidecarStats NormalStats { get; }
         SOSidecarStats BoostStats { get; }
         SOSidecarStats GrassStats { get; }
@@ -15,7 +16,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState DriftingState { get; }
         IDrivingState BoostState { get; }
         IDrivingState GrassState { get; }
+        IDrivingState OilState { get; }
         float CurrentMaxSpeed { get; }
+        float CurrentAcceleration { get; set; }
         bool IsGrounded { get; }
         bool IsDriftingButtonPressed { get; }
         float SteerInput { get; }
@@ -34,7 +37,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp);
         void ApplyLateralGrip(float lateralGripFactor);
         void AnimateSidecar();
-        bool IsOnGrass();
+        GroundType CheckGround();
         float TickDelta();
         bool IsOnwer { get; }
         bool IsServer { get; }
