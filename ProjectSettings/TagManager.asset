@@ -9,6 +9,7 @@ TagManager:
   - LobbyManager
   - RaceManager
   - Grass
+  - Oil
   layers:
   - Default
   - TransparentFX

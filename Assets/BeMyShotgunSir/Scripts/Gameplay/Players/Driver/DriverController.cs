@@ -8,6 +8,12 @@ using UnityEngine.InputSystem;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
+    public enum GroundType : byte
+    {
+        Normal,
+        Grass,
+        Oil,
+    }
     /*  Questo enum serve per identificare e riconciliare gli stati tra client e server.
         Ci sono dei casi in cui sul client e sul server il sidecar non si trova nello stesso stato e quindi sul client
         deve essere riconciliato usando il replicate data.
@@ -19,6 +25,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Drifting,
         Boost,
         Grass,
+        Oil,
     }
 
     /*  This struct contains the inputs of the owner client required to calculate the next state of the
@@ -63,7 +70,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public float BatteryChargeTimer;
         public float BoostTimer;
         public DrivingStateType StateType;
-        public ReconcileData(PredictionRigidbody pr, Quaternion parentRotation, Quaternion sidecarLocalRotation, Vector3 currentLinearVelocity, float currentMaxSpeed, float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, DrivingStateType stateType) : this()
+        public DrivingStateType PreviousStateType;
+        public ReconcileData(PredictionRigidbody pr, Quaternion parentRotation, Quaternion sidecarLocalRotation, Vector3 currentLinearVelocity, float currentMaxSpeed,
+                                float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, DrivingStateType stateType, DrivingStateType previousStateType) : this()
         {
             PredictionRigidbody = pr;
             ParentRotation = parentRotation;
@@ -75,6 +84,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             BatteryChargeTimer = batteryChargeTimer;
             BoostTimer = boostTimer;
             StateType = stateType;
+            PreviousStateType = previousStateType;
         }
         private uint _tick;
         public void Dispose() { }
@@ -111,8 +121,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _driftingState = new DriftingDrivingState();
         private IDrivingState _boostState = new BoostDrivingState();
         private IDrivingState _grassState = new GrassDrivingState();
+        private IDrivingState _oilState = new OilDrivingState();
 
         private float _currentMaxSpeed;
+        private float _currentAcceleartion;
         private float _steerInput;
         private bool _isDrifting;
         private bool _isBoosting;
@@ -124,6 +136,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         Vector3 IDriverControllerContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDriverControllerContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+        Quaternion IDriverControllerContext.SidecarLocalRotation
+        {
+            get => _sidecarLocalRotation;
+            set => _sidecarLocalRotation = value;
+        }
         SOSidecarStats IDriverControllerContext.NormalStats => _sidecarStatsNormal;
         SOSidecarStats IDriverControllerContext.BoostStats => _sidecarStatsBoost;
         SOSidecarStats IDriverControllerContext.GrassStats => _sidecarStatsGrass;
@@ -133,8 +150,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
         IDrivingState IDriverControllerContext.BoostState => _boostState;
         IDrivingState IDriverControllerContext.GrassState => _grassState;
+        IDrivingState IDriverControllerContext.OilState => _oilState;
 
         float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
+        float IDriverControllerContext.CurrentAcceleration
+        {
+            get => _currentAcceleartion;
+            set => _currentAcceleartion = value;
+        }
         bool IDriverControllerContext.IsGrounded => throw new System.NotImplementedException();
         bool IDriverControllerContext.IsDriftingButtonPressed => throw new System.NotImplementedException();
         float IDriverControllerContext.SteerInput => throw new System.NotImplementedException();
@@ -174,6 +197,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _sidecarLocalRotation = _sidecar.localRotation;
             _currentDrivingState = _idleState;
             _currentStateType = DrivingStateType.Idle;
+            _previousDrivingState = _boostState;
+            _previousStateType = DrivingStateType.Boost;
             _currentLinearVelocity = Vector3.zero;
         }
 
@@ -211,7 +236,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _sphere.transform.forward = _sidecar.forward;
 
             AnimateSteer(_visualSteerInput);
-            Debug.Log($"Current battery level: {_currentBatteryCharge}");
+            //Debug.Log($"Current battery level: {_currentBatteryCharge}");
         }
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
@@ -245,7 +270,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         public override void CreateReconcile()
         {
-            var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _currentMaxSpeed, _driftDirection, _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType);
+            var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _currentMaxSpeed, _driftDirection,
+                                        _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType, _previousStateType);
             ReconcileState(rd);
         }
 
@@ -268,7 +294,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _boostTimer = data.BoostTimer;
 
             _currentStateType = data.StateType;
-            _currentDrivingState = GetStateType(_currentStateType);
+            _currentDrivingState = GetStateType(data.StateType);
+
+            _previousStateType = data.PreviousStateType;
+            _previousDrivingState = GetStateType(data.PreviousStateType);
 
             _predictionRigidbody.Reconcile(data.PredictionRigidbody);
         }
@@ -321,27 +350,36 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void IDriverControllerContext.ChangeState(IDrivingState state, ReplicateData data)
         {
             _currentDrivingState?.Exit(this, data);
-            _currentDrivingState = state;
 
-            _currentStateType = GetStateType(state);
-            _currentDrivingState?.Enter(this, data);
+            _previousDrivingState = _currentDrivingState;
+            _previousStateType = GetStateType(_currentDrivingState);
+
+            _currentDrivingState = state;
+            _currentStateType = GetStateType(_currentDrivingState);
+            _currentDrivingState?.Enter(_previousDrivingState, this, data);
         }
 
-        bool IDriverControllerContext.IsOnGrass()
+        GroundType IDriverControllerContext.CheckGround()
         {
             if (Physics.Raycast(_sphere.position, Vector3.down, out RaycastHit hit, 0.6f))
             {
                 if (hit.collider.CompareTag("Grass"))
                 {
                     Debug.Log("Colpito l'erba");
-                    return true;
+                    return GroundType.Grass;
+                }
+                else if (hit.collider.CompareTag("Oil"))
+                {
+                    Debug.Log("Passato su una chiazza di olio");
+                    return GroundType.Oil;
                 }
                 else
                 {
                     Debug.Log("Colpito altro");
+                    return GroundType.Normal;
                 }
             }
-            return false;
+            return GroundType.Normal;
         }
 
         void IDriverControllerContext.SetMaxSpeed(float maxSpeed) => _currentMaxSpeed = maxSpeed;
@@ -369,13 +407,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             switch (stateType)
             {
-                case DrivingStateType.Idle: return _currentDrivingState = _idleState;
-                case DrivingStateType.Normal: return _currentDrivingState = _normalState;
-                case DrivingStateType.Drifting: return _currentDrivingState = _driftingState;
-                case DrivingStateType.Boost: return _currentDrivingState = _boostState;
-                case DrivingStateType.Grass: return _currentDrivingState = _grassState;
+                case DrivingStateType.Idle: return _idleState;
+                case DrivingStateType.Normal: return _normalState;
+                case DrivingStateType.Drifting: return _driftingState;
+                case DrivingStateType.Boost: return _boostState;
+                case DrivingStateType.Grass: return _grassState;
+                case DrivingStateType.Oil: return _oilState;
                 default:
-                    return null;
+                    return _normalState;
             }
         }
         private DrivingStateType GetStateType(IDrivingState drivingState)
@@ -385,7 +424,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             else if (drivingState == _driftingState) return DrivingStateType.Drifting;
             else if (drivingState == _boostState) return DrivingStateType.Boost;
             else if (drivingState == _grassState) return DrivingStateType.Grass;
-            else return DrivingStateType.Idle; // TODO boh
+            else if (drivingState == _oilState) return DrivingStateType.Oil;
+            else return DrivingStateType.Normal;
         }
 
         [ServerRpc] //TODO da capire

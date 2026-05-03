@@ -4,18 +4,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class DriftingDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public override void Enter(IDrivingState previousState, IDriverControllerContext controller, ReplicateData data)
         {
-            Debug.Log("Enter drift state");
+            _previousState = previousState;
             controller.SetMaxSpeed(controller.NormalStats.MaxSpeed);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
 
             //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
             controller.BatteryChargeTimer = 0f;
+            Debug.Log($"Enter drifting state. I am arriving from {_previousState.GetType().Name}");
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public override void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            if (controller.IsOnGrass())
+            GroundType groundType = controller.CheckGround();
+            if (groundType == GroundType.Grass)
             {
                 controller.ChangeState(controller.GrassState, data);
                 return;
@@ -39,7 +41,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public override void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.ParentForward, controller.NormalStats.AccelerationForce);
 
@@ -53,7 +55,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 : Mathf.Lerp(2f, 1f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public override void Exit(IDriverControllerContext controller, ReplicateData data)
         {
             Debug.Log("Exit drift state");
         }
