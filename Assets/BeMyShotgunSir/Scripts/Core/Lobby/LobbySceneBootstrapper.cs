@@ -24,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 Log.ELazy(() => "Coerced bind targets are null. Cannot bind lobby.", this);
                 return;
             }
-            manager.BindLobby(_coercedTargets);
+            manager.BindLobby_Initial(_coercedTargets);
             OnLobbySceneInitialized?.Invoke();
         }
 

@@ -9,12 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4316827781153150406}
+  - component: {fileID: 3414248990729970632}
   - component: {fileID: 7151105789949819031}
   - component: {fileID: 5203953104048775530}
-  - component: {fileID: 3414248990729970632}
+  - component: {fileID: 3562243664245549473}
+  - component: {fileID: 6397635321937519732}
   m_Layer: 0
   m_Name: Race Manager
-  m_TagString: Untagged
+  m_TagString: RaceManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34,39 +36,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7151105789949819031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362008070006806642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e93fbedb542d4784fb8ce9b79ec97719, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Race.RaceManager
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 3414248990729970632}
-  _networkObjectCache: {fileID: 3414248990729970632}
-  _sounds: {fileID: 11400000, guid: 9f0395a972e876e439ae794cb046e9d9, type: 2}
---- !u!114 &5203953104048775530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362008070006806642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2540cd112c2556d4a8ec79309d869de4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Race.RaceNetController
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 3414248990729970632}
-  _networkObjectCache: {fileID: 3414248990729970632}
-  _spawnPoints: []
-  _playerPrefab: {fileID: 4726359609289288218, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
 --- !u!114 &3414248990729970632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +57,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 7151105789949819031}
   - {fileID: 5203953104048775530}
+  - {fileID: 3562243664245549473}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -98,7 +68,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242069955015017
+  _initializedTimestamp: -8584236644162524946
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -123,3 +93,63 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+--- !u!114 &7151105789949819031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362008070006806642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93fbedb542d4784fb8ce9b79ec97719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Race.RaceManager
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 3414248990729970632}
+  _networkObjectCache: {fileID: 3414248990729970632}
+--- !u!114 &5203953104048775530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362008070006806642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2540cd112c2556d4a8ec79309d869de4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Race.RaceNetController
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 3414248990729970632}
+  _networkObjectCache: {fileID: 3414248990729970632}
+  _playerPrefab: {fileID: 4726359609289288218, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
+  _roadManagerPrefab: {fileID: 232372129966702668, guid: ba6a141122910ec45a2b80b692164a12, type: 3}
+--- !u!114 &3562243664245549473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362008070006806642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305e6785680569c49b0403cc95719907, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Race.RaceNetStateStore
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 3414248990729970632}
+  _networkObjectCache: {fileID: 3414248990729970632}
+--- !u!114 &6397635321937519732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362008070006806642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84407868e315d524db03c8a3f734aa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Race.RaceClientProjector
+  _sounds: {fileID: 11400000, guid: 9f0395a972e876e439ae794cb046e9d9, type: 2}

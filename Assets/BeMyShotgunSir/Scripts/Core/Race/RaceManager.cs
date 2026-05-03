@@ -1,90 +1,67 @@
 using System;
-using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Events;
-using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
+using BeMyShotgunSir.Scripts.Core.Lobby;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
+    #region Interfaces
+
     public interface IRaceManager_Bootstrapper : IManager_Bootstrapper
     {
-        /// <summary>
-        /// Binds the RaceCommand and RaceViewModel to the given targets. <br/>
-        /// </summary>
-        /// <param name="targets"></param>
-        void BindLobby(IRaceBindTarget[] targets);
-        /// <summary>
-        /// Sets the TrackManager reference in the RaceManager, allowing it to initialize the track with the correct seed.
-        /// </summary>
-        /// <param name="trackManager"></param>
-        void SetRoadManager(RoadManager trackManager);
+        void BindRace_Initial(IRaceBindTarget[] targets);
     }
-    public interface IRaceManager_LobbyManager
-    {
-        void InitViewModelData(LobbyViewModel viewModel);
-    }
-    public interface IRaceManager_NetController : IManager_NetController
-    {
-        void InitRace_Response(int seed, bool isServer = false, Transform driver = null);
-    }
-    public interface IRaceManager : IManager, IRaceManager_Bootstrapper, IRaceManager_NetController, IRaceManager_LobbyManager { }
 
+    public interface IRaceManager : IManager, IRaceManager_Bootstrapper { }
+
+    #endregion
 
     [RequireComponent(typeof(RaceNetController))]
+    [RequireComponent(typeof(RaceNetStateStore))]
+    [RequireComponent(typeof(RaceClientProjector))]
     public class RaceManager : NetworkBehaviour, IEventSender, IRaceManager, IRaceBindSources
     {
+        //utility
         private bool _log = true;
-        public string SenderName => name;
-
-
+        string IEventSender.SenderName => name;
         public static event Action<IRaceManager> OnRaceManagerStarted;
         public static event Action<IRaceManager> OnRaceManagerReady;
         public static event Action OnRaceManagerDespawned;
-        private bool _isReady = false;
-        private IRaceNetController_Manager _netController;
+
+        //binding
+        private GameObject _lobbyManager;
+        private LobbyViewModel _lobbyViewModel;
+        private LobbyNetStateStore _lobbyNetStateStore;
         private RaceBinder _binder;
-        private RaceCommand _raceCommand;
-        RaceCommand IRaceInitialBindSource.Command => _raceCommand;
+        private RaceNetStateStore _netState;
+        public IRaceNetStateRead NetState => _netState;
+        private RaceNetController _netController;
         private RaceViewModel _viewModel;
+        private IRaceBindTarget[] _bindTargets;
+        private RaceCommand _raceCommand;
+        public RaceCommand Command => _raceCommand;
+        private RaceClientProjector _projector;
+        RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
-        private SOAudioRequestEvent _audioRequestEvent;
-        [SerializeField] private SORaceSounds _sounds;
-        private RoadManager _roadManager;
-
-        public void BindLobby(IRaceBindTarget[] targets)
-        {
-            if (_binder == null)
-            {
-                Log.ELazy(() => "No RaceBinder found. Cannot bind race commands.", this);
-                return;
-            }
-            if (_raceCommand == null)
-            {
-                Log.ELazy(() => "No RaceCommand found. Cannot bind race commands.", this);
-                return;
-            }
-            if (_viewModel == null)
-            {
-                Log.ELazy(() => "No RaceViewModel found. Cannot bind race data.", this);
-                return;
-            }
-            _binder.ExecuteInitialBind(targets);
-            _raceCommand.GetInitSnapshot_Request();
-        }
-
 
         private void Awake()
         {
+            TryGetComponent(out _netController);
+            TryGetComponent(out _netState);
+            TryGetComponent(out _projector);
+
+            if (_netController == null || _netState == null || _projector == null)
+                Log.ELazy(() => $"One or more required components are missing on RaceManager.", this);
+
             _viewModel = new RaceViewModel();
-            Debug.Assert(_sounds != null, "SORaceSounds reference is not assigned in the inspector.", this);
+            _raceCommand = new RaceCommand(_netController);
+            _binder = new RaceBinder(this);
         }
 
         private void OnEnable()
         {
-            RaceNetController.OnRaceNetControllerReady += OnRaceNetControllerReady;
-            RaceNetController.OnRaceNetControllerDespawned += OnRaceNetControllerDespawned;
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
         }
 
@@ -94,34 +71,62 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnRaceManagerStarted?.Invoke(this);
         }
 
-
-        public void InitViewModelData(LobbyViewModel viewModel) =>
-            _viewModel.InitData(viewModel);
-
-
-        private void OnRaceNetControllerReady(IRaceNetController netController)
+        public override void OnStartNetwork()
         {
-            if (_isReady)
+            base.OnStartNetwork();
+            InitializeFromLobby();
+        }
+
+        [Server]
+        private void InitializeFromLobby()
+        {
+            _lobbyManager = GameObject.FindWithTag("LobbyManager");
+            if (_lobbyManager == null)
+            {
+                Log.ELazy(() => $"LobbyManager not found in the scene.", this);
                 return;
+            }
+            _lobbyViewModel = _lobbyManager.GetComponent<LobbyManager>().ViewModel;
+            if (_lobbyViewModel == null)
+            {
+                Log.ELazy(() => $"LobbyViewModel not found on LobbyManager.", this);
+                return;
+            }
+            _viewModel.InitData(_lobbyViewModel);
+            _lobbyNetStateStore = _lobbyManager.GetComponent<LobbyNetStateStore>();
+            if (_lobbyNetStateStore == null)
+            {
+                Log.ELazy(() => $"LobbyNetStateStore not found in the scene.", this);
+                return;
+            }
+            _netState.InitializeFromLobby(_lobbyNetStateStore);
+            _netController.SetLobbyNetState(_lobbyNetStateStore);
 
-            if (netController is IRaceNetController_Manager netController_NetController)
-                _netController = netController_NetController;
-            if (netController is IRaceNetController_Command netController_Command)
-                _raceCommand = new RaceCommand(netController_Command);
-            _binder = new RaceBinder(this, this);
-            _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
-
-            _isReady = true;
             Log.DLazy(() => "RaceManager is ready.", this, _log);
             OnRaceManagerReady?.Invoke(this);
+            LoadRaceScene();
+        }
 
+        [Server]
+        private void LoadRaceScene()
+        {
             if (!IsServerInitialized) //server instructions below
                 return;
 
             GameServices.Instance.SceneCoordinator.LoadRaceScene();
         }
 
-        public void SetRoadManager(RoadManager roadManager) => _roadManager = roadManager;
+        public void BindRace_Initial(IRaceBindTarget[] targets)
+        {
+            if (_binder == null || _raceCommand == null || _viewModel == null)
+            {
+                Log.ELazy(() => $"RaceManager is not fully initialized. Cannot bind race commands. {(_binder == null ? "Binder" : _raceCommand == null ? "Command" : "ViewModel")} is null", this);
+                return;
+            }
+
+            _bindTargets = targets;
+            _binder.ExecuteInitialBind(targets);
+        }
 
         private void OnSceneInitialized(SceneName name)
         {
@@ -129,33 +134,24 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             if (!IsController)
                 return;
-            _netController.InitRace(_roadManager);
+
+            _projector.Init(_viewModel);
+            _raceCommand.GetInitSnapshot_Request();
+
+            if (IsServerInitialized)
+                _netController.InitRace();
         }
 
-        public void InitRace_Response(int seed, bool isServer = false, Transform driver = null)
+
+        private void BindRace_Final(IRaceBindTarget[] targets)
         {
-            //MEMO: here must occur the final initialization of the race scene passing all the data
-            _roadManager.Init(seed, isServer, driver);
-        }
-
-
-
-        private void OnRaceNetControllerDespawned()
-        {
-            if (!_isReady)
-                return;
-
-            _raceCommand = null;
-            _binder = null;
-            _audioRequestEvent = null;
-
-            _isReady = false;
+            int i = 0;
+            _binder.ExecuteFinalBind(targets);
         }
 
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
-            OnRaceNetControllerDespawned();
             UnsubscribeEvents();
             Log.DLazy(() => "RaceManager despawned from the network.", this, _log);
             OnRaceManagerDespawned?.Invoke();
@@ -165,9 +161,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void UnsubscribeEvents()
         {
-            RaceNetController.OnRaceNetControllerReady -= OnRaceNetControllerReady;
-            RaceNetController.OnRaceNetControllerDespawned -= OnRaceNetControllerDespawned;
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
         }
+
     }
 }

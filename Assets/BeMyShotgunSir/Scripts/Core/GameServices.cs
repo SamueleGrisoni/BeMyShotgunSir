@@ -39,25 +39,25 @@ namespace BeMyShotgunSir.Scripts.Core
             ConnectionManager.Initialize();
         }
 
-        private void OnLobbyManagerReady(ILobbyManager lobby)
+        private void OnLobbyManagerReady(ILobbyManager lobbyManager)
         {
-            if (LobbyManager != null && LobbyManager != lobby)
+            if (LobbyManager != null && LobbyManager != lobbyManager)
             {
                 Log.ELazy(() => $"GameServices: Duplicate LobbyManager detected.", this);
                 return;
             }
 
-            LobbyManager = lobby;
+            LobbyManager = lobbyManager;
         }
         private void OnLobbyManagerDespawned() => LobbyManager = null;
-        private void OnRaceManagerReady(IRaceManager manager)
+        private void OnRaceManagerReady(IRaceManager raceManager)
         {
-            if (RaceManager != null && RaceManager != manager)
+            if (RaceManager != null && RaceManager != raceManager)
             {
                 Log.ELazy(() => $"GameServices: Duplicate RaceManager detected.", this);
                 return;
             }
-            RaceManager = manager;
+            RaceManager = raceManager;
         }
         private void OnRaceManagerDespawned() => RaceManager = null;
 
@@ -70,6 +70,7 @@ namespace BeMyShotgunSir.Scripts.Core
         }
 
         #region Local
+
         [field: SerializeField] public Camera MainCamera { get; private set; }
         [field: SerializeField] public EventSystem EventSystem { get; private set; }
         [field: SerializeField] public AudioListener AudioListener { get; private set; }
@@ -80,14 +81,15 @@ namespace BeMyShotgunSir.Scripts.Core
         [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
         [field: SerializeField] public SOChannels Channels { get; private set; }
         [field: SerializeField] public AudioManager AudioManager { get; private set; }
+
         #endregion
 
         #region Network
+
         [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
-        //NOTE now full interfaces, but this should only be used by bootstrapper.
-        //So we will probably add an ad hoc bootstrapp instance locator service
         public ILobbyManager LobbyManager { get; private set; }
         public IRaceManager RaceManager { get; private set; }
+
         #endregion
     }
 }

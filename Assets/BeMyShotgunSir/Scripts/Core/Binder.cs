@@ -63,25 +63,31 @@ namespace BeMyShotgunSir.Scripts.Core
     {
         private bool _log = true;
         protected readonly TInitialBindSource _initialBindSource;
-        protected readonly TFinalBindSource _finalBindSource;
+        protected TFinalBindSource _finalBindSource;
 
-        protected Binder(TInitialBindSource source, TFinalBindSource bindSource)
+        protected Binder(TInitialBindSource source)
         {
             _initialBindSource = source;
-            _finalBindSource = bindSource;
+            _finalBindSource = default;
+        }
+
+        public void UpdateFinalBindSource(TFinalBindSource newBindSource)
+        {
+            _finalBindSource = newBindSource;
+            Log.DLazy(() => "Final bind source updated.", this, _log);
         }
 
         public void ExecuteInitialBind(TBindTarget[] targets)
         {
             InitialBind(targets);
-            OnPreBindComplete(targets);
+            OnInitialBindComplete(targets);
             Log.DLazy(() => "Initial bind executed.", this, _log);
         }
 
         public void ExecuteFinalBind(TBindTarget[] targets)
         {
             FinalBind(targets);
-            OnBindComplete(targets);
+            OnFinalBindComplete(targets);
             Log.DLazy(() => "Final bind executed.", this, _log);
         }
 
@@ -97,13 +103,13 @@ namespace BeMyShotgunSir.Scripts.Core
                 target.FinalBind(_finalBindSource);
         }
 
-        protected virtual void OnPreBindComplete(TBindTarget[] bindTargets)
+        protected virtual void OnInitialBindComplete(TBindTarget[] bindTargets)
         {
             foreach (TBindTarget target in bindTargets)
                 target.OnInitialBindComplete();
         }
 
-        protected virtual void OnBindComplete(TBindTarget[] targets)
+        protected virtual void OnFinalBindComplete(TBindTarget[] targets)
         {
             foreach (TBindTarget target in targets)
                 target.OnFinalBindComplete();

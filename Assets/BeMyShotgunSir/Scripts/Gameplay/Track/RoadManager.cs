@@ -1,14 +1,36 @@
+using System;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
+using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Object;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
-    public class RoadManager : MonoBehaviour
+    public interface IRoadManager
     {
+        void SetSeed(int seed);
+        void SetRaceNetController(RaceNetController raceNetController, bool isServer = false);
+        void SetDriver(GameObject driver);
+        void UpdateFirstPlayer(Transform playerTransform);
+    }
+
+    public class RoadManager : NetworkBehaviour, IRoadManager
+    {
+        private bool _log = true;
         private bool _isInitialized = false;
+        public static event Action<IRoadManager> OnRoadManagerSpawned;
+        private int _seed = -1;
+        private bool _isHostInitialized;
+        private GameObject _driver; //TODO change this to transform please
+        private Transform _firstPlayerTransform;
+        private List<Transform> _spawnPoints;
+        private RaceManager _raceManager;
+        private RaceNetController _raceNetController;
         private bool _started = false;
+
         [Header("Data References")]
         [SerializeField] private SOTrack _trackData;
         [Header("Generators References")]
@@ -20,25 +42,67 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private EnvironmentSpawner _environmentSpawner;
         [SerializeField] private ItemSpawner _itemSpawner;
         [Header("Other References")]
-        private GameObject _driver;
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
-        public void Init(int seed, bool isServer = false, Transform driver = null)
+        public override void OnStartNetwork()
         {
-            if (driver == null)
-                return;
-
-            _driver = driver.gameObject;
-            _environmentSpawner.Init(seed);
-            _trackGenerator.Init(seed);
-            Initialize(isServer);
-            StartRace();
+            base.OnStartNetwork();
+            OnRoadManagerSpawned?.Invoke(this);
         }
 
-        private void Initialize(bool isServer = false)
+        public void SetSeed(int seed)
+        {
+            if (seed == -1)
+                _seed = seed;
+            _environmentSpawner.Init(_seed);
+            _trackGenerator.Init(_seed);
+        }
+
+        public void SetRaceNetController(RaceNetController raceNetController, bool isHostInitialized = false)
+        {
+            if (_raceNetController == null) _raceNetController = raceNetController;
+            if (isHostInitialized)
+            {
+                _isHostInitialized = true;
+                InitSpawnPoints();
+                _raceNetController.SetSpawnPoints(_spawnPoints);
+                _raceNetController.ServerTrackReady();
+            }
+            else _raceNetController.TrackReady_ServerRpc();
+        }
+
+        [Server]
+        private void InitSpawnPoints()
+        {
+            //driver spawnpoints for the moment
+            _spawnPoints = new List<Transform>();
+            for (int i = 0; i < 8; i++)
+            {
+                var spawnPointGO = new GameObject($"SpawnPoint_{i}");
+                spawnPointGO.transform.position = Vector3.zero;
+                _spawnPoints.Add(spawnPointGO.transform);
+            }
+            //TODO here we need to get the spawn points
+        }
+
+        public void SetDriver(GameObject driver)
+        {
+            if (driver == null)
+                _driver = driver;
+            Log.DLazy(() => $"RoadManager: Driver set to {driver.name}", this, _log);
+            Initialize();
+        }
+
+        public void UpdateFirstPlayer(Transform playerTransform)
+        {
+            if (_isHostInitialized)
+                _firstPlayerTransform = playerTransform;
+        }
+
+        private void Initialize()
         {
             if (_isInitialized)
                 return;
@@ -69,6 +133,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Debug.LogError("RoadManager: Driver reference is missing");
             }
 
+            StartRace();
             _isInitialized = true;
         }
 

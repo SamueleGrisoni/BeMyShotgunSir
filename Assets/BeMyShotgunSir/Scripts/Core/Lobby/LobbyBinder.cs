@@ -13,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public class LobbyBinder : Binder<ILobbyInitialBindSource, ILobbyFinalBindSource, ILobbyBindTarget>
     {
-        public LobbyBinder(ILobbyInitialBindSource preBindSource, ILobbyFinalBindSource bindSource) : base(preBindSource, bindSource) { }
+        public LobbyBinder(ILobbyInitialBindSource preBindSource) : base(preBindSource) { }
     }
 
 

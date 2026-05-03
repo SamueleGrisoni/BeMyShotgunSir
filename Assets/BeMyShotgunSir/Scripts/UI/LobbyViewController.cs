@@ -10,6 +10,7 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class LobbyViewController : LobbyBindTarget
     {
+        private bool _log = true;
         [SerializeField] private UIController_Lobby _uiControllerLobby;
         [SerializeField] private UIDocument _lobbyDocument;
 
@@ -29,10 +30,12 @@ namespace BeMyShotgunSir.Scripts.UI
             }
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
+            _command.GetInitSnapshot_Request();
 
             _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
             _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
             _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
+            Log.DLazy(() => "Initial bind complete.", this, _log);
         }
         public override void OnFinalBindComplete()
         {
@@ -122,7 +125,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ReadyButtonHandler()
         {
-            Debug.Log("Ready button clicked");
+            Log.DLazy(() => "Ready button clicked", this, _log);
             _command.SetPlayerReady_Request(true);
             // _command.SelectTeamMate_Request(1);
             // GameServices.Instance.ConnectionManager.StartGame();
@@ -140,19 +143,16 @@ namespace BeMyShotgunSir.Scripts.UI
             _uiControllerLobby.ShowScreen(UIScreen.CentralHub, true);
         }
 
-        private void DriverButtonHandler()
-        {
-            Debug.Log("Driver button clicked");
-        }
+        private void DriverButtonHandler() =>
+            Log.DLazy(() => "Driver button clicked", this, _log);
 
-        private void ShotgunButtonHandler()
-        {
-            Debug.Log("Shotgun button clicked");
-        }
+
+        private void ShotgunButtonHandler() =>
+            Log.DLazy(() => "Shotgun button clicked", this, _log);
 
         private void TeamRequestHandler(int teammateConnectionId)
         {
-            Debug.Log($"Player row clicked, teammateConnectionId={teammateConnectionId}");
+            Log.DLazy(() => $"Player row clicked, teammateConnectionId={teammateConnectionId}", this, _log);
             _command.SelectTeamMate_Request(teammateConnectionId);
         }
 
@@ -166,10 +166,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
 
         // This method can be used to change the player name
-        private void SetName()
-        {
+        private void SetName() =>
             _command.SetName_Request("TEST NAME");
-        }
 
         private void UpdateLobbyIP()
         {

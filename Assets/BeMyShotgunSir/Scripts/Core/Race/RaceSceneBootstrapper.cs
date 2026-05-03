@@ -17,7 +17,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [SerializeField] private RoadManager _roadManager;
 
         private void OnDisable() =>
-            RaceManager.OnRaceManagerReady -= OnRaceManagerSpawned;
+            RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
 
         private void Bind(IRaceManager_Bootstrapper manager)
         {
@@ -26,12 +26,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => "Coerced bind targets are null. Cannot bind race.", this);
                 return;
             }
-            manager.BindLobby(_coercedTargets);
-            manager.SetRoadManager(_roadManager);
+            // manager.SetRoadManager(_roadManager);
+            manager.BindRace_Initial(_coercedTargets);
             OnRaceSceneInitialized?.Invoke();
         }
 
-        private void OnRaceManagerSpawned(IRaceManager manager)
+        private void OnRaceManagerReady(IRaceManager manager)
         {
             if (manager is not IRaceManager_Bootstrapper manager_Bootstrapper)
                 return;
@@ -55,7 +55,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             var raceManager = GameServices.Instance.RaceManager as IRaceManager_Bootstrapper;
             if (raceManager == null)
-                RaceManager.OnRaceManagerReady += OnRaceManagerSpawned;
+                RaceManager.OnRaceManagerReady += OnRaceManagerReady;
             else
                 Bind(raceManager);
         }

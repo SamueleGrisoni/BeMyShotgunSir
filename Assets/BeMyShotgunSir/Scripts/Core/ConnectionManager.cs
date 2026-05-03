@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
-    #region ConnectionManager Enums
+    #region Enums
+
     public enum AppFlowState
     {
         Startup,
@@ -22,6 +23,7 @@ namespace BeMyShotgunSir.Scripts.Core
         Hosting,
         Joining
     }
+
     #endregion
 
     public class ConnectionManager : MonoBehaviour
@@ -134,10 +136,11 @@ namespace BeMyShotgunSir.Scripts.Core
 
             string ip = GetIp(ipAddress);
             ushort portValue = GetPort(ipAddress);
-            Log.DLazy(() => $"Setting client address to {ip}.", this, _log);
+            Log.DLazy(() => $"Setting client address to {ip} on port {portValue}", this, _log);
             GameServices.Instance.NetworkManager.TransportManager.Transport.SetClientAddress(ip);
+            GameServices.Instance.NetworkManager.TransportManager.Transport.SetPort(portValue);
 
-            Log.DLazy(() => $"Starting join session to {ip}.", this, _log);
+            Log.DLazy(() => $"Starting join session", this, _log);
             _clientManager.StartConnection();
         }
 

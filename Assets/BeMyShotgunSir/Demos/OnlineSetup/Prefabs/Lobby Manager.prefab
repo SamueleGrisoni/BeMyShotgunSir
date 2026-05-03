@@ -9,12 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3073850771215983565}
+  - component: {fileID: 8491619145890554402}
   - component: {fileID: 7220682611722132601}
   - component: {fileID: 7744919071968131708}
-  - component: {fileID: 8491619145890554402}
+  - component: {fileID: 7691412910215016252}
+  - component: {fileID: 6411362421927161641}
   m_Layer: 0
   m_Name: Lobby Manager
-  m_TagString: Untagged
+  m_TagString: LobbyManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34,39 +36,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7220682611722132601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2965746313305434028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97bdf3c4fc9e9f04b81d687d6c082c92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.LobbyManager
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 8491619145890554402}
-  _networkObjectCache: {fileID: 8491619145890554402}
-  _netController: {fileID: 7744919071968131708}
-  _sounds: {fileID: 11400000, guid: 1cec94964cd47174a8c2565159ad3408, type: 2}
---- !u!114 &7744919071968131708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2965746313305434028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ff85ce07cf2c904c9a23e7226f46cf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyNetController
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 8491619145890554402}
-  _networkObjectCache: {fileID: 8491619145890554402}
-  _raceManager: {fileID: 3414248990729970632, guid: 515c13b689a1d004a9c85aaae30f5784, type: 3}
 --- !u!114 &8491619145890554402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +57,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 7220682611722132601}
   - {fileID: 7744919071968131708}
+  - {fileID: 7691412910215016252}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -98,7 +68,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242028906047198
+  _initializedTimestamp: -8584237580632600406
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -123,3 +93,62 @@ MonoBehaviour:
     Rotation: {x: -0, y: -0, z: -0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+--- !u!114 &7220682611722132601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965746313305434028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97bdf3c4fc9e9f04b81d687d6c082c92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.LobbyManager
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 8491619145890554402}
+  _networkObjectCache: {fileID: 8491619145890554402}
+--- !u!114 &7744919071968131708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965746313305434028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff85ce07cf2c904c9a23e7226f46cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyNetController
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 8491619145890554402}
+  _networkObjectCache: {fileID: 8491619145890554402}
+  _raceManager: {fileID: 3414248990729970632, guid: 515c13b689a1d004a9c85aaae30f5784, type: 3}
+--- !u!114 &7691412910215016252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965746313305434028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6519dc5d4c083fb469a8a94111c79a3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyNetStateStore
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 8491619145890554402}
+  _networkObjectCache: {fileID: 8491619145890554402}
+--- !u!114 &6411362421927161641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965746313305434028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d555ee6db5f0948a7ac6794fec8b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyClientProjector
+  _sounds: {fileID: 11400000, guid: 1cec94964cd47174a8c2565159ad3408, type: 2}

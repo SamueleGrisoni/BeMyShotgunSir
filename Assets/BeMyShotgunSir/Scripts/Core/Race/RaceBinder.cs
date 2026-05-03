@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public class RaceBinder : Binder<IRaceInitialBindSource, IRaceFinalBindSource, IRaceBindTarget>
     {
-        public RaceBinder(IRaceInitialBindSource source, IRaceFinalBindSource bindSource) : base(source, bindSource) { }
+        public RaceBinder(IRaceInitialBindSource source) : base(source) { }
     }
 
 
