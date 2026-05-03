@@ -57,17 +57,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public Quaternion ParentRotation;
         public Quaternion SidecarLocalRotation;
         public Vector3 CurrentLinearVelocity;
+        public float CurrentMaxSpeed;
         public float DriftDirection;
         public float CurrentBatteryCharge;
         public float BatteryChargeTimer;
         public float BoostTimer;
         public DrivingStateType StateType;
-        public ReconcileData(PredictionRigidbody pr, Quaternion parentRotation, Quaternion sidecarLocalRotation, Vector3 currentLinearVelocity, float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, DrivingStateType stateType) : this()
+        public ReconcileData(PredictionRigidbody pr, Quaternion parentRotation, Quaternion sidecarLocalRotation, Vector3 currentLinearVelocity, float currentMaxSpeed, float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, DrivingStateType stateType) : this()
         {
             PredictionRigidbody = pr;
             ParentRotation = parentRotation;
             SidecarLocalRotation = sidecarLocalRotation;
             CurrentLinearVelocity = currentLinearVelocity;
+            CurrentMaxSpeed = currentMaxSpeed;
             DriftDirection = driftDirection;
             CurrentBatteryCharge = currentBatteryCharge;
             BatteryChargeTimer = batteryChargeTimer;
@@ -89,17 +91,27 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
 
+        [SerializeField] private Transform _handle;
+        [SerializeField] private float _maxSteerAngle = 30f;
+        [SerializeField] private float _steerSpeed = 10f;
+        private float _visualSteerInput;
+
         private PredictionRigidbody _predictionRigidbody;
         private Vector3 _currentLinearVelocity;
         private Quaternion _parentRotation;
         private Quaternion _sidecarLocalRotation;
+
         private IDrivingState _currentDrivingState;
+        private IDrivingState _previousDrivingState;
         private DrivingStateType _currentStateType;
+        private DrivingStateType _previousStateType;
+
         private IDrivingState _idleState = new IdleDrivingState();
         private IDrivingState _normalState = new NormalDrivingState();
         private IDrivingState _driftingState = new DriftingDrivingState();
         private IDrivingState _boostState = new BoostDrivingState();
         private IDrivingState _grassState = new GrassDrivingState();
+
         private float _currentMaxSpeed;
         private float _steerInput;
         private bool _isDrifting;
@@ -121,43 +133,36 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDriverControllerContext.DriftingState => _driftingState;
         IDrivingState IDriverControllerContext.BoostState => _boostState;
         IDrivingState IDriverControllerContext.GrassState => _grassState;
+
         float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
         bool IDriverControllerContext.IsGrounded => throw new System.NotImplementedException();
         bool IDriverControllerContext.IsDriftingButtonPressed => throw new System.NotImplementedException();
         float IDriverControllerContext.SteerInput => throw new System.NotImplementedException();
         bool IDriverControllerContext.IsBoostButtonPressed => throw new System.NotImplementedException();
         bool IDriverControllerContext.IsStartButtonPressed => throw new System.NotImplementedException();
+
         float IDriverControllerContext.DriftDirection
         {
             get => _driftDirection;
             set => _driftDirection = value;
         }
+
         float IDriverControllerContext.CurrentBatteryCharge
         {
             get => _currentBatteryCharge;
             set => _currentBatteryCharge = value;
         }
+
         float IDriverControllerContext.BatteryChargeTimer
         {
             get => _batteryChargeTimer;
             set => _batteryChargeTimer = value;
         }
+
         float IDriverControllerContext.BoostTimer
         {
             get => _boostTimer;
             set => _boostTimer = value;
-        }
-
-        public IDrivingState AirState => throw new System.NotImplementedException();
-
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-            if (IsOwner)
-            {
-                GetComponent<PlayerInput>().enabled = true;
-
-            }
         }
 
         private void Awake()
@@ -174,6 +179,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (IsOwner)
+            {
+                GetComponent<PlayerInput>().enabled = true;
+
+            }
+        }
+
         public override void OnStartNetwork()
         {
             TimeManager.OnTick += TimeManager_OnTick;
@@ -185,12 +200,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
         }
-
-        private void TimeManager_OnTick()
+        public void LateUpdate()
         {
-            RunInputs(CreateReplicateData());
+            // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
+            // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
+            _parent.position = _sphere.transform.position;
+            _parent.rotation = _parentRotation;
+            _sidecar.localRotation = _sidecarLocalRotation;
 
+            _sphere.transform.forward = _sidecar.forward;
+
+            AnimateSteer(_visualSteerInput);
+            Debug.Log($"Current battery level: {_currentBatteryCharge}");
         }
+
+        private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
 
         private ReplicateData CreateReplicateData()
         {
@@ -212,13 +236,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             _predictionRigidbody.Velocity(_currentLinearVelocity);
             _predictionRigidbody.Simulate();
+
+            if (state != ReplicateState.Replayed)
+                _visualSteerInput = data.SteerInput;
         }
 
         private void TimeManager_OnPostTick() => CreateReconcile();
 
         public override void CreateReconcile()
         {
-            var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _driftDirection, _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType);
+            var rd = new ReconcileData(_predictionRigidbody, _parentRotation, _sidecarLocalRotation, _currentLinearVelocity, _currentMaxSpeed, _driftDirection, _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _currentStateType);
             ReconcileState(rd);
         }
 
@@ -234,37 +261,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _sidecarLocalRotation = data.SidecarLocalRotation;
 
             _currentLinearVelocity = data.CurrentLinearVelocity;
+            _currentMaxSpeed = data.CurrentMaxSpeed;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
             _batteryChargeTimer = data.BatteryChargeTimer;
             _boostTimer = data.BoostTimer;
 
             _currentStateType = data.StateType;
-            switch (_currentStateType)
-            {
-                case DrivingStateType.Idle: _currentDrivingState = _idleState; break;
-                case DrivingStateType.Normal: _currentDrivingState = _normalState; break;
-                case DrivingStateType.Drifting: _currentDrivingState = _driftingState; break;
-                case DrivingStateType.Boost: _currentDrivingState = _boostState; break;
-                case DrivingStateType.Grass: _currentDrivingState = _grassState; break;
-                default:
-                    break;
-            }
+            _currentDrivingState = GetStateType(_currentStateType);
 
             _predictionRigidbody.Reconcile(data.PredictionRigidbody);
         }
 
-        public void LateUpdate()
-        {
-            // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
-            // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
-            _parent.position = _sphere.transform.position;
-            _parent.rotation = _parentRotation;
-            _sidecar.localRotation = _sidecarLocalRotation;
-
-            _sphere.transform.forward = _sidecar.forward;
-            Debug.Log($"Current battery level: {_currentBatteryCharge}");
-        }
 
         void IDriverControllerContext.ApplySteering(float steerAmount, float steeringForce)
         {
@@ -273,6 +281,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation *= steerRotation;
 
         }
+
         void IDriverControllerContext.ApplyAcceleration(Vector3 direction, float accelerationForce)
         {
             Vector3 predictedVelocity = _predictionRigidbody.Rigidbody.linearVelocity + direction * (accelerationForce * (float)TimeManager.TickDelta);
@@ -285,11 +294,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentLinearVelocity = predictedVelocity;
         }
 
-        // TODO implementare gravità
-        void IDriverControllerContext.ApplyGravity(float gravity)
-        {
-            _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
-        }
+        void IDriverControllerContext.ApplyGravity(float gravity) => _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
 
         void IDriverControllerContext.ApplyLateralGrip(float lateralGripFactor)
         {
@@ -318,13 +323,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentDrivingState?.Exit(this, data);
             _currentDrivingState = state;
 
-            if (state == _idleState) _currentStateType = DrivingStateType.Idle;
-            else if (state == _normalState) _currentStateType = DrivingStateType.Normal;
-            else if (state == _driftingState) _currentStateType = DrivingStateType.Drifting;
-            else if (state == _boostState) _currentStateType = DrivingStateType.Boost;
-            else if (state == _grassState) _currentStateType = DrivingStateType.Grass;
+            _currentStateType = GetStateType(state);
             _currentDrivingState?.Enter(this, data);
         }
+
         bool IDriverControllerContext.IsOnGrass()
         {
             if (Physics.Raycast(_sphere.position, Vector3.down, out RaycastHit hit, 0.6f))
@@ -340,26 +342,57 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 }
             }
             return false;
-
         }
 
         void IDriverControllerContext.SetMaxSpeed(float maxSpeed) => _currentMaxSpeed = maxSpeed;
-
         void IDriverControllerContext.SetDriftDirection(float driftDirection) => _driftDirection = driftDirection;
-
         float IDriverControllerContext.TickDelta() => (float)TimeManager.TickDelta;
-
         bool IDriverControllerContext.IsOnwer => IsOwner;
-
         bool IDriverControllerContext.IsServer => IsServerInitialized;
 
-
-
-        // TODO aggiungere controlli sull'input (forse)
         private void OnSteer(InputValue value) => _steerInput = value.Get<float>();
         private void OnStart(InputValue value) => _isStarting = value.isPressed;
         private void OnDrift(InputValue value) => _isDrifting = value.isPressed;
         private void OnBoost(InputValue value) => _isBoosting = value.isPressed;
+        private void OnEarlyCommitement(InputValue value) => EarlyCommitment(90);
+
+        private void AnimateSteer(float steerInput)
+        {
+            _handle.localRotation = Quaternion.Slerp(
+                _handle.localRotation,
+                Quaternion.Euler(0, steerInput * _maxSteerAngle, 0),
+                Time.deltaTime * _steerSpeed
+            );
+        }
+
+        private IDrivingState GetStateType(DrivingStateType stateType)
+        {
+            switch (stateType)
+            {
+                case DrivingStateType.Idle: return _currentDrivingState = _idleState;
+                case DrivingStateType.Normal: return _currentDrivingState = _normalState;
+                case DrivingStateType.Drifting: return _currentDrivingState = _driftingState;
+                case DrivingStateType.Boost: return _currentDrivingState = _boostState;
+                case DrivingStateType.Grass: return _currentDrivingState = _grassState;
+                default:
+                    return null;
+            }
+        }
+        private DrivingStateType GetStateType(IDrivingState drivingState)
+        {
+            if (drivingState == _idleState) return DrivingStateType.Idle;
+            else if (drivingState == _normalState) return DrivingStateType.Normal;
+            else if (drivingState == _driftingState) return DrivingStateType.Drifting;
+            else if (drivingState == _boostState) return DrivingStateType.Boost;
+            else if (drivingState == _grassState) return DrivingStateType.Grass;
+            else return DrivingStateType.Idle; // TODO boh
+        }
+
+        [ServerRpc] //TODO da capire
+        public void EarlyCommitment(float chargeBatteryAmount)
+        {
+            _currentBatteryCharge += chargeBatteryAmount;
+        }
 
     }
 }

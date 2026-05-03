@@ -978,6 +978,15 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EarlyCommitment"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb7ece85-70b7-47f3-9037-b7de1a81c0dd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1200,6 +1209,17 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Start"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""73680f81-35e1-405c-8d24-a0d67fb64ac2"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EarlyCommitment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1294,6 +1314,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         m_InGameControls_Steer = m_InGameControls.FindAction("Steer", throwIfNotFound: true);
         m_InGameControls_Drift = m_InGameControls.FindAction("Drift", throwIfNotFound: true);
         m_InGameControls_Start = m_InGameControls.FindAction("Start", throwIfNotFound: true);
+        m_InGameControls_EarlyCommitment = m_InGameControls.FindAction("EarlyCommitment", throwIfNotFound: true);
     }
 
     ~@Input_Actions()
@@ -1717,6 +1738,7 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_InGameControls_Steer;
     private readonly InputAction m_InGameControls_Drift;
     private readonly InputAction m_InGameControls_Start;
+    private readonly InputAction m_InGameControls_EarlyCommitment;
     /// <summary>
     /// Provides access to input actions defined in input action map "InGameControls".
     /// </summary>
@@ -1752,6 +1774,10 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "InGameControls/Start".
         /// </summary>
         public InputAction @Start => m_Wrapper.m_InGameControls_Start;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/EarlyCommitment".
+        /// </summary>
+        public InputAction @EarlyCommitment => m_Wrapper.m_InGameControls_EarlyCommitment;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1796,6 +1822,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @Start.started += instance.OnStart;
             @Start.performed += instance.OnStart;
             @Start.canceled += instance.OnStart;
+            @EarlyCommitment.started += instance.OnEarlyCommitment;
+            @EarlyCommitment.performed += instance.OnEarlyCommitment;
+            @EarlyCommitment.canceled += instance.OnEarlyCommitment;
         }
 
         /// <summary>
@@ -1825,6 +1854,9 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @Start.started -= instance.OnStart;
             @Start.performed -= instance.OnStart;
             @Start.canceled -= instance.OnStart;
+            @EarlyCommitment.started -= instance.OnEarlyCommitment;
+            @EarlyCommitment.performed -= instance.OnEarlyCommitment;
+            @EarlyCommitment.canceled -= instance.OnEarlyCommitment;
         }
 
         /// <summary>
@@ -2093,5 +2125,12 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnStart(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "EarlyCommitment" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnEarlyCommitment(InputAction.CallbackContext context);
     }
 }

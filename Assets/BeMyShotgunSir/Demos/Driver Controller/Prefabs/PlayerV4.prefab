@@ -413,6 +413,9 @@ MonoBehaviour:
   _sphere: {fileID: 852193519373100106}
   _parent: {fileID: 4998179860331136265}
   _sidecar: {fileID: 6190171562437922324}
+  _handle: {fileID: 6147583942181700300}
+  _maxSteerAngle: 30
+  _steerSpeed: 10
 --- !u!65 &7508885612993998191
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -622,6 +625,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: -4161369568681901532, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+--- !u!4 &6147583942181700300 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5264195153946641564, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+  m_PrefabInstance: {fileID: 2044272062808213072}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6190171562437922324 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3910990755373119420, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
