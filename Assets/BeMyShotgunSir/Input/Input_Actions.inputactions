@@ -892,6 +892,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EarlyCommitment",
+                    "type": "Button",
+                    "id": "eb7ece85-70b7-47f3-9037-b7de1a81c0dd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1112,6 +1121,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "73680f81-35e1-405c-8d24-a0d67fb64ac2",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EarlyCommitment",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -49,8 +49,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplySteering(steerControl * controller.DriftDirection, controller.NormalStats.SteeringForce);
 
             float driftControl = controller.DriftDirection == 1
-                ? Mathf.Lerp(0.5f, 2f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
-                : Mathf.Lerp(2f, 0.5f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
+                ? Mathf.Lerp(1f, 2f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
+                : Mathf.Lerp(2f, 1f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
         }
         public void Exit(IDriverControllerContext controller, ReplicateData data)
