@@ -10,9 +10,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [field: SerializeField] public float ChargeBatterAmountRate { get; private set; }
         [field: SerializeField] public float ConsumeBatteryTimeRate { get; private set; }
         [field: SerializeField] public float ConsumeBatteryAmountRate { get; private set; }
-
-        // TODO togliere da qua
-        [field: SerializeField] public float OilAnimationDuration { get; private set; }
-        [field: SerializeField] public float OilTotalRotation { get; private set; }
     }
 }
