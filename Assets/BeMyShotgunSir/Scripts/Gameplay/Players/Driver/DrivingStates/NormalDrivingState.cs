@@ -4,13 +4,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public override void Enter(IDrivingState previousState, IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
-            _previousState = previousState;
             controller.SetMaxSpeed(controller.NormalStats.MaxSpeed);
-            Debug.Log($"Enter normal state. I am arriving from {_previousState.GetType().Name}");
+            //Debug.Log($"Enter normal state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
         }
-        public override void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
@@ -21,6 +20,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             else if (groundType == GroundType.Oil)
             {
                 controller.ChangeState(controller.OilState, data);
+                return;
             }
             if (data.IsDrifting && data.SteerInput != 0)
             {
@@ -33,7 +33,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public override void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.SidecarForward, controller.NormalStats.AccelerationForce);
             controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
@@ -41,9 +41,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public override void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDriverControllerContext controller, ReplicateData data)
         {
         }
-
     }
 }

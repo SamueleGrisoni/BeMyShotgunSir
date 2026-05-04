@@ -1,43 +1,30 @@
-using UnityEngine;
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class OilDrivingState : IDrivingState
     {
-        private Quaternion _lastSidecarLocalRotation;
         private float _timer;
-        public override void Enter(IDrivingState previousState, IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
-            _previousState = previousState;
-            _lastSidecarLocalRotation = controller.SidecarLocalRotation;
-            _timer = 0;
-            Debug.Log($"Enter oil state. I am arriving from {_previousState.GetType().Name}");
+            controller.OilAnimationTimer = 0f;
+            controller.IsOilAnimationActive = true;
         }
-        public override void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
-            _timer += controller.TickDelta();
-
-            if (_timer > controller.BatteryStats.OilAnimationDuration)
+            controller.OilAnimationTimer += controller.TickDelta();
+            if (controller.OilAnimationTimer > 1f && controller.IsServer) // TODO togliere da qua velore hardcodato
             {
-                controller.ChangeState(_previousState, data);
+                controller.ChangeState(controller.PreviousDrivingState, data);
                 return;
             }
         }
-        public override void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {
             controller.ApplyAcceleration(controller.SidecarForward, 0f);
-            /*
-            controller.ApplyVisualRotation(
-                Quaternion.Euler(0, controller.BatteryStats.OilSpeedAnimaton * controller.TickDelta(), 0),
-                45f
-            );
-            */
-            float angleThisTick = (controller.BatteryStats.OilTotalRotation / controller.BatteryStats.OilAnimationDuration) * controller.TickDelta();
-            controller.SidecarLocalRotation *= Quaternion.Euler(0, angleThisTick, 0);
+            controller.OilAnimation();
         }
-        public override void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDriverControllerContext controller, ReplicateData data)
         {
-            Debug.Log("Exit oil state");
+            controller.IsOilAnimationActive = true;
         }
-
     }
 }
