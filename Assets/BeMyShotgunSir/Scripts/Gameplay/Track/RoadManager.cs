@@ -21,7 +21,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     {
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<IRoadManager> OnRoadManagerSpawned;
+        public static event Action<IRoadManager, bool> OnRoadManagerSpawned;
         private int _seed = -1;
         private bool _isHostInitialized;
         private Transform _driver; //TODO change this to transform please
@@ -47,10 +47,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
-        public override void OnStartNetwork()
+        public override void OnStartServer()
         {
-            base.OnStartNetwork();
-            OnRoadManagerSpawned?.Invoke(this);
+            base.OnStartServer();
+            OnRoadManagerSpawned?.Invoke(this, true);
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (IsHostInitialized)
+                return;
+            OnRoadManagerSpawned?.Invoke(this, false);
         }
 
         public void SetSeed(int seed)
@@ -69,9 +77,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 _isHostInitialized = true;
                 InitSpawnPoints();
                 _raceNetController.SetSpawnPoints(_spawnPoints);
-                _raceNetController.ServerTrackReady();
+                _raceNetController.SetServerTrackReady_ServerRpc();
             }
-            else _raceNetController.TrackReady_ServerRpc();
+            else _raceNetController.SetTrackReady_ServerRpc();
         }
 
         [Server]
@@ -94,7 +102,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public void SetDriver(Transform driver)
         {
-            if (driver == null)
+            if (_driver == null)
                 _driver = driver;
             Vector3 pos = _driver.position;
             pos.y = 0.3f;
