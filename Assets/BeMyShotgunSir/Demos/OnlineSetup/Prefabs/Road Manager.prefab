@@ -375,7 +375,8 @@ MonoBehaviour:
   _environmentSpawner: {fileID: 7738397220102761310}
   _itemSpawner: {fileID: 1162758152213850260}
   _trackPooler: {fileID: 5188299226515914168}
-  _despawnBufferDistance: 20
+  _clientDespawnBufferDistance: 20
+  _serverSpawnBufferDistance: 80
 --- !u!1 &4092324638488986822
 GameObject:
   m_ObjectHideFlags: 0

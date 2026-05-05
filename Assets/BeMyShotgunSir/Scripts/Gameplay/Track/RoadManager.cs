@@ -23,7 +23,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private bool _isInitialized = false;
         public static event Action<IRoadManager> OnRoadManagerSpawned;
         private int _seed = -1;
-        private bool _isHostInitialized;
+        private bool _isServer;
         private Transform _driver; //TODO change this to transform please
         private Transform _firstPlayerTransform;
         private List<Transform> _spawnPoints;
@@ -43,7 +43,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private ItemSpawner _itemSpawner;
         [Header("Other References")]
         [SerializeField] private TrackPooler _trackPooler;
-        [SerializeField] private float _despawnBufferDistance = 20f;
+        [SerializeField] private float _clientDespawnBufferDistance = 20f;
+        //pieces are usually 50 units long, but a austin skane is 120. This allow to spawn 2 chunks ahead of the first in the worst case
+        [SerializeField] private float _serverSpawnBufferDistance = 300f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
@@ -75,7 +77,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
             {
-                _isHostInitialized = true;
+                _isServer = true;
                 InitSpawnPoints();
                 _raceNetController.SetServerTrackReady_ServerRpc();
             }
@@ -111,7 +113,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public void UpdateFirstPlayer(Transform playerTransform)
         {
-            if (_isHostInitialized)
+            if (_isServer)
                 _firstPlayerTransform = playerTransform;
         }
 
@@ -145,22 +147,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_driver == null || _activeRoadChunks.Count == 0)
                 return;
 
-            //Remove chunk only when the ancor is passed (faster than computing the distance and works with turn (distance was eucledian))
             PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
             Transform exitAnchor = firstChunk.Component.NextRoadAnchors[0];
-            if (_driver.transform.position.z > exitAnchor.position.z + _despawnBufferDistance)
+            if (_driver.transform.position.z > exitAnchor.position.z + _clientDespawnBufferDistance)
             {
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                 RemoveChunk(oldRoadChunk);
                 SpawnRoadChunk();
             }
+            if (_isServer)
+            {
+                PooledRoadChunk lastChunk = _activeRoadChunks.Last.Value;
+                Transform lastExitAnchor = lastChunk.Component.NextRoadAnchors[0];
+                if (_firstPlayerTransform.position.z <
+                    lastExitAnchor.position.z - _serverSpawnBufferDistance)
+                {
+                    SpawnRoadChunk();
+                }
+            }
         }
 
         private void RemoveChunk(PooledRoadChunk chunk)
         {
-            //todo check, item are not removed?
             _activeRoadChunks.RemoveFirst();
             _environmentSpawner.ClearSpawnedProps(chunk.Component);
+            _itemSpawner.ClearItemsFromChunk(chunk.Component);
             chunk.ReturnToPool();
         }
 
