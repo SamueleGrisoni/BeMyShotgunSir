@@ -188,6 +188,7 @@ MonoBehaviour:
   _stopSocketsOnThread: 0
   _dontRoute: 0
   _reuseAddress: 1
+  _unreliableMtu: 1023
   _ipv4BindAddress: 
   _enableIpv6: 1
   _ipv6BindAddress: 
