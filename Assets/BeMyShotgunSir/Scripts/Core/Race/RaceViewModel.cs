@@ -158,11 +158,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 default:
                     break;
             }
-            if (op != SyncListOperation.Complete)
-            {
-                Log.DLazy(() => $"Leaderboard updated: {op} index: {index} prev: {prev} next: {next}", this, _log);
-                OnRaceLeaderboardChanged?.Invoke();
-            }
+            Log.DLazy(() => $"Leaderboard updated. First 3 teams: {string.Join(", ", Leaderboard.GetRange(0, Math.Min(3, Leaderboard.Count)))}", this, _log);
+            OnRaceLeaderboardChanged?.Invoke();
         }
     }
 }

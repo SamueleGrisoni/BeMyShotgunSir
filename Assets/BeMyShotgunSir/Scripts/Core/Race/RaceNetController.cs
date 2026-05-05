@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
@@ -62,6 +63,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private bool _isRaceStarted = false;
         private Vector3 _trackOrigin = Vector3.zero;
         private Dictionary<int, TeamProgress> _teamProgress;
+        [Header("Performance")]
+        [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
+        [SerializeField] private float _leaderboardUpdateInterval = 0.2f;
+        private float _leaderboardUpdateTimer = 0f;
         [SerializeField] private NetworkObject _playerPrefab;
         [SerializeField] private NetworkObject _roadManagerPrefab;
 
@@ -248,7 +253,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         NetworkObject player = Instantiate(_playerPrefab, spawnPoint.position, spawnPoint.rotation);
                         Spawn(player.gameObject, LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
 
-                        _teamProgress.Add(playerState.TeamId, new TeamProgress(player.transform, 0f));
+                        _teamProgress.Add(playerState.TeamId, new TeamProgress(player.GetComponentInChildren<MovingDriver>().transform, 0f));
 
                         _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], player: player));
 
@@ -312,6 +317,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (!IsHostInitialized || !_isRaceStarted)
                 return;
 
+            // Throttle leaderboard updates to reduce per-frame cost
+            _leaderboardUpdateTimer += Time.deltaTime;
+            if (_leaderboardUpdateTimer < _leaderboardUpdateInterval)
+                return;
+            _leaderboardUpdateTimer = 0f;
+
             UpdateLeaderboard();
         }
 
@@ -321,10 +332,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (_teamProgress.Count == 0)
                 return;
 
-            // Update distances for all teams
+            // Update distances for all teams (use forward progress on Z axis rather than euclidean distance to origin)
             foreach (KeyValuePair<int, TeamProgress> teamProgress in _teamProgress)
             {
-                teamProgress.Value.distance = Vector3.Distance(teamProgress.Value.transform.position, _trackOrigin);
+                float dist = teamProgress.Value.transform.position.z - _trackOrigin.z;
+                teamProgress.Value.distance = dist;
             }
 
             // Sort teams by distance (descending - higher distance is ahead)
@@ -332,7 +344,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             sortedTeams.Sort((teamA, teamB) => _teamProgress[teamB].distance.CompareTo(_teamProgress[teamA].distance));
 
             // Update the networked leaderboard
+            IReadOnlyList<int> lb = NetState.Leaderboard;
+            if (lb.Count == sortedTeams.Count)
+            {
+                bool same = true;
+                for (int i = 0; i < lb.Count; i++)
+                {
+                    if (lb[i] != sortedTeams[i]) { same = false; break; }
+                }
+                if (same) return;
+            }
             _netState.SetLeaderboard(sortedTeams);
+            _roadManager.UpdateFirstPlayer(_teamProgress[sortedTeams[0]].transform);
         }
     }
 }
