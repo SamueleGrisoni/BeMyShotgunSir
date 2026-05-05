@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
+using BeMyShotgunSir.Scripts.UI;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -9,6 +11,17 @@ using UnityEngine.InputSystem;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
+    public interface IDriverController
+    {
+        void SetInputConsumer(IDriverInputConsumer inputConsumer);
+    }
+
+    //TODO copiare nello shotgun
+    // public interface IShotgunController
+    // {
+    //     void SetInputConsumer(IShotgunInputConsumer inputConsumer);
+    // }
+
     public enum GroundType : byte
     {
         Normal,
@@ -94,8 +107,26 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public uint GetTick() => _tick;
         public void SetTick(uint value) => _tick = value;
     }
-    public class DriverController : NetworkBehaviour, IDriverControllerContext
+    public class DriverController : NetworkBehaviour, IDriverControllerContext, IDriverController
     {
+        public static event Action<IDriverController> OnDriverSpawned;
+        private IDriverInputConsumer _inputConsumer;
+        public void SetInputConsumer(IDriverInputConsumer inputConsumer)
+        {
+            if (_inputConsumer == null)
+                _inputConsumer = inputConsumer;
+        }
+
+        //TODO copiare nello shotgun
+        // public static event Action<ShotgunController> OnShotgunSpawned;
+        // public IShotgunInputConsumer _inputConsumer;
+
+        // public void SetInputConsumer(IShotgunInputConsumer inputConsumer)
+        // {
+        //     if (_inputConsumer == null)
+        //         _inputConsumer = inputConsumer;
+        // }
+
         [SerializeField] private SOSidecarStats _sidecarStatsNormal;
         [SerializeField] private SOSidecarStats _sidecarStatsBoost;
         [SerializeField] private SOSidecarStats _sidecarStatsGrass;
@@ -155,11 +186,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDriverControllerContext.OilState => _oilState;
 
         float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
-        bool IDriverControllerContext.IsGrounded => throw new System.NotImplementedException();
-        bool IDriverControllerContext.IsDriftingButtonPressed => throw new System.NotImplementedException();
-        float IDriverControllerContext.SteerInput => throw new System.NotImplementedException();
-        bool IDriverControllerContext.IsBoostButtonPressed => throw new System.NotImplementedException();
-        bool IDriverControllerContext.IsStartButtonPressed => throw new System.NotImplementedException();
+        bool IDriverControllerContext.IsGrounded => throw new NotImplementedException();
+        bool IDriverControllerContext.IsDriftingButtonPressed => throw new NotImplementedException();
+        float IDriverControllerContext.SteerInput => throw new NotImplementedException();
+        bool IDriverControllerContext.IsBoostButtonPressed => throw new NotImplementedException();
+        bool IDriverControllerContext.IsStartButtonPressed => throw new NotImplementedException();
 
         float IDriverControllerContext.DriftDirection
         {
@@ -217,8 +248,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (IsOwner)
             {
                 GetComponent<PlayerInput>().enabled = true;
-
             }
+            OnDriverSpawned?.Invoke(this);
         }
 
         public override void OnStartNetwork()

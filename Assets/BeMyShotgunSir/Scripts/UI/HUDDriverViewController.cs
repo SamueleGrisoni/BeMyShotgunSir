@@ -1,4 +1,5 @@
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,6 +15,8 @@ namespace BeMyShotgunSir.Scripts.UI
         #region Bindings
         private RaceCommand _command;
         private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
         #endregion
 
         public override void OnInitialBindComplete()
@@ -38,6 +41,8 @@ namespace BeMyShotgunSir.Scripts.UI
                 Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
                 return;
             }
+            _roadManager = _finalBindSource.RoadManager;
+            _inputPublisher = _finalBindSource.InputPublisher;
         }
 
 

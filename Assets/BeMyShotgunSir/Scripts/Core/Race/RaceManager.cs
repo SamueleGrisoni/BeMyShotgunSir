@@ -4,6 +4,9 @@ using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.UI;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
@@ -41,10 +44,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private RaceViewModel _viewModel;
         private IRaceBindTarget[] _bindTargets;
         private RaceCommand _raceCommand;
-        public RaceCommand Command => _raceCommand;
         private RaceClientProjector _projector;
+        private IRoadManager _roadManager;
+        private InputPublisher _inputPublisher;
         RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
+        IRoadManager IRaceFinalBindSource.RoadManager => _roadManager;
+        IInputPublisher IRaceFinalBindSource.InputPublisher => _inputPublisher;
 
         private void Awake()
         {
@@ -63,6 +69,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnEnable()
         {
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
+            RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
+            DriverController.OnDriverSpawned += OnDriverSpawned;
+            //TODO
+            // ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
         }
 
         private void Start()
@@ -142,10 +152,29 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _netController.InitRace();
         }
 
+        private void OnRoadManagerSpawned(IRoadManager manager)
+        {
+            if (_roadManager == null)
+                _roadManager = manager;
+        }
+
+        private void OnDriverSpawned(IDriverController controller)
+        {
+            _inputPublisher = new InputPublisher();
+            controller.SetInputConsumer(_inputPublisher);
+            //MEMO here _roadManager and _inputPublisher must be ready
+            BindRace_Final(_bindTargets);
+        }
+
 
         private void BindRace_Final(IRaceBindTarget[] targets)
         {
-            int i = 0;
+            if (_binder == null)
+            {
+                Log.ELazy(() => $"Binder is null. Cannot execute final bind.", this);
+                return;
+            }
+            _binder.UpdateFinalBindSource(this);
             _binder.ExecuteFinalBind(targets);
         }
 

@@ -1,3 +1,6 @@
+using BeMyShotgunSir.Scripts.Gameplay.Track;
+using BeMyShotgunSir.Scripts.UI;
+
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
     public interface IRaceInitialBindSource : IBindSource
@@ -5,7 +8,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         RaceCommand Command { get; }
         RaceViewModel ViewModel { get; }
     }
-    public interface IRaceFinalBindSource : IBindSource { }
+    public interface IRaceFinalBindSource : IBindSource
+    {
+        IRoadManager RoadManager { get; }
+        IInputPublisher InputPublisher { get; }
+    }
     public interface IRaceBindSources : IRaceInitialBindSource, IRaceFinalBindSource, IBindSources { }
     public interface IRaceBindTarget : IBindTarget<IRaceInitialBindSource, IRaceFinalBindSource> { }
     public abstract class RaceBindTarget : BindTarget<IRaceInitialBindSource, IRaceFinalBindSource>, IRaceBindTarget { }

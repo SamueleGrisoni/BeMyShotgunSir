@@ -15,6 +15,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         void SetRaceNetController(RaceNetController raceNetController);
         void SetDriver(Transform driver);
         void UpdateFirstPlayer(Transform playerTransform);
+        void UpdateLastPlayer(Transform playerTransform);
     }
 
     public class RoadManager : NetworkBehaviour, IRoadManager
@@ -26,6 +27,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private bool _isServer;
         private Transform _driver; //TODO change this to transform please
         private Transform _firstPlayerTransform;
+        private Transform _lastPlayerTransform;
         private List<Transform> _spawnPoints;
         private RaceManager _raceManager;
         private RaceNetController _raceNetController;
@@ -115,6 +117,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             if (_isServer)
                 _firstPlayerTransform = playerTransform;
+        }
+
+        public void UpdateLastPlayer(Transform playerTransform)
+        {
+            if (_isServer)
+                _lastPlayerTransform = playerTransform;
         }
 
         private void Initialize()

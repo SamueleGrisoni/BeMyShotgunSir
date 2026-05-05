@@ -575,7 +575,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -601,8 +601,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 899024540}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0817801, y: -5.84976, z: -18.59491}
+  m_LocalRotation: {x: 0.22975294, y: 0, z: 0, w: 0.973249}
+  m_LocalPosition: {x: -1.08043, y: -4.84976, z: -10.59491}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -618,6 +618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1045515487}
   - component: {fileID: 1045515488}
+  - component: {fileID: 1045515489}
   m_Layer: 0
   m_Name: Connection Manager
   m_TagString: Untagged
@@ -655,6 +656,18 @@ MonoBehaviour:
   _currentAppFlow: 0
   _connectionFlowState: 0
   _lobbyManagerPrefab: {fileID: 8491619145890554402, guid: 2a95f435221185447af7158102adc114, type: 3}
+--- !u!114 &1045515489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045515486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 308baeaa208a3914593e0c7abd29c5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.SceneLoader
 --- !u!1 &1610449985
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,11 +959,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023376e00875623468f98046056dc64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GameServices
-  <MainCamera>k__BackingField: {fileID: 899024544}
-  <EventSystem>k__BackingField: {fileID: 1905700939}
-  <AudioListener>k__BackingField: {fileID: 899024543}
-  <GlobalVolume>k__BackingField: {fileID: 192766371}
-  _sceneCoordinator: {fileID: 2006144849}
+  <MainCamera>k__BackingField: {fileID: 0}
+  <EventSystem>k__BackingField: {fileID: 0}
+  <AudioListener>k__BackingField: {fileID: 0}
+  <GlobalVolume>k__BackingField: {fileID: 0}
+  _sceneCoordinator: {fileID: 0}
   <ConnectionManager>k__BackingField: {fileID: 1045515488}
   <Channels>k__BackingField: {fileID: 11400000, guid: c72e358ecdcd8a64181a1f77ec4a2e86, type: 2}
   <AudioManager>k__BackingField: {fileID: 565849611}
@@ -988,7 +1001,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 308baeaa208a3914593e0c7abd29c5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.SceneLoader
-  SceneManager: {fileID: 0}
 --- !u!1 &2082211048
 GameObject:
   m_ObjectHideFlags: 0

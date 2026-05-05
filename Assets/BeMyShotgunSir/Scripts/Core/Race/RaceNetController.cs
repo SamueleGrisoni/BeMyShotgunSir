@@ -356,6 +356,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             _netState.SetLeaderboard(sortedTeams);
             _roadManager.UpdateFirstPlayer(_teamProgress[sortedTeams[0]].transform);
+            _roadManager.UpdateLastPlayer(_teamProgress[sortedTeams[sortedTeams.Count - 1]].transform);
         }
     }
 }
