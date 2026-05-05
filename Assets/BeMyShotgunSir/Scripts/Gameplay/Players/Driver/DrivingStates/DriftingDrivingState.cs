@@ -21,6 +21,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.GrassState, data);
                 return;
             }
+            else if (groundType == GroundType.Oil)
+            {
+                controller.ChangeState(controller.OilState, data);
+                return;
+            }
             if (controller.CurrentBatteryCharge < controller.BatteryStats.MaxBatteryCharge)
             {
                 controller.BatteryChargeTimer += controller.TickDelta();
