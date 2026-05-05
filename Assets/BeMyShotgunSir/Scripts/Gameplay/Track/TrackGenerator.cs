@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
@@ -33,6 +34,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             this.itemsToSpawn = itemsToSpawn;
         }
     }
+
+    public struct SplitSegmentInfo
+    {
+        public int splitLength; // in number of chunks, not including the starting and ending crossroad
+    }
     #endregion
 
     public class TrackGenerator : MonoBehaviour
@@ -53,6 +59,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private List<int> _possibleTurnWeights = new List<int>() { -4, -3, -2, -1, 0, 1, 2, 3, 4 };
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
+
+        public static event Action<SplitSegmentInfo> OnSplitGenerated;
 
         public void Init(int seed)
         {
@@ -137,13 +145,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             return result;
         }
 
-        public int GetRandomNumberInRange(int min, int max) => _rng.Next(min, max);
-
         private void EnqueueNextSegment()
         {
             if (_chunksRemainingInCurrentState <= 0)
             {
                 _isGeneratingSplit = !_isGeneratingSplit;
+                OnSplitGenerated?.Invoke(new SplitSegmentInfo() { splitLength = _chunksRemainingInCurrentState });
                 if (_isGeneratingSplit) // Common -> Split
                 {
                     _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
@@ -153,7 +160,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                                 RoadChunkPosition.MIDDLE),
                             new List<GeneratedItemInfo>()));
                     _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
-                    //todo here a child object that expose lenght for new split lenght, and event to trigger ui map (c# event)
                 }
                 else // Split -> Common
                 {
