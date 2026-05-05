@@ -67,8 +67,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _leaderboardUpdateInterval = 0.2f;
         private float _leaderboardUpdateTimer = 0f;
-        [SerializeField] private NetworkObject _playerPrefab;
         [SerializeField] private NetworkObject _roadManagerPrefab;
+        [SerializeField] private NetworkObject _playerPrefab;
+        [SerializeField] private NetworkObject _shotgunPrefab;
+
 
         private void Awake()
         {
@@ -252,6 +254,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     {
                         NetworkObject player = Instantiate(_playerPrefab, spawnPoint.position, spawnPoint.rotation);
                         Spawn(player.gameObject, LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
+
+                        //Shotgun setup
+                        GameObject parent = player.GetComponentInChildren<MovingDriver>().gameObject;
+                        NetworkObject shotgun = Instantiate(_shotgunPrefab);
+                        // Ensure shotgun is a root object when spawned. Position it near the driver for visuals.
+                        Spawn(shotgun.gameObject, LobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
+                        // Set network parent after spawn so FishNet can move the root object between scenes.
+                        shotgun.SetParent(player);
+
 
                         _teamProgress.Add(playerState.TeamId, new TeamProgress(player.GetComponentInChildren<MovingDriver>().transform, 0f));
 

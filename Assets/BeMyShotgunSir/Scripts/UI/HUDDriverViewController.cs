@@ -17,6 +17,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private RaceViewModel _viewModel;
         private IRoadManager _roadManager;
         private IInputPublisher _inputPublisher;
+        private RaceRole _role;
         #endregion
 
         public override void OnInitialBindComplete()
@@ -43,6 +44,7 @@ namespace BeMyShotgunSir.Scripts.UI
             }
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
+            _role = _finalBindSource.Role;
         }
 
 

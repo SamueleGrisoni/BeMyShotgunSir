@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         IRoadManager RoadManager { get; }
         IInputPublisher InputPublisher { get; }
+        RaceRole Role { get; }
     }
     public interface IRaceBindSources : IRaceInitialBindSource, IRaceFinalBindSource, IBindSources { }
     public interface IRaceBindTarget : IBindTarget<IRaceInitialBindSource, IRaceFinalBindSource> { }

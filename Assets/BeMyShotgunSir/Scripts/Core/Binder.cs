@@ -93,26 +93,74 @@ namespace BeMyShotgunSir.Scripts.Core
 
         protected virtual void InitialBind(TBindTarget[] bindTargets)
         {
+            if (bindTargets == null)
+            {
+                Log.WLazy(() => "Bind targets are null. Skipping InitialBind.", this, _log);
+                return;
+            }
             foreach (TBindTarget target in bindTargets)
+            {
+                if (target == null)
+                {
+                    Log.WLazy(() => "A bind target is null. Skipping this target's InitialBind.", this, _log);
+                    continue;
+                }
                 target.InitialBind(_initialBindSource);
+            }
         }
 
         protected virtual void FinalBind(TBindTarget[] bindTargets)
         {
+            if (bindTargets == null)
+            {
+                Log.WLazy(() => "Bind targets are null. Skipping FinalBind.", this, _log);
+                return;
+            }
             foreach (TBindTarget target in bindTargets)
+            {
+                if (target == null)
+                {
+                    Log.WLazy(() => "A bind target is null. Skipping this target's FinalBind.", this, _log);
+                    continue;
+                }
                 target.FinalBind(_finalBindSource);
+            }
         }
 
         protected virtual void OnInitialBindComplete(TBindTarget[] bindTargets)
         {
+            if (bindTargets == null)
+            {
+                Log.WLazy(() => "Bind targets are null. Skipping OnInitialBindComplete.", this, _log);
+                return;
+            }
             foreach (TBindTarget target in bindTargets)
+            {
+                if (target == null)
+                {
+                    Log.WLazy(() => "A bind target is null. Skipping this target's OnInitialBindComplete.", this, _log);
+                    continue;
+                }
                 target.OnInitialBindComplete();
+            }
         }
 
         protected virtual void OnFinalBindComplete(TBindTarget[] targets)
         {
+            if (targets == null)
+            {
+                Log.WLazy(() => "Bind targets are null. Skipping OnFinalBindComplete.", this, _log);
+                return;
+            }
             foreach (TBindTarget target in targets)
+            {
+                if (target == null)
+                {
+                    Log.WLazy(() => "A bind target is null. Skipping this target's OnFinalBindComplete.", this, _log);
+                    continue;
+                }
                 target.OnFinalBindComplete();
+            }
         }
     }
 }

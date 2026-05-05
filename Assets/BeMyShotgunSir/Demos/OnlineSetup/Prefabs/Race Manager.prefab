@@ -123,8 +123,10 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3414248990729970632}
   _networkObjectCache: {fileID: 3414248990729970632}
-  _playerPrefab: {fileID: 4726359609289288218, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
+  _leaderboardUpdateInterval: 0.2
   _roadManagerPrefab: {fileID: 232372129966702668, guid: ba6a141122910ec45a2b80b692164a12, type: 3}
+  _playerPrefab: {fileID: 4726359609289288218, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
+  _shotgunPrefab: {fileID: 4995661455998479204, guid: 029f48ff96d137e4e8431c49ee205570, type: 3}
 --- !u!114 &3562243664245549473
 MonoBehaviour:
   m_ObjectHideFlags: 0

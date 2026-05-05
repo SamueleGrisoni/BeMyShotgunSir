@@ -7,6 +7,7 @@ using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.UI;
+using BeMyShotgunSir.Scripts.Gameplay.Players;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
@@ -47,10 +48,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private RaceClientProjector _projector;
         private IRoadManager _roadManager;
         private InputPublisher _inputPublisher;
+        private RaceRole _playerRole;
         RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
         IRoadManager IRaceFinalBindSource.RoadManager => _roadManager;
         IInputPublisher IRaceFinalBindSource.InputPublisher => _inputPublisher;
+        RaceRole IRaceFinalBindSource.Role => _playerRole;
 
         private void Awake()
         {
@@ -71,8 +74,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
             DriverController.OnDriverSpawned += OnDriverSpawned;
-            //TODO
-            // ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
+            ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
         }
 
         private void Start()
@@ -133,8 +135,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => $"RaceManager is not fully initialized. Cannot bind race commands. {(_binder == null ? "Binder" : _raceCommand == null ? "Command" : "ViewModel")} is null", this);
                 return;
             }
-
             _bindTargets = targets;
+            if (targets == null || targets.Length == 0)
+            {
+                Log.ELazy(() => $"No bind targets provided for initial bind.", this);
+                return;
+            }
             _binder.ExecuteInitialBind(targets);
         }
 
@@ -162,6 +168,16 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             _inputPublisher = new InputPublisher();
             controller.SetInputConsumer(_inputPublisher);
+            _playerRole = RaceRole.Driver;
+            //MEMO here _roadManager and _inputPublisher must be ready
+            BindRace_Final(_bindTargets);
+        }
+
+        private void OnShotgunSpawned(IShotgunController controller)
+        {
+            _inputPublisher = new InputPublisher();
+            controller.SetInputConsumer(_inputPublisher);
+            _playerRole = RaceRole.Shotgun;
             //MEMO here _roadManager and _inputPublisher must be ready
             BindRace_Final(_bindTargets);
         }
@@ -175,6 +191,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             }
             _binder.UpdateFinalBindSource(this);
+            if (targets == null || targets.Length == 0)
+            {
+                Log.ELazy(() => $"No bind targets provided for final bind.", this);
+                return;
+            }
             _binder.ExecuteFinalBind(targets);
         }
 

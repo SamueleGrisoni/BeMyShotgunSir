@@ -16,12 +16,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void SetInputConsumer(IDriverInputConsumer inputConsumer);
     }
 
-    //TODO copiare nello shotgun
-    // public interface IShotgunController
-    // {
-    //     void SetInputConsumer(IShotgunInputConsumer inputConsumer);
-    // }
-
     public enum GroundType : byte
     {
         Normal,
@@ -116,16 +110,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (_inputConsumer == null)
                 _inputConsumer = inputConsumer;
         }
-
-        //TODO copiare nello shotgun
-        // public static event Action<ShotgunController> OnShotgunSpawned;
-        // public IShotgunInputConsumer _inputConsumer;
-
-        // public void SetInputConsumer(IShotgunInputConsumer inputConsumer)
-        // {
-        //     if (_inputConsumer == null)
-        //         _inputConsumer = inputConsumer;
-        // }
 
         [SerializeField] private SOSidecarStats _sidecarStatsNormal;
         [SerializeField] private SOSidecarStats _sidecarStatsBoost;
@@ -248,8 +232,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (IsOwner)
             {
                 GetComponent<PlayerInput>().enabled = true;
+                OnDriverSpawned?.Invoke(this);
             }
-            OnDriverSpawned?.Invoke(this);
         }
 
         public override void OnStartNetwork()
