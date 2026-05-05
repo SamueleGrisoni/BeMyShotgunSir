@@ -1,5 +1,4 @@
 using System;
-using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
@@ -14,7 +13,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         [SerializeField] private InterfaceSerializer<RaceBindTarget, IRaceBindTarget>[] _bindTargets;
         private IRaceBindTarget[] _coercedTargets;
-        [SerializeField] private RoadManager _roadManager;
 
         private void OnDisable() =>
             RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
@@ -26,7 +24,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => "Coerced bind targets are null. Cannot bind race.", this);
                 return;
             }
-            // manager.SetRoadManager(_roadManager);
             manager.BindRace_Initial(_coercedTargets);
             OnRaceSceneInitialized?.Invoke();
         }

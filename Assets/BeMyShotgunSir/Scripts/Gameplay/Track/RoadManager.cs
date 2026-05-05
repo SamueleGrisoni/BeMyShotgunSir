@@ -45,7 +45,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
-        private LinkedList<PooledRoadChunk> _activeRoadChunks;
+        private LinkedList<PooledRoadChunk> _activeRoadChunks = new LinkedList<PooledRoadChunk>();
 
         public override void OnStartServer()
         {
@@ -77,10 +77,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 _isHostInitialized = true;
                 InitSpawnPoints();
-                _raceNetController.SetSpawnPoints(_spawnPoints);
                 _raceNetController.SetServerTrackReady_ServerRpc();
             }
-            else {_raceNetController.SetTrackReady_ServerRpc();}
+            else { _raceNetController.SetTrackReady_ServerRpc(); }
         }
 
         [Server]
@@ -99,6 +98,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
             RemoveChunk(oldRoadChunk);
             _activeRoadChunks.Clear();
+            _raceNetController.SetSpawnPoints(_spawnPoints, Vector3.zero);
         }
 
         public void SetDriver(Transform driver)
@@ -123,7 +123,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_isInitialized)
                 return;
 
-            _activeRoadChunks = new LinkedList<PooledRoadChunk>();
+            if (_activeRoadChunks == null)
+                _activeRoadChunks = new LinkedList<PooledRoadChunk>();
 
             for (int i = 0; i < _trackData.MaxActiveChunks; i++)
             {
@@ -163,7 +164,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             chunk.ReturnToPool();
         }
 
-        private void SpawnRoadChunk(bool isPeakingStartFinishLine=false)
+        private void SpawnRoadChunk(bool isPeakingStartFinishLine = false)
         {
             List<GeneratedRoadChunkInfoWithItems> generatedRoadChunkInfoList;
             if (!isPeakingStartFinishLine)
@@ -185,11 +186,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
                         ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
                         : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
-                if (_roadSpawner == null)
-                {
-                    Debug.LogError("RoadManager: RoadSpawner reference is missing. Cannot spawn road chunk.");
-                    return;
-                }
                 _roadSpawner.PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type,
                     chunkInfoWithItems.roadChunkInfo.position, _activeRoadChunks.Count);
                 _environmentSpawner.PopulateChunk(nextChunk.Component);

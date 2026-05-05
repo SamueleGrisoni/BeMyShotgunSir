@@ -9,6 +9,21 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
+    #region Data Structures
+
+    public class TeamProgress
+    {
+        public Transform transform;
+        public float distance;
+        public TeamProgress(Transform transform, float distance)
+        {
+            this.transform = transform;
+            this.distance = distance;
+        }
+    }
+
+    #endregion
+
     #region Interfaces
 
     public interface IRaceNetController_Command : INetController_Command
@@ -44,6 +59,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRoadManager _roadManager;
 
         private List<Transform> _spawnPoints;
+        private bool _isRaceStarted = false;
+        private Vector3 _trackOrigin = Vector3.zero;
+        private Dictionary<int, TeamProgress> _teamProgress;
         [SerializeField] private NetworkObject _playerPrefab;
         [SerializeField] private NetworkObject _roadManagerPrefab;
 
@@ -156,8 +174,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         [Server]
-        public void SetSpawnPoints(List<Transform> spawnPoints) =>
+        public void SetSpawnPoints(List<Transform> spawnPoints, Vector3 trackOrigin = default)
+        {
             _spawnPoints = spawnPoints;
+            _trackOrigin = trackOrigin;
+        }
 
 
         private void SetUpClientsRoadManager(int seed)
@@ -249,6 +270,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         NetworkObject player = Instantiate(_playerPrefab, spawnPoint.position, spawnPoint.rotation);
                         Spawn(player.gameObject, LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
 
+                        _teamProgress ??= new Dictionary<int, TeamProgress>();
+                        _teamProgress.Add(playerState.TeamId, new TeamProgress(player.transform, 0f));
+
                         _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], player: player));
 
                         SetUpPlayer_TargetRpc(LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, player, RaceRole.Driver);
@@ -306,7 +330,25 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             //TODO
         }
 
+        private void Update()
+        {
+            if (!IsHostInitialized || !_isRaceStarted)
+                return;
+
+            UpdateLeaderboard();
+        }
+
+        [Server]
+        private void UpdateLeaderboard()
+        {
+            //TODO update leaderboard based on players' progress in the track
+            foreach (KeyValuePair<int, TeamProgress> teamProgress in _teamProgress)
+            {
+                teamProgress.Value.distance = Vector3.Distance(teamProgress.Value.transform.position, _trackOrigin);
+            }
 
 
+
+        }
     }
 }

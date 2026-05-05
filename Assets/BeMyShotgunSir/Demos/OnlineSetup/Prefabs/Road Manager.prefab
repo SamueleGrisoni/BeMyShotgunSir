@@ -533,7 +533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83be5f255a594f4478d096543975d725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.TrackPooler
-  _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
   _roadChunksInactiveParent: {fileID: 5363626884237154951}
   _roadChunksActiveParent: {fileID: 610817924778890783}
   _envChunksInactiveParent: {fileID: 6672161889467657940}
