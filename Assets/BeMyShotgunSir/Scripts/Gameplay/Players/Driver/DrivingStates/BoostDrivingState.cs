@@ -22,6 +22,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.GrassState, data);
                 return;
             }
+            else if (groundType == GroundType.Oil)
+            {
+                controller.ChangeState(controller.OilState, data);
+                return;
+            }
             if (controller.IsOnwer || controller.IsServer)
             {
                 controller.BoostTimer += controller.TickDelta();
