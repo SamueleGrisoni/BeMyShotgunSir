@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using Random = System.Random;
 
@@ -102,6 +103,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
         }
 
+        public List<GeneratedRoadChunkInfoWithItems> PeekStartFinishLine()
+        {
+            if (_trackBits.Count == 0)
+            {
+                Debug.LogError("[TrackManager Server] PeekStartFinishLine called but trackBits is empty!");
+                throw new EarlyExitException();
+            }
+            if (_trackBits.Peek().roadChunkInfo.index != (int)SpecialRoadChunkIndex.START_LINE)
+            {
+                Debug.LogError("[TrackManager Server] PeekStartFinishLine called but the first chunk is not the start line!");
+                throw new EarlyExitException();
+            }
+            return new List<GeneratedRoadChunkInfoWithItems>() { _trackBits.Peek() };
+        }
+
         public List<GeneratedRoadChunkInfoWithItems> GetGeneratedRoadChunkInfoWithItems()
         {
             var result = new List<GeneratedRoadChunkInfoWithItems>();
@@ -137,6 +153,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                                 RoadChunkPosition.MIDDLE),
                             new List<GeneratedItemInfo>()));
                     _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
+                    //todo here a child object that expose lenght for new split lenght, and event to trigger ui map (c# event)
                 }
                 else // Split -> Common
                 {

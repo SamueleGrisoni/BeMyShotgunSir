@@ -321,7 +321,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04487c10383807c448208e627c3907d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.TrackManager
-  _trackSeed: {fileID: 743278065}
   _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
   _itemGenerator: {fileID: 1848292963}
 --- !u!4 &204120562
@@ -913,6 +912,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1226758388}
   - component: {fileID: 1226758389}
+  - component: {fileID: 1226758390}
   m_Layer: 0
   m_Name: Road Manager
   m_TagString: Untagged
@@ -950,17 +950,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 985288150cdf514459a45dbc7cc17a46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.RoadManager
-  _trackSeed: {fileID: 743278065}
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1226758390}
+  _networkObjectCache: {fileID: 0}
   _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
   _trackGenerator: {fileID: 204120561}
-  _itemGenerator: {fileID: 0}
   _roadSpawner: {fileID: 47903829}
   _environmentSpawner: {fileID: 2128947564}
   _itemSpawner: {fileID: 218090104}
-  _startingPoint: {fileID: 0}
-  _driver: {fileID: 0}
   _trackPooler: {fileID: 233792788}
   _despawnBufferDistance: 20
+--- !u!114 &1226758390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226758387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 528055290
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
 --- !u!1 &1482682852
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,7 +1237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13620fa7acc9457dba65c445668b737b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemManager
-  _trackSeed: {fileID: 743278065}
   _itemData: {fileID: 11400000, guid: e9dce43d4db29ec418ac6b7d49b839f3, type: 2}
 --- !u!1 &1958894941
 GameObject:
@@ -1380,7 +1435,6 @@ MonoBehaviour:
   - {fileID: 393752332917596868, guid: 25a5a2895a523074d9c7fe7bb66eccb8, type: 3}
   - {fileID: 2452451734585529808, guid: 723ef5276e09d9a4083e6af5922339dc, type: 3}
   _environmentData: {fileID: 11400000, guid: 05623181645398b4a938f6e01054eaaa, type: 2}
-  _trackSeed: {fileID: 743278065}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

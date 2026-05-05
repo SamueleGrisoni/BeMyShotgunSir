@@ -13,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     {
         void SetSeed(int seed);
         void SetRaceNetController(RaceNetController raceNetController, bool isServer = false);
-        void SetDriver(GameObject driver);
+        void SetDriver(Transform driver);
         void UpdateFirstPlayer(Transform playerTransform);
     }
 
@@ -24,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public static event Action<IRoadManager> OnRoadManagerSpawned;
         private int _seed = -1;
         private bool _isHostInitialized;
-        private GameObject _driver; //TODO change this to transform please
+        private Transform _driver; //TODO change this to transform please
         private Transform _firstPlayerTransform;
         private List<Transform> _spawnPoints;
         private RaceManager _raceManager;
@@ -77,21 +77,28 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [Server]
         private void InitSpawnPoints()
         {
-            //driver spawnpoints for the moment
-            _spawnPoints = new List<Transform>();
-            for (int i = 0; i < 8; i++)
+            SpawnRoadChunk(true);
+            RoadChunk comp = _activeRoadChunks.First.Value.Component;
+            if (comp is StartFinishLineRoadChunk startFinish)
             {
-                var spawnPointGO = new GameObject($"SpawnPoint_{i}");
-                spawnPointGO.transform.position = Vector3.zero;
-                _spawnPoints.Add(spawnPointGO.transform);
+                _spawnPoints = startFinish.GridPositions;
             }
-            //TODO here we need to get the spawn points
+            else
+            {
+                Debug.Log("[Road Manager Server]: Failed to initialize spawn points, the first chunk is not a start finish line");
+            }
+            PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
+            RemoveChunk(oldRoadChunk);
+            _activeRoadChunks.Clear();
         }
 
-        public void SetDriver(GameObject driver)
+        public void SetDriver(Transform driver)
         {
             if (driver == null)
                 _driver = driver;
+            Vector3 pos = _driver.position;
+            pos.y = 0.3f;
+            _driver.position = pos;
             Log.DLazy(() => $"RoadManager: Driver set to {driver.name}", this, _log);
             Initialize();
         }
@@ -115,24 +122,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 SpawnRoadChunk();
             }
 
-            if (_driver != null)
-            {
-                //todo this will be set by the server so the 2 sidecar do not overlap
-                //(this implementation sucks ikik but I want to see the car on track tbh)
-                RoadChunk comp = _activeRoadChunks.First.Value.Component;
-                if (comp is StartFinishLineRoadChunk startFinish)
-                {
-                    Vector3 startingPos = startFinish
-                        .GridPositions[_trackGenerator.GetRandomNumberInRange(0, 1)].position;
-                    startingPos.y = 0.3f;
-                    _driver.transform.position = startingPos;
-                }
-            }
-            else
-            {
-                Debug.LogError("RoadManager: Driver reference is missing");
-            }
-
             StartRace();
             _isInitialized = true;
         }
@@ -153,17 +142,33 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_driver.transform.position.z > exitAnchor.position.z + _despawnBufferDistance)
             {
                 PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
-                _activeRoadChunks.RemoveFirst();
-                _environmentSpawner.ClearSpawnedProps(oldRoadChunk.Component);
-                oldRoadChunk.ReturnToPool();
+                RemoveChunk(oldRoadChunk);
                 SpawnRoadChunk();
             }
         }
 
-        private void SpawnRoadChunk()
+        private void RemoveChunk(PooledRoadChunk chunk)
         {
-            List<GeneratedRoadChunkInfoWithItems> generatedRoadChunkInfoList =
-                _trackGenerator.GetGeneratedRoadChunkInfoWithItems();
+            //todo check, item are not removed?
+            _activeRoadChunks.RemoveFirst();
+            _environmentSpawner.ClearSpawnedProps(chunk.Component);
+            chunk.ReturnToPool();
+        }
+
+        private void SpawnRoadChunk(bool isPeakingStartFinishLine=false)
+        {
+            List<GeneratedRoadChunkInfoWithItems> generatedRoadChunkInfoList;
+            if (!isPeakingStartFinishLine)
+            {
+                generatedRoadChunkInfoList =
+                    _trackGenerator.GetGeneratedRoadChunkInfoWithItems();
+            }
+            else
+            {
+                generatedRoadChunkInfoList =
+                    _trackGenerator.PeekStartFinishLine();
+            }
+
             foreach (GeneratedRoadChunkInfoWithItems chunkInfoWithItems in
                 generatedRoadChunkInfoList)
             {

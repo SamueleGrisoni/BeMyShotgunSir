@@ -126,7 +126,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             }
             cam.enabled = true;
-            _roadManager.SetDriver(driver.gameObject);
+            _roadManager.SetDriver(driver.gameObject.transform);
 
             //TODO FINAL BIND
 
