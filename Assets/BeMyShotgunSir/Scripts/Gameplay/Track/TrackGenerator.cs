@@ -150,7 +150,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_chunksRemainingInCurrentState <= 0)
             {
                 _isGeneratingSplit = !_isGeneratingSplit;
-                OnSplitGenerated?.Invoke(new SplitSegmentInfo() { splitLength = _chunksRemainingInCurrentState });
+                //todo launch event with complete list of chunks in the split segment, not just the length. This will allow the UI to show an accurate preview of the upcoming split segment instead of just a generic "split coming up" message.
+                //OnSplitGenerated?.Invoke(new SplitSegmentInfo() { splitLength = _chunksRemainingInCurrentState });
                 if (_isGeneratingSplit) // Common -> Split
                 {
                     _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(

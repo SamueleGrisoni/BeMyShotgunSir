@@ -46,8 +46,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [Header("Other References")]
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _clientDespawnBufferDistance = 20f;
-        //pieces are usually 50 units long, but a austin skane is 120. This allow to spawn 2 chunks ahead of the first in the worst case
-        [SerializeField] private float _serverSpawnBufferDistance = 300f;
+        [SerializeField] private float _serverBufferDistance = 150f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
@@ -155,23 +154,37 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_driver == null || _activeRoadChunks.Count == 0)
                 return;
 
-            PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
-            Transform exitAnchor = firstChunk.Component.NextRoadAnchors[0];
-            if (_driver.transform.position.z > exitAnchor.position.z + _clientDespawnBufferDistance)
+            if (!_isServer)
             {
-                PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
-                RemoveChunk(oldRoadChunk);
-                SpawnRoadChunk();
+                PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
+                Transform exitAnchor = firstChunk.Component.NextRoadAnchors[0];
+                if (_driver.transform.position.z > exitAnchor.position.z + _clientDespawnBufferDistance)
+                {
+                    PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
+                    RemoveChunk(oldRoadChunk);
+                    SpawnRoadChunk();
+                }
             }
-            if (_isServer)
+            else
             {
                 PooledRoadChunk lastChunk = _activeRoadChunks.Last.Value;
-                Transform lastExitAnchor = lastChunk.Component.NextRoadAnchors[0];
-                if (_firstPlayerTransform.position.z <
-                    lastExitAnchor.position.z - _serverSpawnBufferDistance)
+                Transform exitAnchor = lastChunk.Component.NextRoadAnchors[0];
+                if (_firstPlayerTransform is null) return;
+                if(_firstPlayerTransform.transform.position.z > exitAnchor.position.z - _serverBufferDistance)
                 {
                     SpawnRoadChunk();
                 }
+
+                if(_lastPlayerTransform is null) return;
+                PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
+                Transform firstChunkExitAnchor = firstChunk.Component.NextRoadAnchors[0];
+                if (_lastPlayerTransform.transform.position.z >
+                    firstChunkExitAnchor.position.z + _clientDespawnBufferDistance)
+                {
+                    PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
+                    RemoveChunk(oldRoadChunk);
+                }
+
             }
         }
 
@@ -205,6 +218,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
                         ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
                         : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
+
                 _roadSpawner.PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type,
                     chunkInfoWithItems.roadChunkInfo.position, _activeRoadChunks.Count);
                 _environmentSpawner.PopulateChunk(nextChunk.Component);
