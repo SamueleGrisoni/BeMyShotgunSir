@@ -124,6 +124,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         //It works well enough for ItemSpawnArea but if you need the center of a spawnArea for a generic purpose is going to fuck you up
         public Vector3 GetPolygonBoundsCenter()
         {
+            _worldPoints = GetWorldPoints();
             return ComputePolygonBounds().center;
         }
 

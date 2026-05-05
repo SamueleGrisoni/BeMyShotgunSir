@@ -149,9 +149,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void RemoveChunk(PooledRoadChunk chunk)
         {
-            //todo check, item are not removed?
             _activeRoadChunks.RemoveFirst();
             _environmentSpawner.ClearSpawnedProps(chunk.Component);
+            _itemSpawner.ClearItemsFromChunk(chunk.Component);
             chunk.ReturnToPool();
         }
 

@@ -25,6 +25,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             }
         }
 
+        public void ClearItemsFromChunk(RoadChunk chunk)
+        {
+            foreach (var areaGroup in chunk.AreaGroup)
+            {
+                foreach (var spawnPoint in areaGroup.ItemSpawnPoints)
+                {
+                    foreach (Transform child in spawnPoint.transform)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
+            }
+        }
+
         private void SpawnObstacle(RoadChunk chunk, GeneratedItemInfo itemInfo)
         {
             Item item = _itemData.ObstacleItems[itemInfo.index];
