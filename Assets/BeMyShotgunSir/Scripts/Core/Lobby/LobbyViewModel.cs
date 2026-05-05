@@ -104,8 +104,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 default:
                     break;
             }
-            Log.DLazy(() => $"PlayerStates updated. Operation: {op}, Key: {key}, Value: {value}", this, _log);
-            OnPlayerStatesChanged?.Invoke();
+            if (op != SyncDictionaryOperation.Complete)
+            {
+                Log.DLazy(() => $"PlayerStates updated. Operation: {op}, Key: {key}, Value: {value}", this, _log);
+                OnPlayerStatesChanged?.Invoke();
+            }
         }
 
         public Dictionary<int, LobbyTeamInfo> TeamInfos { get; private set; } = new Dictionary<int, LobbyTeamInfo>();
@@ -129,8 +132,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 default:
                     break;
             }
-            Log.DLazy(() => $"TeamInfos updated. Operation: {op}, Key: {key}, Value: {value}", this, _log);
-            OnTeamInfosChanged?.Invoke();
+            if (op != SyncDictionaryOperation.Complete)
+            {
+                Log.DLazy(() => $"TeamInfos updated. Operation: {op}, Key: {key}, Value: {value}", this, _log);
+                OnTeamInfosChanged?.Invoke();
+            }
         }
     }
 }

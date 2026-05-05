@@ -10,7 +10,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     public class PooledRandomProp : PooledObject<PooledRandomProp, RandomProp> { }
     public class TrackPooler : MonoBehaviour
     {
-        [SerializeField] private SOTrack _trackData;
+        private SOTrack _trackData;
         [SerializeField] private GameObject _roadChunksInactiveParent;
         [SerializeField] private GameObject _roadChunksActiveParent;
         [SerializeField] private GameObject _envChunksInactiveParent;
@@ -27,8 +27,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public void SetTrackData(SOTrack trackData)
         {
-            if (_trackData != null)
-                return; //no overwriting
             _trackData = trackData;
             InitPools(trackData);
         }

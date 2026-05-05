@@ -135,56 +135,71 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Spawn(roadManager.gameObject, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
         }
 
-        private void OnRoadManagerSpawned(IRoadManager manager)
+        private void OnRoadManagerSpawned(IRoadManager manager, bool isServer = false)
         {
             if (_roadManager != null)
             {
                 Log.WLazy(() => "Multiple RoadManagers detected. This is not expected. Ignoring additional instances.", this);
                 return;
             }
+
             _roadManager = manager;
-            _roadManager.SetSeed(_netState.GetSeed());
-            _roadManager.SetRaceNetController(this, IsHostInitialized);
+
+            int seed = _netState.GetSeed();
+            if (isServer)
+            {
+                _roadManager.SetSeed(seed);
+                _roadManager.SetRaceNetController(this, isServer);
+            }
+            else SetUpClientsRoadManager(seed);
+
         }
 
         [Server]
-        public void SetSpawnPoints(List<Transform> spawnPoints)
-        {
-            if (spawnPoints == null || spawnPoints.Count == 0)
-            {
-                Log.WLazy(() => "Received null or empty spawn points list. Ignoring.", this);
-                return;
-            }
+        public void SetSpawnPoints(List<Transform> spawnPoints) =>
             _spawnPoints = spawnPoints;
+
+
+        private void SetUpClientsRoadManager(int seed)
+        {
+            if (IsHostInitialized)
+                return;
+            _roadManager.SetSeed(seed);
+            _roadManager.SetRaceNetController(this, IsHostInitialized);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void ServerTrackReady(NetworkConnection connection = null)
+        public void SetServerTrackReady_ServerRpc(NetworkConnection connection = null)
         {
             if (connection == null || !IsHostInitialized)
                 return;
             if (NetState.TryGetPlayerState(connection.ClientId, out RacePlayerState playerState))
+            {
                 _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, isTrackReady: true));
+                Log.DLazy(() => $"PlayerHost with connection ID {connection.ClientId} is ready with track.", this, _log);
+                TrySpawnPlayers(connection);
+            }
             else
-                Log.ELazy(() => $"Player state for connection {connection.ClientId} not found in RaceNetController", this);
-
-            TrySpawnPlayers(connection);
+                Log.ELazy(() => $"PlayerHost state for connection {connection.ClientId} not found in RaceNetController", this);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void TrackReady_ServerRpc(NetworkConnection connection = null)
+        public void SetTrackReady_ServerRpc(NetworkConnection connection = null)
         {
             if (connection == null)
                 return;
             if (NetState.TryGetPlayerState(connection.ClientId, out RacePlayerState playerState))
+            {
                 _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, isTrackReady: true));
-
-            TrySpawnPlayers(connection);
+                Log.DLazy(() => $"Player with connection ID {connection.ClientId} is ready with track.", this, _log);
+                TrySpawnPlayers(connection);
+            }
         }
 
         [Server]
         private bool AreAllPlayersTrackReady()
         {
+            Log.DLazy(() => $"Checking if all players are ready with track.", this, _log);
             foreach (RacePlayerState playerState in NetState.PlayerStates.Values)
             {
                 if (!playerState.IsTrackReady)
@@ -193,13 +208,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             return true;
         }
 
-
-
         [Server]
         private bool TrySpawnPlayers(NetworkConnection connection)
         {
             if (!AreAllPlayersTrackReady())
                 return false;
+            Log.DLazy(() => $"All players are ready with track. Attempting to spawn players.", this, _log);
 
             Transform spawnPoint;
             List<RacePlayerState> playerStatesSnapshot = new(NetState.PlayerStates.Values);

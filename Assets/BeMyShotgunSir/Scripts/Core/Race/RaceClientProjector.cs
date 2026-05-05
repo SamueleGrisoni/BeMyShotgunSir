@@ -50,11 +50,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
         }
 
-        private void OnRoadManagerSpawned(IRoadManager manager)
-        {
-            if (_roadManager == null)
-                _roadManager = manager as RoadManager;
-        }
+        private void OnRoadManagerSpawned(IRoadManager manager, bool isServer) => _roadManager = manager;
 
         public void Init(RaceViewModel viewModel)
         {
