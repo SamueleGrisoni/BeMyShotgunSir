@@ -72,6 +72,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             if (_netState == null || _clientProjector == null)
                 Log.ELazy(() => $"One or more required components are missing on RaceNetController.", this);
+
+            _teamProgress = new Dictionary<int, TeamProgress>();
         }
 
         public void OnEnable()
@@ -153,7 +155,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Spawn(roadManager.gameObject, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
         }
 
-        private void OnRoadManagerSpawned(IRoadManager manager, bool isServer = false)
+        private void OnRoadManagerSpawned(IRoadManager manager)
         {
             if (_roadManager != null)
             {
@@ -162,15 +164,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
 
             _roadManager = manager;
-
-            int seed = _netState.GetSeed();
-            if (isServer)
-            {
-                _roadManager.SetSeed(seed);
-                _roadManager.SetRaceNetController(this, isServer);
-            }
-            else SetUpClientsRoadManager(seed);
-
+            _roadManager.SetSeed(_netState.GetSeed());
+            _roadManager.SetRaceNetController(this);
         }
 
         [Server]
@@ -180,14 +175,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _trackOrigin = trackOrigin;
         }
 
-
-        private void SetUpClientsRoadManager(int seed)
-        {
-            if (IsHostInitialized)
-                return;
-            _roadManager.SetSeed(seed);
-            _roadManager.SetRaceNetController(this, IsHostInitialized);
-        }
 
         [ServerRpc(RequireOwnership = false)]
         public void SetServerTrackReady_ServerRpc(NetworkConnection connection = null)
@@ -249,20 +236,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
                 if (NetState.TryGetTeamData(playerState.TeamId, out RaceTeamData teamData))
                 {
-                    if (teamData.DriverConnectionId == connection.ClientId)
+                    // Set the calling player as ready to race (driver or shotgun of this team)
+                    if (teamData.DriverConnectionId == connection.ClientId || teamData.ShotgunConnectionId == connection.ClientId)
                         _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, isReadyToRace: true));
-                    else if (teamData.ShotgunConnectionId == connection.ClientId)
-                        _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, isReadyToRace: true));
-                    else
-                    {
-                        Log.ELazy(() => $"Player with connection ID {connection.ClientId} is not assigned as driver or shotgun in their team. Cannot set them as ready.", this);
-                        LogMessage_TargetRpc(connection, "Error setting ready state. Player not assigned as driver or shotgun in their team.", 1);
-                        return false;
-                    }
 
-                    RaceRole role = connection.ClientId == NetState.TeamData[playerState.TeamId].DriverConnectionId ? RaceRole.Driver : RaceRole.Shotgun;
-                    _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, role: role));
-
+                    //spawn player when both driver and shotgun of the team are ready with track and player not spawned yet
                     if (NetState.PlayerStates[teamData.DriverConnectionId].IsTrackReady &&
                      NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady &&
                       !NetState.TeamData[playerState.TeamId].IsPlayerSpawned)
@@ -270,7 +248,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         NetworkObject player = Instantiate(_playerPrefab, spawnPoint.position, spawnPoint.rotation);
                         Spawn(player.gameObject, LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
 
-                        _teamProgress ??= new Dictionary<int, TeamProgress>();
                         _teamProgress.Add(playerState.TeamId, new TeamProgress(player.transform, 0f));
 
                         _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], player: player));
@@ -308,7 +285,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 playerState.IsReadyToRace = true;
                 _netState.SetPlayerState(connection.ClientId, playerState);
-                CheckPlayersReadyToRace();
+                TryStartRace();
             }
             else
             {
@@ -318,17 +295,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         [Server]
-        private void CheckPlayersReadyToRace()
+        private bool TryStartRace()
         {
             if (NetState.AreAllPlayersReady())
-                StartRace();
+            {
+                _isRaceStarted = true;
+                Log.DLazy(() => $"All players are ready. Starting race.", this, _log);
+                return true;
+            }
+            return false;
         }
 
-        [Server]
-        private void StartRace()
-        {
-            //TODO
-        }
 
         private void Update()
         {
@@ -341,14 +318,21 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Server]
         private void UpdateLeaderboard()
         {
-            //TODO update leaderboard based on players' progress in the track
+            if (_teamProgress.Count == 0)
+                return;
+
+            // Update distances for all teams
             foreach (KeyValuePair<int, TeamProgress> teamProgress in _teamProgress)
             {
                 teamProgress.Value.distance = Vector3.Distance(teamProgress.Value.transform.position, _trackOrigin);
             }
 
+            // Sort teams by distance (descending - higher distance is ahead)
+            var sortedTeams = new List<int>(_teamProgress.Keys);
+            sortedTeams.Sort((teamA, teamB) => _teamProgress[teamB].distance.CompareTo(_teamProgress[teamA].distance));
 
-
+            // Update the networked leaderboard
+            _netState.SetLeaderboard(sortedTeams);
         }
     }
 }

@@ -56,13 +56,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public struct RacePlayerState
     {
+        public string PlayerName;
         public int TeamId;
         public bool IsTrackReady;
         public bool IsReadyToRace;
         public RaceRole Role;
 
-        public RacePlayerState(int teamId, bool isTrackReady, bool isReadyToRace, RaceRole role = RaceRole.None)
+        public RacePlayerState(string name, int teamId, bool isTrackReady, bool isReadyToRace, RaceRole role = RaceRole.None)
         {
+            PlayerName = name;
             TeamId = teamId;
             IsTrackReady = isTrackReady;
             IsReadyToRace = isReadyToRace;
@@ -71,13 +73,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public RacePlayerState(RacePlayerState other, bool? isTrackReady = null, bool? isReadyToRace = null, RaceRole? role = null)
         {
+            PlayerName = other.PlayerName;
             TeamId = other.TeamId;
             IsTrackReady = isTrackReady ?? other.IsTrackReady;
             IsReadyToRace = isReadyToRace ?? other.IsReadyToRace;
             Role = role ?? other.Role;
         }
 
-        public override string ToString() => $"TeamId: {TeamId}, IsTrackReady: {IsTrackReady}, IsReadyToRace: {IsReadyToRace}, Role: {Role}";
+        public override string ToString() => $"PlayerName: {PlayerName}, TeamId: {TeamId}, IsTrackReady: {IsTrackReady}, IsReadyToRace: {IsReadyToRace}, Role: {Role}";
     }
 
     public struct RaceTeamData
@@ -165,6 +168,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         void SetSeed(int value);
         void SetPlayerState(int connectionId, RacePlayerState playerState);
         void SetTeamData(int teamId, RaceTeamData teamData);
+        void SetLeaderboard(List<int> orderedTeamIds);
     }
 
     public interface IRaceNetStateStore_Projector
@@ -235,9 +239,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             foreach (KeyValuePair<int, LobbyPlayerState> lobbyPlayerState in lobbyState.PlayerStates)
             {
                 _racePlayerStates[lobbyPlayerState.Key] = new RacePlayerState(
+                    name: lobbyPlayerState.Value.PlayerName,
                     teamId: lobbyPlayerState.Value.TeamId,
                     isTrackReady: false,
-                    isReadyToRace: false
+                    isReadyToRace: false,
+                    role: lobbyPlayerState.Value.ConnectionId == lobbyPlayerState.Value.TeamId ? RaceRole.Driver : RaceRole.Shotgun
                 );
             }
 
@@ -268,6 +274,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Server]
         public void SetTeamData(int teamId, RaceTeamData teamData) =>
             _raceTeamData[teamId] = teamData;
+
+        [Server]
+        public void SetLeaderboard(List<int> orderedTeamIds)
+        {
+            _leaderboard.Clear();
+            foreach (int teamId in orderedTeamIds)
+                _leaderboard.Add(teamId);
+        }
 
         public bool AreAllPlayersReady()
         {

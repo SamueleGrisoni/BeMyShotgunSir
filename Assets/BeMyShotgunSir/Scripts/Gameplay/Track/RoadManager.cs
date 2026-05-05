@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     public interface IRoadManager
     {
         void SetSeed(int seed);
-        void SetRaceNetController(RaceNetController raceNetController, bool isServer = false);
+        void SetRaceNetController(RaceNetController raceNetController);
         void SetDriver(Transform driver);
         void UpdateFirstPlayer(Transform playerTransform);
     }
@@ -21,7 +21,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     {
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<IRoadManager, bool> OnRoadManagerSpawned;
+        public static event Action<IRoadManager> OnRoadManagerSpawned;
         private int _seed = -1;
         private bool _isHostInitialized;
         private Transform _driver; //TODO change this to transform please
@@ -45,12 +45,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private TrackPooler _trackPooler;
         [SerializeField] private float _despawnBufferDistance = 20f;
 
-        private LinkedList<PooledRoadChunk> _activeRoadChunks = new LinkedList<PooledRoadChunk>();
+        private LinkedList<PooledRoadChunk> _activeRoadChunks;
 
         public override void OnStartServer()
         {
             base.OnStartServer();
-            OnRoadManagerSpawned?.Invoke(this, true);
+            OnRoadManagerSpawned?.Invoke(this);
         }
 
         public override void OnStartClient()
@@ -58,7 +58,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             base.OnStartClient();
             if (IsHostInitialized)
                 return;
-            OnRoadManagerSpawned?.Invoke(this, false);
+            OnRoadManagerSpawned?.Invoke(this);
         }
 
         public void SetSeed(int seed)
@@ -69,11 +69,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _trackGenerator.Init(_seed);
         }
 
-        public void SetRaceNetController(RaceNetController raceNetController, bool isHostInitialized = false)
+        public void SetRaceNetController(RaceNetController raceNetController)
         {
             if (_raceNetController == null) _raceNetController = raceNetController;
             _trackPooler.SetTrackData(_trackData);
-            if (isHostInitialized)
+            if (IsServerInitialized)
             {
                 _isHostInitialized = true;
                 InitSpawnPoints();
@@ -85,16 +85,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [Server]
         private void InitSpawnPoints()
         {
+            if (_activeRoadChunks == null) _activeRoadChunks = new LinkedList<PooledRoadChunk>();
             SpawnRoadChunk(true);
             RoadChunk comp = _activeRoadChunks.First.Value.Component;
             if (comp is StartFinishLineRoadChunk startFinish)
-            {
                 _spawnPoints = startFinish.GridPositions;
-            }
             else
-            {
                 Debug.Log("[Road Manager Server]: Failed to initialize spawn points, the first chunk is not a start finish line");
-            }
             PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
             RemoveChunk(oldRoadChunk);
             _activeRoadChunks.Clear();
@@ -127,15 +124,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 _activeRoadChunks = new LinkedList<PooledRoadChunk>();
 
             for (int i = 0; i < _trackData.MaxActiveChunks; i++)
-            {
                 SpawnRoadChunk();
-            }
 
             StartRace();
             _isInitialized = true;
         }
 
-        public void StartRace() => _started = true;
+        public void StartRace()
+        {
+            _raceNetController.SetReadyToRace_ServerRpc();
+            Log.DLazy(() => "Starting race.", this, _log);
+            _started = true;
+        }
 
         private void Update()
         {

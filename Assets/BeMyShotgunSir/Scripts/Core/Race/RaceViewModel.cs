@@ -96,8 +96,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 default:
                     break;
             }
-
-            OnRacePlayerStatesChanged?.Invoke();
+            if (op != SyncDictionaryOperation.Complete)
+            {
+                Log.DLazy(() => $"PlayerStates updated: {op} key: {key} value: {value}", this, _log);
+                OnRacePlayerStatesChanged?.Invoke();
+            }
         }
 
         public Dictionary<int, RaceTeamData> TeamData { get; private set; } = new();
@@ -120,8 +123,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 default:
                     break;
             }
-
-            OnRaceTeamDataChanged?.Invoke();
+            if (op != SyncDictionaryOperation.Complete)
+            {
+                Log.DLazy(() => $"TeamData updated: {op} key: {key} value: {value}", this, _log);
+                OnRaceTeamDataChanged?.Invoke();
+            }
         }
 
         public List<int> Leaderboard { get; private set; } = new();
@@ -152,8 +158,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 default:
                     break;
             }
-
-            OnRaceLeaderboardChanged?.Invoke();
+            if (op != SyncListOperation.Complete)
+            {
+                Log.DLazy(() => $"Leaderboard updated: {op} index: {index} prev: {prev} next: {next}", this, _log);
+                OnRaceLeaderboardChanged?.Invoke();
+            }
         }
     }
 }
