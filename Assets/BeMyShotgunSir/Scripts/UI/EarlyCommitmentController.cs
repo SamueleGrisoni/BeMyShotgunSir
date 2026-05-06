@@ -1,18 +1,48 @@
 using System.Collections;
+using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
-    public class EarlyCommitmentController : MonoBehaviour
+    public class EarlyCommitmentController : RaceBindTarget
     {
         [SerializeField] private UIDocument _hudDocument;
+
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        #endregion
+
+        public override void OnInitialBindComplete()
+        {
+            if (_initialBindSource == null)
+            {
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                return;
+            }
+            _command = _initialBindSource.Command;
+            _viewModel = _initialBindSource.ViewModel;
+
+            //TODO: Race View Model events
+            // _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
+            // _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
+            // _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
+        }
+        public override void OnFinalBindComplete()
+        {
+            if (_finalBindSource == null)
+            {
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                return;
+            }
+        }
 
         #region Visual Elements
         private VisualElement _root;
         private VisualElement _earlyCommitmentContainer;
         private VisualElement _earlyCommitment;
-
         private VisualElement _contentArea;
         private VisualElement _earlyCommitmentLabel;
         private VisualElement _commitmentChoice;
@@ -20,7 +50,6 @@ namespace BeMyShotgunSir.Scripts.UI
         private VisualElement _arrowRight;
         private VisualElement _commitBarMaskLeft;
         private VisualElement _commitBarMaskRight;
-
         #endregion
 
         #region Public Properties
@@ -60,7 +89,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _arrowLeft.RegisterCallback<PointerDownEvent>(ArrowLeftHandler);
             _arrowRight.RegisterCallback<PointerDownEvent>(ArrowRightHandler);
-
         }
 
         private void Update()
