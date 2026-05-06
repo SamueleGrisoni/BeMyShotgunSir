@@ -5,7 +5,6 @@ using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -26,7 +25,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public static event Action<IRoadManager> OnRoadManagerSpawned;
         private int _seed = -1;
         private bool _isServer;
-        private Transform _driver; //TODO change this to transform please
+        private Transform _driver;
         private Transform _firstPlayerTransform;
         private Transform _lastPlayerTransform;
         private List<Transform> _spawnPoints;
@@ -66,21 +65,30 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             OnRoadManagerSpawned?.Invoke(this);
         }
 
+        public override void OnStopServer()
+        {
+            base.OnStopServer();
+            TrackGenerator.OnSplitGenerated -= PropagateOnSplitGenerated;
+        }
+
         public void SetSeed(int seed)
         {
-            if (seed == -1)
-                _seed = seed;
+            if (seed != -1)
+                return;
+            _seed = seed;
             _environmentSpawner.Init(_seed);
-            TrackGenerator.OnSplitGenerated += (splitInfo) =>
-            {
-                Log.TLazy(() => "Receive split info from TrackGenerator, propagating", this);
-                foreach (var info in splitInfo)
-                {
-                    Log.TLazy(() => "Receive info for " + info.roadChunkInfo.type, this);
-                }
-                OnSplitGeneratedProvided?.Invoke(splitInfo);
-            };
+            TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
             _trackGenerator.Init(_seed);
+        }
+
+        private void PropagateOnSplitGenerated(List<GeneratedRoadChunkInfoWithItems> splitInfo)
+        {
+            Log.DLazy(() => "Receive split info from TrackGenerator, propagating", this, _log);
+            foreach (GeneratedRoadChunkInfoWithItems info in splitInfo)
+            {
+                Log.DLazy(() => "Receive info for " + info.roadChunkInfo.type, this, _log);
+            }
+            OnSplitGeneratedProvided?.Invoke(splitInfo);
         }
 
         public void SetRaceNetController(RaceNetController raceNetController)
@@ -105,7 +113,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (comp is StartFinishLineRoadChunk startFinish)
                 _spawnPoints = startFinish.GridPositions;
             else
-                Debug.Log("[Road Manager Server]: Failed to initialize spawn points, the first chunk is not a start finish line");
+                Log.WLazy(() => $"First road chunk is not a StartFinishLineRoadChunk, spawn points cannot be initialized properly.", this);
             PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
             RemoveChunk(oldRoadChunk);
             _activeRoadChunks.Clear();
@@ -181,12 +189,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 PooledRoadChunk lastChunk = _activeRoadChunks.Last.Value;
                 Transform exitAnchor = lastChunk.Component.NextRoadAnchors[0];
                 if (_firstPlayerTransform is null) return;
-                if(_firstPlayerTransform.transform.position.z > exitAnchor.position.z - _serverBufferDistance)
+                if (_firstPlayerTransform.transform.position.z > exitAnchor.position.z - _serverBufferDistance)
                 {
                     SpawnRoadChunk();
                 }
 
-                if(_lastPlayerTransform is null) return;
+                if (_lastPlayerTransform is null) return;
                 PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
                 Transform firstChunkExitAnchor = firstChunk.Component.NextRoadAnchors[0];
                 if (_lastPlayerTransform.transform.position.z >

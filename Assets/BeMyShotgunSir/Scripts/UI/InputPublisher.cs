@@ -1,64 +1,88 @@
 using System;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
-using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
+    public enum CommitmentDirection
+    {
+        Left,
+        Right
+    }
+
     public interface IDriverInputConsumer
     {
-        int SteerInput { get; }
+        float SteerInput { get; }
+        float DriftInput { get; }
         bool IsDrifting { get; }
         bool IsMoving { get; }
         event Action OnBoostPressed;
-        event Action OnEarlyCommitmentPressed;
+        event Action<CommitmentDirection> OnEarlyCommitmentPressed;
+        event Action<DriverFeedback> OnDriverFeedbackPressed;
     }
 
     public interface IShotgunInputConsumer
     {
+        event Action<int> OnEquipPressed;
+        event Action OnUsePressed;
+        event Action OnFirePressed;
+        event Action<WheelMessages> OnWheelMessagePressed;
 
     }
 
     public interface IInputPublisher
     {
-        void SetSteerInput(int input);
+        //Driver
+        void SetSteerInput(float input);
+        void SetDriftInput(float input);
         void SetIsDrifting(bool isDrifting);
         void SetIsMoving(bool isMoving);
         void PressBoost();
-        void PressEarlyCommitment();
+        void PressEarlyCommitment(CommitmentDirection direction);
+        void PressDriverFeedback(DriverFeedback feedback);
+        //Shotgun
+        void EquipPowerUp(int slot);
+        void UsePowerUp();
+        void Fire();
+        void SendWheelMessage(WheelMessages message);
     }
     public class InputPublisher : IInputPublisher, IDriverInputConsumer, IShotgunInputConsumer
     {
         #region Driver
 
-        private int _steerInput;
+        private float _steerInput;
+        private float _driftInput;
         private bool _isDrifting;
         private bool _isMoving;
         public event Action OnBoostPressed;
-        public event Action OnEarlyCommitmentPressed;
+        public event Action<CommitmentDirection> OnEarlyCommitmentPressed;
+        public event Action<DriverFeedback> OnDriverFeedbackPressed;
 
-        public int SteerInput => _steerInput;
+        public float SteerInput => _steerInput;
+        public float DriftInput => _driftInput;
         public bool IsDrifting => _isDrifting;
         public bool IsMoving => _isMoving;
 
-        public void SetSteerInput(int input) => _steerInput = input;
+        public void SetSteerInput(float input) => _steerInput = input;
+        public void SetDriftInput(float input) => _driftInput = input;
         public void SetIsDrifting(bool isDrifting) => _isDrifting = isDrifting;
         public void PressBoost() => OnBoostPressed?.Invoke();
-        public void PressEarlyCommitment() => OnEarlyCommitmentPressed?.Invoke();
+        public void PressEarlyCommitment(CommitmentDirection direction) => OnEarlyCommitmentPressed?.Invoke(direction);
+        public void PressDriverFeedback(DriverFeedback feedback) => OnDriverFeedbackPressed?.Invoke(feedback);
         public void SetIsMoving(bool isMoving) => _isMoving = isMoving;
 
         #endregion
 
         #region Shotgun
 
-        public event Action<int> OnSelectInventoryPowerUp;
-        public event Action<PowerUp> OnEquipPowerUp;
+        public event Action<int> OnEquipPressed;
+        public event Action OnUsePressed;
         public event Action OnFirePressed;
         public event Action<WheelMessages> OnWheelMessagePressed;
 
-        public void SelectInventoryPowerUp(int index) => OnSelectInventoryPowerUp?.Invoke(index);
-        public void EquipPowerUp(PowerUp powerUp) => OnEquipPowerUp?.Invoke(powerUp);
-        public void PressFire() => OnFirePressed?.Invoke();
-        public void PressWheelMessage(WheelMessages message) => OnWheelMessagePressed?.Invoke(message);
+        public void EquipPowerUp(int slot) => OnEquipPressed?.Invoke(slot);
+        public void UsePowerUp() => OnUsePressed?.Invoke();
+        public void Fire() => OnFirePressed?.Invoke();
+        public void SendWheelMessage(WheelMessages message) => OnWheelMessagePressed?.Invoke(message);
 
         #endregion
     }
