@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
-    public class EarlyCommitmentController : RaceBindTarget
+    public class EarlyCommitmentViewController : RaceBindTarget
     {
         [SerializeField] private UIDocument _hudDocument;
 

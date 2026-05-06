@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
-    public class BottomBarController : MonoBehaviour
+    public class BottomBarViewController : MonoBehaviour
     {
         [SerializeField] private UIDocument _hudDocument;
 

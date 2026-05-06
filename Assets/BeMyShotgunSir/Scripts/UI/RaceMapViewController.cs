@@ -2,7 +2,7 @@ using BeMyShotgunSir.Scripts.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class RaceMapController : MonoBehaviour
+public class RaceMapViewController : MonoBehaviour
 {
     [SerializeField] private UIDocument _raceMapDocument;
     [SerializeField] private Tile_RoadChunk[] _tilesRC;
