@@ -23,6 +23,7 @@
                         <ui:VisualElement name="BoostButton" class="boost-button"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
+                <ui:Button text="RUN/STOP" name="RunStopButton" class="run-stop-button debug"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

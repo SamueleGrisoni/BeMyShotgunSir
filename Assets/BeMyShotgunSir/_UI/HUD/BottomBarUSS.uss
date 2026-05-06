@@ -160,3 +160,35 @@
 .thumb-up {
     background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_ThumbUp.png?fileID=2800000&guid=a48e068a7b0cf438593931eca6463803&type=3#HUD_ThumbUp");
 }
+
+.run-stop-button {
+    position: absolute;
+    right: 50px;
+    width: 250px;
+    height: 250px;
+    background-color: rgba(188, 188, 188, 0);
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    color: rgb(255, 255, 255);
+    font-size: 50px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    display: none;
+}
+
+.debug {
+    display: flex;
+}
+
+.run-stop-button .toggled {
+    background-color: rgb(61, 154, 80);
+}
