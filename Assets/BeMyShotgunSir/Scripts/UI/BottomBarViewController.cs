@@ -1,13 +1,47 @@
 using System.Collections;
+using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Messages;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 
 namespace BeMyShotgunSir.Scripts.UI
 {
-    public class BottomBarViewController : MonoBehaviour
+    public class BottomBarViewController : RaceBindTarget
     {
         [SerializeField] private UIDocument _hudDocument;
+
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
+        #endregion
+
+        public override void OnInitialBindComplete()
+        {
+            if (_initialBindSource == null)
+            {
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                return;
+            }
+            _command = _initialBindSource.Command;
+            _viewModel = _initialBindSource.ViewModel;
+        }
+        public override void OnFinalBindComplete()
+        {
+            if (_finalBindSource == null)
+            {
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                return;
+            }
+            _roadManager = _finalBindSource.RoadManager;
+            _inputPublisher = _finalBindSource.InputPublisher;
+            _role = _finalBindSource.Role;
+        }
 
         #region Visual Elements
         private VisualElement _root;
@@ -29,6 +63,11 @@ namespace BeMyShotgunSir.Scripts.UI
         private VisualElement _thumbUpButton;
         #endregion
 
+        #region Debug
+        private Button _runStopButton;
+        private bool _runStopToggle = false;
+        #endregion
+
         #region Private Fields
         private int _steerPointerId = -1;
         private float _steerCenterX;
@@ -41,13 +80,9 @@ namespace BeMyShotgunSir.Scripts.UI
         private float _driftOriginHalfH;
         private float _driftJoystickHalfW;
         private float _driftJoystickHalfH;
-        #endregion
+        private float _steerValue;  // -1 → +1
+        private float _driftValue;  // -1 → +1
 
-        #region Public Properties
-        public float SteerValue { get; private set; }  // -1 → +1
-        public float DriftValue { get; private set; }  // -1 → +1
-        public bool IsDrifting { get; private set; }
-        public float BoostValue { get; private set; }  // 0 → 1 (or more if overboost)
         #endregion
 
 
@@ -67,6 +102,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _feedbackContainer = _bottomBar.Q("FeedbackContainer");
             _thumbDownButton = _feedbackContainer.Q("ThumbDownButton");
             _thumbUpButton = _feedbackContainer.Q("ThumbUpButton");
+
+            _runStopButton = _bottomBar.Q<Button>("RunStopButton");
 
             // Set the correct picking modes for overlapping controls
             _feedbackContainer.pickingMode = PickingMode.Ignore;
@@ -101,9 +138,10 @@ namespace BeMyShotgunSir.Scripts.UI
             _driftControl.RegisterCallback<PointerCancelEvent>(DriftCancelHandler);
 
             _boostButton.RegisterCallback<PointerDownEvent>(BoostDownHandler);
-            _thumbDownButton.RegisterCallback<PointerDownEvent>(ThumbDownDownHandler);
-            _thumbUpButton.RegisterCallback<PointerDownEvent>(ThumbUpDownHandler);
+            _thumbDownButton.RegisterCallback<PointerDownEvent>(ThumbsDownDownHandler);
+            _thumbUpButton.RegisterCallback<PointerDownEvent>(ThumbsUpDownHandler);
 
+            _runStopButton.clicked += RunStopDownHandler;
         }
 
         private void OnDisable()
@@ -123,7 +161,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void DriftDownHandler(PointerDownEvent e)
         {
-            // Debug.Log($"[Drift] PointerDown — pointerId={e.pointerId} pos={e.position}");
+
             if (_driftPointerId != -1) return;
             _driftPointerId = e.pointerId;
             _driftControl.CapturePointer(e.pointerId);
@@ -132,10 +170,11 @@ namespace BeMyShotgunSir.Scripts.UI
             _driftMaxRadius = _driftControl.resolvedStyle.width * 0.25f;
 
             ShowDriftGhost(e.localPosition);
-            DriftValue = 0f;
+            _driftValue = 0f;
             e.StopPropagation();
 
-            IsDrifting = true;
+            _inputPublisher.SetIsDrifting(true);
+            _inputPublisher.SetDriftInput(_driftValue);
         }
 
         private void DriftMoveHandler(PointerMoveEvent e)
@@ -144,21 +183,28 @@ namespace BeMyShotgunSir.Scripts.UI
             if (e.pointerId != _driftPointerId) return;
 
             float delta = Mathf.Clamp(e.localPosition.x - _driftOriginX, -_driftMaxRadius, _driftMaxRadius);
-            DriftValue = delta / _driftMaxRadius;
+            _driftValue = delta / _driftMaxRadius;
 
             float joystickHalf = _driftJoystick.resolvedStyle.width * 0.5f;
             _driftJoystick.style.left = _driftOriginX + delta - joystickHalf;
 
             e.StopPropagation();
+            _inputPublisher.SetDriftInput(_driftValue);
+            Debug.Log($"[Drift] Value={_driftValue:F2}");
+
         }
         private void DriftUpHandler(PointerUpEvent e)
         {
-            IsDrifting = false;
+            Debug.Log($"[Drift] PointerUp — pointerId={e.pointerId}");
+            _inputPublisher.SetIsDrifting(false);
+            _inputPublisher.SetDriftInput(0);
             ResetDrift(e.pointerId);
         }
         private void DriftCancelHandler(PointerCancelEvent e)
         {
-            IsDrifting = false;
+            Debug.Log($"[Drift] PointerCancel — pointerId={e.pointerId}");
+            _inputPublisher.SetIsDrifting(false);
+            _inputPublisher.SetDriftInput(0);
             ResetDrift(e.pointerId);
         }
         private void SteerDownHandler(PointerDownEvent e)
@@ -184,25 +230,43 @@ namespace BeMyShotgunSir.Scripts.UI
             e.StopPropagation();
         }
 
-        private void SteerUpHandler(PointerUpEvent e) => ResetSteer(e.pointerId);
-        private void SteerCancelHandler(PointerCancelEvent e) => ResetSteer(e.pointerId);
+        private void SteerUpHandler(PointerUpEvent e)
+        {
+            Debug.Log($"[Steer] PointerUp — pointerId={e.pointerId}");
+            ResetSteer(e.pointerId);
+        }
+        private void SteerCancelHandler(PointerCancelEvent e)
+        {
+            Debug.Log($"[Steer] PointerCancel — pointerId={e.pointerId}");
+            ResetSteer(e.pointerId);
+        }
 
         private void BoostDownHandler(PointerDownEvent e)
         {
             Debug.Log("[Boost] Pressed");
-            // TODO: Boost command
+            _inputPublisher.PressBoost();
         }
 
-        private void ThumbDownDownHandler(PointerDownEvent e)
+        private void ThumbsDownDownHandler(PointerDownEvent e)
         {
             Debug.Log("[Feedback] Thumbs Down");
-            // TODO: Feedback command
+            _inputPublisher.PressDriverFeedback(DriverFeedback.ThumbsDown);
         }
 
-        private void ThumbUpDownHandler(PointerDownEvent e)
+        private void ThumbsUpDownHandler(PointerDownEvent e)
         {
             Debug.Log("[Feedback] Thumbs Up");
-            // TODO: Feedback command
+            _inputPublisher.PressDriverFeedback(DriverFeedback.ThumbsUp);
+        }
+
+        private void RunStopDownHandler()
+        {
+            Debug.Log("[Debug] Run/Stop Toggled");
+            _runStopToggle = !_runStopToggle;
+            if (_runStopToggle) _runStopButton.AddToClassList("toggled");
+            else _runStopButton.RemoveFromClassList("toggled");
+
+            _inputPublisher.SetIsMoving(_runStopToggle);
         }
 
         #endregion
@@ -211,11 +275,14 @@ namespace BeMyShotgunSir.Scripts.UI
         private void ApplySteer(float screenX)
         {
             float delta = Mathf.Clamp(screenX - _steerCenterX, -_steerMaxRadius, _steerMaxRadius);
-            SteerValue = delta / _steerMaxRadius;
+            _steerValue = delta / _steerMaxRadius;
 
             _steerJoystick.style.translate = new StyleTranslate(
                 new Translate(new Length(delta, LengthUnit.Pixel), new Length(0, LengthUnit.Pixel))
             );
+
+            _inputPublisher.SetSteerInput((int)(_steerValue * 100f)); // Convert to int range -100 to 100
+            Debug.Log($"[Steer] Value={_steerValue:F2}");
         }
 
         private void ResetSteer(int pointerId)
@@ -223,7 +290,7 @@ namespace BeMyShotgunSir.Scripts.UI
             if (pointerId != _steerPointerId) return;
             _steerControl.ReleasePointer(_steerPointerId);
             _steerPointerId = -1;
-            SteerValue = 0f;
+            _steerValue = 0f;
             _steerJoystick.style.translate = new StyleTranslate(
                 new Translate(new Length(0, LengthUnit.Pixel), new Length(0, LengthUnit.Pixel))
             );
@@ -249,7 +316,7 @@ namespace BeMyShotgunSir.Scripts.UI
             if (pointerId != _driftPointerId) return;
             _driftControl.ReleasePointer(_driftPointerId);
             _driftPointerId = -1;
-            DriftValue = 0f;
+            _driftValue = 0f;
             _driftOrigin.style.display = DisplayStyle.None;
             _driftJoystick.style.display = DisplayStyle.None;
         }
