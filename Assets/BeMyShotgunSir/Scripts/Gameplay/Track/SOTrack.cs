@@ -17,7 +17,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     public class SOTrack : ScriptableObject
     {
         [field: SerializeField] public string TrackName { get; private set; }
-        [field: SerializeField] public int QueueBufferSize { get; private set; }
         [field: SerializeField] public int MaxPoolSize { get; private set; }
         [field: SerializeField] public int MaxActiveChunks { get; private set; }
         [field: SerializeField] public RoadChunk[] RoadChunks { get; private set; }

@@ -35,11 +35,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             this.itemsToSpawn = itemsToSpawn;
         }
     }
-
-    public struct SplitSegmentInfo
-    {
-        public int splitLength; // in number of chunks, not including the starting and ending crossroad
-    }
     #endregion
 
     public class TrackGenerator : MonoBehaviour
@@ -60,7 +55,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
 
-        public static event Action<SplitSegmentInfo> OnSplitGenerated;
+        public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGenerated;
 
         public void Init(int seed)
         {
@@ -186,7 +181,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void EnqueueSplitSegment()
         {
-            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+            var splitSegmentChunks = new Queue<GeneratedRoadChunkInfoWithItems>();
+            splitSegmentChunks.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.STARTING_CROSSROAD,
                     RoadChunkType.STARTING_CROSSROAD,
@@ -199,23 +195,24 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 _chunksRemainingInCurrentState--;
                 GeneratedRoadChunkInfo leftChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.LEFT);
                 List<GeneratedItemInfo> powerUpsForLeftSplit = _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.LEFT);
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, powerUpsForLeftSplit));
+                splitSegmentChunks.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, powerUpsForLeftSplit));
 
                 GeneratedRoadChunkInfo rightChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.RIGHT);
                 List<GeneratedItemInfo> powerUpsForRightSplit = _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.RIGHT);
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, powerUpsForRightSplit));
+                splitSegmentChunks.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, powerUpsForRightSplit));
             }
             _leftWeight = -1;
             _rightWeight = 1;
 
-            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+            splitSegmentChunks.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.ENDING_CROSSROAD,
                     RoadChunkType.ENDING_CROSSROAD,
                     RoadChunkPosition.MIDDLE),
                     new List<GeneratedItemInfo>()));
-            //OnSplitGenerated?.Invoke(new SplitSegmentInfo() { splitLength = _chunksRemainingInCurrentState });
-
+            OnSplitGenerated?.Invoke(splitSegmentChunks.ToList());
+            foreach (var splitSegmentChunk in splitSegmentChunks)
+                _trackBits.Enqueue(splitSegmentChunk);
         }
 
         private GeneratedRoadChunkInfo GenerateCommonChunkInfo()

@@ -5,6 +5,7 @@ using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
@@ -49,6 +50,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private float _serverBufferDistance = 150f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
+        public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
 
         public override void OnStartServer()
         {
@@ -69,6 +71,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (seed == -1)
                 _seed = seed;
             _environmentSpawner.Init(_seed);
+            TrackGenerator.OnSplitGenerated += (splitInfo) =>
+            {
+                Log.TLazy(() => "Receive split info from TrackGenerator, propagating", this);
+                foreach (var info in splitInfo)
+                {
+                    Log.TLazy(() => "Receive info for " + info.roadChunkInfo.type, this);
+                }
+                OnSplitGeneratedProvided?.Invoke(splitInfo);
+            };
             _trackGenerator.Init(_seed);
         }
 
