@@ -1,0 +1,89 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/RaceMapUSS.uss?fileID=7433441132597879392&amp;guid=d22199f50fb33496faa57a62fc268c35&amp;type=3#RaceMapUSS"/>
+    <ui:VisualElement name="UIRoot" class="uiroot" style="flex-grow: 1;">
+        <ui:VisualElement name="ContentArea" class="content-area" style="height: 100%; justify-content: center;">
+            <ui:VisualElement name="MapBase" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_Map.png?fileID=2800000&amp;guid=07a897c43306d4133987c4a16a884167&amp;type=3#HUD_Shotgun_Map&quot;); width: 100%; height: 100%;"/>
+            <ui:VisualElement name="MapDiv" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_MapDiv.png?fileID=2800000&amp;guid=51f7e41d0956149d094601af72578b12&amp;type=3#HUD_Shotgun_MapDiv&quot;); -unity-background-scale-mode: scale-to-fit; height: 95%; position: absolute; align-self: center; width: 40px;"/>
+            <ui:VisualElement name="MapTiles" class="map-tiles">
+                <ui:VisualElement name="ForkRow" class="row row-fork">
+                    <ui:VisualElement name="Fork" class="rc-icon fork"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 227px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 227px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_-4_var1.png?fileID=2800000&amp;guid=d7e9473e3e375433790ba80db6977941&amp;type=3#Tile_RC_-4_var1&quot;); left: 155px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: auto; left: -227px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 83px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 190px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_-3_var1.png?fileID=2800000&amp;guid=c15ca6400a0f045bbbe7741bd9947038&amp;type=3#Tile_RC_-3_var1&quot;); left: -152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 190px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+1_var1.png?fileID=2800000&amp;guid=fff5c431697c04fe4a36d47b9ac1bb7e&amp;type=3#Tile_RC_+1_var1&quot;); left: -188px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 190px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+2_var1.png?fileID=2800000&amp;guid=521c14e59a7d341fea03f84dd050a69e&amp;type=3#Tile_RC_+2_var1&quot;); left: -135px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 190px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+3_var1.png?fileID=2800000&amp;guid=17f764f04ed0f4f7ca0db62af4cfb00b&amp;type=3#Tile_RC_+3_var1&quot;); left: -48px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 190px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 8px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 190px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+4_var1.png?fileID=2800000&amp;guid=9b935e671148f4db3972f9d265342ef2&amp;type=3#Tile_RC_+4_var1&quot;); left: 80px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+2_var1.png?fileID=2800000&amp;guid=521c14e59a7d341fea03f84dd050a69e&amp;type=3#Tile_RC_+2_var1&quot;); right: 153px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+4_var1.png?fileID=2800000&amp;guid=9b935e671148f4db3972f9d265342ef2&amp;type=3#Tile_RC_+4_var1&quot;); right: 45px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_-4_var1.png?fileID=2800000&amp;guid=d7e9473e3e375433790ba80db6977941&amp;type=3#Tile_RC_-4_var1&quot;); right: 45px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+3_var1.png?fileID=2800000&amp;guid=17f764f04ed0f4f7ca0db62af4cfb00b&amp;type=3#Tile_RC_+3_var1&quot;); right: 66px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 10px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 10px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 10px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); right: 10px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_0_var1.png?fileID=2800000&amp;guid=c76e12df0064643f49d5d1ba9da7e55b&amp;type=3#Tile_RC_0_var1&quot;); left: 152px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_-2_var1.png?fileID=2800000&amp;guid=48e8410c7e7034da59185a10df402371&amp;type=3#Tile_RC_-2_var1&quot;); right: 47px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="row">
+                    <ui:VisualElement name="Chunk1" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_+2_var1.png?fileID=2800000&amp;guid=521c14e59a7d341fea03f84dd050a69e&amp;type=3#Tile_RC_+2_var1&quot;); left: 191px;"/>
+                    <ui:VisualElement name="Chunk2" class="rc-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_-4_var1.png?fileID=2800000&amp;guid=d7e9473e3e375433790ba80db6977941&amp;type=3#Tile_RC_-4_var1&quot;); right: 154px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="JunctionRow" class="row row-fork">
+                    <ui:VisualElement name="Junction" class="rc-icon junction"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

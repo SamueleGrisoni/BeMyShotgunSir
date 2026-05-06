@@ -14,6 +14,7 @@
                     <ui:VisualElement name="RightPowerUp2" class="power-up-icon" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Shield.png?fileID=2800000&amp;guid=7ef0aac922f9b4d28aed5c01ad4f163b&amp;type=3#PowerUp_Shield&quot;);"/>
                 </ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement name="MapTiles" class="map-tiles"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
