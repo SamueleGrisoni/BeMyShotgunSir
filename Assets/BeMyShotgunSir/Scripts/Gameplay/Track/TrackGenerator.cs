@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
+using BeMyShotgunSir.Scripts.Utils;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using Random = System.Random;
@@ -51,7 +52,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private Queue<GeneratedRoadChunkInfoWithItems> _trackBits = new Queue<GeneratedRoadChunkInfoWithItems>();
         private Random _rng;
 
-        private bool _isGeneratingSplit = false;
         private int _chunksRemainingInCurrentState = 0;
 
         private int _leftWeight = -1;
@@ -76,28 +76,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 return;
             }
 
-            // Initial Sequence
-            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
-                new GeneratedRoadChunkInfo(
-                    (int)SpecialRoadChunkIndex.START_LINE,
-                    RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE),
-                new List<GeneratedItemInfo>()));
-            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
-                new GeneratedRoadChunkInfo(
-                    (int)SpecialRoadChunkIndex.STRAIGHT,
-                    RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE),
-                new List<GeneratedItemInfo>()));
-
-            _isGeneratingSplit = false;
-            _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
-
-            while (_trackBits.Count < _trackData.QueueBufferSize)
-            {
-                EnqueueNextSegment();
-            }
-
             _maxWeight = _possibleTurnWeights.Max();
             _weightToChunkIndexMap.Clear();
             for (int i = 0; i < _trackData.RoadChunks.Length; i++)
@@ -109,6 +87,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     _weightToChunkIndexMap.Add(weight, i);
                 }
             }
+
+            GenerateInitialSequence();
         }
 
         public List<GeneratedRoadChunkInfoWithItems> PeekStartFinishLine()
@@ -140,46 +120,83 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 result.Add(_trackBits.Dequeue());
             }
 
-            EnqueueNextSegment();
+            GenerateNextSequence(nextChunk.roadChunkInfo);
 
             return result;
         }
 
-        private void EnqueueNextSegment()
+        private void GenerateInitialSequence()
         {
-            if (_chunksRemainingInCurrentState <= 0)
-            {
-                _isGeneratingSplit = !_isGeneratingSplit;
-                //todo launch event with complete list of chunks in the split segment, not just the length. This will allow the UI to show an accurate preview of the upcoming split segment instead of just a generic "split coming up" message.
-                //OnSplitGenerated?.Invoke(new SplitSegmentInfo() { splitLength = _chunksRemainingInCurrentState });
-                if (_isGeneratingSplit) // Common -> Split
-                {
-                    _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
-                            new GeneratedRoadChunkInfo(
-                                (int)SpecialRoadChunkIndex.STARTING_CROSSROAD,
-                                RoadChunkType.STARTING_CROSSROAD,
-                                RoadChunkPosition.MIDDLE),
-                            new List<GeneratedItemInfo>()));
-                    _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
-                }
-                else // Split -> Common
-                {
-                    _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
-                        new GeneratedRoadChunkInfo(
-                                (int)SpecialRoadChunkIndex.ENDING_CROSSROAD,
-                                RoadChunkType.ENDING_CROSSROAD,
-                                RoadChunkPosition.MIDDLE),
-                        new List<GeneratedItemInfo>()));
-                    _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
-                    _leftWeight = -1;
-                    _rightWeight = 1;
-                }
-                return; //I already added the crossroad for this step
-            }
+            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+                new GeneratedRoadChunkInfo(
+                    (int)SpecialRoadChunkIndex.START_LINE,
+                    RoadChunkType.STRAIGHT,
+                    RoadChunkPosition.MIDDLE),
+                new List<GeneratedItemInfo>()));
+            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+                new GeneratedRoadChunkInfo(
+                    (int)SpecialRoadChunkIndex.STRAIGHT,
+                    RoadChunkType.STRAIGHT,
+                    RoadChunkPosition.MIDDLE),
+                new List<GeneratedItemInfo>()));
+            _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
+            EnqueueCommonSegment();
+            _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
+            EnqueueSplitSegment();
+        }
 
-            _chunksRemainingInCurrentState--;
-            if (_isGeneratingSplit)
+        private void GenerateFinalSequence()
+        {
+            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+                new GeneratedRoadChunkInfo(
+                    (int)SpecialRoadChunkIndex.STRAIGHT,
+                    RoadChunkType.STRAIGHT,
+                    RoadChunkPosition.MIDDLE),
+                new List<GeneratedItemInfo>()));
+            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+                new GeneratedRoadChunkInfo(
+                    (int)SpecialRoadChunkIndex.START_LINE, //todo this should be a new prefab with a finish line trigger or something
+                    RoadChunkType.STRAIGHT,
+                    RoadChunkPosition.MIDDLE),
+                new List<GeneratedItemInfo>()));
+        }
+
+        private void GenerateNextSequence(GeneratedRoadChunkInfo lastDequeuedChunk)
+        {
+            if (lastDequeuedChunk.type == RoadChunkType.ENDING_CROSSROAD)
             {
+                _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
+                EnqueueSplitSegment();
+            }
+            else if (lastDequeuedChunk.type == RoadChunkType.STARTING_CROSSROAD)
+            {
+                _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
+                EnqueueCommonSegment();
+            }
+        }
+
+        private void EnqueueCommonSegment()
+        {
+            while (_chunksRemainingInCurrentState > 0)
+            {
+                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(GenerateCommonChunkInfo(), _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.MIDDLE)));
+                _chunksRemainingInCurrentState--;
+            }
+        }
+
+        private void EnqueueSplitSegment()
+        {
+            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+                new GeneratedRoadChunkInfo(
+                    (int)SpecialRoadChunkIndex.STARTING_CROSSROAD,
+                    RoadChunkType.STARTING_CROSSROAD,
+                    RoadChunkPosition.MIDDLE),
+                new List<GeneratedItemInfo>()));
+
+
+            while (_chunksRemainingInCurrentState > 0)
+            {
+                _chunksRemainingInCurrentState--;
                 GeneratedRoadChunkInfo leftChunkInfo = GenerateSplitChunkInfo(RoadChunkPosition.LEFT);
                 List<GeneratedItemInfo> powerUpsForLeftSplit = _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.LEFT);
                 _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(leftChunkInfo, powerUpsForLeftSplit));
@@ -188,10 +205,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 List<GeneratedItemInfo> powerUpsForRightSplit = _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.RIGHT);
                 _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(rightChunkInfo, powerUpsForRightSplit));
             }
-            else
-            {
-                _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(GenerateCommonChunkInfo(), _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.MIDDLE)));
-            }
+            _leftWeight = -1;
+            _rightWeight = 1;
+
+            _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
+                new GeneratedRoadChunkInfo(
+                    (int)SpecialRoadChunkIndex.ENDING_CROSSROAD,
+                    RoadChunkType.ENDING_CROSSROAD,
+                    RoadChunkPosition.MIDDLE),
+                    new List<GeneratedItemInfo>()));
+            //OnSplitGenerated?.Invoke(new SplitSegmentInfo() { splitLength = _chunksRemainingInCurrentState });
+
         }
 
         private GeneratedRoadChunkInfo GenerateCommonChunkInfo()
