@@ -47,7 +47,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             {
                 controller.ChangeState(controller.DriftingState, data);
             }
-            Debug.Log($"Current battery charge: {controller.CurrentBatteryCharge}");
+            //Debug.Log($"Current battery charge: {controller.CurrentBatteryCharge}");
         }
         public void RunInputs(IDriverControllerContext controller, ReplicateData data)
         {

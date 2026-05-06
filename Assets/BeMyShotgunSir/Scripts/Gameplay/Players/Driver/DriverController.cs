@@ -256,7 +256,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
             // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
-            if (IsServerInitialized)
+            if (true)
             {
                 _parent.position = _sphere.transform.position;
                 _parent.rotation = _parentRotation;
@@ -270,7 +270,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _sidecarLocalRotation, Time.deltaTime * smoothSpeed);                
             }
 
-            _sphere.transform.forward = _sidecar.forward;
 
             AnimateSteer(_visualSteerInput);
             //Debug.Log($"Current battery level: {_currentBatteryCharge}");
@@ -327,7 +326,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     Vector3 lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
                     Debug.Log($"Lateral push direction: {lateralPushDirection}");
 
-                    float pushStrength = 1f; //- (distance / _bumpRadius);
+                    float pushStrength = 1f - (distance / _bumpRadius);
 
                     if (lateralPushDirection.sqrMagnitude > 0.001f)
                     {
@@ -342,12 +341,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 }
 
             }
-            _currentLinearVelocity += repulsionForce; //* (float)TimeManager.TickDelta;
+            _currentLinearVelocity += repulsionForce * (float)TimeManager.TickDelta;
 
             //_predictionRigidbody.Velocity(_currentLinearVelocity);
             Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
+
+            _sphere.transform.up = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+
 
             if (state != ReplicateState.Replayed)
                 _visualSteerInput = data.SteerInput;
@@ -373,7 +375,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation = data.ParentRotation;
             _sidecarLocalRotation = data.SidecarLocalRotation;
 
-            //_currentLinearVelocity = data.CurrentLinearVelocity;
+            _currentLinearVelocity = data.CurrentLinearVelocity;
             _currentMaxSpeed = data.CurrentMaxSpeed;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
