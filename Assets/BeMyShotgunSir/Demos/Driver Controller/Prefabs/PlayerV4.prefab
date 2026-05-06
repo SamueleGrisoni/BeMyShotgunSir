@@ -96,8 +96,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.9138654
+  m_Center: {x: 0, y: 0, z: 0.020029962}
 --- !u!1 &2204479149634885745
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,7 +266,7 @@ MonoBehaviour:
   _sidecarLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  _bumpRadius: 1.1
+  _bumpRadius: 1
   _bumpForce: 15
   _sidecarStatsNormal: {fileID: 11400000, guid: c91c8525809d78159b92b45bd668f877, type: 2}
   _sidecarStatsBoost: {fileID: 11400000, guid: 47264b8a7db1e3d0897ee573fb80765c, type: 2}
