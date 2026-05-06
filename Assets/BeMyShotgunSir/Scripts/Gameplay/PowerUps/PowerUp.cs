@@ -1,8 +1,6 @@
-using UnityEngine;
-
 namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
-    public enum PowerUpType
+    public enum PowerUp
     {
         Shield,
         Armor,
@@ -16,8 +14,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         // Lasso
     }
 
-    public class PowerUp : MonoBehaviour
+    public enum PowerUpType
     {
-        public PowerUpType Type { get; private set; }
+        Active,
+        Passive
     }
 }

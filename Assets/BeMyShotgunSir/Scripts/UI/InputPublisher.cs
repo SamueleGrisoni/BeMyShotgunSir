@@ -1,4 +1,6 @@
 using System;
+using BeMyShotgunSir.Scripts.Gameplay.Messages;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
@@ -26,6 +28,8 @@ namespace BeMyShotgunSir.Scripts.UI
     }
     public class InputPublisher : IInputPublisher, IDriverInputConsumer, IShotgunInputConsumer
     {
+        #region Driver
+
         private int _steerInput;
         private bool _isDrifting;
         private bool _isMoving;
@@ -41,5 +45,21 @@ namespace BeMyShotgunSir.Scripts.UI
         public void PressBoost() => OnBoostPressed?.Invoke();
         public void PressEarlyCommitment() => OnEarlyCommitmentPressed?.Invoke();
         public void SetIsMoving(bool isMoving) => _isMoving = isMoving;
+
+        #endregion
+
+        #region Shotgun
+
+        public event Action<int> OnSelectInventoryPowerUp;
+        public event Action<PowerUp> OnEquipPowerUp;
+        public event Action OnFirePressed;
+        public event Action<WheelMessages> OnWheelMessagePressed;
+
+        public void SelectInventoryPowerUp(int index) => OnSelectInventoryPowerUp?.Invoke(index);
+        public void EquipPowerUp(PowerUp powerUp) => OnEquipPowerUp?.Invoke(powerUp);
+        public void PressFire() => OnFirePressed?.Invoke();
+        public void PressWheelMessage(WheelMessages message) => OnWheelMessagePressed?.Invoke(message);
+
+        #endregion
     }
 }

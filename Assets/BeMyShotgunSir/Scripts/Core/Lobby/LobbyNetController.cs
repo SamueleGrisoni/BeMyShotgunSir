@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Core.Common;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
@@ -13,9 +12,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     #region Interfaces
 
-    public interface ILobbyNetController_Ready : IReady { }
 
-    public interface ILobbyNetController_Command : INetController_Command, ILobbyNetController_Ready
+    public interface ILobbyNetController_Command : INetController_Command
     {
         void OnRefresh();
         void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
@@ -24,7 +22,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void LeaveTeam_ServerRpc(NetworkConnection conn = null);
     }
 
-    public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetState_Compact { }
+    public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetStateReadWrapped { }
 
     #endregion
 
@@ -49,19 +47,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
 
         private ServerManager _serverManager;
-        private LobbyViewModel _viewModel;
-        private ILobbyNetStateStore_Mutator _netState;
-        public ILobbyNetStateRead LobbyNetState => _netState;
+        private LobbyNetStateStore _netState;
+        public ILobbyNetStateRead NetState => _netState;
         private LobbyClientProjector _clientProjection;
 
         [SerializeField] private NetworkObject _raceManager;
         private NetworkObject _activeRaceManager;
-
-        public void SetLobbyViewModel(LobbyViewModel viewModel)
-        {
-            if (_viewModel == null)
-                _viewModel = viewModel;
-        }
 
         private void Awake()
         {
@@ -70,7 +61,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (_netState == null || _clientProjection == null)
                 Log.ELazy(() => "One or more required components are missing on LobbyNetController.", this);
         }
-
 
         public override void OnStartNetwork()
         {
@@ -157,7 +147,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             if (IsController)
             {
-                _clientProjection.InitNetData_Response(new LobbyNetDataSnapshot(_netState.PlayerCount, new Dictionary<int, LobbyPlayerState>(_netState.PlayerStates), _netState.LobbyInfo, new Dictionary<int, LobbyTeamInfo>(_netState.TeamInfos)));
+                _clientProjection.InitNetData_Response(new LobbyNetDataSnapshot(NetState.PlayerCount, new Dictionary<int, LobbyPlayerState>(NetState.PlayerStates), NetState.LobbyInfo, new Dictionary<int, LobbyTeamInfo>(NetState.TeamInfos)));
                 return;
             }
             if (IsClientInitialized)
@@ -170,7 +160,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (conn == null)
                 return;
 
-            var snapshot = new LobbyNetDataSnapshot(_netState.PlayerCount, new Dictionary<int, LobbyPlayerState>(_netState.PlayerStates), _netState.LobbyInfo, new Dictionary<int, LobbyTeamInfo>(_netState.TeamInfos));
+            var snapshot = new LobbyNetDataSnapshot(NetState.PlayerCount, new Dictionary<int, LobbyPlayerState>(NetState.PlayerStates), NetState.LobbyInfo, new Dictionary<int, LobbyTeamInfo>(NetState.TeamInfos));
 
             InitNetData_TargetRpc(conn, snapshot);
         }

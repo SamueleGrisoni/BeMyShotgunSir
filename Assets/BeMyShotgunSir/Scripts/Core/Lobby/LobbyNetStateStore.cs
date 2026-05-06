@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Core.Common;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.CodeGenerating;
 using FishNet.Connection;
@@ -85,9 +84,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     #region Interfaces
 
-    public interface ILobbyNetState_Ready : IReady { }
 
-    public interface ILobbyNetStateRead : ILobbyNetState_Ready
+    public interface ILobbyNetStateRead
     {
         LobbyInfo LobbyInfo { get; }
         IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates { get; }
@@ -99,24 +97,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         bool ContainsPlayer(int clientId);
     }
 
-    public interface ILobbyNetState_Compact
+    public interface ILobbyNetStateReadWrapped
     {
-        ILobbyNetStateRead LobbyNetState { get; }
+        ILobbyNetStateRead NetState { get; }
     }
 
-    public interface ILobbyNetStateStore_Mutator : ILobbyNetStateRead
-    {
-        void InitSyncValues();
-        void AddPlayer(NetworkConnection conn, string defaultName);
-        void RemovePlayer(int clientId);
-        void SetPlayerName(int clientId, string name);
-        void SetPlayerReady(int clientId, bool isReady);
-        void AddTeamInfo(int teamId, LobbyTeamInfo info);
-        void RemoveTeam(int teamId);
-        void SetPlayerTeam(int clientId, int teamId);
-    }
-
-    public interface ILobbyNetStateStore_Projector
+    public interface ILobbyNetStateSubscribe : ILobbyNetStateRead
     {
         SyncVar<LobbyInfo> LobbyInfoSync { get; }
         SyncDictionary<int, LobbyPlayerState> PlayerStatesSync { get; }
@@ -124,7 +110,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         SyncVar<int> PlayerCountSync { get; }
     }
 
-    public interface ILobbyNetStateStore : ILobbyNetStateStore_Mutator, ILobbyNetStateStore_Projector { }
+    public interface ILobbyNetStateStore : ILobbyNetStateSubscribe { }
 
     #endregion
 
@@ -153,17 +139,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private readonly SyncDictionary<int, LobbyTeamInfo> _teamInfos = new();
         private readonly SyncVar<int> _playerCount = new(0);
 
-        //State Projector accessors
-        public SyncVar<LobbyInfo> LobbyInfoSync => _lobbyInfo;
-        public SyncDictionary<int, LobbyPlayerState> PlayerStatesSync => _playerStates;
-        public SyncDictionary<int, LobbyTeamInfo> TeamInfosSync => _teamInfos;
-        public SyncVar<int> PlayerCountSync => _playerCount;
+        //Subscriber accessors (Projectors)
+        SyncVar<LobbyInfo> ILobbyNetStateSubscribe.LobbyInfoSync => _lobbyInfo;
+        SyncDictionary<int, LobbyPlayerState> ILobbyNetStateSubscribe.PlayerStatesSync => _playerStates;
+        SyncDictionary<int, LobbyTeamInfo> ILobbyNetStateSubscribe.TeamInfosSync => _teamInfos;
+        SyncVar<int> ILobbyNetStateSubscribe.PlayerCountSync => _playerCount;
 
         //State Read-only accessors
-        public LobbyInfo LobbyInfo => _lobbyInfo.Value;
-        public IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates => _playerStates;
-        public IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos => _teamInfos;
-        public int PlayerCount => _playerCount.Value;
+        LobbyInfo ILobbyNetStateRead.LobbyInfo => _lobbyInfo.Value;
+        IReadOnlyDictionary<int, LobbyPlayerState> ILobbyNetStateRead.PlayerStates => _playerStates;
+        IReadOnlyDictionary<int, LobbyTeamInfo> ILobbyNetStateRead.TeamInfos => _teamInfos;
+        int ILobbyNetStateRead.PlayerCount => _playerCount.Value;
 
 
         public override void OnStopNetwork()

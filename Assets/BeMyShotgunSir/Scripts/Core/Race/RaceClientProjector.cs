@@ -28,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private bool _log = true;
 
         //references
-        private IRaceNetStateStore_Projector _state;
+        private IRaceNetStateSubscribe _state;
         private RaceViewModel _viewModel;
         private IRoadManager _roadManager;
         private SOAudioRequestEvent _audioRequestEvent;
@@ -45,10 +45,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => $"SORaceSounds reference is not assigned in the inspector.", this);
         }
 
-        private void OnEnable()
-        {
+        private void OnEnable() =>
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
-        }
 
         private void OnRoadManagerSpawned(IRoadManager manager) => _roadManager = manager;
 
@@ -123,10 +121,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             cam.enabled = true;
             _roadManager.SetDriver(driver.gameObject.transform);
-
-            //TODO FINAL BIND
         }
-
-
     }
 }

@@ -10,7 +10,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     [RequireComponent(typeof(LobbyNetStateStore))]
     public sealed class LobbyClientProjector : MonoBehaviour
     {
-        private ILobbyNetStateStore_Projector _state;
+        private ILobbyNetStateSubscribe _state;
         private LobbyViewModel _viewModel;
         [SerializeField] private SOLobbySounds _sounds;
         private SOAudioRequestEvent _audioRequestEvent;

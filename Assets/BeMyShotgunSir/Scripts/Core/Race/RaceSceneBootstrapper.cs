@@ -15,7 +15,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRaceBindTarget[] _coercedTargets;
 
         private void OnDisable() =>
-            RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
+            RaceManager.OnRaceManagerInitialized -= OnRaceManagerReady;
 
         private void Bind(IRaceManager_Bootstrapper manager)
         {
@@ -52,7 +52,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             var raceManager = GameServices.Instance.RaceManager as IRaceManager_Bootstrapper;
             if (raceManager == null)
-                RaceManager.OnRaceManagerReady += OnRaceManagerReady;
+                RaceManager.OnRaceManagerInitialized += OnRaceManagerReady;
             else
                 Bind(raceManager);
         }

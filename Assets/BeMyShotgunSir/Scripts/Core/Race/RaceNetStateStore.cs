@@ -18,42 +18,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         Shotgun
     }
 
-    // public struct RacePlayerInitData
-    // {
-    //     public bool IsHost;
-    //     public int TeamId;
-    //     public NetworkObject Player;
-    //     public RaceRole Role;
-
-    //     /// <summary>
-    //     /// Create initial player init data.
-    //     /// Player is intentionally set to <c>null</c> here because the NetworkObject
-    //     /// instance for the player will be created/spawned later on the server and
-    //     /// assigned in a second pass (see constructor overload that accepts a
-    //     /// <see cref="NetworkObject"/>). Keeping the field null avoids holding
-    //     /// invalid Unity object references during early state initialization.
-    //     /// </summary>
-    //     public RacePlayerInitData(bool isHost, NetworkObject player, int teamId, RaceRole role)
-    //     {
-    //         IsHost = isHost;
-    //         // Intentionally not assigning `player` here; populated later when the
-    //         // actual spawned NetworkObject is available.
-    //         Player = null;
-    //         TeamId = teamId;
-    //         Role = role;
-    //     }
-
-    //     public RacePlayerInitData(RacePlayerInitData other, NetworkObject player)
-    //     {
-    //         IsHost = other.IsHost;
-    //         Player = player;
-    //         TeamId = other.TeamId;
-    //         Role = other.Role;
-    //     }
-
-    //     public override string ToString() => $"IsHost: {IsHost}, Player: {(Player != null ? Player.name : "null")}, teamId: {TeamId}, Role: {Role}";
-    // }
-
     public struct RacePlayerState
     {
         public string PlayerName;
@@ -118,17 +82,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public struct InventoryData
     {
-        public PowerUpType? PowerUp1;
-        public PowerUpType? PowerUp2;
-        public PowerUpType? PowerUp3;
-        public PowerUpType? PowerUp4;
-        public PowerUpType? PowerUp5;
+        public PowerUp? PowerUp1;
+        public PowerUp? PowerUp2;
+        public PowerUp? PowerUp3;
+        public PowerUp? PowerUp4;
+        public PowerUp? PowerUp5;
         public int MaxPowerUps => 5;
-        public PowerUpType? SelectedPowerUp;
+        public PowerUp? SelectedPowerUp;
+        public PowerUp[] ActivePowerUps;
         public bool IsFull => PowerUp1.HasValue && PowerUp2.HasValue && PowerUp3.HasValue && PowerUp4.HasValue && PowerUp5.HasValue;
         public bool IsEmpty => !PowerUp1.HasValue && !PowerUp2.HasValue && !PowerUp3.HasValue && !PowerUp4.HasValue && !PowerUp5.HasValue;
 
-        public InventoryData(PowerUpType? powerUp1, PowerUpType? powerUp2, PowerUpType? powerUp3, PowerUpType? powerUp4, PowerUpType? powerUp5, PowerUpType? selectedPowerUp)
+        public InventoryData(PowerUp? powerUp1 = null, PowerUp? powerUp2 = null, PowerUp? powerUp3 = null, PowerUp? powerUp4 = null, PowerUp? powerUp5 = null, PowerUp? selectedPowerUp = null, PowerUp[] activePowerUps = null)
         {
             PowerUp1 = powerUp1;
             PowerUp2 = powerUp2;
@@ -136,6 +101,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             PowerUp4 = powerUp4;
             PowerUp5 = powerUp5;
             SelectedPowerUp = selectedPowerUp;
+            ActivePowerUps = activePowerUps ?? new PowerUp[0];
+        }
+
+        public InventoryData(InventoryData other, PowerUp? powerUp1 = null, PowerUp? powerUp2 = null, PowerUp? powerUp3 = null, PowerUp? powerUp4 = null, PowerUp? powerUp5 = null, PowerUp? selectedPowerUp = null, PowerUp[] activePowerUps = null)
+        {
+            PowerUp1 = powerUp1 ?? other.PowerUp1;
+            PowerUp2 = powerUp2 ?? other.PowerUp2;
+            PowerUp3 = powerUp3 ?? other.PowerUp3;
+            PowerUp4 = powerUp4 ?? other.PowerUp4;
+            PowerUp5 = powerUp5 ?? other.PowerUp5;
+            SelectedPowerUp = selectedPowerUp ?? other.SelectedPowerUp;
+            ActivePowerUps = activePowerUps ?? other.ActivePowerUps;
         }
 
         public override string ToString() => $"PowerUp1: {PowerUp1}, PowerUp2: {PowerUp2}, PowerUp3: {PowerUp3}, PowerUp4: {PowerUp4}, PowerUp5: {PowerUp5}, SelectedPowerUp: {SelectedPowerUp}";
@@ -156,29 +133,20 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         bool AreAllPlayersReady();
     }
 
-    // Compact accessor used by external components that need read-only state access.
-    public interface IRaceNetState_Compact
+    public interface IRaceNetStateReadWrapped
     {
         IRaceNetStateRead NetState { get; }
     }
 
-    public interface IRaceNetStateStore_Mutator : IRaceNetStateRead
+    public interface IRaceNetStateSubscribe : IRaceNetStateRead
     {
-        void InitializeFromLobby(ILobbyNetStateRead lobbyState);
-        void SetSeed(int value);
-        void SetPlayerState(int connectionId, RacePlayerState playerState);
-        void SetTeamData(int teamId, RaceTeamData teamData);
-        void SetLeaderboard(List<int> orderedTeamIds);
-    }
-
-    public interface IRaceNetStateStore_Projector
-    {
+        SyncVar<int> Seed { get; }
         SyncDictionary<int, RacePlayerState> PlayerStatesSync { get; }
         SyncDictionary<int, RaceTeamData> TeamDataSync { get; }
         SyncList<int> LeaderboardSync { get; }
     }
 
-    public interface IRaceNetStateStore : IRaceNetStateStore_Mutator, IRaceNetStateStore_Projector { }
+    public interface IRaceNetStateStore : IRaceNetStateSubscribe { }
 
     #endregion
 
@@ -211,16 +179,16 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncList<int> _leaderboard = new();
 
         // State Projector accessors
-        public SyncVar<int> Seed => _seed;
-        public SyncDictionary<int, RacePlayerState> PlayerStatesSync => _racePlayerStates;
-        public SyncDictionary<int, RaceTeamData> TeamDataSync => _raceTeamData;
-        public SyncList<int> LeaderboardSync => _leaderboard;
+        SyncVar<int> IRaceNetStateSubscribe.Seed => _seed;
+        SyncDictionary<int, RacePlayerState> IRaceNetStateSubscribe.PlayerStatesSync => _racePlayerStates;
+        SyncDictionary<int, RaceTeamData> IRaceNetStateSubscribe.TeamDataSync => _raceTeamData;
+        SyncList<int> IRaceNetStateSubscribe.LeaderboardSync => _leaderboard;
 
         // State Read-only accessors
-        public int GetSeed() => _seed.Value;
-        public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _racePlayerStates;
-        public IReadOnlyDictionary<int, RaceTeamData> TeamData => _raceTeamData;
-        public IReadOnlyList<int> Leaderboard => _leaderboard;
+        int IRaceNetStateRead.GetSeed() => _seed.Value;
+        IReadOnlyDictionary<int, RacePlayerState> IRaceNetStateRead.PlayerStates => _racePlayerStates;
+        IReadOnlyDictionary<int, RaceTeamData> IRaceNetStateRead.TeamData => _raceTeamData;
+        IReadOnlyList<int> IRaceNetStateRead.Leaderboard => _leaderboard;
 
         public override void OnStopNetwork()
         {

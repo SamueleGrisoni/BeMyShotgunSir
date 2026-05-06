@@ -28,9 +28,9 @@ namespace BeMyShotgunSir.Scripts.Core
         }
         private void Start()
         {
-            Lobby.LobbyManager.OnLobbyManagerReady += OnLobbyManagerReady;
+            Lobby.LobbyManager.OnLobbyManagerInitialized += OnLobbyManagerReady;
             Lobby.LobbyManager.OnLobbyManagerDespawned += OnLobbyManagerDespawned;
-            Race.RaceManager.OnRaceManagerReady += OnRaceManagerReady;
+            Race.RaceManager.OnRaceManagerInitialized += OnRaceManagerReady;
             Race.RaceManager.OnRaceManagerDespawned += OnRaceManagerDespawned;
 
             TryGetComponent(out _sceneCoordinator);
@@ -63,9 +63,9 @@ namespace BeMyShotgunSir.Scripts.Core
 
         private void OnDisable()
         {
-            Lobby.LobbyManager.OnLobbyManagerReady -= OnLobbyManagerReady;
+            Lobby.LobbyManager.OnLobbyManagerInitialized -= OnLobbyManagerReady;
             Lobby.LobbyManager.OnLobbyManagerDespawned -= OnLobbyManagerDespawned;
-            Race.RaceManager.OnRaceManagerReady -= OnRaceManagerReady;
+            Race.RaceManager.OnRaceManagerInitialized -= OnRaceManagerReady;
             Race.RaceManager.OnRaceManagerDespawned -= OnRaceManagerDespawned;
         }
 

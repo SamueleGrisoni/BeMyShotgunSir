@@ -15,7 +15,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private ILobbyBindTarget[] _coercedTargets;
 
         private void OnDisable() =>
-            LobbyManager.OnLobbyManagerReady -= OnLobbyManagerReady;
+            LobbyManager.OnLobbyManagerInitialized -= OnLobbyManagerReady;
 
         private void Bind(ILobbyManager_Bootstrapper manager)
         {
@@ -58,7 +58,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             var lobbyManager = GameServices.Instance.LobbyManager as ILobbyManager_Bootstrapper;
             if (lobbyManager == null)
-                LobbyManager.OnLobbyManagerReady += OnLobbyManagerReady;
+                LobbyManager.OnLobbyManagerInitialized += OnLobbyManagerReady;
             else
                 Bind(lobbyManager);
         }

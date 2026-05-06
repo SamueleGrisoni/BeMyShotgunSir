@@ -13,12 +13,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 {
     #region Interfaces
 
+    public interface IRaceManagerInitializer
+    {
+        void Initialize(LobbyViewModel viewModel, LobbyNetStateStore netState);
+    }
+
     public interface IRaceManager_Bootstrapper : IManager_Bootstrapper
     {
         void BindRace_Initial(IRaceBindTarget[] targets);
     }
 
-    public interface IRaceManager : IManager, IRaceManager_Bootstrapper { }
+    public interface IRaceManager : IManager, IRaceManager_Bootstrapper, IRaceManagerInitializer { }
 
     #endregion
 
@@ -30,14 +35,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         //utility
         private bool _log = true;
         string IEventSender.SenderName => name;
-        public static event Action<IRaceManager> OnRaceManagerStarted;
-        public static event Action<IRaceManager> OnRaceManagerReady;
+        public static event Action<IRaceManagerInitializer> OnRaceManagerSpawned;
+        public static event Action<IRaceManager> OnRaceManagerInitialized;
         public static event Action OnRaceManagerDespawned;
 
         //binding
-        private GameObject _lobbyManager;
         private LobbyViewModel _lobbyViewModel;
-        private LobbyNetStateStore _lobbyNetStateStore;
+        private ILobbyNetStateRead _lobbyNetStateStore;
         private RaceBinder _binder;
         private RaceNetStateStore _netState;
         public IRaceNetStateRead NetState => _netState;
@@ -49,6 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRoadManager _roadManager;
         private InputPublisher _inputPublisher;
         private RaceRole _playerRole;
+
         RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
         IRoadManager IRaceFinalBindSource.RoadManager => _roadManager;
@@ -77,46 +82,32 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
         }
 
-        private void Start()
-        {
-            Log.DLazy(() => "RaceManager started.", this, _log);
-            OnRaceManagerStarted?.Invoke(this);
-        }
-
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
-            InitializeFromLobby();
+            OnRaceManagerSpawned.Invoke(this);
         }
 
-        [Server]
-        private void InitializeFromLobby()
+        public void Initialize(LobbyViewModel viewModel, LobbyNetStateStore netState)
         {
-            _lobbyManager = GameObject.FindWithTag("LobbyManager");
-            if (_lobbyManager == null)
+            if (_lobbyViewModel != null || _lobbyNetStateStore != null)
             {
-                Log.ELazy(() => $"LobbyManager not found in the scene.", this);
+                Log.ELazy(() => $"RaceManager is already initialized. Ignoring duplicate initialization.", this);
                 return;
             }
-            _lobbyViewModel = _lobbyManager.GetComponent<LobbyManager>().ViewModel;
-            if (_lobbyViewModel == null)
-            {
-                Log.ELazy(() => $"LobbyViewModel not found on LobbyManager.", this);
-                return;
-            }
+            _lobbyViewModel = viewModel;
             _viewModel.InitData(_lobbyViewModel);
-            _lobbyNetStateStore = _lobbyManager.GetComponent<LobbyNetStateStore>();
-            if (_lobbyNetStateStore == null)
-            {
-                Log.ELazy(() => $"LobbyNetStateStore not found in the scene.", this);
-                return;
-            }
-            _netState.InitializeFromLobby(_lobbyNetStateStore);
+            _lobbyNetStateStore = netState;
             _netController.SetLobbyNetState(_lobbyNetStateStore);
-
+            _projector.Init(_viewModel);
+            _raceCommand.GetInitSnapshot_Request(); //DANGER
+            if (IsServerInitialized)
+            {
+                _netState.InitializeFromLobby(_lobbyNetStateStore);
+                LoadRaceScene(); //DANGER
+            }
             Log.DLazy(() => "RaceManager is ready.", this, _log);
-            OnRaceManagerReady?.Invoke(this);
-            LoadRaceScene();
+            OnRaceManagerInitialized?.Invoke(this);
         }
 
         [Server]
@@ -148,12 +139,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             if (name != SceneName.Race)
                 return;
-            if (!IsController)
-                return;
-
-            _projector.Init(_viewModel);
-            _raceCommand.GetInitSnapshot_Request();
-
             if (IsServerInitialized)
                 _netController.InitRace();
         }
@@ -212,6 +197,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void UnsubscribeEvents()
         {
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
+            RoadManager.OnRoadManagerSpawned -= OnRoadManagerSpawned;
+            DriverController.OnDriverSpawned -= OnDriverSpawned;
+            ShotgunController.OnShotgunSpawned -= OnShotgunSpawned;
         }
 
     }

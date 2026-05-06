@@ -3,6 +3,7 @@ using FishNet.Object;
 using UnityEngine;
 using System;
 using BeMyShotgunSir.Scripts.Utils;
+using BeMyShotgunSir.Scripts.Core.Race;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
@@ -29,7 +30,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public bool IsReady { get; private set; } = false;
 
         public static event Action<ILobbyManager> OnLobbyManagerStarted;
-        public static event Action<ILobbyManager> OnLobbyManagerReady;
+        public static event Action<ILobbyManager> OnLobbyManagerInitialized;
         public static event Action OnLobbyManagerDespawned;
 
         //binding
@@ -37,6 +38,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private LobbyNetController _lobbyNetController;
         private ILobbyBindTarget[] _bindTargets;
         private LobbyCommand _lobbyCommand;
+        private LobbyClientProjector _projector;
+        private LobbyNetStateStore _netState;
+        public ILobbyNetStateRead NetState => _lobbyNetController != null ? _lobbyNetController.NetState : null;
         public LobbyViewModel ViewModel { get; private set; }
         LobbyCommand ILobbyInitialBindSource.Command => _lobbyCommand;
         LobbyViewModel ILobbyInitialBindSource.ViewModel => ViewModel;
@@ -44,28 +48,28 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void Awake()
         {
             TryGetComponent(out _lobbyNetController);
+            TryGetComponent(out _netState);
+            TryGetComponent(out _projector);
 
-            if (_lobbyNetController == null)
-                Log.ELazy(() => $"One or more required components are missing on LobbyManager.", this);
+            if (_lobbyNetController == null || _netState == null || _projector == null)
+                Log.ELazy(() => "LobbyManager requires LobbyNetController, LobbyNetStateStore and LobbyClientProjector on the same GameObject.", this);
 
             ViewModel = new LobbyViewModel();
             ViewModel.InitData();
-            _lobbyNetController.SetLobbyViewModel(ViewModel);
+            _projector.Init(ViewModel);
             _lobbyCommand = new LobbyCommand(_lobbyNetController);
             _binder = new LobbyBinder(this);
-
-            if (TryGetComponent(out LobbyClientProjector projector))
-                projector.Init(ViewModel);
-            else
-                Log.ELazy(() => $"LobbyManager is missing LobbyClientProjector component.", this);
         }
 
         private void OnEnable()
         {
+            RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
             if (_lobbyNetController != null)
                 _lobbyNetController.OnReady += TryAnnounceReady;
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
         }
+
+        private void OnRaceManagerSpawned(IRaceManagerInitializer initializer) => initializer.Initialize(ViewModel, _netState);
 
         private void Start()
         {
@@ -79,7 +83,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
 
             IsReady = true;
-            OnLobbyManagerReady?.Invoke(this);
+            OnLobbyManagerInitialized?.Invoke(this);
             Log.DLazy(() => "LobbyManager is ready.", this, _log);
 
             LoadLobbyScene();
