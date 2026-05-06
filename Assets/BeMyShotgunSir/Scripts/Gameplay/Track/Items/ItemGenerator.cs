@@ -4,6 +4,7 @@ using Random = System.Random;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 {
+    public enum ItemType { POWER_UP, OBSTACLE }
     public struct GeneratedItemInfo
     {
         public int index;

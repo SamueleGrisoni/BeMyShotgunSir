@@ -221,8 +221,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
                 _roadSpawner.PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type,
                     chunkInfoWithItems.roadChunkInfo.position, _activeRoadChunks.Count);
+
                 _environmentSpawner.PopulateChunk(nextChunk.Component);
-                _itemSpawner.PopulateChunkWithItems(nextChunk.Component, chunkInfoWithItems.itemsToSpawn);
+
+                if (_isServer || chunkInfoWithItems.itemsToSpawn.TrueForAll(item => item.type == ItemType.OBSTACLE))
+                {
+                    _itemSpawner.PopulateChunkWithItems(nextChunk.Component, chunkInfoWithItems.itemsToSpawn);
+                }
 
                 _activeRoadChunks.AddLast(nextChunk);
             }

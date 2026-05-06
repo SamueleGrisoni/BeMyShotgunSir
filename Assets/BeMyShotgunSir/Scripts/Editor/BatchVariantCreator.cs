@@ -21,7 +21,7 @@ namespace BeMyShotgunSir.Editor
                 string newPath = $"{targetFolder}/{obj.name}_Variant.prefab";
 
                 GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(obj);
-                instance.AddComponent<Item>();
+                //instance.AddComponent<Item>();
 
                 PrefabUtility.SaveAsPrefabAsset(instance, newPath);
                 Object.DestroyImmediate(instance);

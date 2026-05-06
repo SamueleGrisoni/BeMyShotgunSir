@@ -441,6 +441,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1637647b92df40eea32ce6a92393fcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.PowerUp
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   _rotationSpeed: 45
   _bobHeight: 0.5
   _bobSpeed: 2

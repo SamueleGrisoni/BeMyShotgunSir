@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using FishNet.Object;
+using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 {
-    public class PowerUp : Item
+    public class PowerUpSpawnable : MonoBehaviour
     {
         [SerializeField] private float _rotationSpeed = 45f;
         [SerializeField] private float _bobHeight = 0.2f;
@@ -24,6 +25,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             Vector3 localPos = _itemVisualsPrefabs.transform.localPosition;
             localPos.y = Mathf.Max(_minY, _startLocalY + Mathf.Sin(Time.time * _bobSpeed) * _bobHeight);
             _itemVisualsPrefabs.transform.localPosition = localPos;
+        }
+
+        void OnDrawGizmos()
+        {
+            Renderer r = GetComponent<Renderer>();
+            if (r != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireCube(r.bounds.center, r.bounds.size);
+            }
         }
     }
 }
