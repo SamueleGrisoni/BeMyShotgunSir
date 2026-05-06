@@ -45,6 +45,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 239cafc3a075abb429d16d9f674352df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.MovingDriver
+--- !u!1 &1419771959198239803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 164213818918507380}
+  - component: {fileID: 8077602117623460714}
+  m_Layer: 6
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &164213818918507380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419771959198239803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 632954567861261468}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8077602117623460714
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419771959198239803}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2204479149634885745
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,8 +125,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2204479149634885745}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.22975294, y: 0, z: 0, w: 0.973249}
-  m_LocalPosition: {x: 0, y: 1, z: -2}
+  m_LocalRotation: {x: 0.12218326, y: 0, z: 0, w: 0.9925076}
+  m_LocalPosition: {x: 0, y: 1, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -140,7 +193,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 0, y: 0, z: 0}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 1, z: -2}
+  FollowOffset: {x: 0, y: 1, z: -4}
 --- !u!114 &1895062096101697496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,9 +223,9 @@ GameObject:
   - component: {fileID: 3499080570391619972}
   - component: {fileID: 852193519373100106}
   - component: {fileID: 7664934764188766082}
-  - component: {fileID: 7508885612993998191}
+  - component: {fileID: 6245667560920504989}
   - component: {fileID: 2401640324133198514}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +244,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 164213818918507380}
   m_Father: {fileID: 3936639379094671228}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6190888561440212584
@@ -209,6 +263,11 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 2401640324133198514}
   _networkObjectCache: {fileID: 0}
+  _sidecarLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _bumpRadius: 1.1
+  _bumpForce: 15
   _sidecarStatsNormal: {fileID: 11400000, guid: c91c8525809d78159b92b45bd668f877, type: 2}
   _sidecarStatsBoost: {fileID: 11400000, guid: 47264b8a7db1e3d0897ee573fb80765c, type: 2}
   _sidecarStatsGrass: {fileID: 11400000, guid: 52e9b9a1b1bd968239145b7ffbe2f5ad, type: 2}
@@ -373,14 +432,14 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &7508885612993998191
-BoxCollider:
+--- !u!136 &6245667560920504989
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7611221212194578232}
-  m_Material: {fileID: 13400000, guid: 903f078282fa085858c75484732791cf, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -391,9 +450,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9432721, y: 0.6396423, z: 1.7729231}
-  m_Center: {x: -0.0009059906, y: 0.023792654, z: 0.041515768}
+  serializedVersion: 2
+  m_Radius: 0.43358278
+  m_Height: 1.8215477
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.06641722, z: 0.026790738}
 --- !u!114 &2401640324133198514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,6 +487,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: -8584244934708813998
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1
@@ -522,6 +586,9 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: -8584244934708813998
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 1

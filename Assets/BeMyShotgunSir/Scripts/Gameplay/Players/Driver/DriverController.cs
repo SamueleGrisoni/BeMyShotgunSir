@@ -6,6 +6,7 @@ using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using GameKit.Dependencies.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -110,6 +111,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (_inputConsumer == null)
                 _inputConsumer = inputConsumer;
         }
+
+        [SerializeField] private LayerMask _sidecarLayerMask;
+        [SerializeField] private float _bumpRadius = 1.2f;
+        [SerializeField] private float _bumpForce = 15f;
 
         [SerializeField] private SOSidecarStats _sidecarStatsNormal;
         [SerializeField] private SOSidecarStats _sidecarStatsBoost;
@@ -251,9 +256,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
             // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
-            _parent.position = _sphere.transform.position;
-            _parent.rotation = _parentRotation;
-            _sidecar.localRotation = _sidecarLocalRotation;
+            if (IsServerInitialized)
+            {
+                _parent.position = _sphere.transform.position;
+                _parent.rotation = _parentRotation;
+                _sidecar.localRotation = _sidecarLocalRotation;
+            }
+            else
+            {
+                float smoothSpeed = 20f;
+                _parent.position = Vector3.Lerp(_parent.position, _sphere.transform.position, Time.deltaTime * smoothSpeed);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _parentRotation, Time.deltaTime * smoothSpeed);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _sidecarLocalRotation, Time.deltaTime * smoothSpeed);                
+            }
 
             _sphere.transform.forward = _sidecar.forward;
 
@@ -276,6 +291,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Il client esegue immediatamente il codice, senza aspettare il server
         Il server esegue anch'esso i calcoli una volta ricevuti i dati (ReplicateDate)
         */
+
+
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
             /*
@@ -293,7 +310,43 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentDrivingState?.CheckStateChange(this, data);
             _currentDrivingState?.RunInputs(this, data);
 
-            _predictionRigidbody.Velocity(_currentLinearVelocity);
+            Vector3 repulsionForce = Vector3.zero;
+            Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
+            foreach (var hitCollider in hitColliders)
+            {
+                if (hitCollider.transform.root == _parent.root) continue;
+
+                Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
+                rawPushDirection.y = 0;
+                float distance = rawPushDirection.magnitude;
+                if (distance > 0 && distance < _bumpRadius)
+                {
+                    Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+                    forwardDir.y = 0;
+
+                    Vector3 lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+                    Debug.Log($"Lateral push direction: {lateralPushDirection}");
+
+                    float pushStrength = 1f; //- (distance / _bumpRadius);
+
+                    if (lateralPushDirection.sqrMagnitude > 0.001f)
+                    {
+                        Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
+                        repulsionForce += finalPush;
+
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush*0.5f, Color.red, 0.5f);
+                        Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                    }
+                }
+
+            }
+            _currentLinearVelocity += repulsionForce; //* (float)TimeManager.TickDelta;
+
+            //_predictionRigidbody.Velocity(_currentLinearVelocity);
+            Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
+            _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
 
             if (state != ReplicateState.Replayed)
@@ -320,7 +373,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation = data.ParentRotation;
             _sidecarLocalRotation = data.SidecarLocalRotation;
 
-            _currentLinearVelocity = data.CurrentLinearVelocity;
+            //_currentLinearVelocity = data.CurrentLinearVelocity;
             _currentMaxSpeed = data.CurrentMaxSpeed;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
@@ -352,10 +405,39 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             Vector3 horrizontalLinearVelocity = new(predictedVelocity.x, 0, predictedVelocity.z);
             if (horrizontalLinearVelocity.magnitude > _currentMaxSpeed)
             {
-                Vector3 limitedHorizontalVel = horrizontalLinearVelocity.normalized * _currentMaxSpeed;
-                predictedVelocity = new Vector3(limitedHorizontalVel.x, predictedVelocity.y, limitedHorizontalVel.z);
+                Vector3 currentHorizontalVel = new(_predictionRigidbody.Rigidbody.linearVelocity.x, 0, _predictionRigidbody.Rigidbody.linearVelocity.z);
+                if (currentHorizontalVel.magnitude > _currentMaxSpeed)
+                {
+                    float recoveryDrag = 15f;
+                    Vector3 targetVel = currentHorizontalVel.normalized * _currentMaxSpeed;
+                    Vector3 smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
+                    predictedVelocity = new Vector3(smoothedVel.x, predictedVelocity.y, smoothedVel.z);
+                }
+                else
+                {
+                    Vector3 limitedHorizontalVel = horrizontalLinearVelocity.normalized * _currentMaxSpeed;
+                    predictedVelocity = new Vector3(limitedHorizontalVel.x, predictedVelocity.y, limitedHorizontalVel.z);
+                }
             }
+            
+            // TODO da capire
+            /*
+            if (_predictionRigidbody.Rigidbody.SweepTest(predictedVelocity.normalized, out RaycastHit hit, 1f, QueryTriggerInteraction.Ignore))
+            {
+                Debug.Log($"Raychast has hitted something {hit.GetType().Name}");
+                if ((_wallLayerMask.value & (1 << hit.collider.gameObject.layer)) > 0)
+                {
+                    Debug.Log("Hitted the wall");
+                    float verticalVelocity = predictedVelocity.y;
+                    predictedVelocity = Vector3.ProjectOnPlane(predictedVelocity, hit.normal);
+                    predictedVelocity.y = verticalVelocity;
+                }
+            }
+            */
+            
+
             _currentLinearVelocity = predictedVelocity;
+
         }
 
         void IDriverControllerContext.ApplyGravity(float gravity) => _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
