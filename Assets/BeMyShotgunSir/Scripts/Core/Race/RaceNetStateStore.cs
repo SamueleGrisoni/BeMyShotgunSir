@@ -150,7 +150,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     #endregion
 
-
     [RequireComponent(typeof(RaceManager))]
     [RequireComponent(typeof(RaceNetController))]
     [RequireComponent(typeof(RaceClientProjector))]

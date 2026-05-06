@@ -67,7 +67,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             if (_trackData == null)
             {
-                Debug.LogError("TrackManager: Missing SOTrack reference.");
+                Log.ELazy(() => "TrackManager: Missing SOTrack reference.", this);
                 return;
             }
 
@@ -90,12 +90,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             if (_trackBits.Count == 0)
             {
-                Debug.LogError("[TrackManager Server] PeekStartFinishLine called but trackBits is empty!");
+                Log.ELazy(() => "PeekStartFinishLine called but trackBits is empty!", this);
                 throw new EarlyExitException();
             }
             if (_trackBits.Peek().roadChunkInfo.index != (int)SpecialRoadChunkIndex.START_LINE)
             {
-                Debug.LogError("[TrackManager Server] PeekStartFinishLine called but the first chunk is not the start line!");
+                Log.ELazy(() => "PeekStartFinishLine called but the first chunk is not the start line!", this);
                 throw new EarlyExitException();
             }
             return new List<GeneratedRoadChunkInfoWithItems>() { _trackBits.Peek() };
@@ -211,7 +211,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     RoadChunkPosition.MIDDLE),
                     new List<GeneratedItemInfo>()));
             OnSplitGenerated?.Invoke(splitSegmentChunks.ToList());
-            foreach (var splitSegmentChunk in splitSegmentChunks)
+            foreach (GeneratedRoadChunkInfoWithItems splitSegmentChunk in splitSegmentChunks)
                 _trackBits.Enqueue(splitSegmentChunk);
         }
 
@@ -270,7 +270,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
             if (possibleWeights.Count == 0)
             {
-                Debug.LogError("TrackManager: No possible weights to choose from. This should never happen");
+                Log.ELazy(() => "TrackManager: No possible weights to choose from. This should never happen", this);
             }
 
             int selectedWeight = possibleWeights[_rng.Next(0, possibleWeights.Count)];
@@ -300,7 +300,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 return chunkIndex;
             }
 
-            Debug.LogError($"TrackManager: No prefab found for physical weight {weight}. Defaulting to Straight.");
+            Log.ELazy(() => $"TrackManager: No prefab found for physical weight {weight}. Defaulting to Straight.", this);
             return (int)SpecialRoadChunkIndex.STRAIGHT;
         }
     }

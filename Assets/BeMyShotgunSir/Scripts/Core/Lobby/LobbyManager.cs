@@ -27,9 +27,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         //utility
         private bool _log = true;
         string IEventSender.SenderName => name;
-        public bool IsReady { get; private set; } = false;
+        public bool IsInitialized { get; private set; } = false;
 
-        public static event Action<ILobbyManager> OnLobbyManagerStarted;
         public static event Action<ILobbyManager> OnLobbyManagerInitialized;
         public static event Action OnLobbyManagerDespawned;
 
@@ -65,26 +64,20 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
             if (_lobbyNetController != null)
-                _lobbyNetController.OnReady += TryAnnounceReady;
+                _lobbyNetController.OnInitialized += TryInitialize;
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
         }
 
         private void OnRaceManagerSpawned(IRaceManagerInitializer initializer) => initializer.Initialize(ViewModel, _netState);
 
-        private void Start()
+        private void TryInitialize()
         {
-            Log.DLazy(() => "LobbyManager started.", this, _log);
-            OnLobbyManagerStarted?.Invoke(this);
-        }
-
-        private void TryAnnounceReady()
-        {
-            if (IsReady)
+            if (IsInitialized)
                 return;
 
-            IsReady = true;
+            IsInitialized = true;
             OnLobbyManagerInitialized?.Invoke(this);
-            Log.DLazy(() => "LobbyManager is ready.", this, _log);
+            Log.DLazy(() => "LobbyManager is initialized.", this, _log);
 
             LoadLobbyScene();
         }
@@ -130,7 +123,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void UnsubscribeEvents()
         {
             if (_lobbyNetController != null)
-                _lobbyNetController.OnReady -= TryAnnounceReady;
+                _lobbyNetController.OnInitialized -= TryInitialize;
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
         }
     }

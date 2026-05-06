@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Utils;
 using FishNet.CodeGenerating;
 using FishNet.Connection;
 using FishNet.Object;
@@ -84,7 +82,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     #region Interfaces
 
-
     public interface ILobbyNetStateRead
     {
         LobbyInfo LobbyInfo { get; }
@@ -118,20 +115,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     {
         // utility
         private bool _log = true;
-        public bool IsReady { get; private set; }
-        public event Action OnReady;
-        private void SetReady(bool ready)
-        {
-            if (ready == IsReady)
-                return;
-
-            IsReady = ready;
-            if (IsReady)
-            {
-                Log.DLazy(() => "LobbyNetStateStore is ready.", this, _log);
-                OnReady?.Invoke();
-            }
-        }
 
         //Networked state
         private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
@@ -151,13 +134,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         IReadOnlyDictionary<int, LobbyTeamInfo> ILobbyNetStateRead.TeamInfos => _teamInfos;
         int ILobbyNetStateRead.PlayerCount => _playerCount.Value;
 
-
-        public override void OnStopNetwork()
-        {
-            base.OnStopNetwork();
-            SetReady(false);
-        }
-
         [Server]
         public void InitSyncValues()
         {
@@ -166,8 +142,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _lobbyInfo.Value = new LobbyInfo(lobbyIP);
             _playerStates.Collection.Clear();
             _teamInfos.Collection.Clear();
-
-            SetReady(true);
         }
 
         public bool TryGetPlayerState(int clientId, out LobbyPlayerState state) => _playerStates.TryGetValue(clientId, out state);

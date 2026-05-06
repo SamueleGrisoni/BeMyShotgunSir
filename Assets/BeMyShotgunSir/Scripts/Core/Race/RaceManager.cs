@@ -39,7 +39,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public static event Action<IRaceManager> OnRaceManagerInitialized;
         public static event Action OnRaceManagerDespawned;
 
-        //binding
         private LobbyViewModel _lobbyViewModel;
         private ILobbyNetStateRead _lobbyNetStateStore;
         private RaceBinder _binder;
@@ -50,13 +49,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRaceBindTarget[] _bindTargets;
         private RaceCommand _raceCommand;
         private RaceClientProjector _projector;
-        private IRoadManager _roadManager;
+        private IRoadManager _roadManager; //MEMO probably not needed since road manager is sending static events to the UI, but just in case
         private InputPublisher _inputPublisher;
         private RaceRole _playerRole;
 
         RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
-        IRoadManager IRaceFinalBindSource.RoadManager => _roadManager;
+        IRoadManager IRaceFinalBindSource.RoadManager => _roadManager; //MEMO probably not needed since road manager is sending static events to the UI, but just in case
         IInputPublisher IRaceFinalBindSource.InputPublisher => _inputPublisher;
         RaceRole IRaceFinalBindSource.Role => _playerRole;
 
@@ -170,6 +169,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void BindRace_Final(IRaceBindTarget[] targets)
         {
+            //MEMO since RoadManager is sending static events to the UI
+            // having it in the final bind is probably useless. Just keeping it for safety
             if (_binder == null)
             {
                 Log.ELazy(() => $"Binder is null. Cannot execute final bind.", this);

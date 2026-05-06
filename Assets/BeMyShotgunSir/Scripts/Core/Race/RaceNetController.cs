@@ -50,7 +50,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         //utility
         private bool _log = true;
 
-        //references
         private bool _isInitialized = false;
         private int _spawnedTeams = 0;
         public ILobbyNetStateRead LobbyNetState;
@@ -161,11 +160,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnRoadManagerSpawned(IRoadManager manager)
         {
             if (_roadManager != null)
-            {
-                Log.WLazy(() => "Multiple RoadManagers detected. This is not expected. Ignoring additional instances.", this);
                 return;
-            }
-
             _roadManager = manager;
             _roadManager.SetSeed(NetState.GetSeed());
             _roadManager.SetRaceNetController(this);

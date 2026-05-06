@@ -14,6 +14,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         void InitNetData_Project(IRaceNetData data);
         void SetUpPlayer_Response(NetworkObject player, RaceRole role);
     }
+
     /// <summary>
     /// Client-side projection layer for race local effects:
     /// - Sync collections callbacks

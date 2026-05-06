@@ -32,17 +32,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     public class LobbyNetController : NetController, ILobbyNetController
     {
         private bool _log = true;
-        public bool IsReady { get; private set; } = false;
-        public event Action OnReady;
-        private void SetReady(bool value)
+        public bool IsInitialized { get; private set; } = false;
+        public event Action OnInitialized;
+        private void SetInitialized(bool value)
         {
-            if (IsReady == value)
+            if (IsInitialized == value)
                 return;
-            IsReady = value;
-            if (IsReady)
+            IsInitialized = value;
+            if (IsInitialized)
             {
-                Log.DLazy(() => "LobbyNetController is ready.", this, _log);
-                OnReady?.Invoke();
+                Log.DLazy(() => "LobbyNetController is initialized.", this, _log);
+                OnInitialized?.Invoke();
             }
         }
 
@@ -68,7 +68,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (IsServerInitialized)
                 _netState.InitSyncValues();
 
-            SetReady(true);
+            SetInitialized(true);
         }
 
         public override void OnStartServer()
@@ -113,7 +113,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             base.OnStopNetwork();
             UnsubscribeEvents();
-            SetReady(false);
+            SetInitialized(false);
             Log.DLazy(() => "LobbyNetController despawned from the network.", this, _log);
         }
 
@@ -310,8 +310,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", " Server");
             Spawn(_activeRaceManager);
-
         }
-
     }
 }

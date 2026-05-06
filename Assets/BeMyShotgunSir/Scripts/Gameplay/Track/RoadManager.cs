@@ -22,6 +22,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     {
         private bool _log = true;
         private bool _isInitialized = false;
+        private bool _isSeedInitialized = false;
         public static event Action<IRoadManager> OnRoadManagerSpawned;
         private int _seed = -1;
         private bool _isServer;
@@ -51,6 +52,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
 
+        public override void OnStartNetwork()
+        {
+            base.OnStartNetwork();
+            TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
+        }
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -71,16 +77,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             TrackGenerator.OnSplitGenerated -= PropagateOnSplitGenerated;
         }
 
-        public void SetSeed(int seed)
-        {
-            if (seed != -1)
-                return;
-            _seed = seed;
-            _environmentSpawner.Init(_seed);
-            TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
-            _trackGenerator.Init(_seed);
-        }
-
         private void PropagateOnSplitGenerated(List<GeneratedRoadChunkInfoWithItems> splitInfo)
         {
             Log.DLazy(() => "Receive split info from TrackGenerator, propagating", this, _log);
@@ -89,6 +85,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Log.DLazy(() => "Receive info for " + info.roadChunkInfo.type, this, _log);
             }
             OnSplitGeneratedProvided?.Invoke(splitInfo);
+        }
+
+        public void SetSeed(int seed)
+        {
+            if (_isSeedInitialized)
+                return;
+
+            _isSeedInitialized = true;
+            _seed = seed;
+            _environmentSpawner.Init(_seed);
+            _trackGenerator.Init(_seed);
         }
 
         public void SetRaceNetController(RaceNetController raceNetController)

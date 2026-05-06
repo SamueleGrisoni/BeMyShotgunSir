@@ -10,7 +10,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     }
     public interface IRaceFinalBindSource : IBindSource
     {
-        IRoadManager RoadManager { get; }
+        IRoadManager RoadManager { get; } //MEMO probably not needed since road manager is sending static events to the UI, but just in case
         IInputPublisher InputPublisher { get; }
         RaceRole Role { get; }
     }
