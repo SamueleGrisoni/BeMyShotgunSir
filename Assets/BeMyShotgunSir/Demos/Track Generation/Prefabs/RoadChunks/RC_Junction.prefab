@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 8831681657911325613}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Grass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4706,6 +4706,7 @@ MonoBehaviour:
   - {fileID: 4681862563262439462}
   - {fileID: 1133831010216849903}
   <TurnWeight>k__BackingField: 0
+  <AreaGroup>k__BackingField: []
 --- !u!1 &8542496342530918001
 GameObject:
   m_ObjectHideFlags: 0
