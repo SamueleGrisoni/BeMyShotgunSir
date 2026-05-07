@@ -5,8 +5,8 @@ using FishNet.Object;
 using UnityEngine;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
-using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.UI;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Players;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
@@ -27,6 +27,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     #endregion
 
+    [RequireComponent(typeof(PowerUpsNetController))]
     [RequireComponent(typeof(RaceNetController))]
     [RequireComponent(typeof(RaceNetStateStore))]
     [RequireComponent(typeof(RaceClientProjector))]
@@ -52,6 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRoadManager _roadManager; //MEMO probably not needed since road manager is sending static events to the UI, but just in case
         private InputPublisher _inputPublisher;
         private RaceRole _playerRole;
+        private PowerUpsNetController _powerUpsNetController;
 
         RaceCommand IRaceInitialBindSource.Command => _raceCommand;
         RaceViewModel IRaceInitialBindSource.ViewModel => _viewModel;
@@ -64,8 +66,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             TryGetComponent(out _netController);
             TryGetComponent(out _netState);
             TryGetComponent(out _projector);
+            TryGetComponent(out _powerUpsNetController);
 
-            if (_netController == null || _netState == null || _projector == null)
+            if (_netController == null || _netState == null || _projector == null || _powerUpsNetController == null)
                 Log.ELazy(() => $"One or more required components are missing on RaceManager.", this);
 
             _viewModel = new RaceViewModel();
@@ -77,9 +80,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
-            DriverController.OnDriverSpawned += OnDriverSpawned;
-            ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
+            TeamNetController.OnTeamSpawned += OnTeamSpawned;
         }
+
 
         public override void OnStartNetwork()
         {
@@ -148,21 +151,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _roadManager = manager;
         }
 
-        private void OnDriverSpawned(IDriverController controller)
+        private void OnTeamSpawned(ITeamNetControllerInitializer initializer)
         {
             _inputPublisher = new InputPublisher();
-            controller.SetInputConsumer(_inputPublisher);
-            _playerRole = RaceRole.Driver;
-            //MEMO here _roadManager and _inputPublisher must be ready
-            BindRace_Final(_bindTargets);
-        }
-
-        private void OnShotgunSpawned(IShotgunController controller)
-        {
-            _inputPublisher = new InputPublisher();
-            controller.SetInputConsumer(_inputPublisher);
-            _playerRole = RaceRole.Shotgun;
-            //MEMO here _roadManager and _inputPublisher must be ready
+            initializer.Initialize(new TNCInitContext(_inputPublisher,
+                 _netState,
+                 _powerUpsNetController));
             BindRace_Final(_bindTargets);
         }
 
@@ -199,8 +193,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
             RoadManager.OnRoadManagerSpawned -= OnRoadManagerSpawned;
-            DriverController.OnDriverSpawned -= OnDriverSpawned;
-            ShotgunController.OnShotgunSpawned -= OnShotgunSpawned;
         }
 
     }

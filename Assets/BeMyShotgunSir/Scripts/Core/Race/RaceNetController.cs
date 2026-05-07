@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
+
+// using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
@@ -68,7 +70,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [SerializeField] private float _leaderboardUpdateInterval = 0.2f;
         private float _leaderboardUpdateTimer = 0f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
-        [SerializeField] private NetworkObject _playerPrefab;
+        [SerializeField] private NetworkObject _teamPrefab;
+        [SerializeField] private NetworkObject _driverPrefab;
         [SerializeField] private NetworkObject _shotgunPrefab;
 
         private void Awake()
@@ -183,7 +186,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, isTrackReady: true));
                 Log.DLazy(() => $"PlayerHost with connection ID {connection.ClientId} is ready with track.", this, _log);
-                TrySpawnPlayers(connection);
+                TrySpawnTeams(connection);
             }
             else
                 Log.ELazy(() => $"PlayerHost state for connection {connection.ClientId} not found in RaceNetController", this);
@@ -198,7 +201,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 _netState.SetPlayerState(connection.ClientId, new RacePlayerState(playerState, isTrackReady: true));
                 Log.DLazy(() => $"Player with connection ID {connection.ClientId} is ready with track.", this, _log);
-                TrySpawnPlayers(connection);
+                TrySpawnTeams(connection);
             }
         }
 
@@ -215,13 +218,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         [Server]
-        private bool TrySpawnPlayers(NetworkConnection connection)
+        private bool TrySpawnTeams(NetworkConnection connection)
         {
             if (!AreAllPlayersTrackReady())
                 return false;
             Log.DLazy(() => $"All players are ready with track. Attempting to spawn players.", this, _log);
 
-            Transform spawnPoint;
+            Transform spawnPoint = null;
             List<RacePlayerState> playerStatesSnapshot = new(NetState.PlayerStates.Values);
             foreach (RacePlayerState playerState in playerStatesSnapshot)
             {
@@ -243,11 +246,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                      NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady &&
                       !NetState.TeamData[playerState.TeamId].IsPlayerSpawned)
                     {
-                        NetworkObject player = Instantiate(_playerPrefab, spawnPoint.position, spawnPoint.rotation);
+
+                        NetworkObject team = Instantiate(_teamPrefab);
+                        Spawn(team.gameObject, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
+
+                        NetworkObject player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
                         Spawn(player.gameObject, LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
+                        player.SetParent(team);
 
                         //Shotgun setup
-                        GameObject parent = player.GetComponentInChildren<MovingDriver>().gameObject;
                         NetworkObject shotgun = Instantiate(_shotgunPrefab);
                         // Ensure shotgun is a root object when spawned. Position it near the driver for visuals.
                         Spawn(shotgun.gameObject, LobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
@@ -265,6 +272,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], isPlayerSpawned: true));
 
                         _spawnedTeams++;
+                        return true;
+                    }
+                    else
+                    {
+                        Log.DLazy(() => $"Team {playerState.TeamId} is not ready to spawn. Driver track ready: {NetState.PlayerStates[teamData.DriverConnectionId].IsTrackReady}, Shotgun track ready: {NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady}, IsPlayerSpawned: {NetState.TeamData[playerState.TeamId].IsPlayerSpawned}", this, _log);
+                        return false;
                     }
                 }
                 else
@@ -273,7 +286,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     LogMessage_TargetRpc(connection, "Error setting ready state. Team data not found.", 1);
                     return false;
                 }
-
             }
             return true;
         }

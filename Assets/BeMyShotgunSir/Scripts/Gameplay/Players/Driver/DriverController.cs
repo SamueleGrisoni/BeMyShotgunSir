@@ -288,7 +288,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             Vector3 repulsionForce = Vector3.zero;
             Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
-            foreach (var hitCollider in hitColliders)
+            foreach (Collider hitCollider in hitColliders)
             {
                 if (hitCollider.transform.root == _parent.root) continue;
 
@@ -300,7 +300,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
                     forwardDir.y = 0;
 
-                    Vector3 lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+                    var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
                     //Debug.Log($"Lateral push direction: {lateralPushDirection}");
 
                     float pushStrength = 1f - (distance / _bumpRadius);
@@ -312,7 +312,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush*0.5f, Color.red, 0.5f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
                         //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
                     }
 
@@ -397,7 +397,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 {
                     float recoveryDrag = 15f;
                     Vector3 targetVel = currentHorizontalVel.normalized * _currentMaxSpeed;
-                    Vector3 smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
+                    var smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
                     predictedVelocity = new Vector3(smoothedVel.x, predictedVelocity.y, smoothedVel.z);
                 }
                 else
@@ -406,6 +406,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     predictedVelocity = new Vector3(limitedHorizontalVel.x, predictedVelocity.y, limitedHorizontalVel.z);
                 }
             }
+
+            // TODO da capire
+            /*
+            if (_predictionRigidbody.Rigidbody.SweepTest(predictedVelocity.normalized, out RaycastHit hit, 1f, QueryTriggerInteraction.Ignore))
+            {
+                Debug.Log($"Raychast has hitted something {hit.GetType().Name}");
+                if ((_wallLayerMask.value & (1 << hit.collider.gameObject.layer)) > 0)
+                {
+                    Debug.Log("Hitted the wall");
+                    float verticalVelocity = predictedVelocity.y;
+                    predictedVelocity = Vector3.ProjectOnPlane(predictedVelocity, hit.normal);
+                    predictedVelocity.y = verticalVelocity;
+                }
+            }
+            */
+
+
             _currentLinearVelocity = predictedVelocity;
         }
 
@@ -439,10 +456,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _isOilAnimationActive = false;
             }
         }
-        
+
         [ObserversRpc]
         private void SendOilAnimation() => StartCoroutine(ExecuteOilAnimation());
-        
+
         [Client]
         private IEnumerator ExecuteOilAnimation()
         {
