@@ -33,6 +33,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         private bool _log = true;
         private bool _isInitialized = false;
         public static event Action<ITeamNetControllerInitializer> OnTeamSpawned;
+        private int _teamId;
         private IDriverController _driverController;
         private IShotgunController _shotgunController;
         private InputPublisher _inputPublisher;
@@ -92,11 +93,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             if (_assignedRole == RaceRole.Driver)
             {
                 _driverController.SetInputConsumer(_inputPublisher);
+                _driverController.SetTeam(_teamId);
                 Log.ELazy(() => $"Driver initialized and input consumer set.", this);
             }
             else if (_assignedRole == RaceRole.Shotgun)
             {
                 _shotgunController.SetInputConsumer(_inputPublisher);
+                _shotgunController.SetTeam(_teamId);
                 Log.ELazy(() => $"Shotgun initialized and input consumer set.", this);
             }
             else

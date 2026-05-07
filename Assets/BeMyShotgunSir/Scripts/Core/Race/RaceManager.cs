@@ -106,7 +106,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (IsServerInitialized)
             {
                 _netState.InitializeFromLobby(_lobbyNetStateStore);
-                LoadRaceScene(); //DANGER
+                LoadRaceScene();
             }
             Log.DLazy(() => "RaceManager is ready.", this, _log);
             OnRaceManagerInitialized?.Invoke(this);
@@ -115,9 +115,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Server]
         private void LoadRaceScene()
         {
-            if (!IsServerInitialized) //server instructions below
+            if (!IsServerInitialized)
                 return;
-
             GameServices.Instance.SceneCoordinator.LoadRaceScene();
         }
 

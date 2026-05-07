@@ -54,14 +54,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public int ShotgunConnectionId;
         public bool IsPlayerSpawned;
         public NetworkObject Player;
-        public InventoryData? Inventory;
 
         public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId)
         {
             TeamId = teamId;
             DriverConnectionId = driverConnectionId;
             ShotgunConnectionId = shotgunConnectionId;
-            Inventory = null;
             Player = null;
             IsPlayerSpawned = false;
         }
@@ -74,48 +72,47 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             IsPlayerSpawned = isPlayerSpawned ?? other.IsPlayerSpawned;
             Player = player ?? other.Player;
-            Inventory = inventory ?? other.Inventory;
         }
 
-        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, Inventory: {Inventory}, IsPlayerSpawned: {IsPlayerSpawned}";
+        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsPlayerSpawned: {IsPlayerSpawned}";
     }
 
     public struct InventoryData
     {
-        public PowerUp? PowerUp1;
-        public PowerUp? PowerUp2;
-        public PowerUp? PowerUp3;
-        public PowerUp? PowerUp4;
-        public PowerUp? PowerUp5;
+        public PowerUp? Slot1;
+        public PowerUp? Slot2;
+        public PowerUp? Slot3;
+        public PowerUp? Slot4;
+        public PowerUp? Slot5;
         public int MaxPowerUps => 5;
-        public PowerUp? SelectedPowerUp;
+        public PowerUp? SelectedSlot;
         public PowerUp[] ActivePowerUps;
-        public bool IsFull => PowerUp1.HasValue && PowerUp2.HasValue && PowerUp3.HasValue && PowerUp4.HasValue && PowerUp5.HasValue;
-        public bool IsEmpty => !PowerUp1.HasValue && !PowerUp2.HasValue && !PowerUp3.HasValue && !PowerUp4.HasValue && !PowerUp5.HasValue;
+        public bool IsFull => Slot1.HasValue && Slot2.HasValue && Slot3.HasValue && Slot4.HasValue && Slot5.HasValue;
+        public bool IsEmpty => !Slot1.HasValue && !Slot2.HasValue && !Slot3.HasValue && !Slot4.HasValue && !Slot5.HasValue;
 
-        public InventoryData(PowerUp? powerUp1 = null, PowerUp? powerUp2 = null, PowerUp? powerUp3 = null, PowerUp? powerUp4 = null, PowerUp? powerUp5 = null, PowerUp? selectedPowerUp = null, PowerUp[] activePowerUps = null)
+        public InventoryData(PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null, PowerUp[] activePowerUps = null)
         {
-            PowerUp1 = powerUp1;
-            PowerUp2 = powerUp2;
-            PowerUp3 = powerUp3;
-            PowerUp4 = powerUp4;
-            PowerUp5 = powerUp5;
-            SelectedPowerUp = selectedPowerUp;
+            Slot1 = slot1;
+            Slot2 = slot2;
+            Slot3 = slot3;
+            Slot4 = slot4;
+            Slot5 = slot5;
+            SelectedSlot = selectedSlot;
             ActivePowerUps = activePowerUps ?? new PowerUp[0];
         }
 
-        public InventoryData(InventoryData other, PowerUp? powerUp1 = null, PowerUp? powerUp2 = null, PowerUp? powerUp3 = null, PowerUp? powerUp4 = null, PowerUp? powerUp5 = null, PowerUp? selectedPowerUp = null, PowerUp[] activePowerUps = null)
+        public InventoryData(InventoryData other, PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null, PowerUp[] activePowerUps = null)
         {
-            PowerUp1 = powerUp1 ?? other.PowerUp1;
-            PowerUp2 = powerUp2 ?? other.PowerUp2;
-            PowerUp3 = powerUp3 ?? other.PowerUp3;
-            PowerUp4 = powerUp4 ?? other.PowerUp4;
-            PowerUp5 = powerUp5 ?? other.PowerUp5;
-            SelectedPowerUp = selectedPowerUp ?? other.SelectedPowerUp;
+            Slot1 = slot1 ?? other.Slot1;
+            Slot2 = slot2 ?? other.Slot2;
+            Slot3 = slot3 ?? other.Slot3;
+            Slot4 = slot4 ?? other.Slot4;
+            Slot5 = slot5 ?? other.Slot5;
+            SelectedSlot = selectedSlot ?? other.SelectedSlot;
             ActivePowerUps = activePowerUps ?? other.ActivePowerUps;
         }
 
-        public override string ToString() => $"PowerUp1: {PowerUp1}, PowerUp2: {PowerUp2}, PowerUp3: {PowerUp3}, PowerUp4: {PowerUp4}, PowerUp5: {PowerUp5}, SelectedPowerUp: {SelectedPowerUp}";
+        public override string ToString() => $"Slot1: {Slot1}, Slot2: {Slot2}, Slot3: {Slot3}, Slot4: {Slot4}, Slot5: {Slot5}, SelectedSlot: {SelectedSlot}";
     }
 
     #endregion
@@ -127,15 +124,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         int GetSeed();
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, RaceTeamData> TeamData { get; }
+        IReadOnlyDictionary<int, InventoryData> PlayerInventories { get; }
         IReadOnlyList<int> Leaderboard { get; }
         bool TryGetPlayerState(int connectionId, out RacePlayerState playerState);
         bool TryGetTeamData(int teamId, out RaceTeamData teamData);
+        bool TryGetPlayerInventory(int teamId, out InventoryData inventoryData);
         bool AreAllPlayersReady();
-    }
-
-    public interface IRaceNetStateReadWrapped
-    {
-        IRaceNetStateRead NetState { get; }
     }
 
     public interface IRaceNetStateSubscribe : IRaceNetStateRead
@@ -144,6 +138,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncDictionary<int, RacePlayerState> PlayerStatesSync { get; }
         SyncDictionary<int, RaceTeamData> TeamDataSync { get; }
         SyncList<int> LeaderboardSync { get; }
+        SyncDictionary<int, InventoryData> PlayerInventoriesSync { get; }
     }
 
     public interface IRaceNetStateStore : IRaceNetStateSubscribe { }
@@ -175,18 +170,21 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncVar<int> _seed = new(-1);
         private readonly SyncDictionary<int, RacePlayerState> _racePlayerStates = new();
         private readonly SyncDictionary<int, RaceTeamData> _raceTeamData = new();
+        private readonly SyncDictionary<int, InventoryData> _racePlayerInventories = new();
         private readonly SyncList<int> _leaderboard = new();
 
         // State Projector accessors
         SyncVar<int> IRaceNetStateSubscribe.Seed => _seed;
         SyncDictionary<int, RacePlayerState> IRaceNetStateSubscribe.PlayerStatesSync => _racePlayerStates;
         SyncDictionary<int, RaceTeamData> IRaceNetStateSubscribe.TeamDataSync => _raceTeamData;
+        SyncDictionary<int, InventoryData> IRaceNetStateSubscribe.PlayerInventoriesSync => _racePlayerInventories;
         SyncList<int> IRaceNetStateSubscribe.LeaderboardSync => _leaderboard;
 
         // State Read-only accessors
         int IRaceNetStateRead.GetSeed() => _seed.Value;
         IReadOnlyDictionary<int, RacePlayerState> IRaceNetStateRead.PlayerStates => _racePlayerStates;
         IReadOnlyDictionary<int, RaceTeamData> IRaceNetStateRead.TeamData => _raceTeamData;
+        IReadOnlyDictionary<int, InventoryData> IRaceNetStateRead.PlayerInventories => _racePlayerInventories;
         IReadOnlyList<int> IRaceNetStateRead.Leaderboard => _leaderboard;
 
         public override void OnStopNetwork()
@@ -260,5 +258,16 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             return _racePlayerStates.Count > 0;
         }
+
+        #region PowerUps
+
+        [Server]
+        public void SetPlayerInventory(int teamId, InventoryData inventoryData) =>
+            _racePlayerInventories[teamId] = inventoryData;
+
+        public bool TryGetPlayerInventory(int teamId, out InventoryData inventoryData) =>
+            _racePlayerInventories.TryGetValue(teamId, out inventoryData);
+
+        #endregion
     }
 }

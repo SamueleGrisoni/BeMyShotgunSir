@@ -14,6 +14,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public interface IDriverController
     {
         void SetInputConsumer(IDriverInputConsumer inputConsumer);
+        void SetTeam(int teamId);
+        int GetTeam();
     }
 
     public enum GroundType : byte
@@ -106,11 +108,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     {
         public static event Action<IDriverController> OnDriverSpawned;
         private IDriverInputConsumer _inputConsumer;
+        private int _teamId = -999;
         public void SetInputConsumer(IDriverInputConsumer inputConsumer)
         {
             if (_inputConsumer == null)
                 _inputConsumer = inputConsumer;
         }
+        public void SetTeam(int teamId)
+        {
+            if (_teamId != -999)
+                return;
+            _teamId = teamId;
+        }
+        public int GetTeam() => _teamId;
 
         // TODO spostare
         [SerializeField] private LayerMask _sidecarLayerMask;
@@ -215,6 +225,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void Awake()
         {
+            _teamId = -999;
             _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
             _predictionRigidbody.Initialize(_sphere);
             _currentMaxSpeed = _sidecarStatsNormal.MaxSpeed;

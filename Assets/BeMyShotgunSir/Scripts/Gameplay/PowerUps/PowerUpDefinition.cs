@@ -13,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
     public abstract class PowerUpDefinition : ScriptableObject, IPowerUpStrategy
     {
         public PowerUp PowerUp;
-        public PowerUpType Type;
+        public PowerUpClass Type;
         public string Name;
         public float Duration;
         public bool IsAllowedDuringAim;

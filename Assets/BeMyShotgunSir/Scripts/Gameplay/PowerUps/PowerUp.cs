@@ -2,6 +2,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
     public enum PowerUp
     {
+        None,
         Shield,
         Armor,
         Invisibility,
@@ -14,9 +15,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         // Lasso
     }
 
-    public enum PowerUpType
+    public enum PowerUpClass
     {
-        Active,
-        Passive
+        ActionBased,
+        TimeBased,
+        OneShot
+    }
+
+    public enum PowerUpState
+    {
+        Aiming,
+        Fired,
+        Active
     }
 }

@@ -40,7 +40,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         void InitRace(int seed);
     }
 
-    public interface IRaceNetController : INetController, IRaceNetController_Command, IRaceNetController_Manager, IRaceNetStateReadWrapped { }
+    public interface IRaceNetController : INetController, IRaceNetController_Command, IRaceNetController_Manager { }
 
     #endregion
 
