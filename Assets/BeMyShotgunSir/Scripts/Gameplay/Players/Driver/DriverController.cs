@@ -128,6 +128,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _sidecarModel;
 
         [SerializeField] private Transform _handle;
+
         private float _visualSteerInput;
 
         private PredictionRigidbody _predictionRigidbody;
@@ -249,16 +250,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
         }
-        public void LateUpdate()
-        {
-            // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
-            _parent.position = _sphere.transform.position;
-            _parent.rotation = _parentRotation;
-            _sidecar.localRotation = _sidecarLocalRotation;
-
-            AnimateSteer(_visualSteerInput);
-            //Debug.Log($"Current battery level: {_currentBatteryCharge}");
-        }
+        public void LateUpdate() => AnimateSteer(_visualSteerInput);
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
 
@@ -334,6 +326,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             _sphere.transform.up = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
 
+            _parent.position = _sphere.transform.position;
+            _parent.rotation = _parentRotation;
+            _sidecar.localRotation = _sidecarLocalRotation;
+
             if (state != ReplicateState.Replayed)
                 _visualSteerInput = data.SteerInput;
         }
@@ -358,7 +354,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation = data.ParentRotation;
             _sidecarLocalRotation = data.SidecarLocalRotation;
 
-            //_currentLinearVelocity = data.CurrentLinearVelocity;
+            _currentLinearVelocity = data.CurrentLinearVelocity;
             _currentMaxSpeed = data.CurrentMaxSpeed;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
@@ -381,6 +377,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             float steerAngle = steerAmount * steeringForce * (float)TimeManager.TickDelta;
             var steerRotation = Quaternion.AngleAxis(steerAngle, _parent.up);
             _parentRotation *= steerRotation;
+            Debug.Log($"Steer : {steerRotation}");
 
         }
 
@@ -429,7 +426,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             );
         }
 
-        void IDriverControllerContext.AnimateSidecar() => throw new System.NotImplementedException();
         void IDriverControllerContext.OilAnimation()
         {
             if (_isOilAnimationActive)
@@ -477,12 +473,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 if (hit.collider.CompareTag("Grass"))
                 {
-                    //Debug.Log("Colpito l'erba");
+                    Debug.Log("Colpito l'erba");
                     return GroundType.Grass;
                 }
                 else if (hit.collider.CompareTag("Oil"))
                 {
-                    //Debug.Log("Passato su una chiazza di olio");
+                    Debug.Log("Passato su una chiazza di olio");
                     return GroundType.Oil;
                 }
             }
