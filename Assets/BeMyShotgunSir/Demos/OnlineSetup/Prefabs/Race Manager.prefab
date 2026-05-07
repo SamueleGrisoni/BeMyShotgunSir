@@ -176,3 +176,4 @@ MonoBehaviour:
   _componentIndexCache: 3
   _addedNetworkObject: {fileID: 3414248990729970632}
   _networkObjectCache: {fileID: 3414248990729970632}
+  _powerUpData: {fileID: 11400000, guid: abf26ee10e594fe4db43417fdeb2873d, type: 2}
