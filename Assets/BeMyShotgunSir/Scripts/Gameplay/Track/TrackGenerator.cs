@@ -17,11 +17,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public int index;
         public RoadChunkType type;
         public RoadChunkPosition position;
-        public GeneratedRoadChunkInfo(int index, RoadChunkType type, RoadChunkPosition position)
+        public int chunkNumber;
+        public GeneratedRoadChunkInfo(int index, RoadChunkType type, RoadChunkPosition position, int chunkNumber)
         {
             this.index = index;
             this.type = type;
             this.position = position;
+            this.chunkNumber = chunkNumber;
         }
     }
 
@@ -33,6 +35,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             this.roadChunkInfo = roadChunkInfo;
             this.itemsToSpawn = itemsToSpawn;
+        }
+    }
+
+    public struct CrossroadSegmentInfo
+    {
+        public RoadChunkType type;
+        public int chunkNumber;
+        public CrossroadSegmentInfo(RoadChunkType type, int chunkNumber)
+        {
+            this.type = type;
+            this.chunkNumber = chunkNumber;
         }
     }
     #endregion
@@ -54,8 +67,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private List<int> _possibleTurnWeights = new List<int>() { -4, -3, -2, -1, 0, 1, 2, 3, 4 };
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
+        private int _numChunksGenerated = 0;
 
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGenerated;
+        public static event Action<int> OnCommonGenerated;
+        public static event Action<CrossroadSegmentInfo> OnCrossroadGenerated;
 
         public void Init(int seed)
         {
@@ -126,14 +142,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.START_LINE,
                     RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE),
+                    RoadChunkPosition.MIDDLE, 0),
                 new List<GeneratedItemInfo>()));
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.STRAIGHT,
                     RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE),
+                    RoadChunkPosition.MIDDLE, 1),
                 new List<GeneratedItemInfo>()));
+            _numChunksGenerated += 2;
+
             _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
             EnqueueCommonSegment();
             _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
@@ -142,17 +160,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void GenerateFinalSequence()
         {
+            _numChunksGenerated++;
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.STRAIGHT,
                     RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE),
+                    RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
+
+            _numChunksGenerated++;
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.START_LINE, //todo this should be a new prefab with a finish line trigger or something
                     RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE),
+                    RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
         }
 
@@ -172,23 +193,27 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void EnqueueCommonSegment()
         {
+            int crossroadSegmentChunkCount = _chunksRemainingInCurrentState;
             while (_chunksRemainingInCurrentState > 0)
             {
                 _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(GenerateCommonChunkInfo(), _itemGenerator.GenerateItemsForRoadChunk(RoadChunkPosition.MIDDLE)));
                 _chunksRemainingInCurrentState--;
             }
+            OnCommonGenerated?.Invoke(crossroadSegmentChunkCount);
         }
 
         private void EnqueueSplitSegment()
         {
             var splitSegmentChunks = new Queue<GeneratedRoadChunkInfoWithItems>();
+
+            _numChunksGenerated++;
             splitSegmentChunks.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.STARTING_CROSSROAD,
                     RoadChunkType.STARTING_CROSSROAD,
-                    RoadChunkPosition.MIDDLE),
+                    RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
-
+            OnCrossroadGenerated?.Invoke(new CrossroadSegmentInfo(RoadChunkType.STARTING_CROSSROAD, _numChunksGenerated));
 
             while (_chunksRemainingInCurrentState > 0)
             {
@@ -204,12 +229,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _leftWeight = -1;
             _rightWeight = 1;
 
+            _numChunksGenerated++;
             splitSegmentChunks.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.ENDING_CROSSROAD,
                     RoadChunkType.ENDING_CROSSROAD,
-                    RoadChunkPosition.MIDDLE),
+                    RoadChunkPosition.MIDDLE, _numChunksGenerated),
                     new List<GeneratedItemInfo>()));
+            OnCrossroadGenerated?.Invoke(new CrossroadSegmentInfo(RoadChunkType.ENDING_CROSSROAD, _numChunksGenerated));
+
             OnSplitGenerated?.Invoke(splitSegmentChunks.ToList());
             foreach (GeneratedRoadChunkInfoWithItems splitSegmentChunk in splitSegmentChunks)
                 _trackBits.Enqueue(splitSegmentChunk);
@@ -217,38 +245,40 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private GeneratedRoadChunkInfo GenerateCommonChunkInfo()
         {
-            var result = new GeneratedRoadChunkInfo();
+            int index = 0;
+            RoadChunkType type = RoadChunkType.STRAIGHT;
+            _numChunksGenerated++;
             if (_rng.Next(0, 100) < _trackData.StraightPercentage)
             {
                 switch (_rng.Next(0, 4))
                 {
                     case 0:
-                        result.index = (int)SpecialRoadChunkIndex.STRAIGHT;
-                        result.type = RoadChunkType.STRAIGHT;
+                        index = (int)SpecialRoadChunkIndex.STRAIGHT;
+                        type = RoadChunkType.STRAIGHT;
                         break;
                     case 1:
-                        result.index = (int)SpecialRoadChunkIndex.LEFT_HALF_CIRCLE;
-                        result.type = RoadChunkType.STRAIGHT;
+                        index = (int)SpecialRoadChunkIndex.LEFT_HALF_CIRCLE;
+                        type = RoadChunkType.STRAIGHT;
                         break;
                     case 2:
-                        result.index = (int)SpecialRoadChunkIndex.RIGHT_HALF_CIRCLE;
-                        result.type = RoadChunkType.STRAIGHT;
+                        index = (int)SpecialRoadChunkIndex.RIGHT_HALF_CIRCLE;
+                        type = RoadChunkType.STRAIGHT;
                         break;
                     case 3:
-                        result.index = (int)SpecialRoadChunkIndex.AUSTIN_SNAKE;
-                        result.type = RoadChunkType.STRAIGHT;
+                        index = (int)SpecialRoadChunkIndex.AUSTIN_SNAKE;
+                        type = RoadChunkType.STRAIGHT;
                         break;
                     default:
+                        Log.ELazy(()=> "Invalid random value for straight chunk type selection. WTF", this);
                         break;
                 }
             }
             else
             {
-                result.index = _rng.Next(0, _trackData.RoadChunks.Length);
-                result.type = RoadChunkType.TURN;
+                index = _rng.Next(0, _trackData.RoadChunks.Length);
+                type = RoadChunkType.TURN;
             }
-            result.position = RoadChunkPosition.MIDDLE;
-            return result;
+            return new GeneratedRoadChunkInfo(index, type, RoadChunkPosition.MIDDLE, _numChunksGenerated);
         }
 
         private GeneratedRoadChunkInfo GenerateSplitChunkInfo(RoadChunkPosition position)
@@ -285,7 +315,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
             RoadChunkType chunkType = selectedWeight == 0 ? RoadChunkType.STRAIGHT : RoadChunkType.TURN;
             int chunkIndex = MapWeightToChunkIndex(selectedWeight);
-            return new GeneratedRoadChunkInfo(chunkIndex, chunkType, position);
+            _numChunksGenerated++;
+            return new GeneratedRoadChunkInfo(chunkIndex, chunkType, position, _numChunksGenerated);
         }
 
         private int MapWeightToChunkIndex(int weight)

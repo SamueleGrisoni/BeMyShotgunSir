@@ -51,11 +51,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
+        public static event Action<CrossroadSegmentInfo> OnCrossroadProvided;
+        public static event Action<int> OnCommonGenerated;
 
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
             TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
+            TrackGenerator.OnCommonGenerated += PropagateCommonGenerated;
+            TrackGenerator.OnCrossroadGenerated += PropagateOnCrossroad;
         }
         public override void OnStartServer()
         {
@@ -75,6 +79,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             base.OnStopServer();
             TrackGenerator.OnSplitGenerated -= PropagateOnSplitGenerated;
+            TrackGenerator.OnCommonGenerated -= PropagateCommonGenerated;
+            TrackGenerator.OnCrossroadGenerated -= PropagateOnCrossroad;
         }
 
         private void PropagateOnSplitGenerated(List<GeneratedRoadChunkInfoWithItems> splitInfo)
@@ -85,6 +91,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Log.DLazy(() => "Receive info for " + info.roadChunkInfo.type, this, _log);
             }
             OnSplitGeneratedProvided?.Invoke(splitInfo);
+        }
+
+        private void PropagateOnCrossroad(CrossroadSegmentInfo crossroadSegmentInfo)
+        {
+            Log.DLazy(()=> "Receive crossroad info from TrackGenerator. Type: " + crossroadSegmentInfo.type + "chunkNumber: " + crossroadSegmentInfo.chunkNumber, this, _log);
+            OnCrossroadProvided?.Invoke(crossroadSegmentInfo);
+        }
+
+        private void PropagateCommonGenerated(int sectionLenght)
+        {
+            Log.DLazy(() => "Receive common road info from TrackGenerator, lenght : " + sectionLenght, this, _log);
+            OnCommonGenerated?.Invoke(sectionLenght);
         }
 
         public void SetSeed(int seed)
@@ -244,6 +262,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
                         ? _trackPooler.GetPooledRoadChunk(nextChunkIndex)
                         : _trackPooler.GetSpecialRoadChunk(nextChunkIndex);
+
+                nextChunk.Component.Type = chunkInfoWithItems.roadChunkInfo.type;
+                nextChunk.Component.ChunkNumber = chunkInfoWithItems.roadChunkInfo.chunkNumber;
 
                 _roadSpawner.PlaceRoadChunk(nextChunk, chunkInfoWithItems.roadChunkInfo.type,
                     chunkInfoWithItems.roadChunkInfo.position, _activeRoadChunks.Count);
