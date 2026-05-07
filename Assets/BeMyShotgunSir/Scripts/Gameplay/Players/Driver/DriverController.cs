@@ -301,7 +301,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     forwardDir.y = 0;
 
                     Vector3 lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-                    Debug.Log($"Lateral push direction: {lateralPushDirection}");
+                    //Debug.Log($"Lateral push direction: {lateralPushDirection}");
 
                     float pushStrength = 1f - (distance / _bumpRadius);
 
@@ -313,12 +313,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush*0.5f, Color.red, 0.5f);
-                        Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                        //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                    }
+
+                    DriverController otherDriver = hitCollider.GetComponentInParent<DriverController>();
+                    if (otherDriver != null && !otherDriver.IsBoosting()) // TODO qui puoi mettere che se hai lo scudo non ricevi la collisione aumentata
+                    {
+                        repulsionForce *= (float)TimeManager.TickDelta;
+                        Debug.Log("Trovato l'altro driver controller and is boosting");
+
                     }
                 }
-
             }
-            _currentLinearVelocity += repulsionForce * (float)TimeManager.TickDelta;
+            _currentLinearVelocity += repulsionForce;
 
             Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
@@ -377,8 +384,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             float steerAngle = steerAmount * steeringForce * (float)TimeManager.TickDelta;
             var steerRotation = Quaternion.AngleAxis(steerAngle, _parent.up);
             _parentRotation *= steerRotation;
-            Debug.Log($"Steer : {steerRotation}");
-
         }
 
         void IDriverControllerContext.ApplyAcceleration(Vector3 direction, float accelerationForce)
@@ -537,5 +542,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentBatteryCharge += chargeBatteryAmount;
         }
 
+        public bool IsBoosting() => _currentStateType == DrivingStateType.Boost;
     }
 }

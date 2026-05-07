@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 6559965812077029757}
   m_Layer: 0
   m_Name: OilSpill
-  m_TagString: Untagged
+  m_TagString: Oil
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
