@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5880172682804943602}
   m_Layer: 7
   m_Name: RigidBody
-  m_TagString: Untagged
+  m_TagString: Driver
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,7 +139,6 @@ MonoBehaviour:
     m_Bits: 64
   _bumpRadius: 1.2
   _bumpForce: 120
-  _smoothSpeed: 10
   _sidecarStatsNormal: {fileID: 11400000, guid: c91c8525809d78159b92b45bd668f877, type: 2}
   _sidecarStatsBoost: {fileID: 11400000, guid: 47264b8a7db1e3d0897ee573fb80765c, type: 2}
   _sidecarStatsGrass: {fileID: 11400000, guid: 52e9b9a1b1bd968239145b7ffbe2f5ad, type: 2}

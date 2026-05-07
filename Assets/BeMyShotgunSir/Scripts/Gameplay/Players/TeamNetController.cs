@@ -33,12 +33,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         private bool _log = true;
         private bool _isInitialized = false;
         public static event Action<ITeamNetControllerInitializer> OnTeamSpawned;
-        private int _teamId;
+        private int _teamId = -999;
         private IDriverController _driverController;
         private IShotgunController _shotgunController;
         private InputPublisher _inputPublisher;
         private RaceRole _assignedRole;
 
+        private void Awake() =>
+            _teamId = -999;
 
         private void OnEnable()
         {
@@ -48,6 +50,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
         public override void OnStartNetwork()
         {
+
             base.OnStartNetwork();
             OnTeamSpawned?.Invoke(this);
         }
@@ -64,6 +67,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         {
             DriverController.OnDriverSpawned -= InitializeDriver;
             ShotgunController.OnShotgunSpawned -= InitializeShotgun;
+        }
+
+        public void SetTeamId(int teamId)
+        {
+            if (_teamId != -999)
+                return;
+            _teamId = teamId;
         }
 
         public void Initialize(TNCInitContext initContext)

@@ -5,6 +5,7 @@ using BeMyShotgunSir.Scripts.Utils;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using FishNet.Object;
 using Unity.Cinemachine;
+using BeMyShotgunSir.Scripts.Gameplay.Players;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
@@ -12,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         void Init(RaceViewModel viewModel);
         void InitNetData_Project(IRaceNetData data);
-        void SetUpPlayer_Response(NetworkObject player, RaceRole role);
+        void SetUpTeam_Response(int connectionId, NetworkObject team, RaceRole role);
     }
 
     /// <summary>
@@ -105,19 +106,22 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public void InitNetData_Project(IRaceNetData data) => _viewModel.InitNetData(data);
 
-        public void SetUpPlayer_Response(NetworkObject player, RaceRole role)
+        public void SetUpTeam_Response(int connectionId, NetworkObject team, RaceRole role)
         {
             //TODO setup viewmodel with role
-            MovingDriver driver = player.GetComponentInChildren<MovingDriver>();
+            TeamNetController teamController = team.GetComponent<TeamNetController>();
+            _state.TryGetPlayerState(connectionId, out RacePlayerState playerState);
+            teamController.SetTeamId(playerState.TeamId);
+            MovingDriver driver = team.GetComponentInChildren<MovingDriver>();
             if (driver == null)
             {
-                Log.ELazy(() => $"Player prefab {player.name} is missing a driver component. Cannot initialize race for this player.", this);
+                Log.ELazy(() => $"Team prefab {team.name} is missing a driver component. Cannot initialize race for this team.", this);
                 return;
             }
-            CinemachineCamera cam = player.GetComponentInChildren<CinemachineCamera>();
+            CinemachineCamera cam = team.GetComponentInChildren<CinemachineCamera>();
             if (cam == null)
             {
-                Log.ELazy(() => $"Player prefab {player.name} is missing a CinemachineCamera component. Cannot initialize race camera for this player.", this);
+                Log.ELazy(() => $"Team prefab {team.name} is missing a CinemachineCamera component. Cannot initialize race camera for this team.", this);
                 return;
             }
             cam.enabled = true;

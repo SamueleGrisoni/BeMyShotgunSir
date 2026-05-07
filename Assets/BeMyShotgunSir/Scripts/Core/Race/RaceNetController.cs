@@ -67,7 +67,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         [Header("Performance")]
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
-        [SerializeField] private float _leaderboardUpdateInterval = 0.2f;
+        [SerializeField] private float _tICK_INTERVAL = 0.2f;
         private float _leaderboardUpdateTimer = 0f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
         [SerializeField] private NetworkObject _teamPrefab;
@@ -266,8 +266,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
                         _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], player: player));
 
-                        SetUpPlayer_TargetRpc(LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, player, RaceRole.Driver);
-                        SetUpPlayer_TargetRpc(LobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection, player, RaceRole.Shotgun);
+                        SetUpTeam_TargetRpc(LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, team, RaceRole.Driver);
+                        SetUpTeam_TargetRpc(LobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection, team, RaceRole.Shotgun);
 
                         _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], isPlayerSpawned: true));
 
@@ -291,10 +291,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         [TargetRpc]
-        private void SetUpPlayer_TargetRpc(NetworkConnection connection, NetworkObject player, RaceRole role)
+        private void SetUpTeam_TargetRpc(NetworkConnection connection, NetworkObject team, RaceRole role)
         {
-            Log.DLazy(() => $"Setting up player {connection.ClientId} as {role}", this, _log);
-            _clientProjector.SetUpPlayer_Response(player, role);
+            Log.DLazy(() => $"Setting up team {connection.ClientId} as {role}", this, _log);
+            _clientProjector.SetUpTeam_Response(connection.ClientId, team, role);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -333,7 +333,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             // Throttle leaderboard updates to reduce per-frame cost
             _leaderboardUpdateTimer += Time.deltaTime;
-            if (_leaderboardUpdateTimer < _leaderboardUpdateInterval)
+            if (_leaderboardUpdateTimer < _tICK_INTERVAL)
                 return;
             _leaderboardUpdateTimer = 0f;
 

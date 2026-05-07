@@ -166,6 +166,22 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
         }
 
+        //Server-only states
+        private Dictionary<int, NetworkObject> _teamNobs = new();
+        public IReadOnlyDictionary<int, NetworkObject> TeamNobs => _teamNobs;
+
+        [Server]
+        public void RegisterTeamNob(int teamId, NetworkObject nob)
+        {
+            if (_teamNobs.ContainsKey(teamId))
+                Log.WLazy(() => $"Team {teamId} already has a registered nob. Overwriting with new nob.", this);
+            _teamNobs[teamId] = nob;
+        }
+
+        [Server]
+        public bool TryGetTeamNob(int teamId, out NetworkObject nob) =>
+            _teamNobs.TryGetValue(teamId, out nob);
+
         // Networked state
         private readonly SyncVar<int> _seed = new(-1);
         private readonly SyncDictionary<int, RacePlayerState> _racePlayerStates = new();
@@ -223,6 +239,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             SetReady(true);
         }
+
         [Server]
         public void SetSeed(int value) => _seed.Value = value;
 
@@ -239,6 +256,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Server]
         public void SetTeamData(int teamId, RaceTeamData teamData) =>
             _raceTeamData[teamId] = teamData;
+
+        [Server]
+        public void SetPlayerInventory(int teamId, InventoryData inventoryData) =>
+            _racePlayerInventories[teamId] = inventoryData;
+
+        public bool TryGetPlayerInventory(int teamId, out InventoryData inventoryData) =>
+            _racePlayerInventories.TryGetValue(teamId, out inventoryData);
 
         [Server]
         public void SetLeaderboard(List<int> orderedTeamIds)
@@ -258,16 +282,5 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             return _racePlayerStates.Count > 0;
         }
-
-        #region PowerUps
-
-        [Server]
-        public void SetPlayerInventory(int teamId, InventoryData inventoryData) =>
-            _racePlayerInventories[teamId] = inventoryData;
-
-        public bool TryGetPlayerInventory(int teamId, out InventoryData inventoryData) =>
-            _racePlayerInventories.TryGetValue(teamId, out inventoryData);
-
-        #endregion
     }
 }
