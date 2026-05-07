@@ -128,6 +128,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _sidecarModel;
 
         [SerializeField] private Transform _handle;
+
         private float _visualSteerInput;
 
         private PredictionRigidbody _predictionRigidbody;
@@ -249,16 +250,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
         }
-        public void LateUpdate()
-        {
-            // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
-            _parent.position = _sphere.transform.position;
-            _parent.rotation = _parentRotation;
-            _sidecar.localRotation = _sidecarLocalRotation;
-
-            AnimateSteer(_visualSteerInput);
-            //Debug.Log($"Current battery level: {_currentBatteryCharge}");
-        }
+        public void LateUpdate() => AnimateSteer(_visualSteerInput);
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
 
@@ -309,7 +301,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     forwardDir.y = 0;
 
                     Vector3 lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-                    Debug.Log($"Lateral push direction: {lateralPushDirection}");
+                    //Debug.Log($"Lateral push direction: {lateralPushDirection}");
 
                     float pushStrength = 1f - (distance / _bumpRadius);
 
@@ -321,18 +313,29 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush*0.5f, Color.red, 0.5f);
-                        Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                        //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                    }
+
+                    DriverController otherDriver = hitCollider.GetComponentInParent<DriverController>();
+                    if (otherDriver != null && !otherDriver.IsBoosting()) // TODO qui puoi mettere che se hai lo scudo non ricevi la collisione aumentata
+                    {
+                        repulsionForce *= (float)TimeManager.TickDelta;
+                        Debug.Log("Trovato l'altro driver controller and is boosting");
+
                     }
                 }
-
             }
-            _currentLinearVelocity += repulsionForce * (float)TimeManager.TickDelta;
+            _currentLinearVelocity += repulsionForce;
 
             Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
 
             _sphere.transform.up = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+
+            _parent.position = _sphere.transform.position;
+            _parent.rotation = _parentRotation;
+            _sidecar.localRotation = _sidecarLocalRotation;
 
             if (state != ReplicateState.Replayed)
                 _visualSteerInput = data.SteerInput;
@@ -358,7 +361,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation = data.ParentRotation;
             _sidecarLocalRotation = data.SidecarLocalRotation;
 
-            //_currentLinearVelocity = data.CurrentLinearVelocity;
+            _currentLinearVelocity = data.CurrentLinearVelocity;
             _currentMaxSpeed = data.CurrentMaxSpeed;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
@@ -381,7 +384,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             float steerAngle = steerAmount * steeringForce * (float)TimeManager.TickDelta;
             var steerRotation = Quaternion.AngleAxis(steerAngle, _parent.up);
             _parentRotation *= steerRotation;
-
         }
 
         void IDriverControllerContext.ApplyAcceleration(Vector3 direction, float accelerationForce)
@@ -429,7 +431,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             );
         }
 
-        void IDriverControllerContext.AnimateSidecar() => throw new System.NotImplementedException();
         void IDriverControllerContext.OilAnimation()
         {
             if (_isOilAnimationActive)
@@ -477,12 +478,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 if (hit.collider.CompareTag("Grass"))
                 {
-                    //Debug.Log("Colpito l'erba");
+                    Debug.Log("Colpito l'erba");
                     return GroundType.Grass;
                 }
                 else if (hit.collider.CompareTag("Oil"))
                 {
-                    //Debug.Log("Passato su una chiazza di olio");
+                    Debug.Log("Passato su una chiazza di olio");
                     return GroundType.Oil;
                 }
             }
@@ -541,5 +542,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentBatteryCharge += chargeBatteryAmount;
         }
 
+        public bool IsBoosting() => _currentStateType == DrivingStateType.Boost;
     }
 }

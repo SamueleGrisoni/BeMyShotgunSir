@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GrassStats
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.SOSidecarStats
   <AccelerationForce>k__BackingField: 100
-  <MaxSpeed>k__BackingField: 15
+  <MaxSpeed>k__BackingField: 10
   <Gravity>k__BackingField: 50
   <SteeringForce>k__BackingField: 50
   <LateralGripFactor>k__BackingField: 40

@@ -34,7 +34,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void ApplySteering(float steerAmount, float steeringForce);
         void ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp);
         void ApplyLateralGrip(float lateralGripFactor);
-        void AnimateSidecar();
         void OilAnimation();
         GroundType CheckGround();
         float TickDelta();

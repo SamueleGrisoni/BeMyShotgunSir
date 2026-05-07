@@ -10,6 +10,7 @@ TagManager:
   - RaceManager
   - Grass
   - Oil
+  - Driver
   layers:
   - Default
   - TransparentFX
