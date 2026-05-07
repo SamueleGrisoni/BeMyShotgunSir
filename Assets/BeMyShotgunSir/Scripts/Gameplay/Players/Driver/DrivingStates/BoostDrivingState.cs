@@ -6,7 +6,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
-            Debug.Log($"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            //Debug.Log($"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
             if (controller.CurrentBatteryCharge <= 0)
             {
                 controller.ChangeState(controller.NormalState, data);
@@ -58,7 +58,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void Exit(IDriverControllerContext controller, ReplicateData data)
         {
-            Debug.Log("Exit boost state");
+            //Debug.Log("Exit boost state");
         }
     }
 }

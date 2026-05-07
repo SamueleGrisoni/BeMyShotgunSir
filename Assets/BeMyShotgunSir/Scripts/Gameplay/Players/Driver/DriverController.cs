@@ -6,7 +6,6 @@ using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using GameKit.Dependencies.Utilities;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -102,6 +101,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public uint GetTick() => _tick;
         public void SetTick(uint value) => _tick = value;
     }
+
     public class DriverController : NetworkBehaviour, IDriverControllerContext, IDriverController
     {
         public static event Action<IDriverController> OnDriverSpawned;
@@ -112,6 +112,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _inputConsumer = inputConsumer;
         }
 
+        // TODO spostare
         [SerializeField] private LayerMask _sidecarLayerMask;
         [SerializeField] private float _bumpRadius = 1.2f;
         [SerializeField] private float _bumpForce = 15f;
@@ -166,6 +167,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         SOSidecarStats IDriverControllerContext.BoostStats => _sidecarStatsBoost;
         SOSidecarStats IDriverControllerContext.GrassStats => _sidecarStatsGrass;
         SOBatteryStats IDriverControllerContext.BatteryStats => _batteryStats;
+        SOSidecarAnimationStats IDriverControllerContext.AnimationStats => _animationStats;
         IDrivingState IDriverControllerContext.PreviousDrivingState => _previousDrivingState;
         IDrivingState IDriverControllerContext.IdleState => _idleState;
         IDrivingState IDriverControllerContext.NormalState => _normalState;
@@ -175,11 +177,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDriverControllerContext.OilState => _oilState;
 
         float IDriverControllerContext.CurrentMaxSpeed => _currentMaxSpeed;
-        bool IDriverControllerContext.IsGrounded => throw new NotImplementedException();
-        bool IDriverControllerContext.IsDriftingButtonPressed => throw new NotImplementedException();
-        float IDriverControllerContext.SteerInput => throw new NotImplementedException();
-        bool IDriverControllerContext.IsBoostButtonPressed => throw new NotImplementedException();
-        bool IDriverControllerContext.IsStartButtonPressed => throw new NotImplementedException();
 
         float IDriverControllerContext.DriftDirection
         {
@@ -255,21 +252,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public void LateUpdate()
         {
             // TODO aggiungere if (!base.IsReconciling) per bloccare la graphica quando si fa il resimulation
-            // TODO aggiungere interpolazione per rendere la transizione tra due tick molto più smooth.
-            if (true)
-            {
-                _parent.position = _sphere.transform.position;
-                _parent.rotation = _parentRotation;
-                _sidecar.localRotation = _sidecarLocalRotation;
-            }
-            else
-            {
-                float smoothSpeed = 20f;
-                _parent.position = Vector3.Lerp(_parent.position, _sphere.transform.position, Time.deltaTime * smoothSpeed);
-                _parent.rotation = Quaternion.Slerp(_parent.rotation, _parentRotation, Time.deltaTime * smoothSpeed);
-                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _sidecarLocalRotation, Time.deltaTime * smoothSpeed);                
-            }
-
+            _parent.position = _sphere.transform.position;
+            _parent.rotation = _parentRotation;
+            _sidecar.localRotation = _sidecarLocalRotation;
 
             AnimateSteer(_visualSteerInput);
             //Debug.Log($"Current battery level: {_currentBatteryCharge}");
@@ -343,13 +328,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             _currentLinearVelocity += repulsionForce * (float)TimeManager.TickDelta;
 
-            //_predictionRigidbody.Velocity(_currentLinearVelocity);
             Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
 
             _sphere.transform.up = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-
 
             if (state != ReplicateState.Replayed)
                 _visualSteerInput = data.SteerInput;
@@ -375,7 +358,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation = data.ParentRotation;
             _sidecarLocalRotation = data.SidecarLocalRotation;
 
-            _currentLinearVelocity = data.CurrentLinearVelocity;
+            //_currentLinearVelocity = data.CurrentLinearVelocity;
             _currentMaxSpeed = data.CurrentMaxSpeed;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
@@ -421,25 +404,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     predictedVelocity = new Vector3(limitedHorizontalVel.x, predictedVelocity.y, limitedHorizontalVel.z);
                 }
             }
-            
-            // TODO da capire
-            /*
-            if (_predictionRigidbody.Rigidbody.SweepTest(predictedVelocity.normalized, out RaycastHit hit, 1f, QueryTriggerInteraction.Ignore))
-            {
-                Debug.Log($"Raychast has hitted something {hit.GetType().Name}");
-                if ((_wallLayerMask.value & (1 << hit.collider.gameObject.layer)) > 0)
-                {
-                    Debug.Log("Hitted the wall");
-                    float verticalVelocity = predictedVelocity.y;
-                    predictedVelocity = Vector3.ProjectOnPlane(predictedVelocity, hit.normal);
-                    predictedVelocity.y = verticalVelocity;
-                }
-            }
-            */
-            
-
             _currentLinearVelocity = predictedVelocity;
-
         }
 
         void IDriverControllerContext.ApplyGravity(float gravity) => _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
@@ -473,11 +438,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _isOilAnimationActive = false;
             }
         }
+        
         [ObserversRpc]
-        private void SendOilAnimation()
-        {
-            StartCoroutine(ExecuteOilAnimation());
-        }
+        private void SendOilAnimation() => StartCoroutine(ExecuteOilAnimation());
+        
         [Client]
         private IEnumerator ExecuteOilAnimation()
         {

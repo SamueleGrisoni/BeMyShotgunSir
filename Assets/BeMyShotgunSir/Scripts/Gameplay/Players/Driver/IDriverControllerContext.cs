@@ -10,6 +10,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         SOSidecarStats BoostStats { get; }
         SOSidecarStats GrassStats { get; }
         SOBatteryStats BatteryStats { get; }
+        SOSidecarAnimationStats AnimationStats { get; }
         IDrivingState PreviousDrivingState { get; }
         IDrivingState IdleState { get; }
         IDrivingState NormalState { get; }
@@ -19,11 +20,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState OilState { get; }
         float CurrentMaxSpeed { get; }
         //float CurrentAcceleration { get; set; }
-        bool IsGrounded { get; }
-        bool IsDriftingButtonPressed { get; }
-        float SteerInput { get; }
-        bool IsBoostButtonPressed { get; }
-        bool IsStartButtonPressed { get; }
         float DriftDirection { get; set; }
         float CurrentBatteryCharge { get; set; }
         float BatteryChargeTimer { get; set; }

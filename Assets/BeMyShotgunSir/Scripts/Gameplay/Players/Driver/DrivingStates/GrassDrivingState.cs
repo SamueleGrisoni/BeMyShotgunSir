@@ -6,7 +6,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         public void Enter(IDriverControllerContext controller, ReplicateData data)
         {
             controller.SetMaxSpeed(controller.GrassStats.MaxSpeed);
-            Debug.Log($"Enter grass state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            //Debug.Log($"Enter grass state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
         }
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
@@ -27,7 +27,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void Exit(IDriverControllerContext controller, ReplicateData data)
         {
-            Debug.Log("Exit grass state");
+            //Debug.Log("Exit grass state");
         }
     }
 }

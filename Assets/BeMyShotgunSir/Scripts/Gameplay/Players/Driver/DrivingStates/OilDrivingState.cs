@@ -11,7 +11,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
         {
             controller.OilAnimationTimer += controller.TickDelta();
-            if (controller.OilAnimationTimer > 1f && controller.IsServer) // TODO togliere da qua velore hardcodato
+            if (controller.OilAnimationTimer > controller.AnimationStats.OilAnimationDuration && controller.IsServer) // TODO togliere da qua velore hardcodato
             {
                 controller.ChangeState(controller.PreviousDrivingState, data);
                 return;
