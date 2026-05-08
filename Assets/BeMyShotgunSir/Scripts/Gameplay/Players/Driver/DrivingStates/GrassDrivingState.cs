@@ -3,12 +3,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class GrassDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.SetMaxSpeed(controller.GrassStats.MaxSpeed);
-            //Debug.Log($"Enter grass state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            Debug.Log($"Enter grass state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType != GroundType.Grass)
@@ -17,17 +16,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.SidecarForward, controller.GrassStats.AccelerationForce);
+            controller.ApplyAcceleration(controller.SidecarForward, controller.GrassStats.AccelerationForce, controller.GrassStats.MaxSpeed);
             controller.ApplySteering(data.SteerInput, controller.GrassStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.GrassStats.SteerAngularRotation, 0), controller.GrassStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.GrassStats.LateralGripFactor);
             controller.ApplyGravity(controller.GrassStats.Gravity);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDrivingStateContext controller, ReplicateData data)
         {
-            //Debug.Log("Exit grass state");
+            Debug.Log("Exit grass state");
         }
     }
 }

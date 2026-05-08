@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4998179860331136265}
-  - component: {fileID: 927875605057467055}
-  - component: {fileID: 7473439066779166600}
+  - component: {fileID: 7322070008880661126}
   m_Layer: 6
   m_Name: Parent
   m_TagString: Untagged
@@ -34,7 +33,7 @@ Transform:
   - {fileID: 6190171562437922324}
   m_Father: {fileID: 3936639379094671228}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &927875605057467055
+--- !u!114 &7322070008880661126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,43 +42,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1219467363049404537}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 239cafc3a075abb429d16d9f674352df, type: 3}
+  m_Script: {fileID: 11500000, guid: baca04ed9a7b7b748adeae5170db7296, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.MovingDriver
---- !u!114 &7473439066779166600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1219467363049404537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 453481867b26f7c43b5bf38802a5f50e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.Beta.NetworkTickSmoother
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 4726359609289288218}
-  _networkObjectCache: {fileID: 0}
-  _initializationSettings:
-    TargetTransform: {fileID: 4998179860331136265}
-    DetachOnStart: 0
-    AttachOnStop: 0
-  _controllerMovementSettings:
-    EnableTeleport: 0
-    TeleportThreshold: 0
-    AdaptiveInterpolationValue: 0
-    InterpolationValue: 2
-    SmoothedProperties: 4294967295
-    SnapNonSmoothedProperties: 0
-  _favorPredictionNetworkTransform: 1
-  _spectatorMovementSettings:
-    EnableTeleport: 0
-    TeleportThreshold: 0
-    AdaptiveInterpolationValue: 0
-    InterpolationValue: 2
-    SmoothedProperties: 4294967295
-    SnapNonSmoothedProperties: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Gameplay.Players.Driver.DriverVisuals
+  _stats: {fileID: 3826133632397438374}
+  _movement: {fileID: 7864906868263305960}
+  _parent: {fileID: 4998179860331136265}
+  _sidecar: {fileID: 6190171562437922324}
+  _visualModel: {fileID: 7985624542521542911}
+  _smoothingSpeed: 100
+  _handle: {fileID: 6147583942181700300}
 --- !u!1 &1694670322626515296
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,15 +61,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4911276810674100189}
-  - component: {fileID: 5228211478694857263}
+  - component: {fileID: 7864906868263305960}
   - component: {fileID: 5732207182402960207}
   - component: {fileID: 5826905910181042420}
   - component: {fileID: 4283831553852483195}
   - component: {fileID: 2139825348868955056}
   - component: {fileID: 3192123921943259604}
-  - component: {fileID: 5880172682804943602}
   m_Layer: 7
-  m_Name: RigidBody
+  m_Name: Movement
   m_TagString: Driver
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,7 +90,7 @@ Transform:
   - {fileID: 8359259767688481148}
   m_Father: {fileID: 3936639379094671228}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &5228211478694857263
+--- !u!114 &7864906868263305960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,27 +99,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1694670322626515296}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca51c805c277090c3bccd1f2705d02f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fd5a89d6e29d7c4e989de69796aceaf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DriverController
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 4726359609289288218}
-  _networkObjectCache: {fileID: 3192123921943259604}
-  _sidecarLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _bumpRadius: 1.2
-  _bumpForce: 120
-  _sidecarStatsNormal: {fileID: 11400000, guid: c91c8525809d78159b92b45bd668f877, type: 2}
-  _sidecarStatsBoost: {fileID: 11400000, guid: 47264b8a7db1e3d0897ee573fb80765c, type: 2}
-  _sidecarStatsGrass: {fileID: 11400000, guid: 52e9b9a1b1bd968239145b7ffbe2f5ad, type: 2}
-  _batteryStats: {fileID: 11400000, guid: f7631229fd15304ae97bc8d96a169593, type: 2}
-  _animationStats: {fileID: 11400000, guid: 6b7005c24535ee7159d90ce0bd9ddafa, type: 2}
-  _sphere: {fileID: 2139825348868955056}
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.MovementController
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 3192123921943259604}
+  _networkObjectCache: {fileID: 0}
+  _input: {fileID: 7387308273733314743}
+  _stats: {fileID: 3826133632397438374}
+  _movement: {fileID: 2139825348868955056}
   _parent: {fileID: 4998179860331136265}
   _sidecar: {fileID: 6190171562437922324}
   _sidecarModel: {fileID: 7985624542521542911}
-  _handle: {fileID: 6147583942181700300}
+  _sidecarLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _bumpRadius: 1.1
+  _bumpForce: 100
+  _hoverHeight: 0.55
+  _springStrength: 300
+  _springDamper: 50
 --- !u!33 &5732207182402960207
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -238,8 +208,8 @@ Rigidbody:
   m_GameObject: {fileID: 1694670322626515296}
   serializedVersion: 5
   m_Mass: 300
-  m_LinearDamping: 2
-  m_AngularDamping: 0.05
+  m_LinearDamping: 1
+  m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -275,7 +245,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 5228211478694857263}
+  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 4678414540309126450}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -314,36 +284,6 @@ MonoBehaviour:
     Rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
---- !u!114 &5880172682804943602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1694670322626515296}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: 
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &2204479149634885745
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,8 +458,12 @@ GameObject:
   - component: {fileID: 4726359609289288218}
   - component: {fileID: 4678414540309126450}
   - component: {fileID: 5291776962361096658}
+  - component: {fileID: 6133860484994715469}
+  - component: {fileID: 3998145195957461452}
+  - component: {fileID: 7387308273733314743}
+  - component: {fileID: 3826133632397438374}
   m_Layer: 0
-  m_Name: PlayerV4
+  m_Name: Driver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -538,9 +482,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4911276810674100189}
   - {fileID: 4998179860331136265}
   - {fileID: 8096243366278945247}
-  - {fileID: 4911276810674100189}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4726359609289288218
@@ -596,7 +540,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 14
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 11047557474074088806
+  <AssetPathHash>k__BackingField: 7269134423280839538
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: -1.18319, y: -0.73, z: 1.16065}
@@ -634,6 +578,83 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 4726359609289288218}
   _cinemachineCamera: {fileID: 544337676729584939}
+--- !u!114 &6133860484994715469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8924365376436740663}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &3998145195957461452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8924365376436740663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca51c805c277090c3bccd1f2705d02f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DriverController
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4726359609289288218}
+  _networkObjectCache: {fileID: 0}
+--- !u!114 &7387308273733314743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8924365376436740663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f5c37840766a0f44bbdadb7f6487b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DriverInput
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4726359609289288218}
+  _networkObjectCache: {fileID: 0}
+--- !u!114 &3826133632397438374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8924365376436740663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7395fa756af926943b06a7725d438990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Gameplay.Players.Driver.DriverStats
+  <NormalStats>k__BackingField: {fileID: 11400000, guid: c91c8525809d78159b92b45bd668f877, type: 2}
+  <BoostStats>k__BackingField: {fileID: 11400000, guid: 47264b8a7db1e3d0897ee573fb80765c, type: 2}
+  <GrassStats>k__BackingField: {fileID: 11400000, guid: 52e9b9a1b1bd968239145b7ffbe2f5ad, type: 2}
+  <BatteryStats>k__BackingField: {fileID: 11400000, guid: f7631229fd15304ae97bc8d96a169593, type: 2}
+  <AnimationStats>k__BackingField: {fileID: 11400000, guid: 6b7005c24535ee7159d90ce0bd9ddafa, type: 2}
 --- !u!1001 &2044272062808213072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -693,10 +714,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 175383104371498808}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: -4161369568681901532, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
 --- !u!4 &6147583942181700300 stripped
 Transform:
@@ -708,45 +726,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -3910990755373119420, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
   m_PrefabInstance: {fileID: 2044272062808213072}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7343008273424942615 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-  m_PrefabInstance: {fileID: 2044272062808213072}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &175383104371498808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7343008273424942615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 453481867b26f7c43b5bf38802a5f50e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.Beta.NetworkTickSmoother
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 4726359609289288218}
-  _networkObjectCache: {fileID: 0}
-  _initializationSettings:
-    TargetTransform: {fileID: 6190171562437922324}
-    DetachOnStart: 0
-    AttachOnStop: 0
-  _controllerMovementSettings:
-    EnableTeleport: 0
-    TeleportThreshold: 0
-    AdaptiveInterpolationValue: 0
-    InterpolationValue: 2
-    SmoothedProperties: 4294967295
-    SnapNonSmoothedProperties: 0
-  _favorPredictionNetworkTransform: 1
-  _spectatorMovementSettings:
-    EnableTeleport: 0
-    TeleportThreshold: 0
-    AdaptiveInterpolationValue: 0
-    InterpolationValue: 2
-    SmoothedProperties: 4294967295
-    SnapNonSmoothedProperties: 0
 --- !u!4 &7985624542521542911 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}

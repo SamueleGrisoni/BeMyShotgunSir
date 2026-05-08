@@ -4,17 +4,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class BoostDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
-            //Debug.Log($"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            Debug.Log($"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
             if (controller.CurrentBatteryCharge <= 0)
             {
                 controller.ChangeState(controller.NormalState, data);
             }
-            controller.SetMaxSpeed(controller.BoostStats.MaxSpeed);
             controller.BoostTimer = 0f;
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
@@ -49,16 +48,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             }
             //Debug.Log($"Current battery charge: {controller.CurrentBatteryCharge}");
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.SidecarForward, controller.BoostStats.AccelerationForce);
+            controller.ApplyAcceleration(controller.SidecarForward, controller.BoostStats.AccelerationForce, controller.BoostStats.MaxSpeed);
             controller.ApplySteering(data.SteerInput, controller.BoostStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.BoostStats.SteerAngularRotation, 0), controller.BoostStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.BoostStats.LateralGripFactor);
+            controller.ApplyGravity(controller.BoostStats.Gravity);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDrivingStateContext controller, ReplicateData data)
         {
-            //Debug.Log("Exit boost state");
+            Debug.Log("Exit boost state");
         }
     }
 }

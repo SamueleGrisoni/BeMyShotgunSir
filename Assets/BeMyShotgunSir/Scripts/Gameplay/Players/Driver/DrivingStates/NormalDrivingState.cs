@@ -4,12 +4,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.SetMaxSpeed(controller.NormalStats.MaxSpeed);
-            //Debug.Log($"Enter normal state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            Debug.Log($"Enter normal state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
@@ -33,15 +32,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.SidecarForward, controller.NormalStats.AccelerationForce);
+            controller.ApplyAcceleration(controller.SidecarForward, controller.NormalStats.AccelerationForce, controller.NormalStats.MaxSpeed);
             controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDrivingStateContext controller, ReplicateData data)
         {
         }
     }

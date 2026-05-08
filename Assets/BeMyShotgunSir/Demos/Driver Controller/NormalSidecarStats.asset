@@ -18,4 +18,4 @@ MonoBehaviour:
   <SteeringForce>k__BackingField: 50
   <LateralGripFactor>k__BackingField: 50
   <SteerAngularRotation>k__BackingField: 15
-  <SteerAngularRotationSlerp>k__BackingField: 40
+  <SteerAngularRotationSlerp>k__BackingField: 60

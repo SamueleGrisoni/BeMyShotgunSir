@@ -2,13 +2,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class OilDrivingState : IDrivingState
     {
-        private float _timer;
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
             controller.OilAnimationTimer = 0f;
             controller.IsOilAnimationActive = true;
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             controller.OilAnimationTimer += controller.TickDelta();
             if (controller.OilAnimationTimer > controller.AnimationStats.OilAnimationDuration && controller.IsServer) // TODO togliere da qua velore hardcodato
@@ -17,12 +16,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.SidecarForward, 0f);
-            controller.OilAnimation();
+            controller.ApplyAcceleration(controller.SidecarForward, 0f, controller.NormalStats.MaxSpeed);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDrivingStateContext controller, ReplicateData data)
         {
             controller.IsOilAnimationActive = true;
         }

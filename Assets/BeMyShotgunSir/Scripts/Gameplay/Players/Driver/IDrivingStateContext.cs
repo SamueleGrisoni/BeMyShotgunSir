@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
-    public interface IDriverControllerContext
+    public interface IDrivingStateContext
     {
         Vector3 ParentForward { get; }
         Vector3 SidecarForward { get; }
@@ -18,7 +18,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState BoostState { get; }
         IDrivingState GrassState { get; }
         IDrivingState OilState { get; }
-        float CurrentMaxSpeed { get; }
         //float CurrentAcceleration { get; set; }
         float DriftDirection { get; set; }
         float CurrentBatteryCharge { get; set; }
@@ -27,14 +26,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         float OilAnimationTimer { get; set; }
         bool IsOilAnimationActive { get; set; }
         void ChangeState(IDrivingState state, ReplicateData data);
-        void SetMaxSpeed(float maxSpeed); // TODO spostare in CUrrentMaxSpeed 
-        void SetDriftDirection(float driftDirection);
-        void ApplyAcceleration(Vector3 direction, float accelerationForce);
+        void ApplyAcceleration(Vector3 direction, float accelerationForce, float maxSpeed);
         void ApplyGravity(float gravity);
         void ApplySteering(float steerAmount, float steeringForce);
         void ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp);
         void ApplyLateralGrip(float lateralGripFactor);
-        void OilAnimation();
         GroundType CheckGround();
         float TickDelta();
         bool IsOnwer { get; }

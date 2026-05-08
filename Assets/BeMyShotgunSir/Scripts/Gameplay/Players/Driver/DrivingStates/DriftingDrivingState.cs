@@ -4,16 +4,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class DriftingDrivingState : IDrivingState
     {
-        public void Enter(IDriverControllerContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
-            //Debug.Log($"Enter drift state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
-            controller.SetMaxSpeed(controller.NormalStats.MaxSpeed);
+            Debug.Log($"Enter drift state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
 
             //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
             controller.BatteryChargeTimer = 0f;
         }
-        public void CheckStateChange(IDriverControllerContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
@@ -45,9 +44,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDriverControllerContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.ApplyAcceleration(controller.ParentForward, controller.NormalStats.AccelerationForce);
+            controller.ApplyAcceleration(controller.ParentForward, controller.NormalStats.AccelerationForce, controller.NormalStats.MaxSpeed);
 
             float steerControl = controller.DriftDirection == 1
                 ? Mathf.Lerp(0f, 2f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
@@ -58,10 +57,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 ? Mathf.Lerp(1f, 2f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
                 : Mathf.Lerp(2f, 1f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
+            controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDriverControllerContext controller, ReplicateData data)
+        public void Exit(IDrivingStateContext controller, ReplicateData data)
         {
-            //Debug.Log("Exit drift state");
+            Debug.Log("Exit drift state");
         }
     }
 }
