@@ -70,10 +70,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             if (_netController == null || _netState == null || _projector == null || _powerUpsNetController == null)
                 Log.ELazy(() => $"One or more required components are missing on RaceManager.", this);
-
-            _viewModel = new RaceViewModel();
-            _raceCommand = new RaceCommand(_netController);
-            _binder = new RaceBinder(this);
         }
 
         private void OnEnable()
@@ -98,11 +94,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             }
             _lobbyViewModel = viewModel;
-            _viewModel.InitData(_lobbyViewModel);
+            _raceCommand = new RaceCommand(_netController);
+            _binder = new RaceBinder(this);
+            _viewModel = new RaceViewModel(_lobbyViewModel, _netState);
             _lobbyNetStateStore = context.NetState;
-            _netController.SetLobbyNetState(_lobbyNetStateStore);
-            _projector.Init(_viewModel);
-            _raceCommand.GetInitSnapshot_Request(); //DANGER
+            _netController.SetLobbyNetState(_lobbyNetStateStore); //so that net controller can edit lobby net state
+            _projector.Init(_viewModel); //so that the projector can change the view model in response of target/observer rpcs
             if (IsServerInitialized)
             {
                 _netState.InitializeFromLobby(_lobbyNetStateStore);

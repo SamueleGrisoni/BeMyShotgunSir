@@ -3,10 +3,6 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
-    /// <summary>
-    /// Client-side projection layer: maps synchronized network state and local RPC payloads
-    /// into manager/viewmodel response calls.
-    /// </summary>
     [RequireComponent(typeof(LobbyNetStateStore))]
     public sealed class LobbyClientProjector : MonoBehaviour
     {
@@ -29,10 +25,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (_state == null)
                 return;
 
-            _state.LobbyInfoSync.OnChange += OnLobbyInfoChanged;
-            _state.PlayerStatesSync.OnChange += OnPlayerStatesChanged;
-            _state.TeamInfosSync.OnChange += OnTeamInfosChanged;
-            _state.PlayerCountSync.OnChange += OnPlayerCountChanged;
+            _state.LobbyInfo_Sub.OnChange += OnLobbyInfoChanged;
+            _state.PlayerStates_Sub.OnChange += OnPlayerStatesChanged;
+            _state.TeamInfos_Sub.OnChange += OnTeamInfosChanged;
+            _state.PlayerCount_Sub.OnChange += OnPlayerCountChanged;
         }
 
         private void OnDisable()
@@ -40,10 +36,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (_state == null)
                 return;
 
-            _state.LobbyInfoSync.OnChange -= OnLobbyInfoChanged;
-            _state.PlayerStatesSync.OnChange -= OnPlayerStatesChanged;
-            _state.TeamInfosSync.OnChange -= OnTeamInfosChanged;
-            _state.PlayerCountSync.OnChange -= OnPlayerCountChanged;
+            _state.LobbyInfo_Sub.OnChange -= OnLobbyInfoChanged;
+            _state.PlayerStates_Sub.OnChange -= OnPlayerStatesChanged;
+            _state.TeamInfos_Sub.OnChange -= OnTeamInfosChanged;
+            _state.PlayerCount_Sub.OnChange -= OnPlayerCountChanged;
         }
 
         public void Init(LobbyViewModel viewModel)
@@ -52,42 +48,28 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 _viewModel = viewModel;
         }
 
-        public void InitNetData_Response(LobbyNetDataSnapshot snapshot) => _viewModel.InitNetData(snapshot);
-
         private void OnLobbyInfoChanged(LobbyInfo prev, LobbyInfo next, bool asServer)
         {
             if (asServer)
                 return;
-
-            if (_viewModel != null)
-                _viewModel.SetLobbyInfo(next);
         }
 
         private void OnPlayerStatesChanged(SyncDictionaryOperation op, int key, LobbyPlayerState value, bool asServer)
         {
             if (asServer)
                 return;
-
-            if (_viewModel != null)
-                _viewModel.SetPlayerStates(op, key, value);
         }
 
         private void OnTeamInfosChanged(SyncDictionaryOperation op, int key, LobbyTeamInfo value, bool asServer)
         {
             if (asServer)
                 return;
-
-            if (_viewModel != null)
-                _viewModel.SetTeamInfos(op, key, value);
         }
 
         private void OnPlayerCountChanged(int prev, int next, bool asServer)
         {
             if (asServer)
                 return;
-
-            if (_viewModel != null)
-                _viewModel.SetPlayerCount(next);
         }
     }
 }

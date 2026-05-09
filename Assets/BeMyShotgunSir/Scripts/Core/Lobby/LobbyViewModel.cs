@@ -1,142 +1,50 @@
 using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
-    public interface ILobbyNetData : INetData
+    public interface ILobbyDataView : IDataView
     {
         LobbyInfo LobbyInfo { get; }
         int PlayerCount { get; }
-        Dictionary<int, LobbyPlayerState> PlayerStates { get; }
-        Dictionary<int, LobbyTeamInfo> TeamInfos { get; }
-    }
-
-    public interface ILobbyData : IData { }
-
-    public interface ILobbyDataView : IDataView, ILobbyData, ILobbyNetData
-    {
+        IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates { get; }
+        IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos { get; }
         event Action OnLobbyInfoChanged;
         event Action OnLobbyIPChanged;
         event Action OnPlayerCountChanged;
-        event Action OnPlayerStatesChanged;
-        event Action OnTeamInfosChanged;
+        event Action OnLobbyPlayerStatesChanged;
+        event Action OnLobbyTeamInfosChanged;
     }
 
-    public class LobbyViewModel : ViewModel<ILobbyData, ILobbyNetData>, ILobbyDataView
+    public class LobbyViewModel : ILobbyDataView
     {
-        private bool _log = true;
-        public override void InitData(ILobbyData data = null)
-        {
-            Log.DLazy(() => "Initializing LobbyViewModel.", this, _log);
-            LobbyIP = "127.0.0.1";
-            PlayerCount = 0;
-        }
+        private bool _log = false;
+        private ILobbyNetStateSubscribe _netState;
 
-        public override void InitNetData(ILobbyNetData data)
-        {
-            Log.DLazy(() => "Initializing LobbyViewModel net data.", this, _log);
-            //no setters to allow a real refresh even for unchanged values
-            LobbyInfo = data.LobbyInfo;
-            OnLobbyInfoChanged?.Invoke();
-            LobbyIP = data.LobbyInfo.LobbyIP;
-            OnLobbyIPChanged?.Invoke();
-            PlayerCount = data.PlayerCount;
-            OnPlayerCountChanged?.Invoke();
-            PlayerStates = data.PlayerStates;
-            OnPlayerStatesChanged?.Invoke();
-            TeamInfos = data.TeamInfos;
-            OnTeamInfosChanged?.Invoke();
-        }
+        public LobbyInfo LobbyInfo => _netState.LobbyInfo;
+        public int PlayerCount => _netState.PlayerCount;
+        public IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates => _netState.PlayerStates;
+        public IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos => _netState.TeamInfos;
 
-        public LobbyInfo LobbyInfo { get; private set; }
         public event Action OnLobbyInfoChanged;
-        public void SetLobbyInfo(LobbyInfo newInfo)
-        {
-            LobbyInfo = newInfo;
-            Log.DLazy(() => $"LobbyInfo updated. {LobbyInfo}", this, _log);
-            OnLobbyInfoChanged?.Invoke();
-        }
-
-        public string LobbyIP { get; private set; }
         public event Action OnLobbyIPChanged;
-        public void SetLobbyIP(string newIP)
-        {
-            if (LobbyIP != newIP)
-            {
-                LobbyIP = newIP;
-                OnLobbyIPChanged?.Invoke();
-            }
-            Log.DLazy(() => $"LobbyIP updated to {LobbyIP}.", this, _log);
-        }
-
-        public int PlayerCount { get; private set; }
         public event Action OnPlayerCountChanged;
-        public void SetPlayerCount(int newCount)
+        public event Action OnLobbyPlayerStatesChanged;
+        public event Action OnLobbyTeamInfosChanged;
+
+        public LobbyViewModel(ILobbyNetStateSubscribe netState)
         {
-            if (PlayerCount != newCount)
-            {
-                PlayerCount = newCount;
-                OnPlayerCountChanged?.Invoke();
-            }
-            Log.DLazy(() => $"PlayerCount updated to {PlayerCount}.", this, _log);
+            _netState = netState;
+            _netState.LobbyInfo_Sub.OnChange += OnLobbyInfoChanged_Propagate;
+            _netState.PlayerCount_Sub.OnChange += OnPlayerCountChanged_Propagate;
+            _netState.PlayerStates_Sub.OnChange += OnLobbyPlayerStatesChanged_Propagate;
+            _netState.TeamInfos_Sub.OnChange += OnLobbyTeamInfosChanged_Propagate;
         }
 
-        public Dictionary<int, LobbyPlayerState> PlayerStates { get; private set; } = new Dictionary<int, LobbyPlayerState>();
-        public event Action OnPlayerStatesChanged;
-        public void SetPlayerStates(SyncDictionaryOperation op, int key, LobbyPlayerState value)
-        {
-            switch (op)
-            {
-                case SyncDictionaryOperation.Add:
-                case SyncDictionaryOperation.Set:
-                    PlayerStates[key] = value;
-                    break;
-                case SyncDictionaryOperation.Remove:
-                    PlayerStates.Remove(key);
-                    break;
-                case SyncDictionaryOperation.Clear:
-                    PlayerStates.Clear();
-                    break;
-                case SyncDictionaryOperation.Complete:
-                    break;
-                default:
-                    break;
-            }
-            if (op != SyncDictionaryOperation.Complete)
-            {
-                Log.DLazy(() => $"PlayerStates updated. Operation: {op}, Key: {key}, Value: {value}", this, _log);
-                OnPlayerStatesChanged?.Invoke();
-            }
-        }
-
-        public Dictionary<int, LobbyTeamInfo> TeamInfos { get; private set; } = new Dictionary<int, LobbyTeamInfo>();
-        public event Action OnTeamInfosChanged;
-        public void SetTeamInfos(SyncDictionaryOperation op, int key, LobbyTeamInfo value)
-        {
-            switch (op)
-            {
-                case SyncDictionaryOperation.Add:
-                case SyncDictionaryOperation.Set:
-                    TeamInfos[key] = value;
-                    break;
-                case SyncDictionaryOperation.Remove:
-                    TeamInfos.Remove(key);
-                    break;
-                case SyncDictionaryOperation.Clear:
-                    TeamInfos.Clear();
-                    break;
-                case SyncDictionaryOperation.Complete:
-                    break;
-                default:
-                    break;
-            }
-            if (op != SyncDictionaryOperation.Complete)
-            {
-                Log.DLazy(() => $"TeamInfos updated. Operation: {op}, Key: {key}, Value: {value}", this, _log);
-                OnTeamInfosChanged?.Invoke();
-            }
-        }
+        private void OnLobbyInfoChanged_Propagate(LobbyInfo _, LobbyInfo __, bool ___) => OnLobbyInfoChanged?.Invoke();
+        private void OnPlayerCountChanged_Propagate(int _, int __, bool ___) => OnPlayerCountChanged?.Invoke();
+        private void OnLobbyPlayerStatesChanged_Propagate(SyncDictionaryOperation _, int __, LobbyPlayerState ___, bool ____) => OnLobbyPlayerStatesChanged?.Invoke();
+        private void OnLobbyTeamInfosChanged_Propagate(SyncDictionaryOperation _, int __, LobbyTeamInfo ___, bool ____) => OnLobbyTeamInfosChanged?.Invoke();
     }
 }

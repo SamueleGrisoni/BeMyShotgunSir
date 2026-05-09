@@ -7,9 +7,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public void QuitLobby_CMRequest() =>
             GameServices.Instance.ConnectionManager.QuitLobby();
 
-        public void GetInitSnapshot_Request() =>
-            _netController.OnRefresh();
-
         public void SetName_Request(string name)
         {
             if (string.IsNullOrEmpty(name))

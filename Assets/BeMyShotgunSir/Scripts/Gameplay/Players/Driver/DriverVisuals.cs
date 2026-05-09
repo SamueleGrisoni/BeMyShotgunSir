@@ -18,13 +18,13 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         {
             if (_movement == null) return;
 
-            _parent.position = _movement.MovementPosition;
-            _parent.rotation = _movement.ParentRotation;
-            _sidecar.localRotation = _movement.SidecarLocalRotation;
+            // _parent.position = _movement.MovementPosition;
+            // _parent.rotation = _movement.ParentRotation;
+            // _sidecar.localRotation = _movement.SidecarLocalRotation;
 
-            //_parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeed);
-            //_parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeed);
-            //_sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeed);
+            _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeed);
+            _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeed);
+            _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeed);
 
             AnimateSteer();
         }

@@ -53,25 +53,25 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public int DriverConnectionId;
         public int ShotgunConnectionId;
         public bool IsTeamSpawned;
-        public NetworkObject Team;
+        public NetworkObject TeamNob;
 
         public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId)
         {
             TeamId = teamId;
             DriverConnectionId = driverConnectionId;
             ShotgunConnectionId = shotgunConnectionId;
-            Team = null;
+            TeamNob = null;
             IsTeamSpawned = false;
         }
 
-        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject team = null)
+        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null)
         {
             TeamId = other.TeamId;
             DriverConnectionId = other.DriverConnectionId;
             ShotgunConnectionId = other.ShotgunConnectionId;
 
             IsTeamSpawned = isTeamSpawned ?? other.IsTeamSpawned;
-            Team = team ?? other.Team;
+            TeamNob = teamNob ?? other.TeamNob;
         }
 
         public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsTeamSpawned: {IsTeamSpawned}";
@@ -121,7 +121,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public interface IRaceNetStateRead
     {
-        int GetSeed();
+        int Seed { get; }
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, RaceTeamData> TeamData { get; }
         IReadOnlyDictionary<int, InventoryData> PlayerInventories { get; }
@@ -134,11 +134,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public interface IRaceNetStateSubscribe : IRaceNetStateRead
     {
-        SyncVar<int> Seed { get; }
-        SyncDictionary<int, RacePlayerState> PlayerStatesSync { get; }
-        SyncDictionary<int, RaceTeamData> TeamDataSync { get; }
-        SyncList<int> LeaderboardSync { get; }
-        SyncDictionary<int, InventoryData> PlayerInventoriesSync { get; }
+        SyncVar<int> Seed_Sub { get; }
+        SyncDictionary<int, RacePlayerState> PlayerStates_Sub { get; }
+        SyncDictionary<int, RaceTeamData> TeamData_Sub { get; }
+        SyncList<int> Leaderboard_Sub { get; }
+        SyncDictionary<int, InventoryData> PlayerInventories_Sub { get; }
     }
 
     public interface IRaceNetStateStore : IRaceNetStateSubscribe { }
@@ -167,6 +167,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         //Server-only states
+        /// <summary> not synced </summary>
         private Dictionary<int, NetworkObject> _teamNobs = new();
         public IReadOnlyDictionary<int, NetworkObject> TeamNobs => _teamNobs;
 
@@ -183,21 +184,26 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _teamNobs.TryGetValue(teamId, out nob);
 
         // Networked state
-        private readonly SyncVar<int> _seed = new(-1);
+        /// <summary> synced </summary>
+        private readonly SyncVar<int> _seed = new((int)Codes.UnInitialized);
+        /// <summary> synced </summary>
         private readonly SyncDictionary<int, RacePlayerState> _racePlayerStates = new();
+        /// <summary> synced </summary>
         private readonly SyncDictionary<int, RaceTeamData> _raceTeamData = new();
+        /// <summary> synced </summary>
         private readonly SyncDictionary<int, InventoryData> _racePlayerInventories = new();
+        /// <summary> synced </summary>
         private readonly SyncList<int> _leaderboard = new();
 
         // State Projector accessors
-        SyncVar<int> IRaceNetStateSubscribe.Seed => _seed;
-        SyncDictionary<int, RacePlayerState> IRaceNetStateSubscribe.PlayerStatesSync => _racePlayerStates;
-        SyncDictionary<int, RaceTeamData> IRaceNetStateSubscribe.TeamDataSync => _raceTeamData;
-        SyncDictionary<int, InventoryData> IRaceNetStateSubscribe.PlayerInventoriesSync => _racePlayerInventories;
-        SyncList<int> IRaceNetStateSubscribe.LeaderboardSync => _leaderboard;
+        SyncVar<int> IRaceNetStateSubscribe.Seed_Sub => _seed;
+        SyncDictionary<int, RacePlayerState> IRaceNetStateSubscribe.PlayerStates_Sub => _racePlayerStates;
+        SyncDictionary<int, RaceTeamData> IRaceNetStateSubscribe.TeamData_Sub => _raceTeamData;
+        SyncDictionary<int, InventoryData> IRaceNetStateSubscribe.PlayerInventories_Sub => _racePlayerInventories;
+        SyncList<int> IRaceNetStateSubscribe.Leaderboard_Sub => _leaderboard;
 
         // State Read-only accessors
-        public int GetSeed() => _seed.Value;
+        public int Seed => _seed.Value;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _racePlayerStates;
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _raceTeamData;
         public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
@@ -215,7 +221,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _racePlayerStates.Collection.Clear();
             _raceTeamData.Collection.Clear();
             _leaderboard.Clear();
-            _seed.Value = -1;
+            _seed.Value = (int)Codes.UnInitialized;
 
             foreach (KeyValuePair<int, LobbyPlayerState> lobbyPlayerState in lobbyState.PlayerStates)
             {

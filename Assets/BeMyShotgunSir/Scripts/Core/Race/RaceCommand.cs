@@ -6,9 +6,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public void LeaveRace_CMRequest() { /*TODO*/ }
 
-        public void GetInitSnapshot_Request() =>
-            _netController.OnRefresh();
-
         public void SetReadyToRace_Request() =>
             _netController.SetReadyToRace_ServerRpc();
 

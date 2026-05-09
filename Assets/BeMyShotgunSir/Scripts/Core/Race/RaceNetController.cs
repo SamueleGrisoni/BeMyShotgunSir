@@ -30,7 +30,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public interface IRaceNetController_Command : INetController_Command
     {
-        void OnRefresh();
         void SetReadyToRace_ServerRpc(NetworkConnection connection = null);
     }
 
@@ -50,24 +49,25 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         //utility
         private bool _log = true;
-
         private bool _isInitialized = false;
-        private int _spawnedTeams = 0;
+
+        //CONTEXT
         private LobbyNetStateStore _lobbyNetState;
         private RaceNetStateStore _netState;
         public IRaceNetStateRead NetState => _netState;
         private RaceClientProjector _clientProjector;
-        private IRoadManager _roadManager;
 
-        private List<Transform> _spawnPoints;
+        //Specific
         private bool _isRaceStarted = false;
+        private int _spawnedTeams = 0;
         private Vector3 _trackOrigin = Vector3.zero;
+        private IRoadManager _roadManager;
+        private List<Transform> _spawnPoints;
         private Dictionary<int, TeamProgress> _teamProgress;
+        private float _leaderboardUpdateTimer = 0f;
 
-        [Header("Performance")]
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
-        private float _leaderboardUpdateTimer = 0f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
         [SerializeField] private TeamNetController _teamPrefab;
         [SerializeField] private NetworkObject _driverPrefab;
@@ -101,45 +101,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public void SetLobbyNetState(LobbyNetStateStore lobbyNetState) =>
             _lobbyNetState = lobbyNetState;
 
-        public void OnRefresh()
-        {
-            if (IsController)
-            {
-                var snapshot = new RaceNetDataSnapshot(
-                    playerStates: new Dictionary<int, RacePlayerState>(NetState.PlayerStates),
-                    teamData: new Dictionary<int, RaceTeamData>(NetState.TeamData),
-                    leaderboard: new List<int>(NetState.Leaderboard)
-                );
-                _clientProjector.InitNetData_Project(snapshot);
-                return;
-            }
-
-            if (IsClientInitialized)
-                RequestNetDataSnapshot_ServerRpc();
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void RequestNetDataSnapshot_ServerRpc(NetworkConnection connection = null)
-        {
-            if (connection == null)
-                return;
-
-            var snapshot = new RaceNetDataSnapshot(
-                playerStates: new Dictionary<int, RacePlayerState>(NetState.PlayerStates),
-                teamData: new Dictionary<int, RaceTeamData>(NetState.TeamData),
-                leaderboard: new List<int>(NetState.Leaderboard)
-            );
-            InitNetData_TargetRpc(connection, snapshot);
-        }
-
-        [TargetRpc]
-        private void InitNetData_TargetRpc(NetworkConnection connection, RaceNetDataSnapshot snapshot)
-        {
-            if (connection == null)
-                return;
-
-            _clientProjector.InitNetData_Project(snapshot);
-        }
 
         [Server]
         public void InitRace(int seed = -1)
@@ -153,7 +114,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 s = DateTime.Now.Ticks.ToString().GetHashCode();
             _netState.SetSeed(s);
 
-            Log.DLazy(() => $"Initializing race with seed {NetState.GetSeed()}.", this, _log);
+            Log.DLazy(() => $"Initializing race with seed {NetState.Seed}.", this, _log);
 
             NetworkObject roadManager = Instantiate(_roadManagerPrefab);
             Spawn(roadManager.gameObject, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
@@ -164,7 +125,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (_roadManager != null)
                 return;
             _roadManager = manager;
-            _roadManager.SetSeed(NetState.GetSeed());
+            _roadManager.SetSeed(NetState.Seed);
             _roadManager.SetRaceNetController(this);
         }
 
@@ -264,7 +225,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         //MEMO this could be delegated to the team net controller (passing the reference to the server dictionary)
                         _teamProgress.Add(playerState.TeamId, new TeamProgress(player.GetComponentInChildren<MovementController>().transform, 0f));
 
-                        _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], team: team, isTeamSpawned: true));
+                        _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], teamNob: team, isTeamSpawned: true));
                         _spawnedTeams++;
                         return true;
                     }

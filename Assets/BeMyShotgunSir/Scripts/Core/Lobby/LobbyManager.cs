@@ -53,8 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             if (_netController == null || _netState == null || _projector == null)
                 Log.ELazy(() => "LobbyManager requires LobbyNetController, LobbyNetStateStore and LobbyClientProjector on the same GameObject.", this);
 
-            ViewModel = new LobbyViewModel();
-            ViewModel.InitData();
+            ViewModel = new LobbyViewModel(_netState);
             _projector.Init(ViewModel);
             _lobbyCommand = new LobbyCommand(_netController);
             _binder = new LobbyBinder(this);

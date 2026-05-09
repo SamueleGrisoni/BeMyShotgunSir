@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
@@ -15,7 +14,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public interface ILobbyNetController_Command : INetController_Command
     {
-        void OnRefresh();
         void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
         void UpdatePlayerReady_ServerRpc(bool isReady, NetworkConnection conn = null);
         void SelectTeamMate_ServerRpc(int teammateConnectionId, NetworkConnection conn = null);
@@ -141,36 +139,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             {
                 _netState.RemovePlayer(connection.ClientId);
             }
-        }
-
-        public void OnRefresh()
-        {
-            if (IsController)
-            {
-                _clientProjection.InitNetData_Response(new LobbyNetDataSnapshot(NetState.PlayerCount, new Dictionary<int, LobbyPlayerState>(NetState.PlayerStates), NetState.LobbyInfo, new Dictionary<int, LobbyTeamInfo>(NetState.TeamInfos)));
-                return;
-            }
-            if (IsClientInitialized)
-                RequestNetDataSnapshot_ServerRpc();
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void RequestNetDataSnapshot_ServerRpc(NetworkConnection conn = null)
-        {
-            if (conn == null)
-                return;
-
-            var snapshot = new LobbyNetDataSnapshot(NetState.PlayerCount, new Dictionary<int, LobbyPlayerState>(NetState.PlayerStates), NetState.LobbyInfo, new Dictionary<int, LobbyTeamInfo>(NetState.TeamInfos));
-
-            InitNetData_TargetRpc(conn, snapshot);
-        }
-
-        [TargetRpc]
-        private void InitNetData_TargetRpc(NetworkConnection conn, LobbyNetDataSnapshot snapshot)
-        {
-            if (conn == null)
-                return;
-            _clientProjection.InitNetData_Response(snapshot);
         }
 
         [ServerRpc(RequireOwnership = false)]

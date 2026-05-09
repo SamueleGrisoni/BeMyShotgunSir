@@ -30,11 +30,10 @@ namespace BeMyShotgunSir.Scripts.UI
             }
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
-            _command.GetInitSnapshot_Request();
 
             _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
             _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
-            _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
+            _viewModel.OnLobbyPlayerStatesChanged += UpdatePlayerStates;
             Log.DLazy(() => "Initial bind complete.", this, _log);
         }
         public override void OnFinalBindComplete()
@@ -109,7 +108,7 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 _viewModel.OnLobbyIPChanged -= UpdateLobbyIP;
                 _viewModel.OnPlayerCountChanged -= UpdatePlayerCount;
-                _viewModel.OnPlayerStatesChanged -= UpdatePlayerStates;
+                _viewModel.OnLobbyPlayerStatesChanged -= UpdatePlayerStates;
             }
 
             _readyButton.clicked -= ReadyButtonHandler;

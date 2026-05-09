@@ -43,25 +43,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             $"LobbyInfo: IP: {LobbyIP}, Max Players: {MaxPlayers}";
     }
 
-    public struct LobbyNetDataSnapshot : ILobbyNetData
-    {
-        public LobbyInfo LobbyInfo { get; set; }
-        public int PlayerCount { get; set; }
-        public Dictionary<int, LobbyPlayerState> PlayerStates { get; set; }
-        public Dictionary<int, LobbyTeamInfo> TeamInfos { get; set; }
-
-        public LobbyNetDataSnapshot(int playerCount, Dictionary<int, LobbyPlayerState> playerStates, LobbyInfo lobbyInfo, Dictionary<int, LobbyTeamInfo> teamInfos)
-        {
-            PlayerCount = playerCount;
-            PlayerStates = new Dictionary<int, LobbyPlayerState>(playerStates);
-            LobbyInfo = lobbyInfo;
-            TeamInfos = new Dictionary<int, LobbyTeamInfo>(teamInfos);
-        }
-
-        public override string ToString() =>
-            $"LobbyNetDataSnapshot: {LobbyInfo}, PlayerCount: {PlayerCount}, PlayerStates: {string.Join(", ", PlayerStates)}, TeamInfos: {string.Join(", ", TeamInfos)}";
-    }
-
     public struct LobbyTeamInfo
     {
         public int TeamId;
@@ -85,9 +66,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     public interface ILobbyNetStateRead
     {
         LobbyInfo LobbyInfo { get; }
+        int PlayerCount { get; }
         IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos { get; }
-        int PlayerCount { get; }
         bool TryGetPlayerState(int clientId, out LobbyPlayerState state);
         bool TryGetTeamInfo(int teamId, out LobbyTeamInfo info);
         bool CheckAllPlayersReady();
@@ -101,10 +82,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
     public interface ILobbyNetStateSubscribe : ILobbyNetStateRead
     {
-        SyncVar<LobbyInfo> LobbyInfoSync { get; }
-        SyncDictionary<int, LobbyPlayerState> PlayerStatesSync { get; }
-        SyncDictionary<int, LobbyTeamInfo> TeamInfosSync { get; }
-        SyncVar<int> PlayerCountSync { get; }
+        SyncVar<LobbyInfo> LobbyInfo_Sub { get; }
+        SyncDictionary<int, LobbyPlayerState> PlayerStates_Sub { get; }
+        SyncDictionary<int, LobbyTeamInfo> TeamInfos_Sub { get; }
+        SyncVar<int> PlayerCount_Sub { get; }
     }
 
     public interface ILobbyNetStateStore : ILobbyNetStateSubscribe { }
@@ -117,16 +98,20 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private bool _log = true;
 
         //Networked state
+        /// <summary> synced </summary>
         private readonly SyncVar<LobbyInfo> _lobbyInfo = new(default);
+        /// <summary> synced </summary>
         private readonly SyncDictionary<int, LobbyPlayerState> _playerStates = new();
+        /// <summary> synced </summary>
         private readonly SyncDictionary<int, LobbyTeamInfo> _teamInfos = new();
+        /// <summary> synced </summary>
         private readonly SyncVar<int> _playerCount = new(0);
 
         //Subscriber accessors (Projectors)
-        SyncVar<LobbyInfo> ILobbyNetStateSubscribe.LobbyInfoSync => _lobbyInfo;
-        SyncDictionary<int, LobbyPlayerState> ILobbyNetStateSubscribe.PlayerStatesSync => _playerStates;
-        SyncDictionary<int, LobbyTeamInfo> ILobbyNetStateSubscribe.TeamInfosSync => _teamInfos;
-        SyncVar<int> ILobbyNetStateSubscribe.PlayerCountSync => _playerCount;
+        SyncVar<LobbyInfo> ILobbyNetStateSubscribe.LobbyInfo_Sub => _lobbyInfo;
+        SyncDictionary<int, LobbyPlayerState> ILobbyNetStateSubscribe.PlayerStates_Sub => _playerStates;
+        SyncDictionary<int, LobbyTeamInfo> ILobbyNetStateSubscribe.TeamInfos_Sub => _teamInfos;
+        SyncVar<int> ILobbyNetStateSubscribe.PlayerCount_Sub => _playerCount;
 
         //State Read-only accessors
         public LobbyInfo LobbyInfo => _lobbyInfo.Value;

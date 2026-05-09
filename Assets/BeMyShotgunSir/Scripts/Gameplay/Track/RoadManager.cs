@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
@@ -24,7 +25,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private bool _isInitialized = false;
         private bool _isSeedInitialized = false;
         public static event Action<IRoadManager> OnRoadManagerSpawned;
-        private int _seed = -1;
+        private int _seed = (int)Codes.UnInitialized;
         private bool _isServer;
         private Transform _driver;
         private Transform _firstPlayerTransform;
@@ -95,7 +96,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void PropagateOnCrossroad(CrossroadSegmentInfo crossroadSegmentInfo)
         {
-            Log.DLazy(()=> "Receive crossroad info from TrackGenerator. Type: " + crossroadSegmentInfo.type + "chunkNumber: " + crossroadSegmentInfo.chunkNumber, this, _log);
+            Log.DLazy(() => "Receive crossroad info from TrackGenerator. Type: " + crossroadSegmentInfo.type + "chunkNumber: " + crossroadSegmentInfo.chunkNumber, this, _log);
             OnCrossroadProvided?.Invoke(crossroadSegmentInfo);
         }
 
