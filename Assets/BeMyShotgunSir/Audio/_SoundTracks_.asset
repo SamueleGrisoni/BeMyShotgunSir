@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: _SoundTracks_
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.SOSoundTracks
   <LobbyTrack>k__BackingField: {fileID: 8300000, guid: 8d18fc599cef3874b871f6dedc338e25, type: 3}
+  <LobbyTrackVolume>k__BackingField: 0.1
   <GameTrack>k__BackingField: {fileID: 0}

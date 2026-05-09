@@ -35,7 +35,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             Debug.Assert(_pooler != null, "AudioManager: AudioPooler reference is not assigned in the inspector.", this);
             Debug.Assert(_soundTracks != null, "AudioManager: SOSoundTracks reference is not assigned in the inspector.", this);
             TryGetComponent(out _musicSource);
-            ExecuteAudioRequest(new AudioRequest(_soundTracks.LobbyTrack, 1f).As2D().Looping(), _musicSource);
+            ExecuteAudioRequest(new AudioRequest(_soundTracks.LobbyTrack, _soundTracks.LobbyTrackVolume).As2D().Looping(), _musicSource);
 
             _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
             SubscribeToAudioRequests();
