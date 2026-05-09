@@ -4,6 +4,7 @@ using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
@@ -11,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public interface IDriverController
     {
         void Initialize(RaceNetContext context, TeamNetController teamNetController);
+        void SetName(string name);
         int? TeamId { get; }
         Transform GetMovementTransform();
     }
@@ -19,7 +21,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         //utility
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<IDriverController> OnDriverSpawned;
+        public static event Action<IDriverController, int?> OnDriverSpawned;
 
         //CONTEXT
         private RaceNetContext _raceNetContext;
@@ -34,6 +36,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public IDriverInputConsumer _inputConsumer;
         [SerializeField] private MovementController _movementController;
         public Transform GetMovementTransform() => _movementController != null ? _movementController.transform : null;
+
+        private readonly SyncVar<int?> _syncTeamId = new(null);
+
+        [Server]
+        public void SetTeamId(int? teamId) => _syncTeamId.Value = teamId;
+
+        public void SetName(string name) => transform.name = name;
 
         public void Initialize(RaceNetContext context, TeamNetController teamNetController)
         {
@@ -53,7 +62,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public override void OnStartClient()
         {
             base.OnStartClient();
-            OnDriverSpawned?.Invoke(this);
+            OnDriverSpawned?.Invoke(this, _syncTeamId.Value);
         }
+
     }
 }

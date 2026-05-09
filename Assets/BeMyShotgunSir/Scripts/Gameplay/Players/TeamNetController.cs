@@ -14,8 +14,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     public interface ITeamNetControllerInitializer
     {
         void Initialize(RaceNetContext context, IRoadManager roadManager);
-        void OnDriverSpawned(IDriverController driverController);
-        void OnShotgunSpawned(IShotgunController shotgunController);
+        void OnDriverSpawned(IDriverController driverController, int? driverTeamId);
+        void OnShotgunSpawned(IShotgunController shotgunController, int? shotgunTeamId);
     }
 
     public class TeamNetController : NetworkBehaviour, ITeamNetControllerInitializer
@@ -65,15 +65,52 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             OnTeamSpawned?.Invoke(this);
         }
 
+        public void Initialize(RaceNetContext context, IRoadManager roadManager)
+        {
+            _raceNetContext = context;
+            _inputPublisher = context.InputPublisher;
+            _raceNetController = context.NetController;
+            _lobbyNetContext = context.LobbyNetContext;
+            _lobbyNetStateStore = _lobbyNetContext.NetState;
+            _netState = context.NetState;
+            _roadManager = roadManager;
+            _assignedRole = NetState.PlayerStates[LocalConnection.ClientId].Role;
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
             _syncTeamId.OnChange += TrySetUpTeam;
+            TrySetUpTeam();
         }
 
-        private void TrySetUpTeam(int? oldTeamId, int? newTeamId, bool asServer)
+        public void OnDriverSpawned(IDriverController driverController, int? driverTeamId) => TrySetUpTeam();
+
+        public void OnShotgunSpawned(IShotgunController shotgunController, int? shotgunTeamId) => TrySetUpTeam();
+
+        private void TrySetUpTeam()
         {
-            if (_setUpDone || _syncTeamId.Value == null || _driverController == null || _shotgunController == null)
+            TryResolveSpawnedMembers();
+            TrySetUpTeam(null, null, false);
+        }
+
+        private void TryResolveSpawnedMembers()
+        {
+            if (_driverController == null)
+                _driverController = GetComponentInChildren<DriverController>(true);
+
+            if (_shotgunController == null)
+                _shotgunController = GetComponentInChildren<ShotgunController>(true);
+        }
+
+        private void TrySetUpTeam(int? _, int? __, bool ___)
+        {
+            if (_syncTeamId.Value is not int teamId)
+                return;
+
+            name = $"Team {teamId}, LocalConnId: {LocalConnection.ClientId}";
+
+            if (_setUpDone || _driverController == null || _shotgunController == null)
                 return;
 
             if (!_lobbyNetStateStore.TryGetPlayersIDs(_syncTeamId.Value, out _driverConnectionId, out _shotgunConnectionId))
@@ -84,11 +121,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
             _driverController.Initialize(_raceNetContext, this);
             _shotgunController.Initialize(_raceNetContext, this);
-            _roadManager.SetDriver(_driverController.GetMovementTransform());
+            _driverController.SetName($"Driver, TeamId: {_syncTeamId.Value}, DriverId: {_driverConnectionId}");
+            _shotgunController.SetName($"Shotgun, TeamId: {_syncTeamId.Value}, ShotgunId: {_shotgunConnectionId}");
 
-            // Enable camera for local player only if member of the team
+            // for local player only if member of the team
             if (LocalConnection.ClientId == _driverConnectionId || LocalConnection.ClientId == _shotgunConnectionId)
             {
+                _roadManager.SetDriver(_driverController.GetMovementTransform());
+                Log.DLazy(() => $"Initializing team {teamId} for local player with ConnectionId: {LocalConnection.ClientId}. Driver ConnectionId: {_driverConnectionId}, Shotgun ConnectionId: {_shotgunConnectionId}. Transform: {_driverController.GetMovementTransform().name}", this, _log);
                 CinemachineCamera cam = GetComponentInChildren<CinemachineCamera>();
                 if (cam == null)
                 {
@@ -100,18 +140,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
             _syncTeamId.OnChange -= TrySetUpTeam;
             _setUpDone = true;
-        }
-
-        public void Initialize(RaceNetContext context, IRoadManager roadManager)
-        {
-            _raceNetContext = context;
-            _inputPublisher = context.InputPublisher;
-            _raceNetController = context.NetController;
-            _lobbyNetContext = context.LobbyNetContext;
-            _lobbyNetStateStore = _lobbyNetContext.NetState;
-            _netState = context.NetState;
-            _roadManager = roadManager;
-            _assignedRole = NetState.PlayerStates[LocalConnection.ClientId].Role;
         }
 
         public override void OnStopNetwork()
@@ -126,18 +154,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         {
             DriverController.OnDriverSpawned -= OnDriverSpawned;
             ShotgunController.OnShotgunSpawned -= OnShotgunSpawned;
-        }
-
-        public void OnDriverSpawned(IDriverController driverController)
-        {
-            _driverController = driverController;
-            TrySetUpTeam(0, 0, false);
-        }
-
-        public void OnShotgunSpawned(IShotgunController shotgunController)
-        {
-            _shotgunController = shotgunController;
-            TrySetUpTeam(0, 0, false);
         }
     }
 }

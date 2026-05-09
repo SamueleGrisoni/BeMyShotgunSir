@@ -70,8 +70,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
         [SerializeField] private TeamNetController _teamPrefab;
-        [SerializeField] private NetworkObject _driverPrefab;
-        [SerializeField] private NetworkObject _shotgunPrefab;
+        [SerializeField] private DriverController _driverPrefab;
+        [SerializeField] private ShotgunController _shotgunPrefab;
 
         private void Awake()
         {
@@ -213,15 +213,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
                         //MEMO I could move the setup logic into the team net controller changing ownership after spawn
                         //driver setup
-                        NetworkObject player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
+                        DriverController player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
                         player.name = "Driver Team " + teamState.TeamId + " Player " + teamData.DriverConnectionId;
-                        player.SetParent(team);
+                        player.SetTeamId(teamState.TeamId);
+                        player.NetworkObject.SetParent(team);
                         Spawn(player, _lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
 
                         //Shotgun setup
-                        NetworkObject shotgun = Instantiate(_shotgunPrefab);
+                        ShotgunController shotgun = Instantiate(_shotgunPrefab);
                         shotgun.name = "Shotgun Team " + teamState.TeamId + " Player " + teamData.ShotgunConnectionId;
-                        shotgun.SetParent(player);
+                        shotgun.SetTeamId(teamState.TeamId);
+                        shotgun.NetworkObject.SetParent(player);
                         Spawn(shotgun, _lobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection);
 
                         //MEMO this could be delegated to the team net controller (passing the reference to the server dictionary)
