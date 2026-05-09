@@ -52,7 +52,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             foreach (PolygonSpawnArea polygonSpawnArea in chunk.AreaGroup[itemInfo.areaGroupIndex].ItemSpawnPoints)
             {
                 //Debug.Log("Spawning power-up: " + item.name + " in area group: " + itemInfo.areaGroupIndex);
-                NetworkObject nob = Instantiate(item, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation, polygonSpawnArea.transform);
+                NetworkObject nob = Instantiate(item, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation);
                 Spawn(nob);
             }
         }
