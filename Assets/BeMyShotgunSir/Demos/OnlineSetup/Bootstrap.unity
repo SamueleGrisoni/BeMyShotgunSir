@@ -577,8 +577,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a9188bf8b536e428c74d46e5947127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GlobalManager
-  _currentAppFlow: 0
-  _connectionFlowState: 0
   _lobbyManagerPrefab: {fileID: 8491619145890554402, guid: 2a95f435221185447af7158102adc114, type: 3}
 --- !u!114 &1045515489
 MonoBehaviour:
@@ -732,11 +730,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023376e00875623468f98046056dc64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GameServices
-  <MainCamera>k__BackingField: {fileID: 0}
-  <EventSystem>k__BackingField: {fileID: 0}
-  <AudioListener>k__BackingField: {fileID: 0}
-  <GlobalVolume>k__BackingField: {fileID: 0}
-  _sceneCoordinator: {fileID: 0}
+  <MainCamera>k__BackingField: {fileID: 899024544}
+  <EventSystem>k__BackingField: {fileID: 1905700939}
+  <AudioListener>k__BackingField: {fileID: 899024543}
+  <GlobalVolume>k__BackingField: {fileID: 192766371}
+  _sceneCoordinator: {fileID: 2006144849}
   <ConnectionManager>k__BackingField: {fileID: 1045515488}
   <Channels>k__BackingField: {fileID: 11400000, guid: c72e358ecdcd8a64181a1f77ec4a2e86, type: 2}
   <AudioManager>k__BackingField: {fileID: 565849611}

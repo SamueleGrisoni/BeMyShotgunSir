@@ -210,7 +210,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     if (otherDriver != null && !otherDriver.IsBoosting()) // TODO qui puoi mettere che se hai lo scudo non ricevi la collisione aumentata
                     {
                         repulsionForce *= (float)TimeManager.TickDelta;
-                        Log.DLazy(() => "Trovato l'altro driver controller and is boosting", this);
+                        // Log.DLazy(() => "Trovato l'altro driver controller and is boosting", this); //DANGER
 
                     }
                 }
