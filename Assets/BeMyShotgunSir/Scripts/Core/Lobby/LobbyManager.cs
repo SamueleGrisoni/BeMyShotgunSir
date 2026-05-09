@@ -62,13 +62,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         private void OnEnable()
         {
+            LobbySceneBootstrapper.OnLobbyBootStrapperAwakened += OnLobbyBootStrapperAwakened;
             RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
             if (_netController != null)
                 _netController.OnInitialized += TryInitialize;
-            FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
         }
-
-        private void OnRaceManagerSpawned(IRaceManagerInitializer initializer) => initializer.Initialize(ViewModel, new LobbyNetContext(this, _netController, _netState, _projector));
 
         private void TryInitialize()
         {
@@ -81,16 +79,16 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             LoadLobbyScene();
         }
+        private void OnLobbyBootStrapperAwakened(ILobbySceneBootstrapperInitializer initializer) => initializer.Initialize(this);
+
 
         [Server]
         private void LoadLobbyScene()
         {
-            if (!IsServerInitialized) //server instructions below
+            if (!IsServerInitialized)
                 return;
-
             GameServices.Instance.SceneCoordinator.LoadLobbyScene();
         }
-
 
         public void BindLobby_Initial(ILobbyBindTarget[] targets)
         {
@@ -103,11 +101,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _binder.ExecuteInitialBind(targets);
         }
 
-        private void OnSceneInitialized(SceneName name)
-        {
-            if (name != SceneName.Lobby)
-                return;
-        }
+        private void OnRaceManagerSpawned(IRaceManagerInitializer initializer) => initializer.Initialize(ViewModel, new LobbyNetContext(this, _netController, _netState, _projector));
 
         public override void OnStopNetwork()
         {
@@ -122,9 +116,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         private void UnsubscribeEvents()
         {
+            LobbySceneBootstrapper.OnLobbyBootStrapperAwakened -= OnLobbyBootStrapperAwakened;
+            RaceManager.OnRaceManagerSpawned -= OnRaceManagerSpawned;
             if (_netController != null)
                 _netController.OnInitialized -= TryInitialize;
-            FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
         }
     }
 }

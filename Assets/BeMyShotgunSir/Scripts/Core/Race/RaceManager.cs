@@ -78,11 +78,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void OnEnable()
         {
-            FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
+            RaceSceneBootstrapper.OnRaceBootStrapperAwakened += OnRaceBootStrapperAwakened;
+            RaceSceneBootstrapper.OnRaceSceneInitialized += OnRaceSceneInitialized;
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
             TeamNetController.OnTeamSpawned += OnTeamSpawned;
         }
-
 
         public override void OnStartNetwork()
         {
@@ -112,6 +112,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnRaceManagerInitialized?.Invoke(this);
         }
 
+        private void OnRaceBootStrapperAwakened(IRaceSceneBootstrapperInitializer initializer) => initializer.Initialize(this);
+
         [Server]
         private void LoadRaceScene()
         {
@@ -136,10 +138,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _binder.ExecuteInitialBind(targets);
         }
 
-        private void OnSceneInitialized(SceneName name)
+        private void OnRaceSceneInitialized()
         {
-            if (name != SceneName.Race)
-                return;
             if (IsServerInitialized)
                 _netController.InitRace();
         }
@@ -158,7 +158,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             initializer.Initialize(raceContext, _roadManager);
             BindRace_Final(_bindTargets);
         }
-
 
         private void BindRace_Final(IRaceBindTarget[] targets)
         {
@@ -190,7 +189,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void UnsubscribeEvents()
         {
-            FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
+            RaceSceneBootstrapper.OnRaceBootStrapperAwakened -= OnRaceBootStrapperAwakened;
+            RaceSceneBootstrapper.OnRaceSceneInitialized -= OnRaceSceneInitialized;
             RoadManager.OnRoadManagerSpawned -= OnRoadManagerSpawned;
         }
 

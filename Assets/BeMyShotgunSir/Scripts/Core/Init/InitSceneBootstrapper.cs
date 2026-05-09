@@ -4,7 +4,7 @@ namespace BeMyShotgunSir.Scripts.Core.Init
 {
     public class InitSceneBootstrapper : SceneBootstrapper
     {
-        protected override void Initialize()
+        protected override void Bootstrap()
         {
             if (SceneManager.GetSceneByName(SceneName.Lobby.ToString()).isLoaded)
                 SceneManager.UnloadSceneAsync(SceneName.Lobby.ToString());

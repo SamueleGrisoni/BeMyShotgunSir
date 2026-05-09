@@ -4,39 +4,40 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
-    public class RaceSceneBootstrapper : SceneBootstrapper
+    public interface IRaceSceneBootstrapperInitializer
     {
-        /// <summary>
-        /// Avoid subscribing to this event directly. Instead, subscribe to FishNetSceneAdapter.OnSceneInitialized and check for SceneName to determine when a scene is initialized.
-        /// </summary>
+        void Initialize(IRaceManager_Bootstrapper raceManager);
+    }
+    public class RaceSceneBootstrapper : SceneBootstrapper, IRaceSceneBootstrapperInitializer
+    {
+        private bool _isInitialized = false;
+        public static event Action<IRaceSceneBootstrapperInitializer> OnRaceBootStrapperAwakened;
         public static event Action OnRaceSceneInitialized;
 
         [SerializeField] private InterfaceSerializer<RaceBindTarget, IRaceBindTarget>[] _bindTargets;
         private IRaceBindTarget[] _coercedTargets;
+        private IRaceManager_Bootstrapper _raceManager;
 
-        private void OnDisable() =>
-            RaceManager.OnRaceManagerInitialized -= OnRaceManagerReady;
+        private void Awake() =>
+                 OnRaceBootStrapperAwakened?.Invoke(this);
 
-        private void Bind(IRaceManager_Bootstrapper manager)
+        private void OnEnable()
         {
-            if (_coercedTargets == null)
-            {
-                Log.ELazy(() => "Coerced bind targets are null. Cannot bind race.", this);
-                return;
-            }
-            manager.BindRace_Initial(_coercedTargets);
-            OnRaceSceneInitialized?.Invoke();
+            if (!_isInitialized)
+                RaceManager.OnRaceManagerInitialized += Initialize;
         }
 
-        private void OnRaceManagerReady(IRaceManager manager)
+        public void Initialize(IRaceManager_Bootstrapper raceManager)
         {
-            if (manager is not IRaceManager_Bootstrapper manager_Bootstrapper)
+            if (_isInitialized)
                 return;
-            TryInitialize();
-            Bind(manager_Bootstrapper);
+            _raceManager = raceManager;
+            Bootstrap();
+            _isInitialized = true;
+            RaceManager.OnRaceManagerInitialized -= Initialize;
         }
 
-        protected override void Initialize()
+        protected override void Bootstrap()
         {
             _coercedTargets = new IRaceBindTarget[_bindTargets.Length];
             for (int i = 0; i < _bindTargets.Length; i++)
@@ -48,13 +49,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 }
                 _coercedTargets[i] = _bindTargets[i].Interface;
             }
-            _suppressAutoInitialize = true;
+            Bind();
+        }
 
-            var raceManager = GameServices.Instance.RaceManager as IRaceManager_Bootstrapper;
-            if (raceManager == null)
-                RaceManager.OnRaceManagerInitialized += OnRaceManagerReady;
-            else
-                Bind(raceManager);
+        private void Bind()
+        {
+            if (_coercedTargets == null)
+            {
+                Log.ELazy(() => "Coerced bind targets are null. Cannot bind race.", this);
+                return;
+            }
+            _raceManager.BindRace_Initial(_coercedTargets);
+            OnRaceSceneInitialized?.Invoke();
         }
     }
 }

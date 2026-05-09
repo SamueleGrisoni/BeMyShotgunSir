@@ -4,43 +4,41 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
-    public class LobbySceneBootstrapper : SceneBootstrapper
+    public interface ILobbySceneBootstrapperInitializer
     {
-        /// <summary>
-        /// Avoid subscribing to this event directly. Instead, subscribe to FishNetSceneAdapter.OnSceneInitialized and check for SceneName to determine when a scene is initialized.
-        /// </summary>
+        void Initialize(ILobbyManager_Bootstrapper lobbyManager);
+    }
+
+    public class LobbySceneBootstrapper : SceneBootstrapper, ILobbySceneBootstrapperInitializer
+    {
+        private bool _isInitialized = false;
+        public static event Action<ILobbySceneBootstrapperInitializer> OnLobbyBootStrapperAwakened;
         public static event Action OnLobbySceneInitialized;
 
         [SerializeField] private InterfaceSerializer<LobbyBindTarget, ILobbyBindTarget>[] _bindTargets;
         private ILobbyBindTarget[] _coercedTargets;
+        private ILobbyManager_Bootstrapper _lobbyManager;
 
-        private void OnDisable() =>
-            LobbyManager.OnLobbyManagerInitialized -= OnLobbyManagerReady;
+        private void Awake() =>
+             OnLobbyBootStrapperAwakened?.Invoke(this);
 
-        private void Bind(ILobbyManager_Bootstrapper manager)
+        private void OnEnable()
         {
-            if (_coercedTargets == null)
-            {
-                Log.ELazy(() => "Coerced bind targets are null. Cannot bind lobby.", this);
-                return;
-            }
-            manager.BindLobby_Initial(_coercedTargets);
-            OnLobbySceneInitialized?.Invoke();
+            if (!_isInitialized)
+                LobbyManager.OnLobbyManagerInitialized += Initialize;
         }
 
-        private void OnLobbyManagerReady(ILobbyManager manager)
+        public void Initialize(ILobbyManager_Bootstrapper manager)
         {
-            if (manager == null || manager is not ILobbyManager_Bootstrapper manager_Bootstrapper)
-            {
-                Log.ELazy(() => "LobbyManager reference is not of type ILobbyManager_Bootstrapper. Cannot bind lobby.", this);
+            if (_isInitialized)
                 return;
-            }
-
-            TryInitialize();
-            Bind(manager_Bootstrapper);
+            _lobbyManager = manager;
+            Bootstrap();
+            _isInitialized = true;
+            LobbyManager.OnLobbyManagerInitialized -= Initialize;
         }
 
-        protected override void Initialize()
+        protected override void Bootstrap()
         {
             UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.Init.ToString());
 
@@ -54,13 +52,18 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 }
                 _coercedTargets[i] = _bindTargets[i].Interface;
             }
-            _suppressAutoInitialize = true;
+            Bind();
+        }
 
-            var lobbyManager = GameServices.Instance.LobbyManager as ILobbyManager_Bootstrapper;
-            if (lobbyManager == null)
-                LobbyManager.OnLobbyManagerInitialized += OnLobbyManagerReady;
-            else
-                Bind(lobbyManager);
+        private void Bind()
+        {
+            if (_coercedTargets == null)
+            {
+                Log.ELazy(() => "Coerced bind targets are null. Cannot bind lobby.", this);
+                return;
+            }
+            _lobbyManager.BindLobby_Initial(_coercedTargets);
+            OnLobbySceneInitialized?.Invoke();
         }
     }
 }
