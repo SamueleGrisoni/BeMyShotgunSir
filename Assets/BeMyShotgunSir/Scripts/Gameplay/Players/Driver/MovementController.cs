@@ -135,7 +135,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentLinearVelocity = Vector3.zero;
         }
 
-        private void Oestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
+        private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
         public override void OnStartNetwork()
         {
@@ -153,7 +153,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private ReplicateData CreateReplicateData()
         {
-            if (!base.IsOwner)
+            if (!IsOwner)
                 return default;
             return new ReplicateData(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting);
         }
@@ -166,7 +166,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             Vector3 repulsionForce = Vector3.zero;
             Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
-            foreach (var hitCollider in hitColliders)
+            foreach (Collider hitCollider in hitColliders)
             {
                 if (hitCollider.transform.root == _parent.root) continue;
 
@@ -178,7 +178,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
                     forwardDir.y = 0;
 
-                    Vector3 lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+                    var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
                     //Debug.Log($"Lateral push direction: {lateralPushDirection}");
 
                     float pushStrength = 1f - (distance / _bumpRadius);
@@ -190,7 +190,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
                         Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush*0.5f, Color.red, 0.5f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
                         //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
                     }
 
@@ -314,7 +314,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 {
                     float recoveryDrag = 15f;
                     Vector3 targetVel = currentHorizontalVel.normalized * maxSpeed;
-                    Vector3 smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
+                    var smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
                     predictedVelocity = new Vector3(smoothedVel.x, predictedVelocity.y, smoothedVel.z);
                 }
                 else

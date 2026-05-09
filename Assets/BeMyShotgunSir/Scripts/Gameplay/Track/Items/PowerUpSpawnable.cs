@@ -29,7 +29,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         public override void OnStartServer()
         {
             base.OnStartServer();
-            OnPowerUpSpawned?.Invoke(null);
+            OnPowerUpSpawned?.Invoke(this);
         }
 
         private void Start()
@@ -75,7 +75,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             {
                 if (other.TryGetComponent(out IDriverController driverController))
                 {
-                    int teamId = driverController.GetTeam();
+                    int teamId = driverController.TeamId;
                     _netController.AddPowerUpToTeam(teamId, PowerUpType);
                     NetworkObject.Despawn();
                 }

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Gameplay.Players;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
-
-// using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
@@ -54,7 +53,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private bool _isInitialized = false;
         private int _spawnedTeams = 0;
-        public ILobbyNetStateRead LobbyNetState;
+        private LobbyNetStateStore _lobbyNetState;
         private RaceNetStateStore _netState;
         public IRaceNetStateRead NetState => _netState;
         private RaceClientProjector _clientProjector;
@@ -70,7 +69,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
         private float _leaderboardUpdateTimer = 0f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
-        [SerializeField] private NetworkObject _teamPrefab;
+        [SerializeField] private TeamNetController _teamPrefab;
         [SerializeField] private NetworkObject _driverPrefab;
         [SerializeField] private NetworkObject _shotgunPrefab;
 
@@ -99,8 +98,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void UnsubscribeEvents() =>
             RoadManager.OnRoadManagerSpawned -= OnRoadManagerSpawned;
 
-        public void SetLobbyNetState(ILobbyNetStateRead lobbyNetState) =>
-            LobbyNetState = lobbyNetState;
+        public void SetLobbyNetState(LobbyNetStateStore lobbyNetState) =>
+            _lobbyNetState = lobbyNetState;
 
         public void OnRefresh()
         {
@@ -244,39 +243,34 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     //spawn player when both driver and shotgun of the team are ready with track and player not spawned yet
                     if (NetState.PlayerStates[teamData.DriverConnectionId].IsTrackReady &&
                      NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady &&
-                      !NetState.TeamData[playerState.TeamId].IsPlayerSpawned)
+                      !NetState.TeamData[playerState.TeamId].IsTeamSpawned)
                     {
 
-                        NetworkObject team = Instantiate(_teamPrefab);
-                        Spawn(team.gameObject, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
+                        TeamNetController team = Instantiate(_teamPrefab);
+                        Spawn(team, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
+                        team.SetTeamId(playerState.TeamId);
 
+                        //MEMO I could move the setup logic into the team net controller changing ownership after spawn
+                        //driver setup
                         NetworkObject player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
-                        Spawn(player.gameObject, LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
                         player.SetParent(team);
+                        Spawn(player, _lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
 
                         //Shotgun setup
                         NetworkObject shotgun = Instantiate(_shotgunPrefab);
-                        // Ensure shotgun is a root object when spawned. Position it near the driver for visuals.
-                        Spawn(shotgun.gameObject, LobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
-                        // Set network parent after spawn so FishNet can move the root object between scenes.
                         shotgun.SetParent(player);
+                        Spawn(shotgun, _lobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection);
 
+                        //MEMO this could be delegated to the team net controller (passing the reference to the server dictionary)
+                        _teamProgress.Add(playerState.TeamId, new TeamProgress(player.GetComponentInChildren<DriverController>().transform, 0f));
 
-                        _teamProgress.Add(playerState.TeamId, new TeamProgress(player.GetComponentInChildren<MovingDriver>().transform, 0f));
-
-                        _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], player: player));
-
-                        SetUpTeam_TargetRpc(LobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection, team, RaceRole.Driver);
-                        SetUpTeam_TargetRpc(LobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection, team, RaceRole.Shotgun);
-
-                        _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], isPlayerSpawned: true));
-
+                        _netState.SetTeamData(playerState.TeamId, new RaceTeamData(NetState.TeamData[playerState.TeamId], team: team, isTeamSpawned: true));
                         _spawnedTeams++;
                         return true;
                     }
                     else
                     {
-                        Log.DLazy(() => $"Team {playerState.TeamId} is not ready to spawn. Driver track ready: {NetState.PlayerStates[teamData.DriverConnectionId].IsTrackReady}, Shotgun track ready: {NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady}, IsPlayerSpawned: {NetState.TeamData[playerState.TeamId].IsPlayerSpawned}", this, _log);
+                        Log.DLazy(() => $"Team {playerState.TeamId} is not ready to spawn. Driver track ready: {NetState.PlayerStates[teamData.DriverConnectionId].IsTrackReady}, Shotgun track ready: {NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady}, IsTeamSpawned: {NetState.TeamData[playerState.TeamId].IsTeamSpawned}", this, _log);
                         return false;
                     }
                 }
@@ -288,13 +282,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 }
             }
             return true;
-        }
-
-        [TargetRpc]
-        private void SetUpTeam_TargetRpc(NetworkConnection connection, NetworkObject team, RaceRole role)
-        {
-            Log.DLazy(() => $"Setting up team {connection.ClientId} as {role}", this, _log);
-            _clientProjector.SetUpTeam_Response(connection.ClientId, team, role);
         }
 
         [ServerRpc(RequireOwnership = false)]

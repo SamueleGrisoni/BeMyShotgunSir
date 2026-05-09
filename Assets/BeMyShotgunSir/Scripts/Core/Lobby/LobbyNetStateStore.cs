@@ -129,10 +129,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         SyncVar<int> ILobbyNetStateSubscribe.PlayerCountSync => _playerCount;
 
         //State Read-only accessors
-        LobbyInfo ILobbyNetStateRead.LobbyInfo => _lobbyInfo.Value;
-        IReadOnlyDictionary<int, LobbyPlayerState> ILobbyNetStateRead.PlayerStates => _playerStates;
-        IReadOnlyDictionary<int, LobbyTeamInfo> ILobbyNetStateRead.TeamInfos => _teamInfos;
-        int ILobbyNetStateRead.PlayerCount => _playerCount.Value;
+        public LobbyInfo LobbyInfo => _lobbyInfo.Value;
+        public IReadOnlyDictionary<int, LobbyPlayerState> PlayerStates => _playerStates;
+        public IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos => _teamInfos;
+        public int PlayerCount => _playerCount.Value;
 
         [Server]
         public void InitSyncValues()
@@ -210,5 +210,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
 
         public bool ContainsPlayer(int clientId) => _playerStates.ContainsKey(clientId);
+
+        public bool TryGetPlayersIDs(int teamId, out int driverConnectionId, out int shotgunConnectionId)
+        {
+            driverConnectionId = (int)Codes.UnInitialized;
+            shotgunConnectionId = (int)Codes.UnInitialized;
+
+            if (!_teamInfos.TryGetValue(teamId, out LobbyTeamInfo teamInfo))
+                return false;
+            driverConnectionId = teamInfo.DriverConnectionId;
+            shotgunConnectionId = teamInfo.ShotgunConnectionId;
+            return true;
+        }
     }
 }

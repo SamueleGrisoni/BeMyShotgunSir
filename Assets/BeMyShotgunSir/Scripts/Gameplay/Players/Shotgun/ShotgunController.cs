@@ -1,43 +1,44 @@
 using System;
+using BeMyShotgunSir.Scripts.Core;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
 {
     public interface IShotgunController
     {
-        void SetInputConsumer(IShotgunInputConsumer inputConsumer);
-        void SetTeam(int teamId);
+        void InitializeShotgun(RaceNetContext context, TeamNetController teamNetController);
+        int TeamId { get; }
     }
 
     public class ShotgunController : NetworkBehaviour, IShotgunController
     {
+        private bool _log = true;
+        private bool _isInitialized = false;
         public static event Action<IShotgunController> OnShotgunSpawned;
         public IShotgunInputConsumer _inputConsumer;
-        private int _teamId = -999;
-
-        public void SetInputConsumer(IShotgunInputConsumer inputConsumer)
-        {
-            if (_inputConsumer == null)
-                _inputConsumer = inputConsumer;
-        }
-        public void SetTeam(int teamId)
-        {
-            if (_teamId != -999)
-                return;
-            _teamId = teamId;
-        }
-
-        private void Start()
-        {
-            _teamId = -999;
-        }
+        private TeamNetController _teamNetController;
+        public int TeamId => _teamNetController != null ? _teamNetController.TeamId : (int)Codes.UnInitialized;
 
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (IsOwner)
-                OnShotgunSpawned?.Invoke(this);
+            OnShotgunSpawned?.Invoke(this);
+        }
+
+        public void InitializeShotgun(RaceNetContext context, TeamNetController teamNetController)
+        {
+            if (_isInitialized)
+                return;
+
+            if (_inputConsumer == null)
+                _inputConsumer = context.InputPublisher;
+            _teamNetController = teamNetController;
+
+            _isInitialized = true;
+            Log.DLazy(() => $"ShotgunController initialized with teamId {_teamNetController.TeamId}.", this);
         }
     }
 }

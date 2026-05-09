@@ -15,7 +15,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public interface IRaceManagerInitializer
     {
-        void Initialize(LobbyViewModel viewModel, LobbyNetStateStore netState);
+        void Initialize(LobbyViewModel viewModel, LobbyNetContext context);
     }
 
     public interface IRaceManager_Bootstrapper : IManager_Bootstrapper
@@ -41,7 +41,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public static event Action OnRaceManagerDespawned;
 
         private LobbyViewModel _lobbyViewModel;
-        private ILobbyNetStateRead _lobbyNetStateStore;
+        private LobbyNetStateStore _lobbyNetStateStore;
         private RaceBinder _binder;
         private RaceNetStateStore _netState;
         public IRaceNetStateRead NetState => _netState;
@@ -90,7 +90,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnRaceManagerSpawned.Invoke(this);
         }
 
-        public void Initialize(LobbyViewModel viewModel, LobbyNetStateStore netState)
+        public void Initialize(LobbyViewModel viewModel, LobbyNetContext context)
         {
             if (_lobbyViewModel != null || _lobbyNetStateStore != null)
             {
@@ -99,7 +99,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             _lobbyViewModel = viewModel;
             _viewModel.InitData(_lobbyViewModel);
-            _lobbyNetStateStore = netState;
+            _lobbyNetStateStore = context.NetState;
             _netController.SetLobbyNetState(_lobbyNetStateStore);
             _projector.Init(_viewModel);
             _raceCommand.GetInitSnapshot_Request(); //DANGER
@@ -130,7 +130,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _bindTargets = targets;
             if (targets == null || targets.Length == 0)
             {
-                Log.ELazy(() => $"No bind targets provided for initial bind.", this);
+                Log.WLazy(() => $"No bind targets provided for initial bind.", this);
                 return;
             }
             _binder.ExecuteInitialBind(targets);
@@ -152,10 +152,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void OnTeamSpawned(ITeamNetControllerInitializer initializer)
         {
+            var lobbyNetContext = new LobbyNetContext(null, null, _lobbyNetStateStore, null);
             _inputPublisher = new InputPublisher();
-            initializer.Initialize(new TNCInitContext(_inputPublisher,
-                 _netState,
-                 _powerUpsNetController));
+            var raceContext = new RaceNetContext(lobbyNetContext, this, _netController, _netState, _projector, _powerUpsNetController, _inputPublisher);
+            initializer.Initialize(raceContext, _roadManager);
             BindRace_Final(_bindTargets);
         }
 
@@ -172,7 +172,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _binder.UpdateFinalBindSource(this);
             if (targets == null || targets.Length == 0)
             {
-                Log.ELazy(() => $"No bind targets provided for final bind.", this);
+                Log.WLazy(() => $"No bind targets provided for final bind.", this);
                 return;
             }
             _binder.ExecuteFinalBind(targets);

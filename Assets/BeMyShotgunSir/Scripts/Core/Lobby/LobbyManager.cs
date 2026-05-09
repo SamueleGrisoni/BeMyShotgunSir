@@ -34,41 +34,41 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         //binding
         private LobbyBinder _binder;
-        private LobbyNetController _lobbyNetController;
+        private LobbyNetController _netController;
         private ILobbyBindTarget[] _bindTargets;
         private LobbyCommand _lobbyCommand;
         private LobbyClientProjector _projector;
         private LobbyNetStateStore _netState;
-        public ILobbyNetStateRead NetState => _lobbyNetController != null ? _lobbyNetController.NetState : null;
+        public ILobbyNetStateRead NetState => _netController != null ? _netController.NetState : null;
         public LobbyViewModel ViewModel { get; private set; }
         LobbyCommand ILobbyInitialBindSource.Command => _lobbyCommand;
         LobbyViewModel ILobbyInitialBindSource.ViewModel => ViewModel;
 
         private void Awake()
         {
-            TryGetComponent(out _lobbyNetController);
+            TryGetComponent(out _netController);
             TryGetComponent(out _netState);
             TryGetComponent(out _projector);
 
-            if (_lobbyNetController == null || _netState == null || _projector == null)
+            if (_netController == null || _netState == null || _projector == null)
                 Log.ELazy(() => "LobbyManager requires LobbyNetController, LobbyNetStateStore and LobbyClientProjector on the same GameObject.", this);
 
             ViewModel = new LobbyViewModel();
             ViewModel.InitData();
             _projector.Init(ViewModel);
-            _lobbyCommand = new LobbyCommand(_lobbyNetController);
+            _lobbyCommand = new LobbyCommand(_netController);
             _binder = new LobbyBinder(this);
         }
 
         private void OnEnable()
         {
             RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
-            if (_lobbyNetController != null)
-                _lobbyNetController.OnInitialized += TryInitialize;
+            if (_netController != null)
+                _netController.OnInitialized += TryInitialize;
             FishNetSceneAdapter.OnSceneInitialized += OnSceneInitialized;
         }
 
-        private void OnRaceManagerSpawned(IRaceManagerInitializer initializer) => initializer.Initialize(ViewModel, _netState);
+        private void OnRaceManagerSpawned(IRaceManagerInitializer initializer) => initializer.Initialize(ViewModel, new LobbyNetContext(this, _netController, _netState, _projector));
 
         private void TryInitialize()
         {
@@ -122,8 +122,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         private void UnsubscribeEvents()
         {
-            if (_lobbyNetController != null)
-                _lobbyNetController.OnInitialized -= TryInitialize;
+            if (_netController != null)
+                _netController.OnInitialized -= TryInitialize;
             FishNetSceneAdapter.OnSceneInitialized -= OnSceneInitialized;
         }
     }

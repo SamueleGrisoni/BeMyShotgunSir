@@ -1,58 +1,118 @@
 using System;
+using BeMyShotgunSir.Scripts.Core;
+using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
-using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using Unity.Cinemachine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
 {
     public interface ITeamNetControllerInitializer
     {
-        void Initialize(TNCInitContext initContext);
-        void InitializeDriver(IDriverController driverController);
-        void InitializeShotgun(IShotgunController shotgunController);
-    }
-    public class TNCInitContext
-    {
-        public PowerUpsNetController PowerUpsNetController { get; }
-        public InputPublisher InputPublisher { get; }
-        public IRaceNetStateRead RaceNetStateRead { get; }
-
-        public TNCInitContext(InputPublisher inputPublisher, IRaceNetStateRead raceNetStateRead, PowerUpsNetController powerUpsNetController)
-        {
-            InputPublisher = inputPublisher;
-            RaceNetStateRead = raceNetStateRead;
-            PowerUpsNetController = powerUpsNetController;
-        }
+        void Initialize(RaceNetContext context, IRoadManager roadManager);
+        void OnDriverSpawned(IDriverController driverController);
+        void OnShotgunSpawned(IShotgunController shotgunController);
     }
 
     public class TeamNetController : NetworkBehaviour, ITeamNetControllerInitializer
     {
+        //utility
         private bool _log = true;
-        private bool _isInitialized = false;
+        private bool _setUpDone = false;
         public static event Action<ITeamNetControllerInitializer> OnTeamSpawned;
-        private int _teamId = -999;
+
+        //CONTEXT
+        private RaceNetContext _raceNetContext;
+        private IRaceNetController _raceNetController;
+        private LobbyNetContext _lobbyNetContext;
+        private LobbyNetStateStore _lobbyNetStateStore;
+        private RaceNetStateStore _netState;
+        private InputPublisher _inputPublisher;
+        public IRaceNetStateRead NetState => _netState;
+
+        //Specific
+        private IRoadManager _roadManager;
+        public int TeamId => _syncTeamId.Value;
+        private int _driverConnectionId = (int)Codes.UnInitialized;
+        private int _shotgunConnectionId = (int)Codes.UnInitialized;
         private IDriverController _driverController;
         private IShotgunController _shotgunController;
-        private InputPublisher _inputPublisher;
         private RaceRole _assignedRole;
+        private event Action OnMemberSetUpComplete;
 
-        private void Awake() =>
-            _teamId = -999;
+        private readonly SyncVar<int> _syncTeamId = new((int)Codes.UnInitialized);
 
         private void OnEnable()
         {
-            DriverController.OnDriverSpawned += InitializeDriver;
-            ShotgunController.OnShotgunSpawned += InitializeShotgun;
+            DriverController.OnDriverSpawned += OnDriverSpawned;
+            ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
+        }
+
+        [Server]
+        public void SetTeamId(int teamId)
+        {
+            _syncTeamId.Value = teamId;
+            Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
         }
 
         public override void OnStartNetwork()
         {
-
             base.OnStartNetwork();
             OnTeamSpawned?.Invoke(this);
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            _syncTeamId.OnChange += TrySetUpTeam;
+        }
+
+        private void TrySetUpTeam(int oldTeamId, int newTeamId, bool asServer)
+        {
+            if (_setUpDone || _syncTeamId.Value == (int)Codes.UnInitialized || _driverController == null || _shotgunController == null)
+                return;
+
+            if (!_lobbyNetStateStore.TryGetPlayersIDs(_syncTeamId.Value, out _driverConnectionId, out _shotgunConnectionId))
+            {
+                Log.ELazy(() => $"Failed to auto-initialize TeamNetController for ConnectionId: {LocalConnection.ClientId}. No team or player IDs found with team ID {_syncTeamId.Value}.", this, _log);
+                return;
+            }
+
+            _driverController.InitializeDriver(_raceNetContext, this);
+            _shotgunController.InitializeShotgun(_raceNetContext, this);
+            _roadManager.SetDriver(_driverController.GetTransform());
+
+            // Enable camera for local player only if member of the team
+            if (LocalConnection.ClientId == _driverConnectionId || LocalConnection.ClientId == _shotgunConnectionId)
+            {
+                CinemachineCamera cam = GetComponentInChildren<CinemachineCamera>();
+                if (cam == null)
+                {
+                    Log.WLazy(() => $"No CinemachineCamera found in children of TeamNetController for team {TeamId}.", this);
+                    return;
+                }
+                cam.enabled = true;
+            }
+
+            _syncTeamId.OnChange -= TrySetUpTeam;
+            _setUpDone = true;
+        }
+
+        public void Initialize(RaceNetContext context, IRoadManager roadManager)
+        {
+            _raceNetContext = context;
+            _inputPublisher = context.InputPublisher;
+            _raceNetController = context.NetController;
+            _lobbyNetContext = context.LobbyNetContext;
+            _lobbyNetStateStore = _lobbyNetContext.NetState;
+            _netState = context.NetState;
+            _roadManager = roadManager;
+            _assignedRole = NetState.PlayerStates[LocalConnection.ClientId].Role;
         }
 
         public override void OnStopNetwork()
@@ -65,60 +125,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
         private void UnsubscribeEvents()
         {
-            DriverController.OnDriverSpawned -= InitializeDriver;
-            ShotgunController.OnShotgunSpawned -= InitializeShotgun;
+            DriverController.OnDriverSpawned -= OnDriverSpawned;
+            ShotgunController.OnShotgunSpawned -= OnShotgunSpawned;
         }
 
-        public void SetTeamId(int teamId)
-        {
-            if (_teamId != -999)
-                return;
-            _teamId = teamId;
-        }
-
-        public void Initialize(TNCInitContext initContext)
-        {
-            _inputPublisher = initContext.InputPublisher;
-            _assignedRole = initContext.RaceNetStateRead.PlayerStates[LocalConnection.ClientId].Role;
-            TryInitializeTeam();
-        }
-
-        public void InitializeDriver(IDriverController driverController)
+        public void OnDriverSpawned(IDriverController driverController)
         {
             _driverController = driverController;
-            TryInitializeTeam();
+            TrySetUpTeam(0, 0, false);
         }
 
-        public void InitializeShotgun(IShotgunController shotgunController)
+        public void OnShotgunSpawned(IShotgunController shotgunController)
         {
             _shotgunController = shotgunController;
-            TryInitializeTeam();
+            TrySetUpTeam(0, 0, false);
         }
-
-        public bool TryInitializeTeam()
-        {
-            if (_driverController == null || _shotgunController == null)
-                return false;
-
-            if (_assignedRole == RaceRole.Driver)
-            {
-                _driverController.SetInputConsumer(_inputPublisher);
-                _driverController.SetTeam(_teamId);
-                Log.ELazy(() => $"Driver initialized and input consumer set.", this);
-            }
-            else if (_assignedRole == RaceRole.Shotgun)
-            {
-                _shotgunController.SetInputConsumer(_inputPublisher);
-                _shotgunController.SetTeam(_teamId);
-                Log.ELazy(() => $"Shotgun initialized and input consumer set.", this);
-            }
-            else
-            {
-                Log.ELazy(() => $"Invalid role assigned to player: {_assignedRole}", this);
-                return false;
-            }
-            return true;
-        }
-
     }
 }

@@ -1,11 +1,7 @@
 using FishNet.Object.Synchronizing;
-using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using UnityEngine;
 using BeMyShotgunSir.Scripts.Utils;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
-using FishNet.Object;
-using Unity.Cinemachine;
-using BeMyShotgunSir.Scripts.Gameplay.Players;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
@@ -13,7 +9,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         void Init(RaceViewModel viewModel);
         void InitNetData_Project(IRaceNetData data);
-        void SetUpTeam_Response(int connectionId, NetworkObject team, RaceRole role);
     }
 
     /// <summary>
@@ -65,12 +60,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _state.LeaderboardSync.OnChange += OnLeaderboardChanged;
         }
 
-        public void SetRoadManager(RoadManager roadManager)
-        {
-            if (_roadManager == null)
-                _roadManager = roadManager;
-        }
-
         private void OnDisable()
         {
             if (_state == null)
@@ -105,27 +94,5 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         public void InitNetData_Project(IRaceNetData data) => _viewModel.InitNetData(data);
-
-        public void SetUpTeam_Response(int connectionId, NetworkObject team, RaceRole role)
-        {
-            //TODO setup viewmodel with role
-            TeamNetController teamController = team.GetComponent<TeamNetController>();
-            _state.TryGetPlayerState(connectionId, out RacePlayerState playerState);
-            teamController.SetTeamId(playerState.TeamId);
-            MovingDriver driver = team.GetComponentInChildren<MovingDriver>();
-            if (driver == null)
-            {
-                Log.ELazy(() => $"Team prefab {team.name} is missing a driver component. Cannot initialize race for this team.", this);
-                return;
-            }
-            CinemachineCamera cam = team.GetComponentInChildren<CinemachineCamera>();
-            if (cam == null)
-            {
-                Log.ELazy(() => $"Team prefab {team.name} is missing a CinemachineCamera component. Cannot initialize race camera for this team.", this);
-                return;
-            }
-            cam.enabled = true;
-            _roadManager.SetDriver(driver.gameObject.transform);
-        }
     }
 }

@@ -52,29 +52,29 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public int TeamId;
         public int DriverConnectionId;
         public int ShotgunConnectionId;
-        public bool IsPlayerSpawned;
-        public NetworkObject Player;
+        public bool IsTeamSpawned;
+        public NetworkObject Team;
 
         public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId)
         {
             TeamId = teamId;
             DriverConnectionId = driverConnectionId;
             ShotgunConnectionId = shotgunConnectionId;
-            Player = null;
-            IsPlayerSpawned = false;
+            Team = null;
+            IsTeamSpawned = false;
         }
 
-        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isPlayerSpawned = null, NetworkObject player = null)
+        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject team = null)
         {
             TeamId = other.TeamId;
             DriverConnectionId = other.DriverConnectionId;
             ShotgunConnectionId = other.ShotgunConnectionId;
 
-            IsPlayerSpawned = isPlayerSpawned ?? other.IsPlayerSpawned;
-            Player = player ?? other.Player;
+            IsTeamSpawned = isTeamSpawned ?? other.IsTeamSpawned;
+            Team = team ?? other.Team;
         }
 
-        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsPlayerSpawned: {IsPlayerSpawned}";
+        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsTeamSpawned: {IsTeamSpawned}";
     }
 
     public struct InventoryData
@@ -197,11 +197,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncList<int> IRaceNetStateSubscribe.LeaderboardSync => _leaderboard;
 
         // State Read-only accessors
-        int IRaceNetStateRead.GetSeed() => _seed.Value;
-        IReadOnlyDictionary<int, RacePlayerState> IRaceNetStateRead.PlayerStates => _racePlayerStates;
-        IReadOnlyDictionary<int, RaceTeamData> IRaceNetStateRead.TeamData => _raceTeamData;
-        IReadOnlyDictionary<int, InventoryData> IRaceNetStateRead.PlayerInventories => _racePlayerInventories;
-        IReadOnlyList<int> IRaceNetStateRead.Leaderboard => _leaderboard;
+        public int GetSeed() => _seed.Value;
+        public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _racePlayerStates;
+        public IReadOnlyDictionary<int, RaceTeamData> TeamData => _raceTeamData;
+        public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
+        public IReadOnlyList<int> Leaderboard => _leaderboard;
 
         public override void OnStopNetwork()
         {
