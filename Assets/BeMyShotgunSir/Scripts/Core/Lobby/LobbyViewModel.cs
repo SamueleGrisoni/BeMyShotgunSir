@@ -12,9 +12,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos { get; }
         event Action OnLobbyInfoChanged;
         event Action OnLobbyIPChanged;
+        event Action OnMaxPlayersChanged;
         event Action OnPlayerCountChanged;
         event Action OnLobbyPlayerStatesChanged;
         event Action OnLobbyTeamInfosChanged;
+        void AskForRefresh();
     }
 
     public class LobbyViewModel : ILobbyDataView
@@ -29,6 +31,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         public event Action OnLobbyInfoChanged;
         public event Action OnLobbyIPChanged;
+        public event Action OnMaxPlayersChanged;
         public event Action OnPlayerCountChanged;
         public event Action OnLobbyPlayerStatesChanged;
         public event Action OnLobbyTeamInfosChanged;
@@ -42,7 +45,25 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _netState.TeamInfos_Sub.OnChange += OnLobbyTeamInfosChanged_Propagate;
         }
 
-        private void OnLobbyInfoChanged_Propagate(LobbyInfo _, LobbyInfo __, bool ___) => OnLobbyInfoChanged?.Invoke();
+        public void AskForRefresh()
+        {
+            OnLobbyInfoChanged?.Invoke();
+            OnLobbyIPChanged?.Invoke();
+            OnMaxPlayersChanged?.Invoke();
+            OnPlayerCountChanged?.Invoke();
+            OnLobbyPlayerStatesChanged?.Invoke();
+            OnLobbyTeamInfosChanged?.Invoke();
+        }
+
+
+        private void OnLobbyInfoChanged_Propagate(LobbyInfo prev, LobbyInfo next, bool asServer)
+        {
+            if (prev.LobbyIP != next.LobbyIP)
+                OnLobbyIPChanged?.Invoke();
+            if (prev.MaxPlayers != next.MaxPlayers)
+                OnMaxPlayersChanged?.Invoke();
+            OnLobbyInfoChanged?.Invoke();
+        }
         private void OnPlayerCountChanged_Propagate(int _, int __, bool ___) => OnPlayerCountChanged?.Invoke();
         private void OnLobbyPlayerStatesChanged_Propagate(SyncDictionaryOperation _, int __, LobbyPlayerState ___, bool ____) => OnLobbyPlayerStatesChanged?.Invoke();
         private void OnLobbyTeamInfosChanged_Propagate(SyncDictionaryOperation _, int __, LobbyTeamInfo ___, bool ____) => OnLobbyTeamInfosChanged?.Invoke();

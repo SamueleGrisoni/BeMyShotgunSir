@@ -81,6 +81,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _driverButton = _selectRoleContainer.Q<Button>("DriverButton");
             _shotgunButton = _selectRoleContainer.Q<Button>("ShotgunButton");
 
+            if (_viewModel != null)
+                _viewModel.AskForRefresh();
+
             StartCoroutine(InitNextFrame());
             Show(false);
         }

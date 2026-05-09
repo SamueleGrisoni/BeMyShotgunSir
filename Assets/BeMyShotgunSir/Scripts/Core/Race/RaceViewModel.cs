@@ -39,7 +39,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyList<int> Leaderboard => _netState.Leaderboard;
         public ILobbyDataView LobbyDataView => _lobbyViewModel;
 
-
         public RaceViewModel(LobbyViewModel lobbyViewModel, IRaceNetStateSubscribe netState)
         {
             _lobbyViewModel = lobbyViewModel;
@@ -48,6 +47,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _netState.PlayerStates_Sub.OnChange += OnPlayerStatesChanged_Propagate;
             _netState.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;
             _netState.Leaderboard_Sub.OnChange += OnLeaderboardChanged_Propagate;
+        }
+
+        public void AskForRefresh()
+        {
+            OnSeedChanged?.Invoke();
+            OnRacePlayerStatesChanged?.Invoke();
+            OnRaceTeamDataChanged?.Invoke();
+            OnLeaderboardChanged?.Invoke();
         }
 
         private void OnSeedChanged_Propagate(int _, int __, bool ___) => OnSeedChanged?.Invoke();
