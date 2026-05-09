@@ -151,6 +151,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             var lobbyNetContext = new LobbyNetContext(null, null, _lobbyNetStateStore, null);
             _inputPublisher = new InputPublisher();
+            _playerRole = _netState.PlayerStates[LocalConnection.ClientId].Role;
             var raceContext = new RaceNetContext(lobbyNetContext, this, _netController, _netState, _projector, _powerUpsNetController, _inputPublisher);
             initializer.Initialize(raceContext, _roadManager);
             BindRace_Final(_bindTargets);
