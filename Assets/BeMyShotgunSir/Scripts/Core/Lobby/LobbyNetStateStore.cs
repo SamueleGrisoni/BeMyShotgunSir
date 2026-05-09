@@ -14,10 +14,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public NetworkConnection Connection;
         public int ConnectionId;
         public string PlayerName;
-        public int TeamId;
+        public int? TeamId;
         public bool IsReady;
 
-        public LobbyPlayerState(NetworkConnection connection, string playerName, int teamId = -1, bool isReady = false)
+        public LobbyPlayerState(NetworkConnection connection, string playerName, int? teamId = null, bool isReady = false)
         {
             Connection = connection;
             ConnectionId = connection.ClientId;
@@ -34,10 +34,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     {
         public int MaxPlayers;
         public string LobbyIP;
-        public LobbyInfo(string lobbyIP = "<IP>:<Port>")
+        public LobbyInfo(string lobbyIP = null)
         {
-            LobbyIP = lobbyIP;
-            MaxPlayers = 4;
+            LobbyIP = lobbyIP ?? BMMSDefaults.IP_PLACEHOLDER;
+            MaxPlayers = BMMSDefaults.MAX_PLAYERS;
         }
         public override string ToString() =>
             $"LobbyInfo: IP: {LobbyIP}, Max Players: {MaxPlayers}";
@@ -49,7 +49,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public int DriverConnectionId;
         public int ShotgunConnectionId;
 
-        public LobbyTeamInfo(int teamId, int driverConnectionId = -1, int shotgunConnectionId = -1)
+        public LobbyTeamInfo(int teamId, int driverConnectionId, int shotgunConnectionId)
         {
             TeamId = teamId;
             DriverConnectionId = driverConnectionId;
@@ -73,11 +73,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         bool TryGetTeamInfo(int teamId, out LobbyTeamInfo info);
         bool CheckAllPlayersReady();
         bool ContainsPlayer(int clientId);
-    }
-
-    public interface ILobbyNetStateReadWrapped
-    {
-        ILobbyNetStateRead NetState { get; }
     }
 
     public interface ILobbyNetStateSubscribe : ILobbyNetStateRead
@@ -196,12 +191,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
         public bool ContainsPlayer(int clientId) => _playerStates.ContainsKey(clientId);
 
-        public bool TryGetPlayersIDs(int teamId, out int driverConnectionId, out int shotgunConnectionId)
+        public bool TryGetPlayersIDs(int? teamId, out int? driverConnectionId, out int? shotgunConnectionId)
         {
-            driverConnectionId = (int)Codes.UnInitialized;
-            shotgunConnectionId = (int)Codes.UnInitialized;
-
-            if (!_teamInfos.TryGetValue(teamId, out LobbyTeamInfo teamInfo))
+            driverConnectionId = null;
+            shotgunConnectionId = null;
+            if (teamId == null)
+                return false;
+            if (!_teamInfos.TryGetValue(teamId.Value, out LobbyTeamInfo teamInfo))
                 return false;
             driverConnectionId = teamInfo.DriverConnectionId;
             shotgunConnectionId = teamInfo.ShotgunConnectionId;

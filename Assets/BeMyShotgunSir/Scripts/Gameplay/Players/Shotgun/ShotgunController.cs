@@ -1,5 +1,4 @@
 using System;
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
@@ -10,7 +9,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     public interface IShotgunController
     {
         void Initialize(RaceNetContext context, TeamNetController teamNetController);
-        int TeamId { get; }
+        int? TeamId { get; }
     }
 
     public class ShotgunController : NetworkBehaviour, IShotgunController
@@ -20,7 +19,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         public static event Action<IShotgunController> OnShotgunSpawned;
         public IShotgunInputConsumer _inputConsumer;
         private TeamNetController _teamNetController;
-        public int TeamId => _teamNetController != null ? _teamNetController.TeamId : (int)Codes.UnInitialized;
+        public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
 
         public override void OnStartClient()
         {

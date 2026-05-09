@@ -1,6 +1,7 @@
 ﻿using System;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 
@@ -75,9 +76,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             {
                 if (other.TryGetComponent(out MovementController movementController))
                 {
-                    int teamId = movementController.TeamId;
-                    _netController.AddPowerUpToTeam(teamId, PowerUpType);
-                    NetworkObject.Despawn();
+                    int? teamId = movementController.TeamId;
+                    if (teamId.HasValue)
+                    {
+                        _netController.AddPowerUpToTeam(teamId.Value, PowerUpType);
+                        NetworkObject.Despawn();
+                    }
+                    else
+                        Log.ELazy(() => $"Driver has no team assigned. Power-up pickup failed. Driver: {other.gameObject.name}", this);
+
                 }
             }
         }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
@@ -121,7 +120,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public interface IRaceNetStateRead
     {
-        int Seed { get; }
+        int? Seed { get; }
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, RaceTeamData> TeamData { get; }
         IReadOnlyDictionary<int, InventoryData> PlayerInventories { get; }
@@ -134,7 +133,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     public interface IRaceNetStateSubscribe : IRaceNetStateRead
     {
-        SyncVar<int> Seed_Sub { get; }
+        SyncVar<int?> Seed_Sub { get; }
         SyncDictionary<int, RacePlayerState> PlayerStates_Sub { get; }
         SyncDictionary<int, RaceTeamData> TeamData_Sub { get; }
         SyncList<int> Leaderboard_Sub { get; }
@@ -152,19 +151,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         //utility
         private bool _log = true;
-        public bool IsReady { get; private set; }
-        public event Action OnReady;
-        private void SetReady(bool value)
-        {
-            if (IsReady == value)
-                return;
-            IsReady = value;
-            if (IsReady)
-            {
-                Log.DLazy(() => "RaceNetStateStore is ready.", this, _log);
-                OnReady?.Invoke();
-            }
-        }
 
         //Server-only states
         /// <summary> not synced </summary>
@@ -185,7 +171,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         // Networked state
         /// <summary> synced </summary>
-        private readonly SyncVar<int> _seed = new((int)Codes.UnInitialized);
+        private readonly SyncVar<int?> _seed = new();
         /// <summary> synced </summary>
         private readonly SyncDictionary<int, RacePlayerState> _racePlayerStates = new();
         /// <summary> synced </summary>
@@ -196,24 +182,19 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncList<int> _leaderboard = new();
 
         // State Projector accessors
-        SyncVar<int> IRaceNetStateSubscribe.Seed_Sub => _seed;
+        SyncVar<int?> IRaceNetStateSubscribe.Seed_Sub => _seed;
         SyncDictionary<int, RacePlayerState> IRaceNetStateSubscribe.PlayerStates_Sub => _racePlayerStates;
         SyncDictionary<int, RaceTeamData> IRaceNetStateSubscribe.TeamData_Sub => _raceTeamData;
         SyncDictionary<int, InventoryData> IRaceNetStateSubscribe.PlayerInventories_Sub => _racePlayerInventories;
         SyncList<int> IRaceNetStateSubscribe.Leaderboard_Sub => _leaderboard;
 
         // State Read-only accessors
-        public int Seed => _seed.Value;
+        public int? Seed => _seed.Value;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _racePlayerStates;
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _raceTeamData;
         public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
         public IReadOnlyList<int> Leaderboard => _leaderboard;
 
-        public override void OnStopNetwork()
-        {
-            base.OnStopNetwork();
-            SetReady(false);
-        }
 
         [Server]
         public void InitializeFromLobby(ILobbyNetStateRead lobbyState)
@@ -221,16 +202,26 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _racePlayerStates.Collection.Clear();
             _raceTeamData.Collection.Clear();
             _leaderboard.Clear();
-            _seed.Value = (int)Codes.UnInitialized;
 
             foreach (KeyValuePair<int, LobbyPlayerState> lobbyPlayerState in lobbyState.PlayerStates)
             {
+                if (lobbyPlayerState.Value.TeamId is not int)
+                {
+                    Log.ELazy(() => $"Player {lobbyPlayerState.Value.PlayerName} (ConnectionId: {lobbyPlayerState.Key}) does not have a team assigned in the lobby.", this);
+                    return;
+                }
+            }
+
+            foreach (KeyValuePair<int, LobbyPlayerState> lobbyPlayerState in lobbyState.PlayerStates)
+            {
+                int teamId = lobbyPlayerState.Value.TeamId.Value;
+
                 _racePlayerStates[lobbyPlayerState.Key] = new RacePlayerState(
                     name: lobbyPlayerState.Value.PlayerName,
-                    teamId: lobbyPlayerState.Value.TeamId,
+                    teamId: teamId,
                     isTrackReady: false,
                     isReadyToRace: false,
-                    role: lobbyPlayerState.Value.ConnectionId == lobbyPlayerState.Value.TeamId ? RaceRole.Driver : RaceRole.Shotgun
+                    role: lobbyPlayerState.Value.ConnectionId == teamId ? RaceRole.Driver : RaceRole.Shotgun
                 );
             }
 
@@ -242,8 +233,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     shotgunConnectionId: teamInfo.Value.ShotgunConnectionId
                 );
             }
-
-            SetReady(true);
         }
 
         [Server]

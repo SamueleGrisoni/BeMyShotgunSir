@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
@@ -12,7 +11,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
     public interface IRoadManager
     {
-        void SetSeed(int seed);
+        void SetSeed(int? seed);
         void SetRaceNetController(RaceNetController raceNetController);
         void SetDriver(Transform driver);
         void UpdateFirstPlayer(Transform playerTransform);
@@ -25,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private bool _isInitialized = false;
         private bool _isSeedInitialized = false;
         public static event Action<IRoadManager> OnRoadManagerSpawned;
-        private int _seed = (int)Codes.UnInitialized;
+        private int? _seed = null;
         private bool _isServer;
         private Transform _driver;
         private Transform _firstPlayerTransform;
@@ -106,15 +105,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             OnCommonGenerated?.Invoke(sectionLenght);
         }
 
-        public void SetSeed(int seed)
+        public void SetSeed(int? seed)
         {
             if (_isSeedInitialized)
                 return;
-
+            if (seed is not int actualInt)
+                return;
             _isSeedInitialized = true;
+            _environmentSpawner.Init(actualInt);
+            _trackGenerator.Init(actualInt);
             _seed = seed;
-            _environmentSpawner.Init(_seed);
-            _trackGenerator.Init(_seed);
         }
 
         public void SetRaceNetController(RaceNetController raceNetController)

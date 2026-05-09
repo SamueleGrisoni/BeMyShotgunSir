@@ -1,5 +1,4 @@
 using BeMyShotgunSir.Gameplay.Players.Driver;
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.UI;
 using FishNet.Object;
@@ -88,7 +87,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
         [SerializeField] private DriverController _driverController;
-        public int TeamId => _driverController != null ? _driverController.TeamId : (int)Codes.UnInitialized;
+        public int? TeamId => _driverController == null ? null : _driverController.TeamId;
         public IDriverInputConsumer InputConsumer => _driverController != null ? _driverController._inputConsumer : null;
 
         [SerializeField] private DriverInput _input;

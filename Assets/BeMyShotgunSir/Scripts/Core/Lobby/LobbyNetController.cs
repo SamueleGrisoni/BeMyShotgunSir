@@ -10,7 +10,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     #region Interfaces
 
-
     public interface ILobbyNetController_Command : INetController_Command
     {
         void UpdatePlayerName_ServerRpc(string newName, NetworkConnection conn = null);
@@ -19,7 +18,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         void LeaveTeam_ServerRpc(NetworkConnection conn = null);
     }
 
-    public interface ILobbyNetController : INetController, ILobbyNetController_Command, ILobbyNetStateReadWrapped { }
+    public interface ILobbyNetController : INetController, ILobbyNetController_Command { }
 
     #endregion
 
@@ -160,14 +159,14 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                     LogMessage_TargetRpc(conn, "You cannot select yourself as a teammate.", 1);
                     return;
                 }
-                if (playerState.TeamId != -1)
+                if (playerState.TeamId.HasValue)
                 {
                     LogMessage_TargetRpc(conn, "You are already in a team.", 1);
                     return;
                 }
                 if (_netState.TryGetPlayerState(teammateConnectionId, out LobbyPlayerState teammateState))
                 {
-                    if (teammateState.TeamId != -1)
+                    if (teammateState.TeamId.HasValue)
                     {
                         LogMessage_TargetRpc(conn, "Selected teammate is already in a team.", 1);
                         return;
@@ -194,9 +193,9 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             int clientId = conn.ClientId;
             if (_netState.TryGetPlayerState(clientId, out LobbyPlayerState playerState))
             {
-                if (playerState.TeamId != -1)
+                if (playerState.TeamId.HasValue)
                 {
-                    int teamId = playerState.TeamId;
+                    int teamId = playerState.TeamId.Value;
                     if (_netState.TryGetTeamInfo(teamId, out LobbyTeamInfo teamInfo))
                     {
                         int teammateConnectionId = teamInfo.DriverConnectionId == clientId ? teamInfo.ShotgunConnectionId : teamInfo.DriverConnectionId;

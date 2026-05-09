@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public interface IRaceDataView : IDataView
     {
         ILobbyDataView LobbyDataView { get; }
-        int Seed { get; }
+        int? Seed { get; }
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, RaceTeamData> TeamData { get; }
         IReadOnlyList<int> Leaderboard { get; }
@@ -33,7 +33,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public event Action OnRaceTeamDataChanged;
         public event Action OnLeaderboardChanged;
 
-        public int Seed => _netState.Seed;
+        public int? Seed => _netState.Seed;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _netState.PlayerStates;
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _netState.TeamData;
         public IReadOnlyList<int> Leaderboard => _netState.Leaderboard;
@@ -57,7 +57,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnLeaderboardChanged?.Invoke();
         }
 
-        private void OnSeedChanged_Propagate(int _, int __, bool ___) => OnSeedChanged?.Invoke();
+        private void OnSeedChanged_Propagate(int? _, int? __, bool ___) => OnSeedChanged?.Invoke();
         private void OnPlayerStatesChanged_Propagate(SyncDictionaryOperation _, int __, RacePlayerState ___, bool ____) => OnRacePlayerStatesChanged?.Invoke();
         private void OnRaceTeamDataChanged_Propagate(SyncDictionaryOperation _, int __, RaceTeamData ___, bool ____) => OnRaceTeamDataChanged?.Invoke();
         private void OnLeaderboardChanged_Propagate(SyncListOperation _, int __, int ___, int ____, bool _____) => OnLeaderboardChanged?.Invoke();

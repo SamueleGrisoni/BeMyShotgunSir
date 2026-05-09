@@ -55,7 +55,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _state.Seed_Sub.OnChange -= OnSeedChanged;
         }
 
-        private void OnSeedChanged(int prev, int next, bool asServer)
+        private void OnSeedChanged(int? prev, int? next, bool asServer)
         {
             if (asServer)
                 return;

@@ -1,5 +1,4 @@
 using System;
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
@@ -12,7 +11,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public interface IDriverController
     {
         void Initialize(RaceNetContext context, TeamNetController teamNetController);
-        int TeamId { get; }
+        int? TeamId { get; }
         Transform GetMovementTransform();
     }
     public class DriverController : NetworkBehaviour, IDriverController
@@ -29,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private LobbyNetStateStore _lobbyNetStateStore;
         private RaceNetStateStore _netState;
         private TeamNetController _teamNetController;
-        public int TeamId => _teamNetController != null ? _teamNetController.TeamId : (int)Codes.UnInitialized;
+        public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
 
         //specific
         public IDriverInputConsumer _inputConsumer;

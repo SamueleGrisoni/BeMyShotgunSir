@@ -1,5 +1,4 @@
 using System;
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
@@ -37,15 +36,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
         //Specific
         private IRoadManager _roadManager;
-        public int TeamId => _syncTeamId.Value;
-        private int _driverConnectionId = (int)Codes.UnInitialized;
-        private int _shotgunConnectionId = (int)Codes.UnInitialized;
+        public int? TeamId => _syncTeamId.Value;
+        private int? _driverConnectionId = null;
+        private int? _shotgunConnectionId = null;
         private IDriverController _driverController;
         private IShotgunController _shotgunController;
         private RaceRole _assignedRole;
         private event Action OnMemberSetUpComplete;
 
-        private readonly SyncVar<int> _syncTeamId = new((int)Codes.UnInitialized);
+        private readonly SyncVar<int?> _syncTeamId = new(null);
 
         private void OnEnable()
         {
@@ -72,9 +71,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             _syncTeamId.OnChange += TrySetUpTeam;
         }
 
-        private void TrySetUpTeam(int oldTeamId, int newTeamId, bool asServer)
+        private void TrySetUpTeam(int? oldTeamId, int? newTeamId, bool asServer)
         {
-            if (_setUpDone || _syncTeamId.Value == (int)Codes.UnInitialized || _driverController == null || _shotgunController == null)
+            if (_setUpDone || _syncTeamId.Value == null || _driverController == null || _shotgunController == null)
                 return;
 
             if (!_lobbyNetStateStore.TryGetPlayersIDs(_syncTeamId.Value, out _driverConnectionId, out _shotgunConnectionId))
