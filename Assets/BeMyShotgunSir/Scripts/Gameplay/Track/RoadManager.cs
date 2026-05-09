@@ -26,7 +26,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public static event Action<IRoadManager> OnRoadManagerSpawned;
         private int? _seed = null;
         private bool _isServer;
-        private Transform _driver;
+        [SerializeField] private Transform _driver; //DEBUG serlializeField for debug purposes
         private Transform _firstPlayerTransform;
         private Transform _lastPlayerTransform;
         private List<Transform> _spawnPoints;
@@ -61,6 +61,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             TrackGenerator.OnCommonGenerated += PropagateCommonGenerated;
             TrackGenerator.OnCrossroadGenerated += PropagateOnCrossroad;
         }
+
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -188,7 +189,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public void StartRace()
         {
             _raceNetController.SetReadyToRace_ServerRpc();
-            Log.DLazy(() => "Starting race.", this);
+            Log.DLazy(() => "Starting race.", this, _log);
             _started = true;
         }
 

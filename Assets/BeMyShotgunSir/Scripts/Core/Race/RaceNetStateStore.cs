@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Utils;
@@ -195,6 +196,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
         public IReadOnlyList<int> Leaderboard => _leaderboard;
 
+        public void PrintRaceState(bool log = true)
+        {
+            if (!log) return;
+            Log.DLazy(() =>
+            {
+                string playerStatesStr = string.Join(", ", PlayerStates.Select(kvp => $"[ConnectionId: {kvp.Key}, State: {kvp.Value}]"));
+                string teamDataStr = string.Join(", ", TeamData.Select(kvp => $"[TeamId: {kvp.Key}, Data: {kvp.Value}]"));
+                string inventoryStr = string.Join(", ", PlayerInventories.Select(kvp => $"[TeamId: {kvp.Key}, Inventory: {kvp.Value}]"));
+                return $"Race State: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, Leaderboard: [{string.Join(", ", Leaderboard)}]";
+            }, this, _log);
+        }
+
 
         [Server]
         public void InitializeFromLobby(ILobbyNetStateRead lobbyState)
@@ -274,7 +287,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 if (!playerState.Value.IsReadyToRace)
                     return false;
             }
-
+            PrintRaceState(_log);
             return _racePlayerStates.Count > 0;
         }
     }

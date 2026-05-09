@@ -134,7 +134,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             int connectionId = conn.ClientId;
             if (!_netState.TryGetPlayerState(connectionId, out LobbyPlayerState state))
                 return;
-            if (state.TeamId == -1 && isReady)
+            if (state.TeamId == null && isReady)
             {
                 Log.WLazy(() => "Player cannot be ready without selecting a teammate.", this);
                 LogMessage_TargetRpc(conn, "You cannot be ready without selecting a teammate.", 1);
@@ -200,10 +200,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                     {
                         int teammateConnectionId = teamInfo.DriverConnectionId == clientId ? teamInfo.ShotgunConnectionId : teamInfo.DriverConnectionId;
                         _netState.RemoveTeam(teamId);
-                        _netState.SetPlayerTeam(clientId, -1);
+                        _netState.SetPlayerTeam(clientId, null);
                         if (_netState.ContainsPlayer(teammateConnectionId))
                         {
-                            _netState.SetPlayerTeam(teammateConnectionId, -1);
+                            _netState.SetPlayerTeam(teammateConnectionId, null);
                         }
                         else
                         {
@@ -228,6 +228,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         [Server]
         private void StartRace()
         {
+            _netState.PrintLobbyState(_log);
             Log.DLazy(() => "All players ready, starting race!", this, _log);
             if (_activeRaceManager == null)
                 InitRace();

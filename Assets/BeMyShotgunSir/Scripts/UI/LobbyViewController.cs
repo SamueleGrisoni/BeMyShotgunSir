@@ -270,12 +270,12 @@ namespace BeMyShotgunSir.Scripts.UI
                 name.text = playerState.PlayerName;
 
             if (team != null)
-                team.text = (playerState.TeamId != -1) ? playerState.TeamId.ToString() : "-";
+                team.text = (playerState.TeamId != null) ? playerState.TeamId.ToString() : "-";
 
             if (ready != null)
                 ready.style.opacity = playerState.IsReady ? 1f : 0f;
 
-            if (playerState.TeamId != -1) name.AddToClassList("player-in-team");
+            if (playerState.TeamId != null) name.AddToClassList("player-in-team");
             else name.RemoveFromClassList("player-in-team");
         }
 

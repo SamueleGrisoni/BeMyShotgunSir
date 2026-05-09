@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.CodeGenerating;
 using FishNet.Connection;
 using FishNet.Object;
@@ -114,6 +115,20 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         public IReadOnlyDictionary<int, LobbyTeamInfo> TeamInfos => _teamInfos;
         public int PlayerCount => _playerCount.Value;
 
+        public void PrintLobbyState(bool log = true)
+        {
+            if (!log) return;
+            Log.DLazy(() => $"Lobby State: LobbyInfo: {LobbyInfo}, PlayerCount: {PlayerCount}", this, _log);
+            foreach (KeyValuePair<int, LobbyPlayerState> kvp in PlayerStates)
+            {
+                Log.DLazy(() => $"PlayerId: {kvp.Key}, PlayerState: {kvp.Value}", this, _log);
+            }
+            foreach (KeyValuePair<int, LobbyTeamInfo> kvp in TeamInfos)
+            {
+                Log.DLazy(() => $"TeamId: {kvp.Key}, TeamInfo: {kvp.Value}", this, _log);
+            }
+        }
+
         [Server]
         public void InitSyncValues()
         {
@@ -161,7 +176,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
 
         [Server]
-        public void SetPlayerTeam(int clientId, int teamId)
+        public void SetPlayerTeam(int clientId, int? teamId)
         {
             if (!_playerStates.TryGetValue(clientId, out LobbyPlayerState s))
                 return;
