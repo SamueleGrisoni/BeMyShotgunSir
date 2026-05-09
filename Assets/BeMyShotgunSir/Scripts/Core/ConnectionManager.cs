@@ -8,36 +8,15 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core
 {
-    #region Enums
-
-    public enum AppFlowState
-    {
-        Startup,
-        Init,
-        Lobby
-    }
-
-    public enum ConnectionFlowState
-    {
-        Idle,
-        Hosting,
-        Joining
-    }
-
-    #endregion
-
     public class ConnectionManager : MonoBehaviour
     {
         private bool _log = true;
         private bool _isInitialized = false;
         private bool _isHostSession = false;
+        private bool _isInLobby = false;
 
-        [SerializeField]
-        private AppFlowState _currentAppFlow = AppFlowState.Startup;
         private ServerManager _serverManager;
         private ClientManager _clientManager;
-        private int _pendingRemotePlayerDelta;
-        [SerializeField] private ConnectionFlowState _connectionFlowState = ConnectionFlowState.Idle;
         [SerializeField] private NetworkObject _lobbyManagerPrefab;
         private NetworkObject _spawnedLobbyManagerInstance;
 
@@ -46,13 +25,14 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_lobbyManagerPrefab == null)
                 Log.ELazy(() => "LobbyManager prefab reference is not assigned in the inspector.", this);
 
-            HandleStartup();
         }
 
         public void Initialize()
         {
             if (_isInitialized)
                 return;
+
+            GameServices.Instance.SceneCoordinator.LoadInitScene();
 
             if (GameServices.Instance == null || GameServices.Instance.NetworkManager == null)
             {
@@ -73,9 +53,6 @@ namespace BeMyShotgunSir.Scripts.Core
             _clientManager.OnClientConnectionState += OnClientConnectionState;
 
             Log.DLazy(() => "ConnectionManager initialized.", this, _log);
-
-            HandleInit();
-
             _isInitialized = true;
         }
 
@@ -113,7 +90,6 @@ namespace BeMyShotgunSir.Scripts.Core
                 Initialize();
 
             _isHostSession = true;
-            _connectionFlowState = ConnectionFlowState.Hosting;
 
             string ip = GetIp(ipAddress);
             ushort portValue = GetPort(ipAddress);
@@ -132,7 +108,6 @@ namespace BeMyShotgunSir.Scripts.Core
                 Initialize();
 
             _isHostSession = false;
-            _connectionFlowState = ConnectionFlowState.Joining;
 
             string ip = GetIp(ipAddress);
             ushort portValue = GetPort(ipAddress);
@@ -146,102 +121,80 @@ namespace BeMyShotgunSir.Scripts.Core
 
         public void QuitLobby()
         {
-            Log.DLazy(() => "Quitting lobby", this, _log);
-            HandleInit();
-        }
-
-        private void HandleStartup()
-        {
-            if (_currentAppFlow == AppFlowState.Startup)
+            if (!_isInLobby)
                 return;
+            _isInLobby = false;
 
-            Log.DLazy(() => "Start Up State", this, _log);
-            _currentAppFlow = AppFlowState.Startup;
-        }
+            Log.DLazy(() => "Quitting lobby.", this, _log);
 
-        private void HandleInit()
-        {
-
-            if (_spawnedLobbyManagerInstance != null)
+            if (_isHostSession)
             {
-                _spawnedLobbyManagerInstance.Despawn();
-                _spawnedLobbyManagerInstance = null;
+                if (_spawnedLobbyManagerInstance != null)
+                {
+                    _spawnedLobbyManagerInstance.Despawn();
+                    _spawnedLobbyManagerInstance = null;
+                }
+                _serverManager.StopConnection(true);
             }
-
-            Log.DLazy(() => "Stopping all connections", this, _log);
-
-            _clientManager.StopConnection();
-            _serverManager.StopConnection(true);
-
-            if (_currentAppFlow == AppFlowState.Init)
-                return;
-
-            Log.DLazy(() => "Init State", this, _log);
-            _currentAppFlow = AppFlowState.Init;
-
+            else
+            {
+                _clientManager.StopConnection();
+            }
             GameServices.Instance.SceneCoordinator.LoadInitScene();
         }
 
-        private void HandleLobby()
+        private void EnterLobby()
         {
-            if (_currentAppFlow == AppFlowState.Lobby)
+            if (_isInLobby)
                 return;
+            _isInLobby = true;
 
-            Log.DLazy(() => "Lobby State", this, _log);
-            _currentAppFlow = AppFlowState.Lobby;
-
-            if (!_isHostSession)
-                return;
-            //NOTE host only operations below this
-
-            if (_lobbyManagerPrefab != null && _spawnedLobbyManagerInstance == null)
+            if (_isHostSession)
             {
-                NetworkObject instance = Instantiate(_lobbyManagerPrefab);
-                instance.gameObject.name = instance.gameObject.name.Replace("(Clone)", " Server");
-                _serverManager.Spawn(instance);
+                Log.DLazy(() => "Entering lobby as host", this, _log);
+                if (_lobbyManagerPrefab != null && _spawnedLobbyManagerInstance == null)
+                {
+                    NetworkObject instance = Instantiate(_lobbyManagerPrefab);
+                    instance.gameObject.name = instance.gameObject.name.Replace("(Clone)", " Server");
+                    _serverManager.Spawn(instance);
+                }
             }
+            else
+                Log.DLazy(() => "Entering lobby as client", this, _log);
         }
 
         private void OnServerConnectionState(ServerConnectionStateArgs args)
         {
             if (args.ConnectionState == LocalConnectionState.Started)
             {
-                if (_connectionFlowState == ConnectionFlowState.Hosting)
-                    _connectionFlowState = ConnectionFlowState.Idle;
-
                 Log.DLazy(() => "Server connection started.", this, _log);
-                HandleLobby();
+                EnterLobby();
                 return;
             }
 
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
-                _connectionFlowState = ConnectionFlowState.Idle;
-                Log.WLazy(() => "Server stopped, returning to init state.", this);
-                HandleInit();
+                Log.WLazy(() => "Server connection stopped.", this);
+                QuitLobby();
             }
         }
 
         private void OnClientConnectionState(ClientConnectionStateArgs args)
         {
-
-            //Blocks the host from reacting to its own client connection state changes
-            if (_connectionFlowState != ConnectionFlowState.Joining)
+            if (_isHostSession)
                 return;
 
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 Log.DLazy(() => "Client connection started.", this, _log);
-                _connectionFlowState = ConnectionFlowState.Idle;
-                HandleLobby();
+                EnterLobby();
                 return;
             }
 
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
-                _connectionFlowState = ConnectionFlowState.Idle;
-                Log.WLazy(() => "Client connection stopped, returning to init state.", this);
-                HandleInit();
+                Log.WLazy(() => "Client connection stopped.", this);
+                QuitLobby();
             }
         }
 
@@ -255,8 +208,6 @@ namespace BeMyShotgunSir.Scripts.Core
             if (_clientManager != null)
                 _clientManager.OnClientConnectionState -= OnClientConnectionState;
 
-            _connectionFlowState = ConnectionFlowState.Idle;
-            _pendingRemotePlayerDelta = 0;
             _isInitialized = false;
         }
     }

@@ -22,6 +22,8 @@ namespace BeMyShotgunSir.Scripts.Core
         {
             if (UnitySceneManager.GetSceneByName(SceneName.Init.ToString()).isLoaded)
                 return;
+            if (UnitySceneManager.GetSceneByName(SceneName.Lobby.ToString()).isLoaded)
+                UnitySceneManager.UnloadSceneAsync(SceneName.Lobby.ToString());
             UnitySceneManager.LoadScene(SceneName.Init.ToString(), UnityEngine.SceneManagement.LoadSceneMode.Additive);
             Log.DLazy(() => "Loading Init scene.", this, _log);
         }
