@@ -87,15 +87,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
-        private DriverController _driverController;
+        [SerializeField] private DriverController _driverController;
         public int TeamId => _driverController != null ? _driverController.TeamId : (int)Codes.UnInitialized;
         public IDriverInputConsumer InputConsumer => _driverController != null ? _driverController._inputConsumer : null;
-
-        public void Initialize(DriverController driverController)
-        {
-            if (_driverController == null)
-                _driverController = driverController;
-        }
 
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;

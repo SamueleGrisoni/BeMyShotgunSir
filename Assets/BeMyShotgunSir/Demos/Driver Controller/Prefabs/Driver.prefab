@@ -105,6 +105,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 3192123921943259604}
   _networkObjectCache: {fileID: 0}
+  _driverController: {fileID: 3998145195957461452}
   _input: {fileID: 7387308273733314743}
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 2139825348868955056}
