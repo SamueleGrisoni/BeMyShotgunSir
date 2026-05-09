@@ -38,7 +38,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _state.Seed_Sub.OnChange += OnSeedChanged;
         }
 
-
         public void Init(RaceViewModel viewModel)
         {
             if (_viewModel == null)

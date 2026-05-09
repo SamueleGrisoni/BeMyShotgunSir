@@ -63,23 +63,19 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             LobbySceneBootstrapper.OnLobbyBootStrapperAwakened += OnLobbyBootStrapperAwakened;
             RaceManager.OnRaceManagerSpawned += OnRaceManagerSpawned;
-            if (_netController != null)
-                _netController.OnInitialized += TryInitialize;
         }
 
-        private void TryInitialize()
+        public override void OnStartNetwork()
         {
-            if (IsInitialized)
-                return;
-
-            IsInitialized = true;
+            base.OnStartNetwork();
             OnLobbyManagerInitialized?.Invoke(this);
             Log.DLazy(() => "LobbyManager is initialized.", this, _log);
 
-            LoadLobbyScene();
+            if (IsServerInitialized)
+                LoadLobbyScene();
         }
-        private void OnLobbyBootStrapperAwakened(ILobbySceneBootstrapperInitializer initializer) => initializer.Initialize(this);
 
+        private void OnLobbyBootStrapperAwakened(ILobbySceneBootstrapperInitializer initializer) => initializer.Initialize(this);
 
         [Server]
         private void LoadLobbyScene()
@@ -117,8 +113,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             LobbySceneBootstrapper.OnLobbyBootStrapperAwakened -= OnLobbyBootStrapperAwakened;
             RaceManager.OnRaceManagerSpawned -= OnRaceManagerSpawned;
-            if (_netController != null)
-                _netController.OnInitialized -= TryInitialize;
         }
     }
 }

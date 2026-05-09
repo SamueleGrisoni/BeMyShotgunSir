@@ -1,4 +1,3 @@
-using System;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
@@ -30,20 +29,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     public class LobbyNetController : NetController, ILobbyNetController
     {
         private bool _log = true;
-        public bool IsInitialized { get; private set; } = false;
-        public event Action OnInitialized;
-        private void SetInitialized(bool value)
-        {
-            if (IsInitialized == value)
-                return;
-            IsInitialized = value;
-            if (IsInitialized)
-            {
-                Log.DLazy(() => "LobbyNetController is initialized.", this, _log);
-                OnInitialized?.Invoke();
-            }
-        }
-
         private ServerManager _serverManager;
         private LobbyNetStateStore _netState;
         public ILobbyNetStateRead NetState => _netState;
@@ -60,18 +45,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 Log.ELazy(() => "One or more required components are missing on LobbyNetController.", this);
         }
 
-        public override void OnStartNetwork()
-        {
-            base.OnStartNetwork();
-            if (IsServerInitialized)
-                _netState.InitSyncValues();
-
-            SetInitialized(true);
-        }
-
         public override void OnStartServer()
         {
             base.OnStartServer();
+            _netState.InitSyncValues();
             _serverManager = GameServices.Instance.NetworkManager.ServerManager;
             _serverManager.OnRemoteConnectionState += OnRemoteConnectionState;
 
@@ -111,12 +88,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         {
             base.OnStopNetwork();
             UnsubscribeEvents();
-            SetInitialized(false);
             Log.DLazy(() => "LobbyNetController despawned from the network.", this, _log);
         }
 
         private void OnDisable() => UnsubscribeEvents();
-
 
         private void UnsubscribeEvents()
         {
@@ -162,7 +137,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
             if (state.TeamId == -1 && isReady)
             {
-                Log.ELazy(() => "Player cannot be ready without selecting a teammate.", this);
+                Log.WLazy(() => "Player cannot be ready without selecting a teammate.", this);
                 LogMessage_TargetRpc(conn, "You cannot be ready without selecting a teammate.", 1);
                 return;
             }
