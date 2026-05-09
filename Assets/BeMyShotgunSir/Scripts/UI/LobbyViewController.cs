@@ -34,17 +34,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
             _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
             _viewModel.OnLobbyPlayerStatesChanged += UpdatePlayerStates;
-            Log.DLazy(() => "Initial bind complete.", this, _log);
         }
-        public override void OnFinalBindComplete()
-        {
-            if (_finalBindSource == null)
-            {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
-                return;
-            }
-        }
-
+        public override void OnFinalBindComplete() { }
 
         #region UI Elements
         private VisualElement _root;

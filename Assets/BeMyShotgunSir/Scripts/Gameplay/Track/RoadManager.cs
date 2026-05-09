@@ -20,7 +20,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
     public class RoadManager : NetworkBehaviour, IRoadManager
     {
-        private bool _log = true;
+        private bool _log = false;
         private bool _isInitialized = false;
         private bool _isSeedInitialized = false;
         public static event Action<IRoadManager> OnRoadManagerSpawned;
@@ -90,18 +90,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 Log.DLazy(() => "Receive info for " + info.roadChunkInfo.type, this, _log);
             }
+            Log.DLazy(() => "Invoking OnSplitGeneratedProvided with split info count: " + splitInfo.Count, this);
             OnSplitGeneratedProvided?.Invoke(splitInfo);
         }
 
         private void PropagateOnCrossroad(CrossroadSegmentInfo crossroadSegmentInfo)
         {
-            Log.DLazy(() => "Receive crossroad info from TrackGenerator. Type: " + crossroadSegmentInfo.type + "chunkNumber: " + crossroadSegmentInfo.chunkNumber, this, _log);
+            Log.DLazy(() => "Invoking OnCrossroadProvided with info: " + crossroadSegmentInfo, this);
             OnCrossroadProvided?.Invoke(crossroadSegmentInfo);
         }
 
         private void PropagateCommonGenerated(int sectionLenght)
         {
-            Log.DLazy(() => "Receive common road info from TrackGenerator, lenght : " + sectionLenght, this, _log);
+            Log.DLazy(() => "Invoking OnCommonGenerated with section length: " + sectionLenght, this);
             OnCommonGenerated?.Invoke(sectionLenght);
         }
 
@@ -153,7 +154,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             Vector3 pos = _driver.position;
             pos.y = 0.3f;
             _driver.position = pos;
-            Log.DLazy(() => $"RoadManager: Driver set to {driver.name}", this, _log);
+            Log.DLazy(() => $"RoadManager: Driver set to {driver.name}", this);
             Initialize();
         }
 
@@ -187,7 +188,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public void StartRace()
         {
             _raceNetController.SetReadyToRace_ServerRpc();
-            Log.DLazy(() => "Starting race.", this, _log);
+            Log.DLazy(() => "Starting race.", this);
             _started = true;
         }
 

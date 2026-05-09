@@ -48,7 +48,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public class RaceNetController : NetController, IRaceNetController
     {
         //utility
-        private bool _log = true;
+        private bool _log = false;
         private bool _isInitialized = false;
 
         //CONTEXT
@@ -114,7 +114,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 s = DateTime.Now.Ticks.ToString().GetHashCode();
             _netState.SetSeed(s);
 
-            Log.DLazy(() => $"Initializing race with seed {NetState.Seed}.", this, _log);
+            Log.DLazy(() => $"Initializing race with seed {NetState.Seed}.", this);
 
             NetworkObject roadManager = Instantiate(_roadManagerPrefab);
             Spawn(roadManager.gameObject, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
@@ -238,7 +238,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 else
                 {
                     Log.ELazy(() => $"Team data for team ID {playerState.TeamId} not found in RaceNetController. Cannot set player with connection ID {connection.ClientId} as ready.", this);
-                    LogMessage_TargetRpc(connection, "Error setting ready state. Team data not found.", 1);
+                    LogMessage_TargetRpc(connection, "Error setting ready state. Team data not found.", 2);
                     return false;
                 }
             }
@@ -262,15 +262,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         [Server]
-        private bool TryStartRace()
+        private void TryStartRace()
         {
+            if (_isRaceStarted)
+                return;
             if (NetState.AreAllPlayersReady())
             {
                 _isRaceStarted = true;
-                Log.DLazy(() => $"All players are ready. Starting race.", this, _log);
-                return true;
+                Log.DLazy(() => $"All players are ready. Starting race.", this);
             }
-            return false;
         }
 
 
@@ -316,6 +316,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 }
                 if (same) return;
             }
+            Log.DLazy(() => "Updating leaderboard. Team order: " + string.Join(", ", sortedTeams), this);
             _netState.SetLeaderboard(sortedTeams);
             _roadManager.UpdateFirstPlayer(_teamProgress[sortedTeams[0]].transform);
             _roadManager.UpdateLastPlayer(_teamProgress[sortedTeams[sortedTeams.Count - 1]].transform);

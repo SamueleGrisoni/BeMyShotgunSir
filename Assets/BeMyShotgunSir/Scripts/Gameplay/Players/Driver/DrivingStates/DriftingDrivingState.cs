@@ -1,3 +1,4 @@
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
@@ -6,7 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
-            Debug.Log($"Enter drift state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            Log.DLazy(() => $"Enter drift state", this, controller.Log);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
 
             //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
@@ -59,9 +60,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data)
-        {
-            Debug.Log("Exit drift state");
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
+            Log.DLazy(() => "Exiting drift state", this, controller.Log);
     }
 }

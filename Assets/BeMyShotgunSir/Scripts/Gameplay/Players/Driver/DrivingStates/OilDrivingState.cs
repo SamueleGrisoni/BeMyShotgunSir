@@ -1,9 +1,12 @@
+using BeMyShotgunSir.Scripts.Utils;
+
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class OilDrivingState : IDrivingState
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
+            Log.DLazy(() => "Entering oil state", this, controller.Log);
             controller.OilAnimationTimer = 0f;
             controller.IsOilAnimationActive = true;
         }
@@ -16,13 +19,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 return;
             }
         }
-        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
-        {
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data) =>
             controller.ApplyAcceleration(controller.SidecarForward, 0f, controller.NormalStats.MaxSpeed);
-        }
         public void Exit(IDrivingStateContext controller, ReplicateData data)
         {
-            controller.IsOilAnimationActive = true;
+            Log.DLazy(() => "Exiting oil state", this, controller.Log);
+            controller.IsOilAnimationActive = false;
         }
     }
 }

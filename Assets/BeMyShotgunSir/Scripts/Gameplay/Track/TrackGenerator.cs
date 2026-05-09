@@ -47,6 +47,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             this.type = type;
             this.chunkNumber = chunkNumber;
         }
+
+        public override string ToString() => $"CrossroadSegmentInfo: Type: {type}, ChunkNumber: {chunkNumber}";
     }
     #endregion
 
@@ -269,7 +271,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                         type = RoadChunkType.STRAIGHT;
                         break;
                     default:
-                        Log.ELazy(()=> "Invalid random value for straight chunk type selection. WTF", this);
+                        Log.ELazy(() => "Invalid random value for straight chunk type selection. WTF", this);
                         break;
                 }
             }

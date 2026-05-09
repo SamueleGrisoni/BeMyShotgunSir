@@ -4,6 +4,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public interface IDrivingStateContext
     {
+        bool Log { get; }
         Vector3 ParentForward { get; }
         Vector3 SidecarForward { get; }
         SOSidecarStats NormalStats { get; }

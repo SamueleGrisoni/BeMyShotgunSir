@@ -1,3 +1,4 @@
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
@@ -6,7 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data)
         {
-            Debug.Log($"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
+            Log.DLazy(() => $"Enter boost state", this, controller.Log);
             if (controller.CurrentBatteryCharge <= 0)
             {
                 controller.ChangeState(controller.NormalState, data);
@@ -56,9 +57,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.BoostStats.LateralGripFactor);
             controller.ApplyGravity(controller.BoostStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data)
-        {
-            Debug.Log("Exit boost state");
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
+            Log.DLazy(() => "Exiting boost state", this, controller.Log);
     }
 }

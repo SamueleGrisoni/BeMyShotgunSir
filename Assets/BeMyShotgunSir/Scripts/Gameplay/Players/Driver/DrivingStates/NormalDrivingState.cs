@@ -1,13 +1,13 @@
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data)
-        {
-            Debug.Log($"Enter normal state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
-        }
+        public void Enter(IDrivingStateContext controller, ReplicateData data) =>
+            Log.DLazy(() => $"Enter normal state", this, controller.Log);
+
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
@@ -40,8 +40,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data)
-        {
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
+            Log.DLazy(() => "Exiting normal state", this, controller.Log);
     }
 }

@@ -1,12 +1,11 @@
+using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class GrassDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data)
-        {
-            Debug.Log($"Enter grass state. I am arriving from {controller.PreviousDrivingState.GetType().Name}");
-        }
+        public void Enter(IDrivingStateContext controller, ReplicateData data) =>
+            Log.DLazy(() => $"Enter grass state", this, controller.Log);
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
         {
             GroundType groundType = controller.CheckGround();
@@ -24,9 +23,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.GrassStats.LateralGripFactor);
             controller.ApplyGravity(controller.GrassStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data)
-        {
-            Debug.Log("Exit grass state");
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
+            Log.DLazy(() => "Exiting grass state", this, controller.Log);
     }
 }

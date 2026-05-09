@@ -1,6 +1,7 @@
 using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.UI;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -86,6 +87,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
+        private bool _log = false;
+        bool IDrivingStateContext.Log => _log;
         [SerializeField] private DriverController _driverController;
         public int? TeamId => _driverController == null ? null : _driverController.TeamId;
         public IDriverInputConsumer InputConsumer => _driverController != null ? _driverController._inputConsumer : null;
@@ -207,7 +210,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     if (otherDriver != null && !otherDriver.IsBoosting()) // TODO qui puoi mettere che se hai lo scudo non ricevi la collisione aumentata
                     {
                         repulsionForce *= (float)TimeManager.TickDelta;
-                        Debug.Log("Trovato l'altro driver controller and is boosting");
+                        Log.DLazy(() => "Trovato l'altro driver controller and is boosting", this);
 
                     }
                 }
@@ -390,12 +393,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 if (hit.collider.CompareTag("Grass"))
                 {
-                    Debug.Log("Colpito l'erba");
+                    Log.DLazy(() => "Colpito l'erba", this, _log);
                     return GroundType.Grass;
                 }
                 else if (hit.collider.CompareTag("Oil"))
                 {
-                    Debug.Log("Passato su una chiazza di olio");
+                    Log.DLazy(() => "Passato su una chiazza di olio", this, _log);
                     return GroundType.Oil;
                 }
             }
