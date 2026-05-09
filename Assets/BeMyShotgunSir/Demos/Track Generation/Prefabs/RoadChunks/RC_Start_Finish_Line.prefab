@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1872832749909431605}
   - component: {fileID: 3581325262423571197}
   - component: {fileID: 1148788320664917074}
-  - component: {fileID: 3828871416312271439}
+  - component: {fileID: 8085928518711778916}
   m_Layer: 0
   m_Name: SM_fencing_04 (13)
   m_TagString: Untagged
@@ -27,13 +27,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 33195397141531352}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 26}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &3581325262423571197
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -91,8 +91,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3828871416312271439
-MeshCollider:
+--- !u!65 &8085928518711778916
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,10 +109,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000006914139, y: 1.6794482, z: -0.1314973}
 --- !u!1 &107073718447057460
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,7 +123,7 @@ GameObject:
   - component: {fileID: 3190437495447752384}
   - component: {fileID: 8712742087502128487}
   - component: {fileID: 2366719603917486629}
-  - component: {fileID: 985235467086695776}
+  - component: {fileID: 8222042904259702405}
   m_Layer: 0
   m_Name: SM_fencing_04 (22)
   m_TagString: Untagged
@@ -204,8 +203,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &985235467086695776
-MeshCollider:
+--- !u!65 &8222042904259702405
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -222,10 +221,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.000002861023, y: 1.6794482, z: -0.13149726}
 --- !u!1 &115500574826915437
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +235,7 @@ GameObject:
   - component: {fileID: 328121201243433807}
   - component: {fileID: 2923847802514528612}
   - component: {fileID: 2848604379770497274}
-  - component: {fileID: 8480493489906274382}
+  - component: {fileID: 1028966642769717156}
   m_Layer: 0
   m_Name: SM_fencing_04 (3)
   m_TagString: Untagged
@@ -317,8 +315,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8480493489906274382
-MeshCollider:
+--- !u!65 &1028966642769717156
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -335,10 +333,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &182751735787013524
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +347,7 @@ GameObject:
   - component: {fileID: 5842037911942177222}
   - component: {fileID: 140068901977156899}
   - component: {fileID: 5981897166153895920}
-  - component: {fileID: 8829078454985182741}
+  - component: {fileID: 51555449002036199}
   m_Layer: 0
   m_Name: SM_fencing_04 (8)
   m_TagString: Untagged
@@ -366,13 +363,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182751735787013524}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 16}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &140068901977156899
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -430,8 +427,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8829078454985182741
-MeshCollider:
+--- !u!65 &51555449002036199
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -448,10 +445,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.0000047683716, y: 1.6794482, z: -0.1314973}
 --- !u!1 &639126669995730110
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,7 +459,7 @@ GameObject:
   - component: {fileID: 304507007547582030}
   - component: {fileID: 7911789056745270313}
   - component: {fileID: 4895583544576973485}
-  - component: {fileID: 3535557486588726882}
+  - component: {fileID: 4708091133629676016}
   m_Layer: 0
   m_Name: SM_fencing_04 (12)
   m_TagString: Untagged
@@ -479,13 +475,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639126669995730110}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 24}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &7911789056745270313
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -543,8 +539,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3535557486588726882
-MeshCollider:
+--- !u!65 &4708091133629676016
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -561,10 +557,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.00000667572, y: 1.6794482, z: -0.1314973}
 --- !u!1 &677207842265732474
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,7 +607,7 @@ GameObject:
   - component: {fileID: 1295512301626589495}
   - component: {fileID: 3924331149679327081}
   - component: {fileID: 4049197049826942667}
-  - component: {fileID: 7115064235260801976}
+  - component: {fileID: 9022949229648108525}
   m_Layer: 0
   m_Name: SM_fencing_04 (18)
   m_TagString: Untagged
@@ -628,13 +623,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 690854043456243884}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 36}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &3924331149679327081
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -692,8 +687,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7115064235260801976
-MeshCollider:
+--- !u!65 &9022949229648108525
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -710,10 +705,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000009536743, y: 1.6794482, z: -0.1314973}
 --- !u!1 &794800199429296679
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,7 +752,7 @@ GameObject:
   - component: {fileID: 3533992826054891913}
   - component: {fileID: 8382164915377615807}
   - component: {fileID: 2210541217455010379}
-  - component: {fileID: 1480299347888935820}
+  - component: {fileID: 7696153957647759554}
   m_Layer: 0
   m_Name: SM_fencing_04 (25)
   m_TagString: Untagged
@@ -838,8 +832,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1480299347888935820
-MeshCollider:
+--- !u!65 &7696153957647759554
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -856,10 +850,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149822}
 --- !u!1 &862671000019983198
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,7 +864,7 @@ GameObject:
   - component: {fileID: 6374125993115914033}
   - component: {fileID: 8674502837569638438}
   - component: {fileID: 9222478687321088201}
-  - component: {fileID: 3664475599973762745}
+  - component: {fileID: 7722998613749879774}
   m_Layer: 0
   m_Name: SM_fencing_04 (21)
   m_TagString: Untagged
@@ -951,8 +944,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3664475599973762745
-MeshCollider:
+--- !u!65 &7722998613749879774
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -969,10 +962,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000023841858, y: 1.6794482, z: -0.13149822}
 --- !u!1 &985486039602220032
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +976,7 @@ GameObject:
   - component: {fileID: 2737244119024662470}
   - component: {fileID: 8468715822407337559}
   - component: {fileID: 1929120150783003607}
-  - component: {fileID: 2764458964017634597}
+  - component: {fileID: 3543397081605887283}
   m_Layer: 0
   m_Name: SM_fencing_04 (26)
   m_TagString: Untagged
@@ -1064,8 +1056,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2764458964017634597
-MeshCollider:
+--- !u!65 &3543397081605887283
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1082,10 +1074,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149822}
 --- !u!1 &1091821006881984446
 GameObject:
   m_ObjectHideFlags: 0
@@ -1097,7 +1088,7 @@ GameObject:
   - component: {fileID: 5369092263699423976}
   - component: {fileID: 2373336762376080873}
   - component: {fileID: 2401676199623400551}
-  - component: {fileID: 3956647781302368000}
+  - component: {fileID: 2112190504770599131}
   m_Layer: 0
   m_Name: SM_fencing_04 (5)
   m_TagString: Untagged
@@ -1177,8 +1168,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3956647781302368000
-MeshCollider:
+--- !u!65 &2112190504770599131
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1195,10 +1186,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149822}
 --- !u!1 &1287108291802976096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,7 +1200,7 @@ GameObject:
   - component: {fileID: 7435666433028513842}
   - component: {fileID: 7785638376251424116}
   - component: {fileID: 510344426000129837}
-  - component: {fileID: 4463426881362488078}
+  - component: {fileID: 834092065807598431}
   m_Layer: 0
   m_Name: SM_fencing_04 (23)
   m_TagString: Untagged
@@ -1290,8 +1280,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4463426881362488078
-MeshCollider:
+--- !u!65 &834092065807598431
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1308,10 +1298,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.000002861023, y: 1.6794482, z: -0.13149726}
 --- !u!1 &1399405585762448178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1323,7 +1312,7 @@ GameObject:
   - component: {fileID: 6661208605038879276}
   - component: {fileID: 5243352214600373190}
   - component: {fileID: 5894060707014754219}
-  - component: {fileID: 5698793212946565500}
+  - component: {fileID: 4065357484714141557}
   m_Layer: 0
   m_Name: SM_fencing_04 (33)
   m_TagString: Untagged
@@ -1403,8 +1392,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5698793212946565500
-MeshCollider:
+--- !u!65 &4065357484714141557
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1421,10 +1410,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149822}
 --- !u!1 &1972615557858499762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1436,7 +1424,7 @@ GameObject:
   - component: {fileID: 3605178985293059861}
   - component: {fileID: 4069542274811069842}
   - component: {fileID: 5417409237395965616}
-  - component: {fileID: 6539157241638120973}
+  - component: {fileID: 8316615306645621433}
   m_Layer: 0
   m_Name: SM_fencing_04 (15)
   m_TagString: Untagged
@@ -1452,13 +1440,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1972615557858499762}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 30}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &4069542274811069842
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1516,8 +1504,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6539157241638120973
-MeshCollider:
+--- !u!65 &8316615306645621433
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1534,10 +1522,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000007987022, y: 1.6794482, z: -0.1314973}
 --- !u!1 &2115944450859014531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1549,7 +1536,7 @@ GameObject:
   - component: {fileID: 7342794679504693287}
   - component: {fileID: 426013801585423732}
   - component: {fileID: 8294084265438814118}
-  - component: {fileID: 4866460867860261744}
+  - component: {fileID: 6636145196581105245}
   m_Layer: 0
   m_Name: SM_fencing_04 (17)
   m_TagString: Untagged
@@ -1565,13 +1552,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2115944450859014531}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 34}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &426013801585423732
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1629,8 +1616,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4866460867860261744
-MeshCollider:
+--- !u!65 &6636145196581105245
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1647,10 +1634,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000009059906, y: 1.6794482, z: -0.1314973}
 --- !u!1 &2201255315021191236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1662,7 +1648,7 @@ GameObject:
   - component: {fileID: 3616940631912353700}
   - component: {fileID: 2256806731717392149}
   - component: {fileID: 5735182778020461856}
-  - component: {fileID: 4347704860182331145}
+  - component: {fileID: 2495100535629761700}
   m_Layer: 0
   m_Name: SM_fencing_04 (10)
   m_TagString: Untagged
@@ -1742,8 +1728,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4347704860182331145
-MeshCollider:
+--- !u!65 &2495100535629761700
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1760,10 +1746,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149822}
 --- !u!1 &2298844413638738523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,7 +1760,7 @@ GameObject:
   - component: {fileID: 210640388727703003}
   - component: {fileID: 8007505171749428962}
   - component: {fileID: 6049642736151967868}
-  - component: {fileID: 5723380059721506198}
+  - component: {fileID: 1056441071331069241}
   m_Layer: 0
   m_Name: SM_fencing_04 (8)
   m_TagString: Untagged
@@ -1855,8 +1840,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5723380059721506198
-MeshCollider:
+--- !u!65 &1056441071331069241
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1873,10 +1858,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &2300433281466178758
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,7 +1872,7 @@ GameObject:
   - component: {fileID: 3186658719681775018}
   - component: {fileID: 3936850195918101339}
   - component: {fileID: 8302069659458866759}
-  - component: {fileID: 6528821541515602514}
+  - component: {fileID: 3085163242295541702}
   m_Layer: 0
   m_Name: SM_fencing_04 (24)
   m_TagString: Untagged
@@ -1968,8 +1952,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6528821541515602514
-MeshCollider:
+--- !u!65 &3085163242295541702
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1986,10 +1970,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: -0.0000009536743, y: 1.6794482, z: -0.13149726}
 --- !u!1 &2365775290693426437
 GameObject:
   m_ObjectHideFlags: 0
@@ -2063,7 +2046,7 @@ GameObject:
   - component: {fileID: 8767123444471635617}
   - component: {fileID: 4199373224508816126}
   - component: {fileID: 8001470388142713786}
-  - component: {fileID: 2707822755104712116}
+  - component: {fileID: 7271585428020321044}
   m_Layer: 0
   m_Name: SM_fencing_04 (31)
   m_TagString: Untagged
@@ -2143,8 +2126,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2707822755104712116
-MeshCollider:
+--- !u!65 &7271585428020321044
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2161,10 +2144,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &2421158094772890939
 GameObject:
   m_ObjectHideFlags: 0
@@ -2176,7 +2158,7 @@ GameObject:
   - component: {fileID: 4438790709634729063}
   - component: {fileID: 1482800380431386250}
   - component: {fileID: 1117470427395135173}
-  - component: {fileID: 6108114095033758828}
+  - component: {fileID: 485740122536412721}
   m_Layer: 0
   m_Name: SM_fencing_04 (9)
   m_TagString: Untagged
@@ -2256,8 +2238,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6108114095033758828
-MeshCollider:
+--- !u!65 &485740122536412721
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2274,10 +2256,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &2573181237630735750
 GameObject:
   m_ObjectHideFlags: 0
@@ -2289,7 +2270,7 @@ GameObject:
   - component: {fileID: 4289409938790813339}
   - component: {fileID: 8981811822359012980}
   - component: {fileID: 4919284158576577573}
-  - component: {fileID: 2858891952896847570}
+  - component: {fileID: 1748515092613509895}
   m_Layer: 0
   m_Name: SM_fencing_04 (6)
   m_TagString: Untagged
@@ -2369,8 +2350,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2858891952896847570
-MeshCollider:
+--- !u!65 &1748515092613509895
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2387,10 +2368,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &2600585480324844600
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,7 +2421,7 @@ GameObject:
   - component: {fileID: 3101213341497486869}
   - component: {fileID: 337023171523754820}
   - component: {fileID: 1556008240765964704}
-  - component: {fileID: 6082935055821379942}
+  - component: {fileID: 7302707787951807099}
   m_Layer: 0
   m_Name: SM_fencing_04 (4)
   m_TagString: Untagged
@@ -2521,8 +2501,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6082935055821379942
-MeshCollider:
+--- !u!65 &7302707787951807099
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2539,10 +2519,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &2646149874879905023
 GameObject:
   m_ObjectHideFlags: 0
@@ -2619,7 +2598,7 @@ GameObject:
   - component: {fileID: 3608651281074305065}
   - component: {fileID: 2807860141244506681}
   - component: {fileID: 8056976545938881752}
-  - component: {fileID: 186119711077784101}
+  - component: {fileID: 1140549982089654214}
   m_Layer: 0
   m_Name: SM_fencing_04 (1)
   m_TagString: Untagged
@@ -2699,8 +2678,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &186119711077784101
-MeshCollider:
+--- !u!65 &1140549982089654214
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2717,10 +2696,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149822}
 --- !u!1 &2942754401628094575
 GameObject:
   m_ObjectHideFlags: 0
@@ -2732,7 +2710,7 @@ GameObject:
   - component: {fileID: 5816196308187775893}
   - component: {fileID: 1381693835092650186}
   - component: {fileID: 2300049984542095109}
-  - component: {fileID: 2559746589621316212}
+  - component: {fileID: 1547424075188445080}
   m_Layer: 0
   m_Name: SM_fencing_04 (12)
   m_TagString: Untagged
@@ -2812,8 +2790,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2559746589621316212
-MeshCollider:
+--- !u!65 &1547424075188445080
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2830,10 +2808,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &3025392528542573615
 GameObject:
   m_ObjectHideFlags: 0
@@ -2877,7 +2854,7 @@ GameObject:
   - component: {fileID: 9065046684770044350}
   - component: {fileID: 5559209377295992709}
   - component: {fileID: 1512283888448835063}
-  - component: {fileID: 6730800413765971159}
+  - component: {fileID: 7896447777816117489}
   m_Layer: 0
   m_Name: SM_fencing_04 (17)
   m_TagString: Untagged
@@ -2957,8 +2934,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6730800413765971159
-MeshCollider:
+--- !u!65 &7896447777816117489
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2975,10 +2952,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000014305115, y: 1.6794482, z: -0.13149822}
 --- !u!1 &3304247440245616723
 GameObject:
   m_ObjectHideFlags: 0
@@ -3102,7 +3078,7 @@ GameObject:
   - component: {fileID: 5959437624006338118}
   - component: {fileID: 5423702610132326040}
   - component: {fileID: 5146408504027751737}
-  - component: {fileID: 1319726867338852179}
+  - component: {fileID: 1710986513058661666}
   m_Layer: 0
   m_Name: SM_fencing_04 (28)
   m_TagString: Untagged
@@ -3182,8 +3158,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1319726867338852179
-MeshCollider:
+--- !u!65 &1710986513058661666
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3200,10 +3176,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &3542378348287145609
 GameObject:
   m_ObjectHideFlags: 0
@@ -3215,7 +3190,7 @@ GameObject:
   - component: {fileID: 8248235788333680617}
   - component: {fileID: 7127493314312210242}
   - component: {fileID: 5530952274370019828}
-  - component: {fileID: 2466024000424556497}
+  - component: {fileID: 4959428981321617308}
   m_Layer: 0
   m_Name: SM_fencing_04 (20)
   m_TagString: Untagged
@@ -3295,8 +3270,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2466024000424556497
-MeshCollider:
+--- !u!65 &4959428981321617308
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3313,10 +3288,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000021457672, y: 1.6794482, z: -0.13149726}
 --- !u!1 &3621794065729277103
 GameObject:
   m_ObjectHideFlags: 0
@@ -3328,7 +3302,7 @@ GameObject:
   - component: {fileID: 3234596507142898729}
   - component: {fileID: 2054819556106638452}
   - component: {fileID: 7481506432106102569}
-  - component: {fileID: 3150783949141607673}
+  - component: {fileID: 5431436319871194308}
   m_Layer: 0
   m_Name: SM_fencing_04 (9)
   m_TagString: Untagged
@@ -3408,8 +3382,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3150783949141607673
-MeshCollider:
+--- !u!65 &5431436319871194308
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3426,10 +3400,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149822}
 --- !u!1 &3663208369646665854
 GameObject:
   m_ObjectHideFlags: 0
@@ -3441,7 +3414,7 @@ GameObject:
   - component: {fileID: 6603239136223908229}
   - component: {fileID: 5289388330303111947}
   - component: {fileID: 4209682752528821145}
-  - component: {fileID: 3276163003556794970}
+  - component: {fileID: 3474382375215944227}
   m_Layer: 0
   m_Name: SM_fencing_04 (19)
   m_TagString: Untagged
@@ -3521,8 +3494,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3276163003556794970
-MeshCollider:
+--- !u!65 &3474382375215944227
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3539,10 +3512,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &3813829583397453768
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,7 +3526,7 @@ GameObject:
   - component: {fileID: 5133446674555983086}
   - component: {fileID: 4174180416986266547}
   - component: {fileID: 2060421190383978494}
-  - component: {fileID: 2371288096483680376}
+  - component: {fileID: 3727549298093306782}
   m_Layer: 0
   m_Name: SM_fencing_04 (11)
   m_TagString: Untagged
@@ -3634,8 +3606,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2371288096483680376
-MeshCollider:
+--- !u!65 &3727549298093306782
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3652,10 +3624,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149631}
 --- !u!1 &3919040786615113358
 GameObject:
   m_ObjectHideFlags: 0
@@ -3667,7 +3638,7 @@ GameObject:
   - component: {fileID: 6393788628572854095}
   - component: {fileID: 7538569347933329690}
   - component: {fileID: 29363531311988884}
-  - component: {fileID: 9129128204235949438}
+  - component: {fileID: 6108083675853232885}
   m_Layer: 0
   m_Name: SM_fencing_04 (11)
   m_TagString: Untagged
@@ -3683,13 +3654,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3919040786615113358}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 22}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &7538569347933329690
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3747,8 +3718,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &9129128204235949438
-MeshCollider:
+--- !u!65 &6108083675853232885
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3765,10 +3736,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000006198883, y: 1.6794482, z: -0.1314973}
 --- !u!1 &4010729552971971620
 GameObject:
   m_ObjectHideFlags: 0
@@ -3780,7 +3750,7 @@ GameObject:
   - component: {fileID: 8920729783766104425}
   - component: {fileID: 1923766821270022101}
   - component: {fileID: 2398671648309495062}
-  - component: {fileID: 4956383650916212264}
+  - component: {fileID: 1878551846989108335}
   m_Layer: 0
   m_Name: SM_fencing_04 (20)
   m_TagString: Untagged
@@ -3796,13 +3766,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4010729552971971620}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 40}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &1923766821270022101
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3860,8 +3830,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4956383650916212264
-MeshCollider:
+--- !u!65 &1878551846989108335
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3878,10 +3848,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.0000104904175, y: 1.6794482, z: -0.1314973}
 --- !u!1 &4061329757012762638
 GameObject:
   m_ObjectHideFlags: 0
@@ -3893,7 +3862,7 @@ GameObject:
   - component: {fileID: 2414348593998850642}
   - component: {fileID: 8695826954101649345}
   - component: {fileID: 8772989646932316037}
-  - component: {fileID: 6155284781040868206}
+  - component: {fileID: 1469498047524556792}
   m_Layer: 0
   m_Name: SM_fencing_04 (7)
   m_TagString: Untagged
@@ -3973,8 +3942,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6155284781040868206
-MeshCollider:
+--- !u!65 &1469498047524556792
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3991,10 +3960,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149631}
 --- !u!1 &4069262013089706177
 GameObject:
   m_ObjectHideFlags: 0
@@ -4119,7 +4087,7 @@ GameObject:
   - component: {fileID: 994585147015226593}
   - component: {fileID: 5528692746055690062}
   - component: {fileID: 5082752645347932997}
-  - component: {fileID: 8214132717774993545}
+  - component: {fileID: 6050015415118995165}
   m_Layer: 0
   m_Name: SM_fencing_04 (10)
   m_TagString: Untagged
@@ -4135,13 +4103,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4121059661915767505}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 20}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &5528692746055690062
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4199,8 +4167,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8214132717774993545
-MeshCollider:
+--- !u!65 &6050015415118995165
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4217,10 +4185,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000005722046, y: 1.6794482, z: -0.1314973}
 --- !u!1 &4167288994287416142
 GameObject:
   m_ObjectHideFlags: 0
@@ -4232,7 +4199,7 @@ GameObject:
   - component: {fileID: 8104500377683415843}
   - component: {fileID: 9072869665514532116}
   - component: {fileID: 3884166382651430634}
-  - component: {fileID: 6438524236092980252}
+  - component: {fileID: 6585601847413290737}
   m_Layer: 0
   m_Name: SM_fencing_04 (16)
   m_TagString: Untagged
@@ -4248,13 +4215,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4167288994287416142}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 32}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &9072869665514532116
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4312,8 +4279,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6438524236092980252
-MeshCollider:
+--- !u!65 &6585601847413290737
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4330,10 +4297,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.00000834465, y: 1.6794482, z: -0.1314973}
 --- !u!1 &4220036393539509397
 GameObject:
   m_ObjectHideFlags: 0
@@ -4345,7 +4311,7 @@ GameObject:
   - component: {fileID: 7892733761514226048}
   - component: {fileID: 6864212028327095089}
   - component: {fileID: 1349917720490137877}
-  - component: {fileID: 8537553323309185438}
+  - component: {fileID: 4046797953807428165}
   m_Layer: 0
   m_Name: SM_fencing_04 (8)
   m_TagString: Untagged
@@ -4425,8 +4391,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8537553323309185438
-MeshCollider:
+--- !u!65 &4046797953807428165
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4443,10 +4409,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &4308770051488740091
 GameObject:
   m_ObjectHideFlags: 0
@@ -4458,7 +4423,7 @@ GameObject:
   - component: {fileID: 5359652445823284212}
   - component: {fileID: 6767609467002492312}
   - component: {fileID: 8330605151826938539}
-  - component: {fileID: 55510262858583583}
+  - component: {fileID: 1072426469233845923}
   m_Layer: 0
   m_Name: SM_fencing_04 (16)
   m_TagString: Untagged
@@ -4538,8 +4503,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &55510262858583583
-MeshCollider:
+--- !u!65 &1072426469233845923
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4556,10 +4521,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000014305115, y: 1.6794482, z: -0.13149726}
 --- !u!1 &4411803502982110364
 GameObject:
   m_ObjectHideFlags: 0
@@ -4607,7 +4571,7 @@ GameObject:
   - component: {fileID: 2391511938100674370}
   - component: {fileID: 6980821806892420187}
   - component: {fileID: 3123058411867643283}
-  - component: {fileID: 5967221302351030142}
+  - component: {fileID: 6133540967527004347}
   m_Layer: 0
   m_Name: SM_fencing_04 (19)
   m_TagString: Untagged
@@ -4623,13 +4587,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4454326496303557614}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 38}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &6980821806892420187
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4687,8 +4651,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5967221302351030142
-MeshCollider:
+--- !u!65 &6133540967527004347
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4705,10 +4669,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.000009536743, y: 1.6794482, z: -0.1314973}
 --- !u!1 &4645895954977958415
 GameObject:
   m_ObjectHideFlags: 0
@@ -4720,7 +4683,7 @@ GameObject:
   - component: {fileID: 1008897091026159422}
   - component: {fileID: 1815429826566012980}
   - component: {fileID: 830208735727270859}
-  - component: {fileID: 6541573024057729292}
+  - component: {fileID: 3255867454450794929}
   m_Layer: 0
   m_Name: SM_fencing_04 (32)
   m_TagString: Untagged
@@ -4800,8 +4763,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6541573024057729292
-MeshCollider:
+--- !u!65 &3255867454450794929
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4818,10 +4781,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &4715806060505911718
 GameObject:
   m_ObjectHideFlags: 0
@@ -4895,7 +4857,7 @@ GameObject:
   - component: {fileID: 3226996624067361692}
   - component: {fileID: 2652103228530247206}
   - component: {fileID: 6112629088163515736}
-  - component: {fileID: 6260509785018902518}
+  - component: {fileID: 2326820212581639108}
   m_Layer: 0
   m_Name: SM_fencing_04 (27)
   m_TagString: Untagged
@@ -4975,8 +4937,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6260509785018902518
-MeshCollider:
+--- !u!65 &2326820212581639108
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4993,10 +4955,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &4992806124168806921
 GameObject:
   m_ObjectHideFlags: 0
@@ -5054,7 +5015,7 @@ GameObject:
   - component: {fileID: 6155642523281179164}
   - component: {fileID: 1315198789895243073}
   - component: {fileID: 8397382858948556183}
-  - component: {fileID: 1797323515746008741}
+  - component: {fileID: 2668624868986089632}
   m_Layer: 0
   m_Name: SM_fencing_04 (9)
   m_TagString: Untagged
@@ -5070,13 +5031,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5153012373105770812}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 18}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &1315198789895243073
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5134,8 +5095,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1797323515746008741
-MeshCollider:
+--- !u!65 &2668624868986089632
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5152,10 +5113,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.0000047683716, y: 1.6794482, z: -0.1314973}
 --- !u!1 &5191963256474936530
 GameObject:
   m_ObjectHideFlags: 0
@@ -5167,7 +5127,7 @@ GameObject:
   - component: {fileID: 737689213801782192}
   - component: {fileID: 5988590497209562833}
   - component: {fileID: 7478038536729494654}
-  - component: {fileID: 5196699854074713879}
+  - component: {fileID: 3241305553392329626}
   m_Layer: 0
   m_Name: SM_fencing_04 (15)
   m_TagString: Untagged
@@ -5247,8 +5207,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5196699854074713879
-MeshCollider:
+--- !u!65 &3241305553392329626
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5265,10 +5225,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000009536743, y: 1.6794482, z: -0.13149726}
 --- !u!1 &5248556007690734718
 GameObject:
   m_ObjectHideFlags: 0
@@ -5311,7 +5270,7 @@ GameObject:
   - component: {fileID: 4450416667013674343}
   - component: {fileID: 6233053840873331917}
   - component: {fileID: 1636562370363562930}
-  - component: {fileID: 5086212438919996072}
+  - component: {fileID: 3703796900943647301}
   m_Layer: 0
   m_Name: SM_fencing_04 (13)
   m_TagString: Untagged
@@ -5391,8 +5350,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5086212438919996072
-MeshCollider:
+--- !u!65 &3703796900943647301
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5409,10 +5368,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000009536743, y: 1.6794482, z: -0.13149822}
 --- !u!1 &5383107474658090336
 GameObject:
   m_ObjectHideFlags: 0
@@ -5455,7 +5413,7 @@ GameObject:
   - component: {fileID: 5928148889569818494}
   - component: {fileID: 5484297887140480685}
   - component: {fileID: 8642528687825953546}
-  - component: {fileID: 239535007452748664}
+  - component: {fileID: 4503448290662831971}
   m_Layer: 0
   m_Name: SM_fencing_04 (7)
   m_TagString: Untagged
@@ -5471,13 +5429,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5491107516391974639}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 14}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &5484297887140480685
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5535,8 +5493,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &239535007452748664
-MeshCollider:
+--- !u!65 &4503448290662831971
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5553,10 +5511,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.0000038146973, y: 1.6794482, z: -0.1314973}
 --- !u!1 &5518573730754786400
 GameObject:
   m_ObjectHideFlags: 0
@@ -5568,7 +5525,7 @@ GameObject:
   - component: {fileID: 5214328346899765372}
   - component: {fileID: 6345404657251343231}
   - component: {fileID: 4021213640277221437}
-  - component: {fileID: 89759411479451726}
+  - component: {fileID: 825997930592664584}
   m_Layer: 0
   m_Name: SM_fencing_04 (21)
   m_TagString: Untagged
@@ -5584,13 +5541,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5518573730754786400}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 42}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &6345404657251343231
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5648,8 +5605,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &89759411479451726
-MeshCollider:
+--- !u!65 &825997930592664584
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5666,10 +5623,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.0000104904175, y: 1.6794482, z: -0.1314973}
 --- !u!1 &5659022613412406909
 GameObject:
   m_ObjectHideFlags: 0
@@ -5681,7 +5637,7 @@ GameObject:
   - component: {fileID: 6989300707686006755}
   - component: {fileID: 9159031355448922477}
   - component: {fileID: 3135891095877759842}
-  - component: {fileID: 7815558028411223428}
+  - component: {fileID: 3548621900461111089}
   m_Layer: 0
   m_Name: SM_fencing_04 (14)
   m_TagString: Untagged
@@ -5761,8 +5717,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7815558028411223428
-MeshCollider:
+--- !u!65 &3548621900461111089
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5779,10 +5735,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000009536743, y: 1.6794482, z: -0.13149726}
 --- !u!1 &5676924395320784981
 GameObject:
   m_ObjectHideFlags: 0
@@ -5794,7 +5749,7 @@ GameObject:
   - component: {fileID: 4913846453376887681}
   - component: {fileID: 249857281515270516}
   - component: {fileID: 7086135224411596313}
-  - component: {fileID: 8032406024852112050}
+  - component: {fileID: 5036022955266372328}
   m_Layer: 0
   m_Name: SM_fencing_04 (2)
   m_TagString: Untagged
@@ -5874,8 +5829,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8032406024852112050
-MeshCollider:
+--- !u!65 &5036022955266372328
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5892,10 +5847,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149822}
 --- !u!1 &5823964258181756374
 GameObject:
   m_ObjectHideFlags: 0
@@ -5957,7 +5911,7 @@ GameObject:
   - component: {fileID: 4508891574944873454}
   - component: {fileID: 3134719450270342641}
   - component: {fileID: 7999189815062698628}
-  - component: {fileID: 8396009406731068902}
+  - component: {fileID: 3380597255586905546}
   m_Layer: 0
   m_Name: SM_fencing_04 (18)
   m_TagString: Untagged
@@ -6037,8 +5991,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8396009406731068902
-MeshCollider:
+--- !u!65 &3380597255586905546
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6055,10 +6009,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000017881393, y: 1.6794482, z: -0.13149822}
 --- !u!1 &6197971943785462579
 GameObject:
   m_ObjectHideFlags: 0
@@ -6070,7 +6023,7 @@ GameObject:
   - component: {fileID: 2862469741862982978}
   - component: {fileID: 4192951656072895942}
   - component: {fileID: 1082756499176950763}
-  - component: {fileID: 2837876442121249489}
+  - component: {fileID: 9178144460158173664}
   m_Layer: 0
   m_Name: SM_fencing_04 (14)
   m_TagString: Untagged
@@ -6086,13 +6039,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6197971943785462579}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 28}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 68.369, y: 0, z: 28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958085865800331919}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &4192951656072895942
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6150,8 +6103,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2837876442121249489
-MeshCollider:
+--- !u!65 &9178144460158173664
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6168,10 +6121,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226638, y: 3.3588965, z: 0.46299466}
+  m_Center: {x: 0.0000075101852, y: 1.6794482, z: -0.1314973}
 --- !u!1 &6409566598229595750
 GameObject:
   m_ObjectHideFlags: 0
@@ -6183,7 +6135,7 @@ GameObject:
   - component: {fileID: 4062081916186422987}
   - component: {fileID: 6643920469287031729}
   - component: {fileID: 8943996037522062972}
-  - component: {fileID: 208041212268713687}
+  - component: {fileID: 6028058982085431486}
   m_Layer: 0
   m_Name: SM_fencing_04 (9)
   m_TagString: Untagged
@@ -6263,8 +6215,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &208041212268713687
-MeshCollider:
+--- !u!65 &6028058982085431486
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6281,10 +6233,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149822}
 --- !u!1 &6415935338505861294
 GameObject:
   m_ObjectHideFlags: 0
@@ -6330,7 +6281,7 @@ GameObject:
   - component: {fileID: 1835348952644689887}
   - component: {fileID: 222274774946328841}
   - component: {fileID: 3591415207512608664}
-  - component: {fileID: 5363653876998068853}
+  - component: {fileID: 970086876104765129}
   m_Layer: 0
   m_Name: SM_fencing_04 (34)
   m_TagString: Untagged
@@ -6410,8 +6361,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5363653876998068853
-MeshCollider:
+--- !u!65 &970086876104765129
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6428,10 +6379,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149822}
 --- !u!1 &6655141354197100836
 GameObject:
   m_ObjectHideFlags: 0
@@ -6443,7 +6393,7 @@ GameObject:
   - component: {fileID: 68748115639455083}
   - component: {fileID: 75804132308545912}
   - component: {fileID: 5432667651777293280}
-  - component: {fileID: 8461544228663727169}
+  - component: {fileID: 1115827772657965089}
   m_Layer: 0
   m_Name: SM_fencing_04 (10)
   m_TagString: Untagged
@@ -6523,8 +6473,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8461544228663727169
-MeshCollider:
+--- !u!65 &1115827772657965089
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6541,10 +6491,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &6676498319157546506
 GameObject:
   m_ObjectHideFlags: 0
@@ -6618,7 +6567,7 @@ GameObject:
   - component: {fileID: 6190256485090186236}
   - component: {fileID: 9103936836192441726}
   - component: {fileID: 5624891076698132143}
-  - component: {fileID: 2142963568706114351}
+  - component: {fileID: 389299150769677922}
   m_Layer: 0
   m_Name: SM_fencing_04 (10)
   m_TagString: Untagged
@@ -6698,8 +6647,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2142963568706114351
-MeshCollider:
+--- !u!65 &389299150769677922
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6716,10 +6665,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149631}
 --- !u!1 &6758730410014036515
 GameObject:
   m_ObjectHideFlags: 0
@@ -6798,7 +6746,7 @@ GameObject:
   - component: {fileID: 8545709112522210118}
   - component: {fileID: 3953574527650007745}
   - component: {fileID: 3789927411826599288}
-  - component: {fileID: 7758696633344407629}
+  - component: {fileID: 7661546490102020093}
   m_Layer: 0
   m_Name: SM_fencing_04 (29)
   m_TagString: Untagged
@@ -6878,8 +6826,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7758696633344407629
-MeshCollider:
+--- !u!65 &7661546490102020093
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6896,10 +6844,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149822}
 --- !u!1 &7346007645410685815
 GameObject:
   m_ObjectHideFlags: 0
@@ -6911,7 +6858,7 @@ GameObject:
   - component: {fileID: 2302667452225114059}
   - component: {fileID: 8225444800072874255}
   - component: {fileID: 1845711500992813371}
-  - component: {fileID: 132164058412007094}
+  - component: {fileID: 7962065019261475271}
   m_Layer: 0
   m_Name: SM_fencing_04 (7)
   m_TagString: Untagged
@@ -6991,8 +6938,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &132164058412007094
-MeshCollider:
+--- !u!65 &7962065019261475271
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7009,10 +6956,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &8334931881942977320
 GameObject:
   m_ObjectHideFlags: 0
@@ -7024,7 +6970,7 @@ GameObject:
   - component: {fileID: 3266364545443197375}
   - component: {fileID: 2888067056173130958}
   - component: {fileID: 1460933377020150676}
-  - component: {fileID: 765201832661110218}
+  - component: {fileID: 6679437786032740321}
   m_Layer: 0
   m_Name: SM_fencing_04 (7)
   m_TagString: Untagged
@@ -7104,8 +7050,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &765201832661110218
-MeshCollider:
+--- !u!65 &6679437786032740321
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7122,10 +7068,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: -0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &8422355689236027852
 GameObject:
   m_ObjectHideFlags: 0
@@ -7168,7 +7113,7 @@ GameObject:
   - component: {fileID: 1942067517315768389}
   - component: {fileID: 3641963163650530519}
   - component: {fileID: 641748015059294074}
-  - component: {fileID: 888549528286421615}
+  - component: {fileID: 539378370678178156}
   m_Layer: 0
   m_Name: SM_fencing_04 (8)
   m_TagString: Untagged
@@ -7248,8 +7193,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &888549528286421615
-MeshCollider:
+--- !u!65 &539378370678178156
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7266,10 +7211,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1 &8627107446401431209
 GameObject:
   m_ObjectHideFlags: 0
@@ -7281,7 +7225,7 @@ GameObject:
   - component: {fileID: 1156697168797469837}
   - component: {fileID: 7527951400188363633}
   - component: {fileID: 2132565122911905908}
-  - component: {fileID: 2190867093165270261}
+  - component: {fileID: 8684250902183147023}
   m_Layer: 0
   m_Name: SM_fencing_04 (11)
   m_TagString: Untagged
@@ -7361,8 +7305,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2190867093165270261
-MeshCollider:
+--- !u!65 &8684250902183147023
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7379,10 +7323,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &8890350433842143493
 GameObject:
   m_ObjectHideFlags: 0
@@ -7425,7 +7368,7 @@ GameObject:
   - component: {fileID: 8733334944934492839}
   - component: {fileID: 6391092821667900724}
   - component: {fileID: 3714611263136342487}
-  - component: {fileID: 343561257995740997}
+  - component: {fileID: 8051668379742663442}
   m_Layer: 0
   m_Name: SM_fencing_04 (11)
   m_TagString: Untagged
@@ -7505,8 +7448,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &343561257995740997
-MeshCollider:
+--- !u!65 &8051668379742663442
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7523,10 +7466,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0.0000019073486, y: 1.6794482, z: -0.13149726}
 --- !u!1 &9141217411879403787
 GameObject:
   m_ObjectHideFlags: 0
@@ -7538,7 +7480,7 @@ GameObject:
   - component: {fileID: 4755637324890076113}
   - component: {fileID: 5290862601547088894}
   - component: {fileID: 4219690248829239959}
-  - component: {fileID: 701230039224624443}
+  - component: {fileID: 5683130131904030162}
   m_Layer: 0
   m_Name: SM_fencing_04 (30)
   m_TagString: Untagged
@@ -7618,8 +7560,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &701230039224624443
-MeshCollider:
+--- !u!65 &5683130131904030162
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7636,10 +7578,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4737717390296622703, guid: 65c503697fe33b04dac3b97c3286fc3b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.0226634, y: 3.3588965, z: 0.46299458}
+  m_Center: {x: 0, y: 1.6794482, z: -0.13149726}
 --- !u!1001 &1918981482252540895
 PrefabInstance:
   m_ObjectHideFlags: 0
