@@ -83,9 +83,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                 return;
             }
 
-            _driverController.InitializeDriver(_raceNetContext, this);
-            _shotgunController.InitializeShotgun(_raceNetContext, this);
-            _roadManager.SetDriver(_driverController.GetTransform());
+            _driverController.Initialize(_raceNetContext, this);
+            _shotgunController.Initialize(_raceNetContext, this);
+            _roadManager.SetDriver(_driverController.GetMovementTransform());
 
             // Enable camera for local player only if member of the team
             if (LocalConnection.ClientId == _driverConnectionId || LocalConnection.ClientId == _shotgunConnectionId)

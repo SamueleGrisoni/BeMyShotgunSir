@@ -11,9 +11,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public interface IDriverController
     {
-        void InitializeDriver(RaceNetContext context, TeamNetController teamNetController);
+        void Initialize(RaceNetContext context, TeamNetController teamNetController);
         int TeamId { get; }
-        Transform GetTransform();
+        Transform GetMovementTransform();
     }
     public class DriverController : NetworkBehaviour, IDriverController
     {
@@ -32,9 +32,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public int TeamId => _teamNetController != null ? _teamNetController.TeamId : (int)Codes.UnInitialized;
 
         //specific
-        private IDriverInputConsumer _inputConsumer;
-        public Transform GetTransform() => transform;
-        public void InitializeDriver(RaceNetContext context, TeamNetController teamNetController)
+        public IDriverInputConsumer _inputConsumer;
+        [SerializeField] private MovementController _movementController;
+        public Transform GetMovementTransform() => _movementController != null ? _movementController.transform : null;
+
+        public void Initialize(RaceNetContext context, TeamNetController teamNetController)
         {
             if (_isInitialized)
                 return;

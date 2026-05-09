@@ -624,6 +624,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 0}
+  _movementController: {fileID: 7864906868263305960}
 --- !u!114 &7387308273733314743
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 {
     public interface IShotgunController
     {
-        void InitializeShotgun(RaceNetContext context, TeamNetController teamNetController);
+        void Initialize(RaceNetContext context, TeamNetController teamNetController);
         int TeamId { get; }
     }
 
@@ -28,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             OnShotgunSpawned?.Invoke(this);
         }
 
-        public void InitializeShotgun(RaceNetContext context, TeamNetController teamNetController)
+        public void Initialize(RaceNetContext context, TeamNetController teamNetController)
         {
             if (_isInitialized)
                 return;

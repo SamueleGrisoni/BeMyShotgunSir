@@ -73,9 +73,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
                 return;
             if (other.CompareTag("Driver"))
             {
-                if (other.TryGetComponent(out IDriverController driverController))
+                if (other.TryGetComponent(out MovementController movementController))
                 {
-                    int teamId = driverController.TeamId;
+                    int teamId = movementController.TeamId;
                     _netController.AddPowerUpToTeam(teamId, PowerUpType);
                     NetworkObject.Despawn();
                 }

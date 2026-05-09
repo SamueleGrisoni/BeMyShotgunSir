@@ -1,5 +1,7 @@
 using BeMyShotgunSir.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
+using BeMyShotgunSir.Scripts.UI;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -8,6 +10,8 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
+    #region Enums and Structs
+
     public enum GroundType : byte
     {
         Normal,
@@ -79,8 +83,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public void SetTick(uint value) => _tick = value;
     }
 
+    #endregion
+
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
+        private DriverController _driverController;
+        public int TeamId => _driverController != null ? _driverController.TeamId : (int)Codes.UnInitialized;
+        public IDriverInputConsumer InputConsumer => _driverController != null ? _driverController._inputConsumer : null;
+
+        public void Initialize(DriverController driverController)
+        {
+            if (_driverController == null)
+                _driverController = driverController;
+        }
+
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
 
