@@ -151,6 +151,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
+        private void LateUpdate()
+        {
+            _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+        }
+
         public override void OnStartNetwork()
         {
             TimeManager.OnTick += TimeManager_OnTick;
@@ -224,7 +229,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
 
-            _movement.transform.up = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
 
             if (state != ReplicateState.Replayed)
                 _currentSteerInput = data.SteerInput;
@@ -390,9 +394,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data, bool isReplayed)
         {
-            DrivingStateTpye newStateType = GetStateType(state);
-            if (_currentStateType == newStateType)
-                return;
             _currentDrivingState?.Exit(this, data, isReplayed);
 
             _previousDrivingState = _currentDrivingState;
@@ -404,7 +405,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         GroundType IDrivingStateContext.CheckGround()
         {
-            if (Physics.Raycast(_movement.position, Vector3.down, out RaycastHit hit, 0.6f))
+            if (Physics.SphereCast(_movement.position, 0.3f, Vector3.down, out RaycastHit hit, 0.6f))
             {
                 if (hit.collider.CompareTag("Grass"))
                 {

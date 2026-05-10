@@ -7,7 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            Log.DLazy(() => $"Enter drift state", this, controller.Log);
+            Log.DLazy(() => $"Enter drift state", this);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
 
             //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
@@ -60,6 +60,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting drift state", this, controller.Log);
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting drift state", this);
     }
 }
