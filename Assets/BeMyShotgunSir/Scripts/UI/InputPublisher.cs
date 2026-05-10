@@ -6,7 +6,8 @@ namespace BeMyShotgunSir.Scripts.UI
     public enum CommitmentDirection
     {
         Left,
-        Right
+        Right,
+        Default,
     }
 
     public interface IDriverInputConsumer

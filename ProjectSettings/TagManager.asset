@@ -21,8 +21,8 @@ TagManager:
   - SidecarCollider
   - SphereCollider
   - CollisionCollider
-  - 
-  - 
+  - LeftCollider
+  - RightCollider
   - 
   - 
   - 

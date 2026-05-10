@@ -2,7 +2,6 @@ using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
-using FishNet.Demo.Prediction.Rigidbodies;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -37,13 +36,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         //public float DriftInput;
         public bool IsBoosting;
         public bool IsStarting;
-        public ReplicateData(float steerInput, bool isDrifting, /*float driftInput,*/ bool isBoosting, bool isStarting) : this()
+        public CommitmentDirection CommitmentDirection;
+        public ReplicateData(float steerInput, bool isDrifting, /*float driftInput,*/ bool isBoosting, bool isStarting, CommitmentDirection commitmentDirection) : this()
         {
             SteerInput = steerInput;
             IsDrifting = isDrifting;
             //DriftInput = driftInput;
             IsBoosting = isBoosting;
             IsStarting = isStarting;
+            CommitmentDirection = commitmentDirection;
         }
 
         private uint _tick;
@@ -100,11 +101,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             InputConsumer = inputConsumer;
             InputConsumer.OnBoostPressed += ExecuteCommit;
+            InputConsumer.OnEarlyCommitmentPressed += ExecuteEarlyCommitment;
         }
         public void ExecuteCommit()
         {
             Debug.Log("Boost button pressed from movement controller");
             _isBoosting = true;
+        }
+        public void ExecuteEarlyCommitment(CommitmentDirection direction)
+        {
+            Debug.Log($"Early commitment pressed from movement controller: {direction}");
+            _commitmentDirection = direction;
         }
         
         [SerializeField] private bool _isDebugInputEnabled = false;
@@ -116,6 +123,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
         [SerializeField] private Transform _sidecarModel;
+        [SerializeField] private Collider _commitmentCollider;
 
         [SerializeField] private LayerMask _sidecarLayerMask;
         [SerializeField] private float _bumpRadius;
@@ -143,6 +151,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _oilState = new OilDrivingState();
 
         private bool _isBoosting;
+        private CommitmentDirection _commitmentDirection;
         private float _currentBatteryCharge;
         private float _batteryChargeTimer;
         private float _boostTimer;
@@ -164,13 +173,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentLinearVelocity = Vector3.zero;
             _isOilAnimationActive = false;
             _isBoosting = false;
+            _commitmentDirection = CommitmentDirection.Default;
         }
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
         private void Update()
         {
-            Debug.Log($"Start button pressed from movement controller {InputConsumer.IsMoving}");
+            Debug.Log($"Early commitment: {_input.EarlyCommitment}");
         }
 
         private void LateUpdate()
@@ -201,11 +211,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             ReplicateData rd = new();
             if (_isDebugInputEnabled)
             {
-                rd = new(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting);
+                rd = new(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting, _input.EarlyCommitment);
             }
             else {
                 float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput / 100; // TODO poi marco lo aggiustaz
-                rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving);
+                rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving, _input.EarlyCommitment);
                 _isBoosting = false;
             }
             return rd;
@@ -214,6 +224,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
+            _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left ?
+                                                    LayerMask.NameToLayer("LeftCollider") :
+                                                    LayerMask.NameToLayer("RightCollider");
+
             bool isReplayed = state.ContainsReplayed();
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
             _currentDrivingState?.RunInputs(this, data, isReplayed);

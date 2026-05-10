@@ -987,6 +987,24 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftEarlyCommitment"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a494eb74-0328-4cb6-a91a-b0d8362b655e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightEarlyCommitment"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""4e65fcfc-43cc-4075-a3a1-e5749c2d519d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1220,6 +1238,28 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""EarlyCommitment"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""00818fd1-cc7e-4c9d-9542-6ff0b0203652"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftEarlyCommitment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""185fb7bf-5590-4796-be80-a1fd9660f28f"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightEarlyCommitment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1315,6 +1355,8 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         m_InGameControls_Drift = m_InGameControls.FindAction("Drift", throwIfNotFound: true);
         m_InGameControls_Start = m_InGameControls.FindAction("Start", throwIfNotFound: true);
         m_InGameControls_EarlyCommitment = m_InGameControls.FindAction("EarlyCommitment", throwIfNotFound: true);
+        m_InGameControls_LeftEarlyCommitment = m_InGameControls.FindAction("LeftEarlyCommitment", throwIfNotFound: true);
+        m_InGameControls_RightEarlyCommitment = m_InGameControls.FindAction("RightEarlyCommitment", throwIfNotFound: true);
     }
 
     ~@Input_Actions()
@@ -1739,6 +1781,8 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_InGameControls_Drift;
     private readonly InputAction m_InGameControls_Start;
     private readonly InputAction m_InGameControls_EarlyCommitment;
+    private readonly InputAction m_InGameControls_LeftEarlyCommitment;
+    private readonly InputAction m_InGameControls_RightEarlyCommitment;
     /// <summary>
     /// Provides access to input actions defined in input action map "InGameControls".
     /// </summary>
@@ -1778,6 +1822,14 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "InGameControls/EarlyCommitment".
         /// </summary>
         public InputAction @EarlyCommitment => m_Wrapper.m_InGameControls_EarlyCommitment;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/LeftEarlyCommitment".
+        /// </summary>
+        public InputAction @LeftEarlyCommitment => m_Wrapper.m_InGameControls_LeftEarlyCommitment;
+        /// <summary>
+        /// Provides access to the underlying input action "InGameControls/RightEarlyCommitment".
+        /// </summary>
+        public InputAction @RightEarlyCommitment => m_Wrapper.m_InGameControls_RightEarlyCommitment;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1825,6 +1877,12 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @EarlyCommitment.started += instance.OnEarlyCommitment;
             @EarlyCommitment.performed += instance.OnEarlyCommitment;
             @EarlyCommitment.canceled += instance.OnEarlyCommitment;
+            @LeftEarlyCommitment.started += instance.OnLeftEarlyCommitment;
+            @LeftEarlyCommitment.performed += instance.OnLeftEarlyCommitment;
+            @LeftEarlyCommitment.canceled += instance.OnLeftEarlyCommitment;
+            @RightEarlyCommitment.started += instance.OnRightEarlyCommitment;
+            @RightEarlyCommitment.performed += instance.OnRightEarlyCommitment;
+            @RightEarlyCommitment.canceled += instance.OnRightEarlyCommitment;
         }
 
         /// <summary>
@@ -1857,6 +1915,12 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
             @EarlyCommitment.started -= instance.OnEarlyCommitment;
             @EarlyCommitment.performed -= instance.OnEarlyCommitment;
             @EarlyCommitment.canceled -= instance.OnEarlyCommitment;
+            @LeftEarlyCommitment.started -= instance.OnLeftEarlyCommitment;
+            @LeftEarlyCommitment.performed -= instance.OnLeftEarlyCommitment;
+            @LeftEarlyCommitment.canceled -= instance.OnLeftEarlyCommitment;
+            @RightEarlyCommitment.started -= instance.OnRightEarlyCommitment;
+            @RightEarlyCommitment.performed -= instance.OnRightEarlyCommitment;
+            @RightEarlyCommitment.canceled -= instance.OnRightEarlyCommitment;
         }
 
         /// <summary>
@@ -2132,5 +2196,19 @@ public partial class @Input_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnEarlyCommitment(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftEarlyCommitment" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftEarlyCommitment(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightEarlyCommitment" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightEarlyCommitment(InputAction.CallbackContext context);
     }
 }

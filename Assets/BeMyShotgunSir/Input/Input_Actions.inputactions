@@ -901,6 +901,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeftEarlyCommitment",
+                    "type": "PassThrough",
+                    "id": "a494eb74-0328-4cb6-a91a-b0d8362b655e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightEarlyCommitment",
+                    "type": "PassThrough",
+                    "id": "4e65fcfc-43cc-4075-a3a1-e5749c2d519d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1132,6 +1150,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "EarlyCommitment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00818fd1-cc7e-4c9d-9542-6ff0b0203652",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftEarlyCommitment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "185fb7bf-5590-4796-be80-a1fd9660f28f",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightEarlyCommitment",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
