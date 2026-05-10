@@ -9,7 +9,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         {
             if (!isReplayed)
             {
-                Log.DLazy(() => $"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}", this, controller.Log);
+                Log.DLazy(() => $"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}", this);
             }
             if (controller.CurrentBatteryCharge <= 0)
             {
@@ -50,7 +50,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             {
                 controller.ChangeState(controller.DriftingState, data, isReplayed);
             }
-            //Debug.Log($"Current battery charge: {controller.CurrentBatteryCharge}");
         }
         public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {

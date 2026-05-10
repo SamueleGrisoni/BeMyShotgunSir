@@ -2,6 +2,7 @@ using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Demo.Prediction.Rigidbodies;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -33,12 +34,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     {
         public float SteerInput;
         public bool IsDrifting;
+        //public float DriftInput;
         public bool IsBoosting;
         public bool IsStarting;
-        public ReplicateData(float steerInput, bool isDrifting, bool isBoosting, bool isStarting) : this()
+        public ReplicateData(float steerInput, bool isDrifting, /*float driftInput,*/ bool isBoosting, bool isStarting) : this()
         {
             SteerInput = steerInput;
             IsDrifting = isDrifting;
+            //DriftInput = driftInput;
             IsBoosting = isBoosting;
             IsStarting = isStarting;
         }
@@ -91,8 +94,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         bool IDrivingStateContext.Log => _log;
         [SerializeField] private DriverController _driverController;
         public int? TeamId => _driverController == null ? null : _driverController.TeamId;
-        public IDriverInputConsumer InputConsumer => _driverController != null ? _driverController._inputConsumer : null;
+        public IDriverInputConsumer InputConsumer;
 
+        public void Initialize(IDriverInputConsumer inputConsumer)
+        {
+            InputConsumer = inputConsumer;
+            InputConsumer.OnBoostPressed += ExecuteCommit;
+        }
+        public void ExecuteCommit()
+        {
+            Debug.Log("Boost button pressed from movement controller");
+            _isBoosting = true;
+        }
+        
+        [SerializeField] private bool _isDebugInputEnabled = false;
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private DriverVisuals _driverVisual;
@@ -127,6 +142,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _grassState = new GrassDrivingState();
         private IDrivingState _oilState = new OilDrivingState();
 
+        private bool _isBoosting;
         private float _currentBatteryCharge;
         private float _batteryChargeTimer;
         private float _boostTimer;
@@ -147,9 +163,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _previousStateType = DrivingStateTpye.Idle;
             _currentLinearVelocity = Vector3.zero;
             _isOilAnimationActive = false;
+            _isBoosting = false;
         }
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
+
+        private void Update()
+        {
+            Debug.Log($"Start button pressed from movement controller {InputConsumer.IsMoving}");
+        }
 
         private void LateUpdate()
         {
@@ -166,6 +188,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
+            InputConsumer.OnBoostPressed -= ExecuteCommit;
         }
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
@@ -174,7 +197,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (!IsOwner)
                 return default;
-            return new ReplicateData(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting);
+            
+            ReplicateData rd = new();
+            if (_isDebugInputEnabled)
+            {
+                rd = new(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting);
+            }
+            else {
+                float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput / 100; // TODO poi marco lo aggiustaz
+                rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving);
+                _isBoosting = false;
+            }
+            return rd;
         }
 
         [Replicate]
@@ -199,7 +233,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     forwardDir.y = 0;
 
                     var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-                    //Debug.Log($"Lateral push direction: {lateralPushDirection}");
 
                     float pushStrength = 1f - (distance / _bumpRadius);
 

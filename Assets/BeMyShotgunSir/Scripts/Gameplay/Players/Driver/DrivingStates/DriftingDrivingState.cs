@@ -7,7 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            Log.DLazy(() => $"Enter drift state", this);
+            Log.DLazy(() => $"Enter drift", this);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
 
             //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
