@@ -95,6 +95,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
+        [SerializeField] private DriverVisuals _driverVisual;
 
         [SerializeField] private Rigidbody _movement;
         [SerializeField] private Transform _parent;
@@ -145,6 +146,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _previousDrivingState = _idleState;
             _previousStateType = DrivingStateTpye.Idle;
             _currentLinearVelocity = Vector3.zero;
+            _isOilAnimationActive = false;
         }
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
@@ -173,8 +175,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
-            _currentDrivingState?.CheckStateChange(this, data);
-            _currentDrivingState?.RunInputs(this, data);
+            bool isReplayed = state.ContainsReplayed();
+            _currentDrivingState?.CheckStateChange(this, data, isReplayed);
+            _currentDrivingState?.RunInputs(this, data, isReplayed);
 
             Vector3 repulsionForce = Vector3.zero;
             Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
@@ -324,7 +327,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 Vector3 currentHorizontalVel = new(_predictionRigidbody.Rigidbody.linearVelocity.x, 0, _predictionRigidbody.Rigidbody.linearVelocity.z);
                 if (currentHorizontalVel.magnitude > maxSpeed)
                 {
-                    float recoveryDrag = 15f;
+                    float recoveryDrag = 0.1f;
                     Vector3 targetVel = currentHorizontalVel.normalized * maxSpeed;
                     var smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
                     predictedVelocity = new Vector3(smoothedVel.x, predictedVelocity.y, smoothedVel.z);
@@ -376,16 +379,28 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 steerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
         }
-        void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data)
+        void IDrivingStateContext.OilAnimation()
         {
-            _currentDrivingState?.Exit(this, data);
+            if (_isOilAnimationActive)
+            {
+                SendOilAnimation();
+                _isOilAnimationActive = false;
+            }
+        }
+
+        void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data, bool isReplayed)
+        {
+            DrivingStateTpye newStateType = GetStateType(state);
+            if (_currentStateType == newStateType)
+                return;
+            _currentDrivingState?.Exit(this, data, isReplayed);
 
             _previousDrivingState = _currentDrivingState;
             _previousStateType = _currentStateType;
 
             _currentDrivingState = state;
             _currentStateType = GetStateType(state);
-            _currentDrivingState?.Enter(this, data);
+            _currentDrivingState?.Enter(this, data, isReplayed);
         }
         GroundType IDrivingStateContext.CheckGround()
         {
@@ -434,9 +449,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public Vector3 MovementPosition => _movement.transform.position;
         public Quaternion ParentRotation => _parentRotation;
         public Quaternion SidecarLocalRotation => _sidecarLocalRotation;
-
+        public bool IsOilAnimationActive
+        {
+            get => _isOilAnimationActive;
+            set => _isOilAnimationActive = value;
+        }
 
         public bool IsBoosting() => _currentStateType == DrivingStateTpye.Boost;
+        public bool IsDrifting() => _currentStateType == DrivingStateTpye.Drifting;
         public float CurrentSteerInput => _currentSteerInput;
+        public float CurrentOilAnimationTimer => _oilAnimationTimer;
+
+        [ObserversRpc]
+        private void SendOilAnimation() => _driverVisual.OilAnimation();
+
     }
 }

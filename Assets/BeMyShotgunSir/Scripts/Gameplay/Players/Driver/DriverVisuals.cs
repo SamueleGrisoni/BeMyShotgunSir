@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using UnityEngine;
 
@@ -13,20 +15,24 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private float _smoothingSpeed = 100f;
 
         [SerializeField] private Transform _handle;
+        [SerializeField] private List<ParticleSystem> _driftParticles = new List<ParticleSystem>();
+
+        private void Awake()
+        {
+        }
 
         private void LateUpdate()
         {
-            if (_movement == null) return;
-
-            // _parent.position = _movement.MovementPosition;
-            // _parent.rotation = _movement.ParentRotation;
-            // _sidecar.localRotation = _movement.SidecarLocalRotation;
+            //_parent.position = _movement.MovementPosition;
+            //_parent.rotation = _movement.ParentRotation;
+            //_sidecar.localRotation = _movement.SidecarLocalRotation;
 
             _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeed);
             _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeed);
             _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeed);
 
             AnimateSteer();
+            AnimateDrifting();
         }
 
         private void AnimateSteer()
@@ -36,6 +42,31 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 Quaternion.Euler(0, _movement.CurrentSteerInput * _stats.AnimationStats.MaxSteerAngle, 0),
                 Time.deltaTime * _stats.AnimationStats.SteerAnimationSpeed
             );
+        }
+        private void AnimateDrifting()
+        {
+            bool isDrifting = _movement.IsDrifting();
+            foreach (ParticleSystem p in _driftParticles)
+            {
+                ParticleSystem.EmissionModule emission = p.emission;
+                emission.enabled = isDrifting;
+            }
+        }
+        public void OilAnimation() => StartCoroutine(ExecuteOilAnimation());
+        private IEnumerator ExecuteOilAnimation()
+        {
+            float timer = 0f;
+            Quaternion startRotation = _visualModel.localRotation;
+
+            while (timer < _stats.AnimationStats.OilAnimationDuration)
+            {
+                timer += Time.deltaTime;
+                float currentRotation = (_stats.AnimationStats.OilTotalRotation / _stats.AnimationStats.OilAnimationDuration) * Time.deltaTime;
+                _visualModel.localRotation *= Quaternion.Euler(0, 0, currentRotation);
+                yield return null;
+            }
+
+            _visualModel.localRotation = startRotation;
         }
     }
 }

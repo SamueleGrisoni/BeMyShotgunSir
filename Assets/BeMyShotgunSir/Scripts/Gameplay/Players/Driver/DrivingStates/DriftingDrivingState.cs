@@ -5,7 +5,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class DriftingDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             Log.DLazy(() => $"Enter drift state", this, controller.Log);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
@@ -13,17 +13,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
             controller.BatteryChargeTimer = 0f;
         }
-        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
             {
-                controller.ChangeState(controller.GrassState, data);
+                controller.ChangeState(controller.GrassState, data, isReplayed);
                 return;
             }
             else if (groundType == GroundType.Oil)
             {
-                controller.ChangeState(controller.OilState, data);
+                controller.ChangeState(controller.OilState, data, isReplayed);
                 return;
             }
             if (controller.CurrentBatteryCharge < controller.BatteryStats.MaxBatteryCharge)
@@ -41,11 +41,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             }
             if (!data.IsDrifting)
             {
-                controller.ChangeState(controller.NormalState, data);
+                controller.ChangeState(controller.NormalState, data, isReplayed);
                 return;
             }
         }
-        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             controller.ApplyAcceleration(controller.ParentForward, controller.NormalStats.AccelerationForce, controller.NormalStats.MaxSpeed);
 
@@ -60,7 +60,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
-            Log.DLazy(() => "Exiting drift state", this, controller.Log);
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting drift state", this, controller.Log);
     }
 }

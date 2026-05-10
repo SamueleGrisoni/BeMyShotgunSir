@@ -5,26 +5,29 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class BoostDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data)
+        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            Log.DLazy(() => $"Enter boost state", this, controller.Log);
+            if (!isReplayed)
+            {
+                Log.DLazy(() => $"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}", this, controller.Log);
+            }
             if (controller.CurrentBatteryCharge <= 0)
             {
-                controller.ChangeState(controller.NormalState, data);
+                controller.ChangeState(controller.NormalState, data, isReplayed);
             }
             controller.BoostTimer = 0f;
         }
-        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
             {
-                controller.ChangeState(controller.GrassState, data);
+                controller.ChangeState(controller.GrassState, data, isReplayed);
                 return;
             }
             else if (groundType == GroundType.Oil)
             {
-                controller.ChangeState(controller.OilState, data);
+                controller.ChangeState(controller.OilState, data, isReplayed);
                 return;
             }
             if (controller.IsOnwer || controller.IsServer)
@@ -39,17 +42,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 if (controller.CurrentBatteryCharge <= 0)
                 {
                     controller.CurrentBatteryCharge = 0;
-                    controller.ChangeState(controller.NormalState, data);
+                    controller.ChangeState(controller.NormalState, data, isReplayed);
                     return;
                 }
             }
             if (data.IsDrifting && data.SteerInput != 0)
             {
-                controller.ChangeState(controller.DriftingState, data);
+                controller.ChangeState(controller.DriftingState, data, isReplayed);
             }
             //Debug.Log($"Current battery charge: {controller.CurrentBatteryCharge}");
         }
-        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             controller.ApplyAcceleration(controller.SidecarForward, controller.BoostStats.AccelerationForce, controller.BoostStats.MaxSpeed);
             controller.ApplySteering(data.SteerInput, controller.BoostStats.SteeringForce);
@@ -57,7 +60,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.BoostStats.LateralGripFactor);
             controller.ApplyGravity(controller.BoostStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
-            Log.DLazy(() => "Exiting boost state", this, controller.Log);
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
+        {
+            if (isReplayed){
+                Log.DLazy(() => "Exiting boost state", this, controller.Log);
+            }
+        }
     }
 }

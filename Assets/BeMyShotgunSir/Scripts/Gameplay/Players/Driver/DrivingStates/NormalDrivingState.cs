@@ -5,34 +5,35 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data) =>
+        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
+        {
             Log.DLazy(() => $"Enter normal state", this, controller.Log);
-
-        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
+        }
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             GroundType groundType = controller.CheckGround();
             if (groundType == GroundType.Grass)
             {
-                controller.ChangeState(controller.GrassState, data);
+                controller.ChangeState(controller.GrassState, data, isReplayed);
                 return;
             }
             else if (groundType == GroundType.Oil)
             {
-                controller.ChangeState(controller.OilState, data);
+                controller.ChangeState(controller.OilState, data, isReplayed);
                 return;
             }
             if (data.IsDrifting && data.SteerInput != 0)
             {
-                controller.ChangeState(controller.DriftingState, data);
+                controller.ChangeState(controller.DriftingState, data, isReplayed);
                 return;
             }
             if (data.IsBoosting && controller.CurrentBatteryCharge > 0)
             {
-                controller.ChangeState(controller.BoostState, data);
+                controller.ChangeState(controller.BoostState, data, isReplayed);
                 return;
             }
         }
-        public void RunInputs(IDrivingStateContext controller, ReplicateData data)
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             controller.ApplyAcceleration(controller.SidecarForward, controller.NormalStats.AccelerationForce, controller.NormalStats.MaxSpeed);
             controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
@@ -40,7 +41,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
             controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
+        {
             Log.DLazy(() => "Exiting normal state", this, controller.Log);
+        }
     }
 }

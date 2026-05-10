@@ -3,20 +3,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class IdleDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data) =>
+        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
+        {
             Log.DLazy(() => $"Enter idle state.", this, controller.Log);
-        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data)
+        }
+        public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             if (data.IsStarting)
             {
                 Log.DLazy(() => "Player has clicked start button", this, controller.Log);
-                controller.ChangeState(controller.NormalState, data);
+                controller.ChangeState(controller.NormalState, data, isReplayed);
             }
         }
-        public void RunInputs(IDrivingStateContext controller, ReplicateData data) =>
+        public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
+        {
             controller.ApplyGravity(controller.NormalStats.Gravity);
-
-        public void Exit(IDrivingStateContext controller, ReplicateData data) =>
+        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
+        {
             Log.DLazy(() => "Exiting idle state", this, controller.Log);
+        }
     }
 }
