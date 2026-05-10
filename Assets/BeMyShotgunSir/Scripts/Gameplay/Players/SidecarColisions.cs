@@ -7,7 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     {
         [SerializeField] private float _bumpForce = 20f;
         [SerializeField] private Rigidbody _sphere;
-        [SerializeField] private IDriverController _driverController;
+        [SerializeField] private DriverController _driverController;
 
 
         private void OnTriggerEnter(Collider other)

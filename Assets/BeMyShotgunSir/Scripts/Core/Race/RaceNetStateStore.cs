@@ -54,6 +54,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public int ShotgunConnectionId;
         public bool IsTeamSpawned;
         public NetworkObject TeamNob;
+        public NetworkObject DriverNob;
+        public NetworkObject ShotgunNob;
 
         public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId)
         {
@@ -61,10 +63,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             DriverConnectionId = driverConnectionId;
             ShotgunConnectionId = shotgunConnectionId;
             TeamNob = null;
+            DriverNob = null;
+            ShotgunNob = null;
             IsTeamSpawned = false;
         }
 
-        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null)
+        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null, NetworkObject driverNob = null, NetworkObject shotgunNob = null)
         {
             TeamId = other.TeamId;
             DriverConnectionId = other.DriverConnectionId;
@@ -72,6 +76,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             IsTeamSpawned = isTeamSpawned ?? other.IsTeamSpawned;
             TeamNob = teamNob ?? other.TeamNob;
+            DriverNob = driverNob ?? other.DriverNob;
+            ShotgunNob = shotgunNob ?? other.ShotgunNob;
         }
 
         public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsTeamSpawned: {IsTeamSpawned}";

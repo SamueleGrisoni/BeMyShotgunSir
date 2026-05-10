@@ -14,8 +14,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     public interface ITeamNetControllerInitializer
     {
         void Initialize(RaceNetContext context, IRoadManager roadManager);
-        void OnDriverSpawned(IDriverController driverController, int? driverTeamId);
-        void OnShotgunSpawned(IShotgunController shotgunController, int? shotgunTeamId);
+        void OnDriverSpawned(DriverController driverController, int? driverTeamId);
+        void OnShotgunSpawned(ShotgunController shotgunController, int? shotgunTeamId);
     }
 
     public class TeamNetController : NetworkBehaviour, ITeamNetControllerInitializer
@@ -39,8 +39,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         public int? TeamId => _syncTeamId.Value;
         private int? _driverConnectionId = null;
         private int? _shotgunConnectionId = null;
-        private IDriverController _driverController;
-        private IShotgunController _shotgunController;
+        private DriverController _driverController;
+        private ShotgunController _shotgunController;
         private RaceRole _assignedRole;
         private event Action OnMemberSetUpComplete;
 
@@ -84,9 +84,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             TrySetUpTeam();
         }
 
-        public void OnDriverSpawned(IDriverController driverController, int? driverTeamId) => TrySetUpTeam();
+        public void OnDriverSpawned(DriverController driverController, int? driverTeamId) => TrySetUpTeam();
 
-        public void OnShotgunSpawned(IShotgunController shotgunController, int? shotgunTeamId) => TrySetUpTeam();
+        public void OnShotgunSpawned(ShotgunController shotgunController, int? shotgunTeamId) => TrySetUpTeam();
 
         private void TrySetUpTeam()
         {
@@ -129,7 +129,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             {
                 _roadManager.SetDriver(_driverController.GetMovementTransform());
                 Log.DLazy(() => $"Initializing team {teamId} for local player with ConnectionId: {LocalConnection.ClientId}. Driver ConnectionId: {_driverConnectionId}, Shotgun ConnectionId: {_shotgunConnectionId}. Transform: {_driverController.GetMovementTransform().name}", this, _log);
-                CinemachineCamera cam = GetComponentInChildren<CinemachineCamera>();
+                CinemachineCamera cam = _driverController.GetComponentInChildren<CinemachineCamera>();
                 if (cam == null)
                 {
                     Log.WLazy(() => $"No CinemachineCamera found in children of TeamNetController for team {TeamId}.", this);

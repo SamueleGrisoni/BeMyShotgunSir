@@ -7,18 +7,11 @@ using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
 {
-    public interface IShotgunController
-    {
-        void SetName(string name);
-        void Initialize(RaceNetContext context, TeamNetController teamNetController);
-        int? TeamId { get; }
-    }
-
-    public class ShotgunController : NetworkBehaviour, IShotgunController
+    public class ShotgunController : NetworkBehaviour
     {
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<IShotgunController, int?> OnShotgunSpawned;
+        public static event Action<ShotgunController, int?> OnShotgunSpawned;
         public IShotgunInputConsumer _inputConsumer;
         private TeamNetController _teamNetController;
         public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;

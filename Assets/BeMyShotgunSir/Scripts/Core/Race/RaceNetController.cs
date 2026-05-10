@@ -229,7 +229,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         //MEMO this could be delegated to the team net controller (passing the reference to the server dictionary)
                         _teamProgress.Add(teamState.TeamId, new TeamProgress(player.GetComponentInChildren<MovementController>().transform, 0f));
 
-                        _netState.SetTeamData(teamState.TeamId, new RaceTeamData(NetState.TeamData[teamState.TeamId], teamNob: team, isTeamSpawned: true));
+                        _netState.SetTeamData(teamState.TeamId, new RaceTeamData(NetState.TeamData[teamState.TeamId], teamNob: team.NetworkObject, driverNob: player.NetworkObject, shotgunNob: shotgun.NetworkObject, isTeamSpawned: true));
                         _spawnedTeams++;
                     }
                     else

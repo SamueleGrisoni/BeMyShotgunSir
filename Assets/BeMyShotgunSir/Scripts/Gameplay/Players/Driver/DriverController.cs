@@ -9,19 +9,12 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
-    public interface IDriverController
-    {
-        void Initialize(RaceNetContext context, TeamNetController teamNetController);
-        void SetName(string name);
-        int? TeamId { get; }
-        Transform GetMovementTransform();
-    }
-    public class DriverController : NetworkBehaviour, IDriverController
+    public class DriverController : NetworkBehaviour
     {
         //utility
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<IDriverController, int?> OnDriverSpawned;
+        public static event Action<DriverController, int?> OnDriverSpawned;
 
         //CONTEXT
         private RaceNetContext _raceNetContext;
