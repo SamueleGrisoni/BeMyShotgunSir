@@ -32,6 +32,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public event Action OnRacePlayerStatesChanged;
         public event Action OnRaceTeamDataChanged;
         public event Action OnLeaderboardChanged;
+        public event Action OnInventoryChanged;
 
         public int? Seed => _netState.Seed;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _netState.PlayerStates;
@@ -46,8 +47,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _netState.Seed_Sub.OnChange += OnSeedChanged_Propagate;
             _netState.PlayerStates_Sub.OnChange += OnPlayerStatesChanged_Propagate;
             _netState.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;
+            _netState.PlayerInventories_Sub.OnChange += OnPlayerStatesChanged_Propagate; //inventory changes can affect player states (e.g. stunned), so we treat them as the same for the sake of UI updates
             _netState.Leaderboard_Sub.OnChange += OnLeaderboardChanged_Propagate;
         }
+
 
         public void AskForRefresh()
         {
@@ -60,6 +63,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnSeedChanged_Propagate(int? _, int? __, bool ___) => OnSeedChanged?.Invoke();
         private void OnPlayerStatesChanged_Propagate(SyncDictionaryOperation _, int __, RacePlayerState ___, bool ____) => OnRacePlayerStatesChanged?.Invoke();
         private void OnRaceTeamDataChanged_Propagate(SyncDictionaryOperation _, int __, RaceTeamData ___, bool ____) => OnRaceTeamDataChanged?.Invoke();
+        private void OnPlayerStatesChanged_Propagate(SyncDictionaryOperation op, int key, InventoryData value, bool asServer) => OnInventoryChanged?.Invoke();
         private void OnLeaderboardChanged_Propagate(SyncListOperation _, int __, int ___, int ____, bool _____) => OnLeaderboardChanged?.Invoke();
     }
 }

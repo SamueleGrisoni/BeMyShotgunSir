@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 
@@ -13,14 +15,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
     {
         public int OwnerTeamId;
         public PowerUp PowerUp;
-        public int TargetTeamId;
+        public int? TargetTeamId;
+        public override string ToString() => $"OwnerTeamId: {OwnerTeamId}, PowerUp: {PowerUp}, TargetTeamId: {TargetTeamId}";
+        public InfoUsePowerUp(int ownerTeamId, PowerUp powerUp, int? targetTeamId = null)
+        {
+            OwnerTeamId = ownerTeamId;
+            PowerUp = powerUp;
+            TargetTeamId = targetTeamId;
+        }
     }
 
     public struct ActivePowerUp
     {
         public int OwnerTeamId;
         public PowerUp PowerUp;
-        public int TargetTeamId;
+        public int? TargetTeamId;
         public int ManagerInstanceId;
         public PowerUpClass PowerUpClass;
         public PowerUpState PowerUpState;
@@ -72,17 +81,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         private bool _log = true;
         private bool _isInitialized = false;
         private RaceNetController _raceNetController;
-        private RaceNetStateStore _raeNetState;
-        public IRaceNetStateRead RaceNetStateRead => _raeNetState;
+        private RaceNetStateStore _raceNetState;
+        public IRaceNetStateRead RaceNetStateRead => _raceNetState;
         private RaceClientProjector _raceClientProjector;
         private StrategyContext _strategyContext;
-
 
         [SerializeField] private SOPowerUpsData _powerUpData;
         private Dictionary<PowerUp, SOPowerUp> _definitions;
         public IReadOnlyDictionary<PowerUp, SOPowerUp> Definitions => _definitions;
         private int _nextPowerUpInstanceId = 0;
-        public int NextPowerUpInstanceId => _nextPowerUpInstanceId++;
         private Dictionary<int, PowerUpRuntime> _activePowerUps;
 
         private float _tickTimer = 0;
@@ -91,16 +98,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         private void Awake()
         {
             TryGetComponent(out _raceNetController);
-            TryGetComponent(out _raeNetState);
+            TryGetComponent(out _raceNetState);
             TryGetComponent(out _raceClientProjector);
 
-            if (_raceNetController == null || _raeNetState == null || _raceClientProjector == null)
+            if (_raceNetController == null || _raceNetState == null || _raceClientProjector == null)
                 Log.ELazy(() => "PowerUpsNetController requires RaceNetController, RaceNetStateStore and RaceClientProjector on the same GameObject.", this);
 
             _activePowerUps = new Dictionary<int, PowerUpRuntime>();
             _definitions = _powerUpData.GetPowerUpDefinitions();
-            _strategyContext = new StrategyContext(_raeNetState, this, _activePowerUps);
-
+            _strategyContext = new StrategyContext(_raceNetState, this, _activePowerUps);
         }
 
         public void OnEnable() => PowerUpSpawnable.OnPowerUpSpawned += OnPowerUpSpawned;
@@ -118,70 +124,36 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public void OnPowerUpSpawned(IPowerUpSpawnable powerUpSpawnable) =>
             powerUpSpawnable.Initialize(this);
 
-        public void AddPowerUpToTeam(int teamId, PowerUp powerUpType)
+        [Server]
+        public int GetInstanceId() => _nextPowerUpInstanceId++;
+
+        [Server]
+        public void AddActivePowerUp(PowerUpRuntime powerUpRuntime)
         {
-            if (!RaceNetStateRead.TryGetPlayerInventory(teamId, out InventoryData inventory))
-            {
-                Log.WLazy(() => $"Trying to add power-up to team {teamId} but no inventory found.", this);
-                return;
-            }
-            if (inventory.IsFull)
-            {
-                Log.WLazy(() => $"Trying to add power-up to team {teamId} but inventory is full.", this);
-                return;
-            }
-
-            if (inventory.Slot1 == PowerUp.None)
-                inventory.Slot1 = powerUpType;
-            else if (inventory.Slot2 == PowerUp.None)
-                inventory.Slot2 = powerUpType;
-            else if (inventory.Slot3 == PowerUp.None)
-                inventory.Slot3 = powerUpType;
-            else if (inventory.Slot4 == PowerUp.None)
-                inventory.Slot4 = powerUpType;
-            else if (inventory.Slot5 == PowerUp.None)
-                inventory.Slot5 = powerUpType;
-
-            _raeNetState.SetPlayerInventory(teamId, inventory);
-            Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
+            _activePowerUps[powerUpRuntime.ActivePowerUpData.ManagerInstanceId] = powerUpRuntime;
+            if (powerUpRuntime.Definition.PowerUpClass == PowerUpClass.TimeBased)
+                Log.DLazy(() => $"Added time-based power-up instance {powerUpRuntime.ActivePowerUpData.ManagerInstanceId} of type {powerUpRuntime.Definition.PowerUpType} for team {powerUpRuntime.ActivePowerUpData.OwnerTeamId}. Total duration: {powerUpRuntime.ActivePowerUpData.TotalDuration}, Remaining duration: {powerUpRuntime.ActivePowerUpData.RemainingDuration}.", this, _log);
+            if (powerUpRuntime.Definition.PowerUpClass == PowerUpClass.OneShot)
+                Log.DLazy(() => $"Added active one-shot power-up instance {powerUpRuntime.ActivePowerUpData.ManagerInstanceId} of type {powerUpRuntime.Definition.PowerUpType} for team {powerUpRuntime.ActivePowerUpData.OwnerTeamId}.", this, _log);
+            if (powerUpRuntime.Definition.PowerUpClass == PowerUpClass.ActionBased)
+                Log.DLazy(() => $"Added active action-based power-up instance {powerUpRuntime.ActivePowerUpData.ManagerInstanceId} of type {powerUpRuntime.Definition.PowerUpType} for team {powerUpRuntime.ActivePowerUpData.OwnerTeamId}.", this, _log);
         }
 
-        public void ActivatePowerUp(InfoUsePowerUp info)
+        [Server]
+        public void RemoveActivePowerUp(int instanceId)
         {
-            if (!_definitions.TryGetValue(info.PowerUp, out SOPowerUp definition))
+            if (_activePowerUps.TryGetValue(instanceId, out PowerUpRuntime powerUpRuntime))
             {
-                Log.WLazy(() => $"Trying to activate power-up {info.PowerUp} for team {info.OwnerTeamId} but no definition found.", this);
-                return;
-            }
-            if (definition.TryPreliminaryCheck(info, _strategyContext))
-            {
-                PowerUpRuntime powerUpRuntime = definition.OnCreateRuntime(definition, info, _strategyContext);
-                if (definition.CanActivate(powerUpRuntime, _strategyContext))
-                {
-                    definition.OnActivate(powerUpRuntime, _strategyContext);
-                    Log.DLazy(() => $"Team {info.OwnerTeamId} activated power-up {info.PowerUp}. Current target: {powerUpRuntime.TargetNob?.name ?? "None"}", this, _log);
-                }
+                _activePowerUps.Remove(instanceId);
+                Log.DLazy(() => $"Removed active power-up instance {instanceId} of type {powerUpRuntime.Definition.PowerUpType} for team {powerUpRuntime.ActivePowerUpData.OwnerTeamId}.", this, _log);
             }
             else
             {
-                Log.WLazy(() => $"Team {info.OwnerTeamId} tried to activate power-up {info.PowerUp} but preliminary conditions were not met.", this);
+                Log.WLazy(() => $"Trying to remove active power-up instance {instanceId} but no active power-up found with this id.", this, _log);
             }
         }
 
-        public void SetPowerUpTarget(int instanceId, int targetTeamId)
-        {
-            if (!_activePowerUps.TryGetValue(instanceId, out PowerUpRuntime powerUpRuntime))
-            {
-                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} but no active power-up found with this id.", this);
-                return;
-            }
-            NetworkObject targetNob = null;
-            if (!_raeNetState.TryGetTeamNob(targetTeamId, out targetNob))
-                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} to team {targetTeamId} but no nob found for this team.", this);
-
-            _activePowerUps[instanceId].Definition.OnChangeTarget(powerUpRuntime, instanceId, targetTeamId, _strategyContext);
-        }
-
+        [Server]
         private void Update()
         {
             if (!IsServerInitialized)
@@ -199,5 +171,189 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             }
         }
 
+        [Server]
+        public void AddPowerUpToTeam(int teamId, PowerUp powerUpType)
+        {
+            if (!RaceNetStateRead.TryGetTeamInventory(teamId, out InventoryData inventory))
+            {
+                Log.WLazy(() => $"Trying to add power-up to team {teamId} but no inventory found.", this);
+                return;
+            }
+            if (inventory.IsFull)
+            {
+                Log.WLazy(() => $"Trying to add power-up to team {teamId} but inventory is full.", this);
+                return;
+            }
+
+            if (inventory.Slot1.PowerUp == PowerUp.None)
+                inventory.Slot1 = new PuSlot(1, powerUpType);
+            else if (inventory.Slot2.PowerUp == PowerUp.None)
+                inventory.Slot2 = new PuSlot(2, powerUpType);
+            else if (inventory.Slot3.PowerUp == PowerUp.None)
+                inventory.Slot3 = new PuSlot(3, powerUpType);
+            else if (inventory.Slot4.PowerUp == PowerUp.None)
+                inventory.Slot4 = new PuSlot(4, powerUpType);
+            else if (inventory.Slot5.PowerUp == PowerUp.None)
+                inventory.Slot5 = new PuSlot(5, powerUpType);
+
+            _raceNetState.SetPlayerInventory(teamId, inventory);
+            Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ActivatePowerUp_ServerRpc(NetworkConnection connection = null) //TODO expose command to ui
+        {
+            if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
+            {
+                if (inventory.SelectedSlot == null || inventory.SelectedSlot == PowerUp.None)
+                {
+                    Log.WLazy(() => $"Trying to use power-up for team {playerState.TeamId} but no slot selected.", this);
+                    return;
+                }
+                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot.Value);
+                if (IsUsingMaxNumberOfPowerUps(teamData))
+                {
+                    Log.WLazy(() => $"Trying to use power-up {powerUpInfo.PowerUp} for team {powerUpInfo.OwnerTeamId} but already using max number of power-ups.", this);
+                    return;
+                }
+                ActivatePowerUp(powerUpInfo);
+            }
+        }
+
+        private bool IsUsingMaxNumberOfPowerUps(RaceTeamData teamData)
+        {
+            int activePowerUpsCount = 0;
+            if (teamData.ActivePowerUps == null || teamData.ActivePowerUps.Length == 0)
+            {
+                Log.WLazy(() => $"Cannot check active power-ups for team {teamData.TeamId}.", this);
+                return false;
+            }
+
+            foreach (PowerUpIdentifier powerUp in teamData.ActivePowerUps)
+            {
+                if (powerUp.PowerUp != PowerUp.None)
+                    activePowerUpsCount++;
+            }
+            return activePowerUpsCount >= BMMSDefaults.MAX_ACTIVE_POWER_UPS;
+        }
+
+        [Server]
+        public void ActivatePowerUp(InfoUsePowerUp info)
+        {
+            if (!_definitions.TryGetValue(info.PowerUp, out SOPowerUp definition))
+            {
+                Log.WLazy(() => $"Trying to activate power-up {info.PowerUp} for team {info.OwnerTeamId} but no definition found.", this);
+                return;
+            }
+            if (definition.TryPreliminaryCheck(info, _strategyContext))
+            {
+                PowerUpRuntime powerUpRuntime = definition.OnCreateRuntime(info, _strategyContext);
+                if (definition.CanActivate(powerUpRuntime, _strategyContext))
+                {
+                    definition.OnActivate(powerUpRuntime, _strategyContext);
+                    Log.DLazy(() => $"Team {info.OwnerTeamId} activated power-up {info.PowerUp}. Current target: {powerUpRuntime.TargetNob?.name ?? "None"}", this, _log);
+                }
+            }
+            else
+            {
+                Log.WLazy(() => $"Team {info.OwnerTeamId} tried to activate power-up {info.PowerUp} but preliminary conditions were not met.", this);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetPowerUpTarget_ServerRpc(int instanceId, int targetTeamId, NetworkConnection connection = null)
+        {
+            if (!_activePowerUps.TryGetValue(instanceId, out PowerUpRuntime powerUpRuntime))
+            {
+                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} but no active power-up found with this id.", this);
+                return;
+            }
+            _raceNetState.TryGetTeamData(powerUpRuntime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
+            if (!teamData.HasActivePowerUp(powerUpRuntime.ActivePowerUpData.PowerUp))
+            {
+                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} but the owner team {powerUpRuntime.ActivePowerUpData.OwnerTeamId} is not using this power-up anymore.", this);
+                return;
+            }
+            if (!_raceNetState.TryGetTeamData(targetTeamId, out RaceTeamData targetTeamData))
+            {
+                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} to team {targetTeamId} but no data found for this team.", this);
+                return;
+            }
+            if (targetTeamData.IsTargetedByPowerUp(powerUpRuntime.ActivePowerUpData.PowerUp))
+            {
+                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} to team {targetTeamId} but this team is already targeted by the same power-up.", this);
+                return;
+            }
+            SetPowerUpTarget(instanceId, targetTeamId);
+        }
+
+        [Server]
+        public void SetPowerUpTarget(int instanceId, int targetTeamId)
+        {
+            if (!_activePowerUps.TryGetValue(instanceId, out PowerUpRuntime powerUpRuntime)) //redundant check but better safe than sorry
+            {
+                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} but no active power-up found with this id.", this);
+                return;
+            }
+            NetworkObject targetNob = null;
+            if (!_raceNetState.TryGetTeamNob(targetTeamId, out targetNob))
+                Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} to team {targetTeamId} but no nob found for this team.", this);
+
+            _activePowerUps[instanceId].Definition.OnChangeTarget(powerUpRuntime, instanceId, targetTeamId, _strategyContext);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void TriggerAction_ServerRpc(PowerUpAction action, NetworkConnection connection = null)
+        {
+            if (!_activePowerUps.TryGetValue(action.Identifier.InstanceId, out PowerUpRuntime powerUpRuntime))
+            {
+                Log.WLazy(() => $"Trying to trigger action {action.ActionType} for power-up instance {action.Identifier.InstanceId} but no active power-up found with this id.", this);
+                return;
+            }
+            _activePowerUps[action.Identifier.InstanceId].Definition.OnAction(powerUpRuntime, _strategyContext, action);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void TriggerAction_ServerRpc(PowerUpActionType actionType, NetworkConnection connection = null)
+        {
+            if (!_raceNetState.TryGetTeamInventory(connection.ClientId, out InventoryData inventory))
+            {
+                Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no inventory found.", this);
+                return;
+            }
+            if (inventory.SelectedSlot == null || inventory.SelectedSlot == PowerUp.None)
+            {
+                Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no power-up selected.", this);
+                return;
+            }
+            PowerUp selectedPowerUp = inventory.SelectedSlot.Value;
+            if (!_raceNetState.TryGetTeamData(connection.ClientId, out RaceTeamData teamData))
+            {
+                Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no team data found.", this);
+                return;
+            }
+            if (teamData.ActivePowerUps == null || teamData.ActivePowerUps.Length == 0)
+            {
+                Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but team {teamData.TeamId} has no active power-ups.", this);
+                return;
+            }
+            if (teamData.HasActivePowerUp(selectedPowerUp))
+            {
+                foreach (PowerUpIdentifier powerUpIdentifier in teamData.ActivePowerUps)
+                {
+                    if (powerUpIdentifier.PowerUp == selectedPowerUp)
+                    {
+                        if (!_activePowerUps.TryGetValue(powerUpIdentifier.InstanceId, out PowerUpRuntime powerUpRuntime))
+                            continue;
+                        _activePowerUps[powerUpIdentifier.InstanceId].Definition.OnAction(powerUpRuntime, _strategyContext, new PowerUpAction(actionType, powerUpIdentifier, teamData.TeamId));
+                    }
+                }
+            }
+            else
+            {
+                Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but the selected power-up {selectedPowerUp} is not active for this team.", this);
+                return;
+            }
+        }
     }
 }

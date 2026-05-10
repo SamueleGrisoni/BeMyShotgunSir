@@ -57,6 +57,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             base.OnStartClient();
             OnDriverSpawned?.Invoke(this, _syncTeamId.Value);
         }
-
     }
 }

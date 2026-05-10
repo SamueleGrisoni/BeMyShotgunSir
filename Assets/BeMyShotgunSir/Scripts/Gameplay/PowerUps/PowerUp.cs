@@ -27,7 +27,50 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
     {
         None,
         Active,
-        Fired,
+        Ticking,
         Expired
+    }
+
+    public enum PowerUpActionType
+    {
+        None,
+        CustomAction1,
+        CustomAction2
+    }
+
+    public struct PowerUpIdentifier
+    {
+        public PowerUp PowerUp;
+        public int InstanceId;
+
+        public PowerUpIdentifier(PowerUp powerUp, int instanceId)
+        {
+            PowerUp = powerUp;
+            InstanceId = instanceId;
+        }
+
+        public override string ToString() => $"PowerUp: {PowerUp}, InstanceId: {InstanceId}";
+    }
+
+    public struct PowerUpAction
+    {
+        public PowerUpActionType ActionType;
+        public PowerUpIdentifier Identifier;
+        public int OwnerTeamId;
+        public int? TargetTeamId;
+        public int value1;
+        public int value2;
+
+        public PowerUpAction(PowerUpActionType actionType, PowerUpIdentifier identifier, int ownerTeamId, int? targetTeamId = null, int value1 = 0, int value2 = 0)
+        {
+            ActionType = actionType;
+            Identifier = identifier;
+            OwnerTeamId = ownerTeamId;
+            TargetTeamId = targetTeamId;
+            this.value1 = value1;
+            this.value2 = value2;
+        }
+
+        public override string ToString() => $"PowerUpAction: ActionType={ActionType}, Identifier={Identifier}, OwnerTeamId={OwnerTeamId}, TargetTeamId={TargetTeamId}, value1={value1}, value2={value2}";
     }
 }

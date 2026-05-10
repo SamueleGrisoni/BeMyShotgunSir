@@ -94,7 +94,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             }
             _lobbyViewModel = viewModel;
-            _raceCommand = new RaceCommand(_netController);
+            _raceCommand = new RaceCommand(_netController, _powerUpsNetController);
             _binder = new RaceBinder(this);
             _viewModel = new RaceViewModel(_lobbyViewModel, _netState);
             _lobbyNetStateStore = context.NetState;

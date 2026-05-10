@@ -56,6 +56,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public NetworkObject TeamNob;
         public NetworkObject DriverNob;
         public NetworkObject ShotgunNob;
+        public PowerUpIdentifier[] ActivePowerUps;
+        public PowerUpIdentifier[] TargetedByPowerUps;
+        public ActivePowerUpsInfo ActivePowerUpInfo;
 
         public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId)
         {
@@ -66,9 +69,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             DriverNob = null;
             ShotgunNob = null;
             IsTeamSpawned = false;
+            ActivePowerUps = new PowerUpIdentifier[BMMSDefaults.MAX_ACTIVE_POWER_UPS];
+            TargetedByPowerUps = new PowerUpIdentifier[BMMSDefaults.MAX_TARGETED_BY_POWER_UPS];
+            ActivePowerUpInfo = default;
         }
 
-        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null, NetworkObject driverNob = null, NetworkObject shotgunNob = null)
+        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null, NetworkObject driverNob = null, NetworkObject shotgunNob = null, PowerUpIdentifier[] activePowerUps = null, PowerUpIdentifier[] targetedByPowerUps = null, ActivePowerUpsInfo? activePowerUpInfo = null)
         {
             TeamId = other.TeamId;
             DriverConnectionId = other.DriverConnectionId;
@@ -78,47 +84,86 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             TeamNob = teamNob ?? other.TeamNob;
             DriverNob = driverNob ?? other.DriverNob;
             ShotgunNob = shotgunNob ?? other.ShotgunNob;
+            ActivePowerUps = activePowerUps ?? other.ActivePowerUps;
+            TargetedByPowerUps = targetedByPowerUps ?? other.TargetedByPowerUps;
+            ActivePowerUpInfo = activePowerUpInfo ?? other.ActivePowerUpInfo;
         }
 
-        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsTeamSpawned: {IsTeamSpawned}";
+        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsTeamSpawned: {IsTeamSpawned}, TeamNob: {TeamNob}, DriverNob: {DriverNob}, ShotgunNob: {ShotgunNob}, ActivePowerUps: [{string.Join(", ", ActivePowerUps)}], TargetedByPowerUps: [{string.Join(", ", TargetedByPowerUps)}], ActivePowerUpInfo: {ActivePowerUpInfo}";
+
+        public bool IsTargetedByPowerUp(PowerUp powerUp) => TargetedByPowerUps.Any(identifier => identifier.PowerUp == powerUp);
+        public bool HasActivePowerUp(PowerUp powerUp) => ActivePowerUps.Any(identifier => identifier.PowerUp == powerUp);
+
+    }
+
+    public struct PuSlot
+    {
+        public int SlotIndex;
+        public PowerUp? PowerUp;
+
+        public PuSlot(int slotIndex, PowerUp? powerUp)
+        {
+            SlotIndex = slotIndex;
+            PowerUp = powerUp;
+        }
     }
 
     public struct InventoryData
     {
-        public PowerUp? Slot1;
-        public PowerUp? Slot2;
-        public PowerUp? Slot3;
-        public PowerUp? Slot4;
-        public PowerUp? Slot5;
+        public int TeamId;
+        public PuSlot Slot1;
+        public PuSlot Slot2;
+        public PuSlot Slot3;
+        public PuSlot Slot4;
+        public PuSlot Slot5;
         public int MaxPowerUps => 5;
         public PowerUp? SelectedSlot;
-        public PowerUp[] ActivePowerUps;
-        public bool IsFull => Slot1.HasValue && Slot2.HasValue && Slot3.HasValue && Slot4.HasValue && Slot5.HasValue;
-        public bool IsEmpty => !Slot1.HasValue && !Slot2.HasValue && !Slot3.HasValue && !Slot4.HasValue && !Slot5.HasValue;
+        public bool IsFull => Slot1.PowerUp.HasValue && Slot2.PowerUp.HasValue && Slot3.PowerUp.HasValue && Slot4.PowerUp.HasValue && Slot5.PowerUp.HasValue;
+        public bool IsEmpty => !Slot1.PowerUp.HasValue && !Slot2.PowerUp.HasValue && !Slot3.PowerUp.HasValue && !Slot4.PowerUp.HasValue && !Slot5.PowerUp.HasValue;
 
-        public InventoryData(PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null, PowerUp[] activePowerUps = null)
+        public InventoryData(int teamId, PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null)
         {
-            Slot1 = slot1;
-            Slot2 = slot2;
-            Slot3 = slot3;
-            Slot4 = slot4;
-            Slot5 = slot5;
+            TeamId = teamId;
+            Slot1 = slot1 != null ? new PuSlot(1, slot1) : new PuSlot(1, null);
+            Slot2 = slot2 != null ? new PuSlot(2, slot2) : new PuSlot(2, null);
+            Slot3 = slot3 != null ? new PuSlot(3, slot3) : new PuSlot(3, null);
+            Slot4 = slot4 != null ? new PuSlot(4, slot4) : new PuSlot(4, null);
+            Slot5 = slot5 != null ? new PuSlot(5, slot5) : new PuSlot(5, null);
             SelectedSlot = selectedSlot;
-            ActivePowerUps = activePowerUps ?? new PowerUp[0];
         }
 
-        public InventoryData(InventoryData other, PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null, PowerUp[] activePowerUps = null)
+        public InventoryData(InventoryData other, PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null)
         {
-            Slot1 = slot1 ?? other.Slot1;
-            Slot2 = slot2 ?? other.Slot2;
-            Slot3 = slot3 ?? other.Slot3;
-            Slot4 = slot4 ?? other.Slot4;
-            Slot5 = slot5 ?? other.Slot5;
-            SelectedSlot = selectedSlot ?? other.SelectedSlot;
-            ActivePowerUps = activePowerUps ?? other.ActivePowerUps;
+            TeamId = other.TeamId;
+            Slot1 = slot1 != null ? new PuSlot(1, slot1) : other.Slot1;
+            Slot2 = slot2 != null ? new PuSlot(2, slot2) : other.Slot2;
+            Slot3 = slot3 != null ? new PuSlot(3, slot3) : other.Slot3;
+            Slot4 = slot4 != null ? new PuSlot(4, slot4) : other.Slot4;
+            Slot5 = slot5 != null ? new PuSlot(5, slot5) : other.Slot5;
+            SelectedSlot = selectedSlot != null ? selectedSlot : other.SelectedSlot;
         }
 
         public override string ToString() => $"Slot1: {Slot1}, Slot2: {Slot2}, Slot3: {Slot3}, Slot4: {Slot4}, Slot5: {Slot5}, SelectedSlot: {SelectedSlot}";
+    }
+
+    public struct ActivePowerUpsInfo
+    {
+        public bool isShieldActive;
+        public bool isArmorActive;
+        public bool isInvisibilityActive;
+        public bool isStealPowerUpActive;
+        public bool isRerollPowerUpActive;
+        public bool isRoadBlockActive;
+        public override string ToString() => $"ActivePowerUpInfo: isShieldActive: {isShieldActive}, isArmorActive: {isArmorActive}, isInvisibilityActive: {isInvisibilityActive}, isStealPowerUpActive: {isStealPowerUpActive}, isRerollPowerUpActive: {isRerollPowerUpActive}, isRoadBlockActive: {isRoadBlockActive}";
+        public ActivePowerUpsInfo(bool isShieldActive = false, bool isArmorActive = false, bool isInvisibilityActive = false, bool isStealPowerUpActive = false, bool isRerollPowerUpActive = false, bool isRoadBlockActive = false)
+        {
+            this.isShieldActive = isShieldActive;
+            this.isArmorActive = isArmorActive;
+            this.isInvisibilityActive = isInvisibilityActive;
+            this.isStealPowerUpActive = isStealPowerUpActive;
+            this.isRerollPowerUpActive = isRerollPowerUpActive;
+            this.isRoadBlockActive = isRoadBlockActive;
+        }
     }
 
     #endregion
@@ -134,7 +179,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         IReadOnlyList<int> Leaderboard { get; }
         bool TryGetPlayerState(int connectionId, out RacePlayerState playerState);
         bool TryGetTeamData(int teamId, out RaceTeamData teamData);
-        bool TryGetPlayerInventory(int teamId, out InventoryData inventoryData);
+        bool TryGetTeamInventory(int teamId, out InventoryData inventoryData);
         bool AreAllPlayersReady();
     }
 
@@ -172,10 +217,34 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _teamNobs[teamId] = nob;
         }
 
-        [Server]
         public bool TryGetTeamNob(int teamId, out NetworkObject nob) =>
             _teamNobs.TryGetValue(teamId, out nob);
 
+        public bool TryGetTeamNobByPlayerId(int connectionId, out NetworkObject nob)
+        {
+            nob = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            return TryGetTeamNob(playerState.TeamId, out nob);
+        }
+
+        public bool TryGetDriverNob(int teamId, out NetworkObject nob)
+        {
+            nob = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            nob = teamData.DriverNob;
+            return nob != null;
+        }
+
+        public bool TryGetShotgunNob(int teamId, out NetworkObject nob)
+        {
+            nob = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            nob = teamData.ShotgunNob;
+            return nob != null;
+        }
         // Networked state
         /// <summary> synced </summary>
         private readonly SyncVar<int?> _seed = new();
@@ -213,7 +282,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return $"Race State: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, Leaderboard: [{string.Join(", ", Leaderboard)}]";
             }, this, _log);
         }
-
 
         [Server]
         public void InitializeFromLobby(ILobbyNetStateRead lobbyState)
@@ -267,16 +335,55 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public bool TryGetTeamData(int teamId, out RaceTeamData teamData) =>
             _raceTeamData.TryGetValue(teamId, out teamData);
 
-        [Server]
-        public void SetTeamData(int teamId, RaceTeamData teamData) =>
-            _raceTeamData[teamId] = teamData;
+        public bool TryGetTeamDataByPlayerId(int connectionId, out RaceTeamData teamData)
+        {
+            teamData = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            return TryGetTeamData(playerState.TeamId, out teamData);
+        }
+
+        public bool TryGetTeamDataByPlayer(RacePlayerState playerState, out RaceTeamData teamData) => TryGetTeamData(playerState.TeamId, out teamData);
 
         [Server]
-        public void SetPlayerInventory(int teamId, InventoryData inventoryData) =>
-            _racePlayerInventories[teamId] = inventoryData;
+        public void SetTeamData(int teamId, RaceTeamData teamData) => _raceTeamData[teamId] = teamData;
 
-        public bool TryGetPlayerInventory(int teamId, out InventoryData inventoryData) =>
-            _racePlayerInventories.TryGetValue(teamId, out inventoryData);
+        [Server]
+        public void SetPlayerInventory(int teamId, InventoryData inventoryData) => _racePlayerInventories[teamId] = inventoryData;
+
+        [Server]
+        public void SetSelectedPowerUp(int teamId, int slot)
+        {
+            if (!_racePlayerInventories.TryGetValue(teamId, out InventoryData inventoryData))
+            {
+                Log.WLazy(() => $"Trying to set selected power-up for team {teamId} but no inventory data found for this team.", this);
+                return;
+            }
+            switch (slot)
+            {
+                case 1:
+                    inventoryData = new InventoryData(inventoryData, slot1: inventoryData.Slot1.PowerUp);
+                    break;
+                case 2:
+                    inventoryData = new InventoryData(inventoryData, slot2: inventoryData.Slot2.PowerUp);
+                    break;
+                case 3:
+                    inventoryData = new InventoryData(inventoryData, slot3: inventoryData.Slot3.PowerUp);
+                    break;
+                case 4:
+                    inventoryData = new InventoryData(inventoryData, slot4: inventoryData.Slot4.PowerUp);
+                    break;
+                case 5:
+                    inventoryData = new InventoryData(inventoryData, slot5: inventoryData.Slot5.PowerUp);
+                    break;
+                default:
+                    Log.WLazy(() => $"Trying to set selected power-up for team {teamId} but invalid slot index {slot}.", this);
+                    return;
+            }
+            SetPlayerInventory(teamId, inventoryData);
+        }
+
+        public bool TryGetTeamInventory(int teamId, out InventoryData inventoryData) => _racePlayerInventories.TryGetValue(teamId, out inventoryData);
 
         [Server]
         public void SetLeaderboard(List<int> orderedTeamIds)
@@ -295,6 +402,33 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             PrintRaceState(_log);
             return _racePlayerStates.Count > 0;
+        }
+
+        public bool TryUnwrapConnectionState(int connectionId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory)
+        {
+            playerState = default;
+            teamData = default;
+            inventory = default;
+
+            if (!TryGetPlayerState(connectionId, out RacePlayerState p))
+            {
+                Log.WLazy(() => $"No player state found for ConnectionId: {connectionId}.", this);
+                return false;
+            }
+            if (!TryGetTeamDataByPlayer(playerState, out RaceTeamData t))
+            {
+                Log.WLazy(() => $"No team data found for player {p.TeamId}.", this);
+                return false;
+            }
+            if (!TryGetTeamInventory(playerState.TeamId, out InventoryData i))
+            {
+                Log.WLazy(() => $"No inventory found for team {p.TeamId}.", this);
+                return false;
+            }
+            playerState = p;
+            teamData = t;
+            inventory = i;
+            return true;
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
@@ -9,12 +8,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
     public interface IPowerUpStrategy
     {
         bool TryPreliminaryCheck(InfoUsePowerUp info, StrategyContext context);
-        PowerUpRuntime OnCreateRuntime(SOPowerUp definition, InfoUsePowerUp info, StrategyContext context);
+        PowerUpRuntime OnCreateRuntime(InfoUsePowerUp info, StrategyContext context);
         bool CanActivate(PowerUpRuntime runtime, StrategyContext context);
         void OnActivate(PowerUpRuntime runtime, StrategyContext context);
         void OnChangeTarget(PowerUpRuntime runtime, int instanceId, int targetTeamId, StrategyContext context);
         void OnUse(PowerUpRuntime runtime, StrategyContext context);
         void OnTick(float dt, PowerUpRuntime runtime, StrategyContext context);
+        void OnAction(PowerUpRuntime runtime, StrategyContext context, PowerUpAction action);
         void OnExpire(PowerUpRuntime runtime, StrategyContext context);
         void OnDeactivate(PowerUpRuntime runtime, StrategyContext context);
     }
@@ -29,8 +29,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public virtual bool TryPreliminaryCheck(InfoUsePowerUp info, StrategyContext context)
         {
-            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out IRaceNetStateRead raceNetStateRead, out PowerUpsNetController powerUpsNetController, out Dictionary<int, PowerUpRuntime> activePowerUps);
-            if (!raceNetStateRead.TryGetPlayerInventory(info.OwnerTeamId, out InventoryData inventory))
+            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+            if (!raceNetStateStore.TryGetTeamInventory(info.OwnerTeamId, out InventoryData inventory))
             {
                 Log.WLazy(() => $"Trying to activate power-up for team {info.OwnerTeamId} but no inventory found.", this);
                 return false;
@@ -45,20 +45,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to activate power-up {info.PowerUp} for team {info.OwnerTeamId} but selected slot contains {inventory.SelectedSlot}.", this);
                 return false;
             }
-
             return true;
         }
 
-        public virtual PowerUpRuntime OnCreateRuntime(SOPowerUp definition, InfoUsePowerUp info, StrategyContext context)
+        public virtual PowerUpRuntime OnCreateRuntime(InfoUsePowerUp info, StrategyContext context)
         {
-            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out IRaceNetStateRead raceNetStateRead, out PowerUpsNetController powerUpsNetController, out Dictionary<int, PowerUpRuntime> activePowerUps);
-            var activePowerUpData = new ActivePowerUp(info, powerUpsNetController.NextPowerUpInstanceId, definition);
+            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+            var activePowerUpData = new ActivePowerUp(info, powerUpsNetController.GetInstanceId(), this);
 
             NetworkObject targetNob = null;
-            if (definition.IsOwnerTargeted)
+            if (IsOwnerTargeted)
                 //for owner-targeted power-ups the target nob is the owner's team itself
                 raceNetStateStore.TryGetTeamNob(info.OwnerTeamId, out targetNob);
-            return new PowerUpRuntime(definition, activePowerUpData, targetNob);
+            return new PowerUpRuntime(this, activePowerUpData, targetNob);
         }
 
         public virtual bool CanActivate(PowerUpRuntime runtime, StrategyContext context) => true;
@@ -82,7 +81,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public abstract void OnUse(PowerUpRuntime runtime, StrategyContext context);
         public virtual void OnTick(float dt, PowerUpRuntime runtime, StrategyContext context)
         {
-            if (runtime.ActivePowerUpData.PowerUpState == PowerUpState.Active)
+            if (runtime.ActivePowerUpData.PowerUpState == PowerUpState.Ticking)
             {
                 runtime.ActivePowerUpData.RemainingDuration -= dt;
                 if (runtime.ActivePowerUpData.RemainingDuration <= 0)
@@ -90,21 +89,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             }
         }
 
+        public virtual void OnAction(PowerUpRuntime runtime, StrategyContext context, PowerUpAction action) { }
+
         public virtual void OnDeactivate(PowerUpRuntime runtime, StrategyContext context) { }
 
         public virtual void OnExpire(PowerUpRuntime runtime, StrategyContext context)
         {
-            UnwrapContext(context, out RaceNetStateStore _, out IRaceNetStateRead _, out PowerUpsNetController _, out Dictionary<int, PowerUpRuntime> activePowerUps);
+            UnwrapContext(context, out RaceNetStateStore _, out PowerUpsNetController powerUpsNetController);
             runtime.ActivePowerUpData.PowerUpState = PowerUpState.Expired;
-            activePowerUps.Remove(runtime.ActivePowerUpData.ManagerInstanceId);
+            powerUpsNetController.RemoveActivePowerUp(runtime.ActivePowerUpData.ManagerInstanceId);
         }
 
-        public void UnwrapContext(StrategyContext context, out RaceNetStateStore raceNetStateStore, out IRaceNetStateRead raceNetStateRead, out PowerUpsNetController powerUpsNetController, out Dictionary<int, PowerUpRuntime> activePowerUps)
+        public void UnwrapContext(StrategyContext context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController)
         {
             raceNetStateStore = context.RaceNetStateStore;
-            raceNetStateRead = context.RaceNetStateStore;
             powerUpsNetController = context.PowerUpsNetController;
-            activePowerUps = context.ActivePowerUps;
         }
     }
 }

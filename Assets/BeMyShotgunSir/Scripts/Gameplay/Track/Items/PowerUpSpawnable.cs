@@ -64,6 +64,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             _netController = powerUpsNetController;
         }
 
+        [Server]
         public void OnTriggerEnter(Collider other)
         {
             if (IsClientInitialized)

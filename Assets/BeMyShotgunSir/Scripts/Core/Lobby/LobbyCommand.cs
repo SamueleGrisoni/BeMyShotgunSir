@@ -1,8 +1,12 @@
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
-    public class LobbyCommand : Command<ILobbyNetController_Command>
+    public class LobbyCommand : ICommand
     {
-        public LobbyCommand(ILobbyNetController_Command netController) : base(netController) { }
+        private ILobbyNetController_Command _netController;
+        public LobbyCommand(ILobbyNetController_Command netController)
+        {
+            _netController = netController;
+        }
 
         public void QuitLobby_CMRequest() =>
             GameServices.Instance.ConnectionManager.QuitLobby();
