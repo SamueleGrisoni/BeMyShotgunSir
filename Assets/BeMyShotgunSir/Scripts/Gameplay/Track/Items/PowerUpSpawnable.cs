@@ -1,4 +1,5 @@
 ﻿using System;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Utils;
@@ -20,6 +21,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         [SerializeField] private PowerUp _powerUpType;
         public PowerUp PowerUpType => _powerUpType;
         private PowerUpsNetController _netController;
+        private RaceNetStateStore _raceNetStateStore;
         [SerializeField] private float _rotationSpeed = 45f;
         [SerializeField] private float _bobHeight = 0.2f;
         [SerializeField] private float _bobSpeed = 2f;
@@ -58,20 +60,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             }
         }
 
-        public void Initialize(PowerUpsNetController powerUpsNetController)
+        public void Initialize(PowerUpsNetController powerUpsNetController, RaceNetStateStore raceNetStateStore)
         {
             if (_netController != null)
                 return;
             _netController = powerUpsNetController;
+            _raceNetStateStore = raceNetStateStore;
         }
 
         [Server]
-        public void OnTriggerEnter(Collider other)
+        public void OnTriggerEnterServer(Collider other)
         {
-            if (IsClientInitialized)
-            {
-                //SOUND here
-            }
             if (!IsServerInitialized)
                 return;
             if (other.CompareTag("Driver"))
@@ -86,9 +85,44 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
                     }
                     else
                         Log.ELazy(() => $"Driver has no team assigned. Power-up pickup failed. Driver: {other.gameObject.name}", this);
-
                 }
             }
+        }
+
+        [Client]
+        public void OnTriggerEnterClient(Collider other)
+        {
+            if (!IsClientInitialized)
+                return;
+            if (other.CompareTag("Driver"))
+            {
+                if (other.TryGetComponent(out MovementController movementController))
+                {
+                    int? teamId = movementController.TeamId;
+                    if (teamId.HasValue)
+                    {
+                        if (_raceNetStateStore.TryGetInventoryIsFull(teamId.Value, out bool isFull) && !isFull)
+                            GetComponent<MeshRenderer>().enabled = false;
+                    }
+                    else
+                        Log.ELazy(() => $"Driver has no team assigned. Power-up pickup failed. Driver: {other.gameObject.name}", this);
+                }
+            }
+        }
+
+        public void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Driver"))
+            {
+                //SOUND here
+            }
+            if (IsServerInitialized)
+            {
+                OnTriggerEnterServer(other);
+                return;
+            }
+            if (IsClientInitialized)
+                OnTriggerEnterClient(other);
         }
     }
 }

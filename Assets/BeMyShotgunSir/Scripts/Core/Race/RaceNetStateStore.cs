@@ -119,11 +119,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public PuSlot Slot4;
         public PuSlot Slot5;
         public int MaxPowerUps => 5;
-        public PowerUp SelectedSlot;
+        public PuSlot? SelectedSlot;
         public bool IsFull => Slot1.PowerUp != PowerUp.None && Slot2.PowerUp != PowerUp.None && Slot3.PowerUp != PowerUp.None && Slot4.PowerUp != PowerUp.None && Slot5.PowerUp != PowerUp.None;
         public bool IsEmpty => Slot1.PowerUp == PowerUp.None && Slot2.PowerUp == PowerUp.None && Slot3.PowerUp == PowerUp.None && Slot4.PowerUp == PowerUp.None && Slot5.PowerUp == PowerUp.None;
 
-        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp selectedSlot = PowerUp.None)
+        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PuSlot? selectedSlot = null)
         {
             TeamId = teamId;
             Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : new PuSlot(1, PowerUp.None);
@@ -131,10 +131,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : new PuSlot(3, PowerUp.None);
             Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : new PuSlot(4, PowerUp.None);
             Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : new PuSlot(5, PowerUp.None);
-            SelectedSlot = selectedSlot != PowerUp.None ? selectedSlot : PowerUp.None;
+            SelectedSlot = selectedSlot;
         }
 
-        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp selectedSlot = PowerUp.None)
+        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PuSlot? selectedSlot = null)
         {
             TeamId = other.TeamId;
             Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : other.Slot1;
@@ -142,7 +142,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : other.Slot3;
             Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : other.Slot4;
             Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : other.Slot5;
-            SelectedSlot = selectedSlot != PowerUp.None ? selectedSlot : other.SelectedSlot;
+            SelectedSlot = selectedSlot ?? other.SelectedSlot;
         }
 
         public PowerUp GetPowerUpInSlot(int slotIndex)
@@ -163,15 +163,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (IsEmpty)
                 updateSelectedSlot = true;
             if (Slot1.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot1: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+                return new InventoryData(this, slot1: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(1, powerUp) : SelectedSlot);
             if (Slot2.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot2: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+                return new InventoryData(this, slot2: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(2, powerUp) : SelectedSlot);
             if (Slot3.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot3: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+                return new InventoryData(this, slot3: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(3, powerUp) : SelectedSlot);
             if (Slot4.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot4: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+                return new InventoryData(this, slot4: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(4, powerUp) : SelectedSlot);
             if (Slot5.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot5: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+                return new InventoryData(this, slot5: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(5, powerUp) : SelectedSlot);
 
             Log.WLazy(() => $"Trying to add power-up {powerUp} to inventory but no free slots available.", this);
             return this;
@@ -180,15 +180,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public InventoryData RemovePowerUp(PowerUp powerUp)
         {
             if (Slot1.PowerUp == powerUp)
-                return new InventoryData(this, slot1: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+                return new InventoryData(this, slot1: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 1 ? new PuSlot(1, powerUp) : SelectedSlot);
             if (Slot2.PowerUp == powerUp)
-                return new InventoryData(this, slot2: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+                return new InventoryData(this, slot2: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 2 ? new PuSlot(2, powerUp) : SelectedSlot);
             if (Slot3.PowerUp == powerUp)
-                return new InventoryData(this, slot3: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+                return new InventoryData(this, slot3: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 3 ? new PuSlot(3, powerUp) : SelectedSlot);
             if (Slot4.PowerUp == powerUp)
-                return new InventoryData(this, slot4: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+                return new InventoryData(this, slot4: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 4 ? new PuSlot(4, powerUp) : SelectedSlot);
             if (Slot5.PowerUp == powerUp)
-                return new InventoryData(this, slot5: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+                return new InventoryData(this, slot5: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 5 ? new PuSlot(5, powerUp) : SelectedSlot);
 
             Log.WLazy(() => $"Trying to remove power-up {powerUp} from inventory but it was not found in any slot.", this);
             return this;
@@ -253,7 +253,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
     #region Interfaces
 
-    public interface IRaceNetStateRead
+    public interface IRaceNetStateRead //MEMO outdated
     {
         int? Seed { get; }
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
@@ -275,6 +275,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncList<int> Leaderboard_Sub { get; }
         SyncDictionary<int, InventoryData> PlayerInventories_Sub { get; }
         SyncDictionary<int, TeamTrackProgress> TeamTrackProgress_Sub { get; }
+        SyncVar<bool> RaceTimerExpired_Sub { get; }
     }
 
     public interface IRaceNetStateStore : IRaceNetStateSubscribe { }
@@ -361,6 +362,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncList<int> _leaderboard = new();
         /// <summary> synced </summary>
         private readonly SyncDictionary<int, TeamTrackProgress> _teamTrackProgress = new();
+        /// <summary> synced </summary>
+        private readonly SyncVar<bool> _raceTimerExpired = new(false);
 
         // State Projector accessors
         SyncVar<int?> IRaceNetStateSubscribe.Seed_Sub => _seed;
@@ -369,6 +372,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncDictionary<int, InventoryData> IRaceNetStateSubscribe.PlayerInventories_Sub => _racePlayerInventories;
         SyncList<int> IRaceNetStateSubscribe.Leaderboard_Sub => _leaderboard;
         SyncDictionary<int, TeamTrackProgress> IRaceNetStateSubscribe.TeamTrackProgress_Sub => _teamTrackProgress;
+        SyncVar<bool> IRaceNetStateSubscribe.RaceTimerExpired_Sub => _raceTimerExpired;
 
         // State Read-only accessors
         public int? Seed => _seed.Value;
@@ -377,6 +381,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
         public IReadOnlyList<int> Leaderboard => _leaderboard;
         public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _teamTrackProgress;
+        public bool RaceTimerExpired => _raceTimerExpired.Value;
 
         [Server]
         public void InitializeFromLobby(ILobbyNetStateRead lobbyState)
@@ -420,6 +425,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 _racePlayerInventories[teamData.Key] = new InventoryData(teamId: teamData.Key);
             }
+            _raceTimerExpired.Value = false;
         }
 
         # endregion
@@ -484,6 +490,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _leaderboard.Add(teamId);
         }
 
+        [Server]
+        public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
+
         #endregion
 
         #region Getters
@@ -508,6 +517,16 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         // Inventory
         public bool TryGetTeamInventory(int teamId, out InventoryData inventoryData) => _racePlayerInventories.TryGetValue(teamId, out inventoryData);
+
+        public bool TryGetSelectedPowerUp(int teamId, out PuSlot? selectedPowerUp)
+        {
+            selectedPowerUp = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            selectedPowerUp = inventoryData.SelectedSlot != null && inventoryData.SelectedSlot.Value.PowerUp != PowerUp.None ? inventoryData.SelectedSlot : null;
+            return true;
+        }
+
 
         public bool TryGetPlayerName(int connectionId, out string playerName)
         {
@@ -652,7 +671,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             selectedSlot = default;
             if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
                 return false;
-            selectedSlot = inventoryData.SelectedSlot;
+            selectedSlot = inventoryData.SelectedSlot?.PowerUp ?? PowerUp.None;
             return true;
         }
 
@@ -684,7 +703,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         // Team track progress
-
         public bool TryGetTeamCurrentChunkId(int teamId, out int currentChunkId)
         {
             currentChunkId = default;
@@ -726,6 +744,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             trackProgress = default;
             return TeamTrackProgress.TryGetValue(teamId, out trackProgress);
         }
+
+        // race timer
+
+        public bool IsRaceTimerExpired() => _raceTimerExpired.Value;
 
         #endregion
 

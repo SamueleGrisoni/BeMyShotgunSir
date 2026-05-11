@@ -137,7 +137,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public void OnPowerUpSpawned(PowerUpSpawnable powerUpSpawnable)
         {
             _spawnedPowerUps.Add(new SpawnedPowerUpData(powerUpSpawnable, powerUpSpawnable.ChunkIndex ?? -1));
-            powerUpSpawnable.Initialize(this);
+            powerUpSpawnable.Initialize(this, _raceNetState);
         }
 
         [Server]
@@ -241,8 +241,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                     Log.WLazy(() => $"Trying to equip power-up for client {connection.ClientId} with empty slot index {slotIndex}.", this);
                     return;
                 }
-                inventory.SelectedSlot = selectedPowerUp;
-                _raceNetState.SetPlayerInventory(playerState.TeamId, inventory);
+                _raceNetState.SetSelectedPowerUp(playerState.TeamId, slotIndex);
                 Log.DLazy(() => $"Client {connection.ClientId} equipped power-up {selectedPowerUp} in slot {slotIndex}.", this, _log);
             }
         }
@@ -252,12 +251,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         {
             if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
             {
-                if (inventory.SelectedSlot == PowerUp.None)
+                if (!inventory.SelectedSlot.HasValue || inventory.SelectedSlot.Value.PowerUp == PowerUp.None)
                 {
                     Log.WLazy(() => $"Trying to use power-up for team {playerState.TeamId} but no slot selected.", this);
                     return;
                 }
-                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot);
+                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot.HasValue ? inventory.SelectedSlot.Value.PowerUp : PowerUp.None);
                 if (IsUsingMaxNumberOfPowerUps(teamData))
                 {
                     Log.WLazy(() => $"Trying to use power-up {powerUpInfo.PowerUp} for team {powerUpInfo.OwnerTeamId} but already using max number of power-ups.", this);
@@ -368,12 +367,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no inventory found.", this);
                 return;
             }
-            if (actionType == PowerUpActionType.Aim && inventory.SelectedSlot == PowerUp.None)
+            if (actionType == PowerUpActionType.Aim && (!inventory.SelectedSlot.HasValue || inventory.SelectedSlot.Value.PowerUp == PowerUp.None))
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no power-up selected.", this);
                 return;
             }
-            PowerUp selectedPowerUp = inventory.SelectedSlot;
+            PowerUp selectedPowerUp = inventory.SelectedSlot.Value.PowerUp;
             if (!_raceNetState.TryGetTeamData(connection.ClientId, out RaceTeamData teamData))
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no team data found.", this);
@@ -402,5 +401,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 return;
             }
         }
+
+        // public bool GetCollisionBehaviour(int teamId, int otherId)
+        // {
+        //     if (!_raceNetState.TryGetTeamData(teamId, out RaceTeamData teamData) || !_raceNetState.TryGetTeamData(otherId, out RaceTeamData otherTeamData))
+        //     {
+        //         Log.WLazy(() => $"Trying to get collision behaviour for team {teamId} and other team {otherId} but no data found for one of the teams.", this);
+        //         return new PowerUpCollisionBehaviour[] { PowerUpCollisionBehaviour.Standard };
+        //     }
+        //     if (teamData.ActivePowerUps.Length == 0 || otherTeamData.ActivePowerUps.Length == 0)
+
+        //     {
+
+        //     }
+        // }
     }
 }

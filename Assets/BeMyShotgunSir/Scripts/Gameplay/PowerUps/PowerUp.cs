@@ -73,4 +73,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public override string ToString() => $"PowerUpAction: ActionType={ActionType}, Identifier={Identifier}, OwnerTeamId={OwnerTeamId}, TargetTeamId={TargetTeamId}, value1={value1}, value2={value2}";
     }
+
 }
