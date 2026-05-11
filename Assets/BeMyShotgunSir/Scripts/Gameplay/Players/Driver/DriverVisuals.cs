@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
+using FishNet.Object;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
-    public class DriverVisuals : MonoBehaviour
+    public class DriverVisuals : NetworkBehaviour
     {
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
@@ -16,6 +17,8 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
         [SerializeField] private Transform _handle;
         [SerializeField] private List<ParticleSystem> _driftParticles = new List<ParticleSystem>();
+        [SerializeField] private List<TrailRenderer> _trailRendereresDrift = new List<TrailRenderer>();
+        [SerializeField] private List<ParticleSystem> _boostParticles = new List<ParticleSystem>();
 
         private void Awake()
         {
@@ -33,6 +36,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
             AnimateSteer();
             AnimateDrifting();
+            AnimateBoost();
         }
 
         private void AnimateSteer()
@@ -51,6 +55,21 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 ParticleSystem.EmissionModule emission = p.emission;
                 emission.enabled = isDrifting;
             }
+            foreach (TrailRenderer tr in _trailRendereresDrift)
+            {
+                tr.emitting = isDrifting;
+            }
+        }
+        private void AnimateBoost()
+        {
+            if (!IsOwner) return;
+            
+            bool isBoosting = _movement.IsBoosting();
+            foreach (ParticleSystem p in _boostParticles)
+            {
+                ParticleSystem.EmissionModule emission = p.emission;
+                emission.enabled = isBoosting;
+            } 
         }
         public void OilAnimation() => StartCoroutine(ExecuteOilAnimation());
         private IEnumerator ExecuteOilAnimation()
