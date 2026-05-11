@@ -13,4 +13,10 @@ MonoBehaviour:
   m_Name: PowerUpsData
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.PowerUps.SOPowerUpsData
   <PowerUps>k__BackingField:
+  - {fileID: 11400000, guid: d9ba277964a1a2f4490a620d175a97b5, type: 2}
   - {fileID: 11400000, guid: 3088daef35e08414c88e5e5b92c5cf59, type: 2}
+  - {fileID: 11400000, guid: ad7091ca1185be9459b66ca803eaa040, type: 2}
+  - {fileID: 11400000, guid: 9fa0285bcd476b14b81bb773cef13d61, type: 2}
+  - {fileID: 11400000, guid: ced55b1d0cfb4044c925d542fa7f9343, type: 2}
+  - {fileID: 11400000, guid: d614bce3eb658304aa182a091e958d8b, type: 2}
+  - {fileID: 11400000, guid: 19e35455606b01d469cee95f4d34ffb7, type: 2}
