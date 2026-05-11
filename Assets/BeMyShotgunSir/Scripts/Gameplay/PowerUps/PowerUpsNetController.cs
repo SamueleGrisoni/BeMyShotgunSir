@@ -49,6 +49,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         }
     }
 
+    public class SpawnedPowerUpData
+    {
+        public PowerUpSpawnable reference;
+        public int ChunkIndex;
+        public SpawnedPowerUpData(PowerUpSpawnable reference, int chunkIndex)
+        {
+            this.reference = reference;
+            ChunkIndex = chunkIndex;
+        }
+    }
+
     #endregion
 
     #region Interfaces
@@ -91,6 +102,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public IReadOnlyDictionary<PowerUp, SOPowerUp> Definitions => _definitions;
         private int _nextPowerUpInstanceId = 0;
         private Dictionary<int, PowerUpRuntime> _activePowerUps;
+        private List<SpawnedPowerUpData> _spawnedPowerUps = new List<SpawnedPowerUpData>();
 
         private float _tickTimer = 0;
         [SerializeField] private float _tICK_INTERVAL = 0.3f;
@@ -121,8 +133,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             UnsubscribeEvents();
         }
 
-        public void OnPowerUpSpawned(IPowerUpSpawnable powerUpSpawnable) =>
-            powerUpSpawnable.Initialize(this);
+        [Server]
+        public void OnPowerUpSpawned(PowerUpSpawnable powerUpSpawnable)
+        {
+            _spawnedPowerUps.Add(new SpawnedPowerUpData(powerUpSpawnable, powerUpSpawnable.ChunkIndex ?? -1));
+            powerUpSpawnable.Initialize(this, _raceNetState);
+        }
+
+        [Server]
+        public void DespawnSurpassedPowerUp(int chunkIndex) //TODO this should be called whenever all the players surpass a special chunk
+        {
+            List<SpawnedPowerUpData> toDespawn = _spawnedPowerUps.FindAll(data => data.ChunkIndex < chunkIndex);
+            foreach (SpawnedPowerUpData data in toDespawn)
+            {
+                if (data.reference != null && data.reference.IsSpawned)
+                {
+                    data.reference.Despawn();
+                    Log.DLazy(() => $"Despawning power-up {data.reference.name} in chunk {data.ChunkIndex} because it has been surpassed by all players.", this, _log);
+                }
+                else
+                {
+                    Log.WLazy(() => $"Trying to despawn power-up in chunk {data.ChunkIndex} but reference is null or not spawned.", this, _log);
+                }
+            }
+            _spawnedPowerUps.RemoveAll(data => data.ChunkIndex < chunkIndex);
+        }
 
         [Server]
         public int GetInstanceId() => _nextPowerUpInstanceId++;
@@ -184,21 +219,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to add power-up to team {teamId} but inventory is full.", this);
                 return false;
             }
-
-            if (inventory.Slot1.PowerUp == PowerUp.None)
-                inventory.Slot1 = new PuSlot(1, powerUpType);
-            else if (inventory.Slot2.PowerUp == PowerUp.None)
-                inventory.Slot2 = new PuSlot(2, powerUpType);
-            else if (inventory.Slot3.PowerUp == PowerUp.None)
-                inventory.Slot3 = new PuSlot(3, powerUpType);
-            else if (inventory.Slot4.PowerUp == PowerUp.None)
-                inventory.Slot4 = new PuSlot(4, powerUpType);
-            else if (inventory.Slot5.PowerUp == PowerUp.None)
-                inventory.Slot5 = new PuSlot(5, powerUpType);
-
+            inventory = inventory.SetFreeSlot(powerUpType);
             _raceNetState.SetPlayerInventory(teamId, inventory);
             Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
             return true;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void EquipPowerUp_ServerRpc(int slotIndex, NetworkConnection connection = null)
+        {
+            if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
+            {
+                if (slotIndex < 0 || slotIndex >= inventory.MaxPowerUps)
+                {
+                    Log.WLazy(() => $"Trying to equip power-up for client {connection.ClientId} with invalid slot index {slotIndex}.", this);
+                    return;
+                }
+                PowerUp selectedPowerUp = inventory.GetPowerUpInSlot(slotIndex);
+                if (selectedPowerUp == PowerUp.None)
+                {
+                    Log.WLazy(() => $"Trying to equip power-up for client {connection.ClientId} with empty slot index {slotIndex}.", this);
+                    return;
+                }
+                _raceNetState.SetSelectedPowerUp(playerState.TeamId, slotIndex);
+                Log.DLazy(() => $"Client {connection.ClientId} equipped power-up {selectedPowerUp} in slot {slotIndex}.", this, _log);
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -206,12 +251,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         {
             if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
             {
-                if (inventory.SelectedSlot == null || inventory.SelectedSlot == PowerUp.None)
+                if (!inventory.SelectedSlot.HasValue || inventory.SelectedSlot.Value.PowerUp == PowerUp.None)
                 {
                     Log.WLazy(() => $"Trying to use power-up for team {playerState.TeamId} but no slot selected.", this);
                     return;
                 }
-                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot.Value);
+                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot.HasValue ? inventory.SelectedSlot.Value.PowerUp : PowerUp.None);
                 if (IsUsingMaxNumberOfPowerUps(teamData))
                 {
                     Log.WLazy(() => $"Trying to use power-up {powerUpInfo.PowerUp} for team {powerUpInfo.OwnerTeamId} but already using max number of power-ups.", this);
@@ -322,12 +367,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no inventory found.", this);
                 return;
             }
-            if (inventory.SelectedSlot == null || inventory.SelectedSlot == PowerUp.None)
+            if (actionType == PowerUpActionType.Aim && (!inventory.SelectedSlot.HasValue || inventory.SelectedSlot.Value.PowerUp == PowerUp.None))
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no power-up selected.", this);
                 return;
             }
-            PowerUp selectedPowerUp = inventory.SelectedSlot.Value;
+            PowerUp selectedPowerUp = inventory.SelectedSlot.Value.PowerUp;
             if (!_raceNetState.TryGetTeamData(connection.ClientId, out RaceTeamData teamData))
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no team data found.", this);
@@ -356,5 +401,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 return;
             }
         }
+
+        // public bool GetCollisionBehaviour(int teamId, int otherId)
+        // {
+        //     if (!_raceNetState.TryGetTeamData(teamId, out RaceTeamData teamData) || !_raceNetState.TryGetTeamData(otherId, out RaceTeamData otherTeamData))
+        //     {
+        //         Log.WLazy(() => $"Trying to get collision behaviour for team {teamId} and other team {otherId} but no data found for one of the teams.", this);
+        //         return new PowerUpCollisionBehaviour[] { PowerUpCollisionBehaviour.Standard };
+        //     }
+        //     if (teamData.ActivePowerUps.Length == 0 || otherTeamData.ActivePowerUps.Length == 0)
+
+        //     {
+
+        //     }
+        // }
     }
 }

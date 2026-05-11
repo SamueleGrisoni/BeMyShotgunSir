@@ -1,4 +1,5 @@
 using BeMyShotgunSir.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
@@ -97,8 +98,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public int? TeamId => _driverController == null ? null : _driverController.TeamId;
         public IDriverInputConsumer InputConsumer;
 
-        public void Initialize(IDriverInputConsumer inputConsumer)
+        public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer)
         {
+            //TODO set context references here
             InputConsumer = inputConsumer;
             InputConsumer.OnBoostPressed += ExecuteCommit;
             InputConsumer.OnEarlyCommitmentPressed += ExecuteEarlyCommitment;
@@ -113,7 +115,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             Debug.Log($"Early commitment pressed from movement controller: {direction}");
             _commitmentDirection = direction;
         }
-        
+
         [SerializeField] private bool _isDebugInputEnabled = false;
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
@@ -178,11 +180,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
-        private void Update()
-        {
-            Debug.Log($"Early commitment: {_input.EarlyCommitment}");
-        }
-
         private void LateUpdate()
         {
             _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
@@ -207,13 +204,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (!IsOwner)
                 return default;
-            
+
             ReplicateData rd = new();
             if (_isDebugInputEnabled)
             {
                 rd = new(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting, _input.EarlyCommitment);
             }
-            else {
+            else
+            {
                 float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput / 100; // TODO poi marco lo aggiustaz
                 rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving, _input.EarlyCommitment);
                 _isBoosting = false;

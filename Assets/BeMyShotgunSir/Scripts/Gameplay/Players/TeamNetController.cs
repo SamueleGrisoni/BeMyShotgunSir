@@ -14,8 +14,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     public interface ITeamNetControllerInitializer
     {
         void Initialize(RaceNetContext context, IRoadManager roadManager);
-        void OnDriverSpawned(DriverController driverController, int? driverTeamId);
-        void OnShotgunSpawned(ShotgunController shotgunController, int? shotgunTeamId);
+        int? TeamId { get; }
     }
 
     public class TeamNetController : NetworkBehaviour, ITeamNetControllerInitializer

@@ -17,5 +17,14 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             Log.DLazy(() => $"Team {runtime.ActivePowerUpData.OwnerTeamId} is using Armor.", this);
             powerUpsNetController.AddActivePowerUp(runtime);
         }
+
+        public override void OnExpire(PowerUpRuntime runtime, StrategyContext context)
+        {
+            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+            raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
+            teamData.ActivePowerUpInfo.isArmorActive = false;
+            raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+            base.OnExpire(runtime, context);
+        }
     }
 }

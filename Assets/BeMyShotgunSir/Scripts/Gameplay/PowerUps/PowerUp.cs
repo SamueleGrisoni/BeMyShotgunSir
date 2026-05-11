@@ -34,8 +34,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
     public enum PowerUpActionType
     {
         None,
-        CustomAction1,
-        CustomAction2
+        Aim,
+        BumpToSteal,
     }
 
     public struct PowerUpIdentifier
@@ -73,4 +73,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public override string ToString() => $"PowerUpAction: ActionType={ActionType}, Identifier={Identifier}, OwnerTeamId={OwnerTeamId}, TargetTeamId={TargetTeamId}, value1={value1}, value2={value2}";
     }
+
 }

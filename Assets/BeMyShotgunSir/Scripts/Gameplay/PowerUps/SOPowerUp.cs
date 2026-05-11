@@ -35,12 +35,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to activate power-up for team {info.OwnerTeamId} but no inventory found.", this);
                 return false;
             }
-            if (inventory.SelectedSlot == null)
+            if (!inventory.SelectedSlot.HasValue || inventory.SelectedSlot.Value.PowerUp == PowerUp.None)
             {
                 Log.WLazy(() => $"Trying to activate power-up for team {info.OwnerTeamId} but no slot selected.", this);
                 return false;
             }
-            if (inventory.SelectedSlot != info.PowerUp)
+            if (inventory.SelectedSlot.Value.PowerUp != info.PowerUp)
             {
                 Log.WLazy(() => $"Trying to activate power-up {info.PowerUp} for team {info.OwnerTeamId} but selected slot contains {inventory.SelectedSlot}.", this);
                 return false;

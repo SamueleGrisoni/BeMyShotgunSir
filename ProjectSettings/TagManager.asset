@@ -23,8 +23,8 @@ TagManager:
   - CollisionCollider
   - LeftCollider
   - RightCollider
-  - 
-  - 
+  - Invisibility PowerUp
+  - Armor PowerUp
   - 
   - 
   - 

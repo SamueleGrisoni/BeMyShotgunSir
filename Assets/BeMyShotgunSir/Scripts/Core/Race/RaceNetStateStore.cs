@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -93,6 +94,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public bool IsTargetedByPowerUp(PowerUp powerUp) => TargetedByPowerUps.Any(identifier => identifier.PowerUp == powerUp);
         public bool HasActivePowerUp(PowerUp powerUp) => ActivePowerUps.Any(identifier => identifier.PowerUp == powerUp);
+        public bool HasPlayerConnectionId(int connectionId) => DriverConnectionId == connectionId || ShotgunConnectionId == connectionId;
 
     }
 
@@ -117,11 +119,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public PuSlot Slot4;
         public PuSlot Slot5;
         public int MaxPowerUps => 5;
-        public PowerUp? SelectedSlot;
+        public PuSlot? SelectedSlot;
         public bool IsFull => Slot1.PowerUp != PowerUp.None && Slot2.PowerUp != PowerUp.None && Slot3.PowerUp != PowerUp.None && Slot4.PowerUp != PowerUp.None && Slot5.PowerUp != PowerUp.None;
         public bool IsEmpty => Slot1.PowerUp == PowerUp.None && Slot2.PowerUp == PowerUp.None && Slot3.PowerUp == PowerUp.None && Slot4.PowerUp == PowerUp.None && Slot5.PowerUp == PowerUp.None;
 
-        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp? selectedSlot = null)
+        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PuSlot? selectedSlot = null)
         {
             TeamId = teamId;
             Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : new PuSlot(1, PowerUp.None);
@@ -132,7 +134,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             SelectedSlot = selectedSlot;
         }
 
-        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp? selectedSlot = null)
+        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PuSlot? selectedSlot = null)
         {
             TeamId = other.TeamId;
             Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : other.Slot1;
@@ -140,7 +142,56 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : other.Slot3;
             Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : other.Slot4;
             Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : other.Slot5;
-            SelectedSlot = selectedSlot != null ? selectedSlot : other.SelectedSlot;
+            SelectedSlot = selectedSlot ?? other.SelectedSlot;
+        }
+
+        public PowerUp GetPowerUpInSlot(int slotIndex)
+        {
+            return slotIndex switch
+            {
+                1 => Slot1.PowerUp,
+                2 => Slot2.PowerUp,
+                3 => Slot3.PowerUp,
+                4 => Slot4.PowerUp,
+                5 => Slot5.PowerUp,
+                _ => PowerUp.None
+            };
+        }
+
+        public InventoryData SetFreeSlot(PowerUp powerUp, bool updateSelectedSlot = false)
+        {
+            if (IsEmpty)
+                updateSelectedSlot = true;
+            if (Slot1.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot1: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(1, powerUp) : SelectedSlot);
+            if (Slot2.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot2: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(2, powerUp) : SelectedSlot);
+            if (Slot3.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot3: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(3, powerUp) : SelectedSlot);
+            if (Slot4.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot4: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(4, powerUp) : SelectedSlot);
+            if (Slot5.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot5: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(5, powerUp) : SelectedSlot);
+
+            Log.WLazy(() => $"Trying to add power-up {powerUp} to inventory but no free slots available.", this);
+            return this;
+        }
+
+        public InventoryData RemovePowerUp(PowerUp powerUp)
+        {
+            if (Slot1.PowerUp == powerUp)
+                return new InventoryData(this, slot1: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 1 ? new PuSlot(1, powerUp) : SelectedSlot);
+            if (Slot2.PowerUp == powerUp)
+                return new InventoryData(this, slot2: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 2 ? new PuSlot(2, powerUp) : SelectedSlot);
+            if (Slot3.PowerUp == powerUp)
+                return new InventoryData(this, slot3: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 3 ? new PuSlot(3, powerUp) : SelectedSlot);
+            if (Slot4.PowerUp == powerUp)
+                return new InventoryData(this, slot4: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 4 ? new PuSlot(4, powerUp) : SelectedSlot);
+            if (Slot5.PowerUp == powerUp)
+                return new InventoryData(this, slot5: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 5 ? new PuSlot(5, powerUp) : SelectedSlot);
+
+            Log.WLazy(() => $"Trying to remove power-up {powerUp} from inventory but it was not found in any slot.", this);
+            return this;
         }
 
         public override string ToString() => $"Slot1: {Slot1.PowerUp}, Slot2: {Slot2.PowerUp}, Slot3: {Slot3.PowerUp}, Slot4: {Slot4.PowerUp}, Slot5: {Slot5.PowerUp}, SelectedSlot: {SelectedSlot}";
@@ -166,17 +217,50 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
     }
 
+    public struct PortalInfo
+    {
+        public int Id;
+        public RoadChunkType Position;
+    }
+
+    public struct TeamTrackProgress
+    {
+        public int CurrentChunkId;
+        public int NextSpecialChunkId;
+        public PortalInfo? LastSpecialChunkType;
+        public bool IsFinishLineNext;
+
+        public TeamTrackProgress(int nextForkId = 0, int nextJunctionId = 0, PortalInfo? lastSpecialPortalType = null, bool isFinishLineNext = false)
+        {
+            CurrentChunkId = nextForkId;
+            NextSpecialChunkId = nextJunctionId;
+            LastSpecialChunkType = lastSpecialPortalType;
+            IsFinishLineNext = isFinishLineNext;
+        }
+
+        public TeamTrackProgress(TeamTrackProgress other, int? nextForkId = null, int? nextJunctionId = null, PortalInfo? lastSpecialPortalType = null, bool? isFinishLineNext = null)
+        {
+            CurrentChunkId = nextForkId ?? other.CurrentChunkId;
+            NextSpecialChunkId = nextJunctionId ?? other.NextSpecialChunkId;
+            LastSpecialChunkType = lastSpecialPortalType ?? other.LastSpecialChunkType;
+            IsFinishLineNext = isFinishLineNext ?? other.IsFinishLineNext;
+        }
+
+        public override string ToString() => $"TeamTrackProgress: NextForkId: {CurrentChunkId}, NextJunctionId: {NextSpecialChunkId}, LastSpecialPortalType: {LastSpecialChunkType}, IsFinishLineNext: {IsFinishLineNext}";
+    }
+
     #endregion
 
     #region Interfaces
 
-    public interface IRaceNetStateRead
+    public interface IRaceNetStateRead //MEMO outdated
     {
         int? Seed { get; }
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, RaceTeamData> TeamData { get; }
         IReadOnlyDictionary<int, InventoryData> PlayerInventories { get; }
         IReadOnlyList<int> Leaderboard { get; }
+        IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress { get; }
         bool TryGetPlayerState(int connectionId, out RacePlayerState playerState);
         bool TryGetTeamData(int teamId, out RaceTeamData teamData);
         bool TryGetTeamInventory(int teamId, out InventoryData inventoryData);
@@ -190,6 +274,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncDictionary<int, RaceTeamData> TeamData_Sub { get; }
         SyncList<int> Leaderboard_Sub { get; }
         SyncDictionary<int, InventoryData> PlayerInventories_Sub { get; }
+        SyncDictionary<int, TeamTrackProgress> TeamTrackProgress_Sub { get; }
+        SyncVar<bool> RaceTimerExpired_Sub { get; }
     }
 
     public interface IRaceNetStateStore : IRaceNetStateSubscribe { }
@@ -201,6 +287,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     [RequireComponent(typeof(RaceClientProjector))]
     public sealed class RaceNetStateStore : NetworkBehaviour, IRaceNetStateStore
     {
+
+        # region Server-only state and methods
         //utility
         private bool _log = true;
 
@@ -208,6 +296,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         /// <summary> not synced </summary>
         private Dictionary<int, NetworkObject> _teamNobs = new();
         public IReadOnlyDictionary<int, NetworkObject> TeamNobs => _teamNobs;
+
+        public void PrintRaceState(bool log = true)
+        {
+            if (!log) return;
+            Log.DLazy(() =>
+            {
+                string playerStatesStr = string.Join(", ", PlayerStates.Select(kvp => $"[ConnectionId: {kvp.Key}, State: {kvp.Value}]"));
+                string teamDataStr = string.Join(", ", TeamData.Select(kvp => $"[TeamId: {kvp.Key}, Data: {kvp.Value}]"));
+                string inventoryStr = string.Join(", ", PlayerInventories.Select(kvp => $"[TeamId: {kvp.Key}, Inventory: {kvp.Value}]"));
+                return $"Race State: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, Leaderboard: [{string.Join(", ", Leaderboard)}]";
+            }, this, _log);
+        }
 
         [Server]
         public void RegisterTeamNob(int teamId, NetworkObject nob)
@@ -245,6 +345,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             nob = teamData.ShotgunNob;
             return nob != null;
         }
+
+        # endregion
+
+        # region Networked state and methods
         // Networked state
         /// <summary> synced </summary>
         private readonly SyncVar<int?> _seed = new();
@@ -256,6 +360,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncDictionary<int, InventoryData> _racePlayerInventories = new();
         /// <summary> synced </summary>
         private readonly SyncList<int> _leaderboard = new();
+        /// <summary> synced </summary>
+        private readonly SyncDictionary<int, TeamTrackProgress> _teamTrackProgress = new();
+        /// <summary> synced </summary>
+        private readonly SyncVar<bool> _raceTimerExpired = new(false);
 
         // State Projector accessors
         SyncVar<int?> IRaceNetStateSubscribe.Seed_Sub => _seed;
@@ -263,6 +371,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncDictionary<int, RaceTeamData> IRaceNetStateSubscribe.TeamData_Sub => _raceTeamData;
         SyncDictionary<int, InventoryData> IRaceNetStateSubscribe.PlayerInventories_Sub => _racePlayerInventories;
         SyncList<int> IRaceNetStateSubscribe.Leaderboard_Sub => _leaderboard;
+        SyncDictionary<int, TeamTrackProgress> IRaceNetStateSubscribe.TeamTrackProgress_Sub => _teamTrackProgress;
+        SyncVar<bool> IRaceNetStateSubscribe.RaceTimerExpired_Sub => _raceTimerExpired;
 
         // State Read-only accessors
         public int? Seed => _seed.Value;
@@ -270,18 +380,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _raceTeamData;
         public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
         public IReadOnlyList<int> Leaderboard => _leaderboard;
-
-        public void PrintRaceState(bool log = true)
-        {
-            if (!log) return;
-            Log.DLazy(() =>
-            {
-                string playerStatesStr = string.Join(", ", PlayerStates.Select(kvp => $"[ConnectionId: {kvp.Key}, State: {kvp.Value}]"));
-                string teamDataStr = string.Join(", ", TeamData.Select(kvp => $"[TeamId: {kvp.Key}, Data: {kvp.Value}]"));
-                string inventoryStr = string.Join(", ", PlayerInventories.Select(kvp => $"[TeamId: {kvp.Key}, Inventory: {kvp.Value}]"));
-                return $"Race State: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, Leaderboard: [{string.Join(", ", Leaderboard)}]";
-            }, this, _log);
-        }
+        public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _teamTrackProgress;
+        public bool RaceTimerExpired => _raceTimerExpired.Value;
 
         [Server]
         public void InitializeFromLobby(ILobbyNetStateRead lobbyState)
@@ -325,34 +425,27 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 _racePlayerInventories[teamData.Key] = new InventoryData(teamId: teamData.Key);
             }
+            _raceTimerExpired.Value = false;
         }
 
+        # endregion
+
+        #region Setters
+
+        // Seed
         [Server]
         public void SetSeed(int value) => _seed.Value = value;
 
-        public bool TryGetPlayerState(int connectionId, out RacePlayerState playerState) =>
-            _racePlayerStates.TryGetValue(connectionId, out playerState);
-
+        // Player state
         [Server]
         public void SetPlayerState(int connectionId, RacePlayerState playerState) =>
             _racePlayerStates[connectionId] = playerState;
 
-        public bool TryGetTeamData(int teamId, out RaceTeamData teamData) =>
-            _raceTeamData.TryGetValue(teamId, out teamData);
-
-        public bool TryGetTeamDataByPlayerId(int connectionId, out RaceTeamData teamData)
-        {
-            teamData = default;
-            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
-                return false;
-            return TryGetTeamData(playerState.TeamId, out teamData);
-        }
-
-        public bool TryGetTeamDataByPlayer(RacePlayerState playerState, out RaceTeamData teamData) => TryGetTeamData(playerState.TeamId, out teamData);
-
+        // Team data
         [Server]
         public void SetTeamData(int teamId, RaceTeamData teamData) => _raceTeamData[teamId] = teamData;
 
+        // Inventory
         [Server]
         public void SetPlayerInventory(int teamId, InventoryData inventoryData) => _racePlayerInventories[teamId] = inventoryData;
 
@@ -388,8 +481,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             SetPlayerInventory(teamId, inventoryData);
         }
 
-        public bool TryGetTeamInventory(int teamId, out InventoryData inventoryData) => _racePlayerInventories.TryGetValue(teamId, out inventoryData);
-
+        // Leaderboard
         [Server]
         public void SetLeaderboard(List<int> orderedTeamIds)
         {
@@ -397,6 +489,269 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             foreach (int teamId in orderedTeamIds)
                 _leaderboard.Add(teamId);
         }
+
+        [Server]
+        public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
+
+        #endregion
+
+        #region Getters
+
+        // Player state
+        public bool TryGetPlayerState(int connectionId, out RacePlayerState playerState) =>
+            _racePlayerStates.TryGetValue(connectionId, out playerState);
+
+        // Team data
+        public bool TryGetTeamData(int teamId, out RaceTeamData teamData) =>
+            _raceTeamData.TryGetValue(teamId, out teamData);
+
+        public bool TryGetTeamDataByPlayerId(int connectionId, out RaceTeamData teamData)
+        {
+            teamData = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            return TryGetTeamData(playerState.TeamId, out teamData);
+        }
+
+        public bool TryGetTeamDataByPlayer(RacePlayerState playerState, out RaceTeamData teamData) => TryGetTeamData(playerState.TeamId, out teamData);
+
+        // Inventory
+        public bool TryGetTeamInventory(int teamId, out InventoryData inventoryData) => _racePlayerInventories.TryGetValue(teamId, out inventoryData);
+
+        public bool TryGetSelectedPowerUp(int teamId, out PuSlot? selectedPowerUp)
+        {
+            selectedPowerUp = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            selectedPowerUp = inventoryData.SelectedSlot != null && inventoryData.SelectedSlot.Value.PowerUp != PowerUp.None ? inventoryData.SelectedSlot : null;
+            return true;
+        }
+
+
+        public bool TryGetPlayerName(int connectionId, out string playerName)
+        {
+            playerName = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            playerName = playerState.PlayerName;
+            return true;
+        }
+
+        public bool TryGetPlayerTeamId(int connectionId, out int teamId)
+        {
+            teamId = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            teamId = playerState.TeamId;
+            return true;
+        }
+
+        public bool TryGetPlayerTrackReady(int connectionId, out bool isTrackReady)
+        {
+            isTrackReady = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            isTrackReady = playerState.IsTrackReady;
+            return true;
+        }
+
+        public bool TryGetPlayerReadyToRace(int connectionId, out bool isReadyToRace)
+        {
+            isReadyToRace = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            isReadyToRace = playerState.IsReadyToRace;
+            return true;
+        }
+
+        public bool TryGetPlayerRole(int connectionId, out RaceRole role)
+        {
+            role = default;
+            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+                return false;
+            role = playerState.Role;
+            return true;
+        }
+
+        public bool TryGetTeamDriverConnectionId(int teamId, out int driverConnectionId)
+        {
+            driverConnectionId = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            driverConnectionId = teamData.DriverConnectionId;
+            return true;
+        }
+
+        public bool TryGetTeamShotgunConnectionId(int teamId, out int shotgunConnectionId)
+        {
+            shotgunConnectionId = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            shotgunConnectionId = teamData.ShotgunConnectionId;
+            return true;
+        }
+
+        public bool TryGetTeamSpawned(int teamId, out bool isTeamSpawned)
+        {
+            isTeamSpawned = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            isTeamSpawned = teamData.IsTeamSpawned;
+            return true;
+        }
+
+        public bool TryGetTeamDriverNob(int teamId, out NetworkObject driverNob)
+        {
+            driverNob = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            driverNob = teamData.DriverNob;
+            return driverNob != null;
+        }
+
+        public bool TryGetTeamShotgunNob(int teamId, out NetworkObject shotgunNob)
+        {
+            shotgunNob = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            shotgunNob = teamData.ShotgunNob;
+            return shotgunNob != null;
+        }
+
+        public bool TryGetTeamActivePowerUps(int teamId, out PowerUpIdentifier[] activePowerUps)
+        {
+            activePowerUps = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            activePowerUps = teamData.ActivePowerUps;
+            return activePowerUps != null;
+        }
+
+        public bool TryGetTeamTargetedByPowerUps(int teamId, out PowerUpIdentifier[] targetedByPowerUps)
+        {
+            targetedByPowerUps = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            targetedByPowerUps = teamData.TargetedByPowerUps;
+            return targetedByPowerUps != null;
+        }
+
+        public bool TryGetTeamActivePowerUpInfo(int teamId, out ActivePowerUpsInfo activePowerUpInfo)
+        {
+            activePowerUpInfo = default;
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            activePowerUpInfo = teamData.ActivePowerUpInfo;
+            return true;
+        }
+
+        public bool IsTeamTargetedByPowerUp(int teamId, PowerUp powerUp)
+        {
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            return teamData.IsTargetedByPowerUp(powerUp);
+        }
+
+        public bool TeamHasActivePowerUp(int teamId, PowerUp powerUp)
+        {
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            return teamData.HasActivePowerUp(powerUp);
+        }
+
+        public bool TeamHasPlayerConnectionId(int teamId, int connectionId)
+        {
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
+                return false;
+            return teamData.HasPlayerConnectionId(connectionId);
+        }
+
+        public bool TryGetInventorySelectedSlot(int teamId, out PowerUp selectedSlot)
+        {
+            selectedSlot = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            selectedSlot = inventoryData.SelectedSlot?.PowerUp ?? PowerUp.None;
+            return true;
+        }
+
+        public bool TryGetInventoryPowerUpInSlot(int teamId, int slotIndex, out PowerUp powerUp)
+        {
+            powerUp = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            powerUp = inventoryData.GetPowerUpInSlot(slotIndex);
+            return powerUp != PowerUp.None;
+        }
+
+        public bool TryGetInventoryIsFull(int teamId, out bool isFull)
+        {
+            isFull = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            isFull = inventoryData.IsFull;
+            return true;
+        }
+
+        public bool TryGetInventoryIsEmpty(int teamId, out bool isEmpty)
+        {
+            isEmpty = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            isEmpty = inventoryData.IsEmpty;
+            return true;
+        }
+
+        // Team track progress
+        public bool TryGetTeamCurrentChunkId(int teamId, out int currentChunkId)
+        {
+            currentChunkId = default;
+            if (!TeamTrackProgress.TryGetValue(teamId, out TeamTrackProgress trackProgress))
+                return false;
+            currentChunkId = trackProgress.CurrentChunkId;
+            return true;
+        }
+
+        public bool TryGetTeamNextSpecialChunkId(int teamId, out int nextSpecialChunkId)
+        {
+            nextSpecialChunkId = default;
+            if (!TeamTrackProgress.TryGetValue(teamId, out TeamTrackProgress trackProgress))
+                return false;
+            nextSpecialChunkId = trackProgress.NextSpecialChunkId;
+            return true;
+        }
+
+        public bool TryGetTeamLastSpecialChunkType(int teamId, out PortalInfo? lastSpecialChunkType)
+        {
+            lastSpecialChunkType = default;
+            if (!TeamTrackProgress.TryGetValue(teamId, out TeamTrackProgress trackProgress))
+                return false;
+            lastSpecialChunkType = trackProgress.LastSpecialChunkType;
+            return true;
+        }
+
+        public bool TryGetTeamIsFinishLineNext(int teamId, out bool isFinishLineNext)
+        {
+            isFinishLineNext = default;
+            if (!TeamTrackProgress.TryGetValue(teamId, out TeamTrackProgress trackProgress))
+                return false;
+            isFinishLineNext = trackProgress.IsFinishLineNext;
+            return true;
+        }
+
+        public bool TryGetTeamTrackProgress(int teamId, out TeamTrackProgress trackProgress)
+        {
+            trackProgress = default;
+            return TeamTrackProgress.TryGetValue(teamId, out trackProgress);
+        }
+
+        // race timer
+
+        public bool IsRaceTimerExpired() => _raceTimerExpired.Value;
+
+        #endregion
+
+        #region Utility methods
 
         public bool AreAllPlayersReady()
         {
@@ -435,5 +790,37 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             inventory = i;
             return true;
         }
+
+        public bool IsTeamMember(int localConnectionId, int teamId)
+        {
+            if (!TryGetTeamDataByPlayerId(localConnectionId, out RaceTeamData teamData))
+            {
+                Log.WLazy(() => $"No team data found for player {localConnectionId}.", this);
+                return false;
+            }
+            return teamData.DriverConnectionId == localConnectionId || teamData.ShotgunConnectionId == localConnectionId;
+        }
+
+        public bool DidAllTeamsReachedChunk(int chunkId)
+        {
+            foreach (KeyValuePair<int, TeamTrackProgress> teamProgress in _teamTrackProgress.Collection)
+            {
+                if (teamProgress.Value.CurrentChunkId < chunkId)
+                    return false;
+            }
+            return true;
+        }
+
+        public bool AreAllTeamsBeforeChunk(int chunkId)
+        {
+            foreach (KeyValuePair<int, TeamTrackProgress> teamProgress in _teamTrackProgress.Collection)
+            {
+                if (teamProgress.Value.CurrentChunkId >= chunkId)
+                    return false;
+            }
+            return true;
+        }
+
+        #endregion
     }
 }

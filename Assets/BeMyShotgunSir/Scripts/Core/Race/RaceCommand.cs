@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _powerUpsNetController = powerUpsNetController;
         }
         public void LeaveRace_CMRequest() { /*TODO*/ }
+        public void EquipPowerUp(int slotIndex) => _powerUpsNetController.EquipPowerUp_ServerRpc(slotIndex);
         public void ActivatePowerUp() => _powerUpsNetController.ActivatePowerUp_ServerRpc();
         public void TriggerPowerUpAction(PowerUpActionType actionType) => _powerUpsNetController.TriggerAction_ServerRpc(actionType);
     }

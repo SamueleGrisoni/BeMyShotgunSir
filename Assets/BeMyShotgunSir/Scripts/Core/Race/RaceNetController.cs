@@ -65,6 +65,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private List<Transform> _spawnPoints;
         private Dictionary<int, TeamProgress> _teamProgress;
         private float _leaderboardUpdateTimer = 0f;
+        [SerializeField] private float _maxRaceTime = 150f;
+        private float _raceTimer = 0f;
 
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
@@ -273,24 +275,37 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
         }
 
-
         private void Update()
         {
-            if (!IsHostInitialized || !_isRaceStarted)
+            if (!IsServerInitialized || !_isRaceStarted)
                 return;
 
-            // Throttle leaderboard updates to reduce per-frame cost
-            _leaderboardUpdateTimer += Time.deltaTime;
-            if (_leaderboardUpdateTimer < _tICK_INTERVAL)
-                return;
-            _leaderboardUpdateTimer = 0f;
-
+            UpdateTimer();
             UpdateLeaderboard();
+        }
+
+        [Server]
+        private void UpdateTimer()
+        {
+            if (_netState.RaceTimerExpired)
+                return;
+
+            _raceTimer += Time.deltaTime;
+            if (_raceTimer >= _maxRaceTime)
+            {
+                _netState.SetRaceTimerExpired();
+                Log.DLazy(() => $"Race timer expired. RaceTimer: {_raceTimer}, MaxRaceTime: {_maxRaceTime}", this, _log);
+            }
         }
 
         [Server]
         private void UpdateLeaderboard()
         {
+            _leaderboardUpdateTimer += Time.deltaTime;
+            if (_leaderboardUpdateTimer < _tICK_INTERVAL)
+                return;
+            _leaderboardUpdateTimer = 0f;
+
             if (_teamProgress.Count == 0)
                 return;
 

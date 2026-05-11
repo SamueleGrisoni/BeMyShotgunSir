@@ -96,7 +96,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _lobbyViewModel = viewModel;
             _raceCommand = new RaceCommand(_netController, _powerUpsNetController);
             _binder = new RaceBinder(this);
-            _viewModel = new RaceViewModel(_lobbyViewModel, _netState);
+            _viewModel = new RaceViewModel(_lobbyViewModel, _netState, LocalConnection.ClientId);
             _lobbyNetStateStore = context.NetState;
             _netController.SetLobbyNetState(_lobbyNetStateStore); //so that net controller can edit lobby net state
             _projector.Init(_viewModel); //so that the projector can change the view model in response of target/observer rpcs

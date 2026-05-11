@@ -43,7 +43,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 return;
 
             _inputConsumer = context.InputPublisher;
-            _movementController.Initialize(_inputConsumer);
+            _movementController.Initialize(new RaceNetContext(null, null, null, context.NetState, context.ClientProjector, context.PowerUpsNetController, null), _inputConsumer);
             _teamNetController = teamNetController;
 
             if (_inputConsumer == null || _teamNetController == null)
