@@ -57,8 +57,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public struct ReconcileData : IReconcileData
     {
         public PredictionRigidbody PredictionRigidbody;
-        public float ParentRotationY; // TODO dato che la rotazione avviene solo su un asse, scremare
-        public float SidecarLocalRotationY; // TODO dato che la rotezione avviene solo su un asse, scremare
+        public float ParentRotationY;
+        public float SidecarLocalRotationY;
         public Vector3 CurrentLinearVelocity; // TODO da togliere. Forse si può già usare quella del predictionRigidboy
         public float DriftDirection;
         public float CurrentBatteryCharge;
@@ -180,10 +180,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
-        private void LateUpdate()
-        {
-            _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-        }
+        private void LateUpdate() => _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
 
         public override void OnStartNetwork()
         {
@@ -200,6 +197,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
 
+        private ReplicateData _lastReplicateData;
         private ReplicateData CreateReplicateData()
         {
             if (!IsOwner)
@@ -222,6 +220,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
+            if (state.IsFuture() && !IsOwner)
+            {
+                data = _lastReplicateData;
+            }
+            else
+            {
+                _lastReplicateData = data;
+            }
             _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left ?
                                                     LayerMask.NameToLayer("LeftCollider") :
                                                     LayerMask.NameToLayer("RightCollider");
@@ -253,9 +259,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                         Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
                         repulsionForce += finalPush;
 
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+                        //Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                        //Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                        //Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
                         //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
                     }
 
@@ -263,8 +269,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     if (otherDriver != null && !otherDriver.IsBoosting()) // TODO qui puoi mettere che se hai lo scudo non ricevi la collisione aumentata
                     {
                         repulsionForce *= (float)TimeManager.TickDelta;
-                        // Log.DLazy(() => "Trovato l'altro driver controller and is boosting", this); //DANGER
-
                     }
                 }
             }

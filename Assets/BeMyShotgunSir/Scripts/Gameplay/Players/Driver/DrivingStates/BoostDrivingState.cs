@@ -61,7 +61,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         }
         public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            if (isReplayed){
+            if (isReplayed) {
                 Log.DLazy(() => "Exiting boost state", this, controller.Log);
             }
         }

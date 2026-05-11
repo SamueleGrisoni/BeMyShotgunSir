@@ -14,6 +14,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private Transform _sidecar;
         [SerializeField] private Transform _visualModel;
         [SerializeField] private float _smoothingSpeed = 100f;
+        [SerializeField] private float _smoothingSpeedNonOwner = 10f;
 
         [SerializeField] private Transform _handle;
         [SerializeField] private List<ParticleSystem> _driftParticles = new List<ParticleSystem>();
@@ -29,10 +30,17 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             //_parent.position = _movement.MovementPosition;
             //_parent.rotation = _movement.ParentRotation;
             //_sidecar.localRotation = _movement.SidecarLocalRotation;
-
-            _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeed);
-            _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeed);
-            _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeed);
+            if (IsOwner || IsServerInitialized) { 
+                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeed);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeed);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeed);
+            }
+            else
+            {
+                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedNonOwner);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedNonOwner);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedNonOwner);
+            }
 
             AnimateSteer();
             AnimateDrifting();

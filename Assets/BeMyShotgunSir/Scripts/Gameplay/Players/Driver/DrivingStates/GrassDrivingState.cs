@@ -4,10 +4,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class GrassDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
-        {
-            Log.DLazy(() => $"Enter grass state", this, controller.Log);
-        }
+        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => $"Enter grass state", this, controller.Log);
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             GroundType groundType = controller.CheckGround();
@@ -25,9 +22,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyLateralGrip(controller.GrassStats.LateralGripFactor);
             controller.ApplyGravity(controller.GrassStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
-        {
-            Log.DLazy(() => "Exiting grass state", this, controller.Log);
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting grass state", this, controller.Log);
     }
 }
