@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Lobby;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
@@ -72,5 +73,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnInventoryChanged_Propagate(SyncDictionaryOperation op, int key, InventoryData value, bool asServer) => OnInventoryChanged?.Invoke();
         private void OnRaceTeamDataChanged_Propagate(SyncDictionaryOperation _, int __, RaceTeamData ___, bool ____) => OnRaceTeamDataChanged?.Invoke();
         private void OnLeaderboardChanged_Propagate(SyncListOperation _, int __, int ___, int ____, bool _____) => OnLeaderboardChanged?.Invoke();
+
+        public bool TryGetTeamIdFromClientId(int clientId, out int? teamId)
+        {
+            teamId = null;
+            if (_netState.PlayerStates.TryGetValue(clientId, out RacePlayerState playerState))
+            {
+                teamId = playerState.TeamId;
+                return true;
+            }
+            Log.WLazy(() => $"Trying to get team id for client {clientId} but no player state found.", this);
+            return false;
+        }
     }
 }
