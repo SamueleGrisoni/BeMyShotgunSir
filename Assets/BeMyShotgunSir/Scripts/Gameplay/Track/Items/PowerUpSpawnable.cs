@@ -7,15 +7,16 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 {
-    public interface IPowerUpSpawnable
+    public class PowerUpSpawnable : NetworkBehaviour
     {
-        PowerUp PowerUpType { get; }
-        void Initialize(PowerUpsNetController powerUpsNetController);
-    }
+        public static event Action<PowerUpSpawnable> OnPowerUpSpawned;
+        public int? ChunkIndex { get; private set; }
+        public void SetChunkIndex(int chunkIndex)
+        {
+            if (!ChunkIndex.HasValue)
+                ChunkIndex = chunkIndex;
+        }
 
-    public class PowerUpSpawnable : NetworkBehaviour, IPowerUpSpawnable
-    {
-        public static event Action<IPowerUpSpawnable> OnPowerUpSpawned;
         [SerializeField] private PowerUp _powerUpType;
         public PowerUp PowerUpType => _powerUpType;
         private PowerUpsNetController _netController;

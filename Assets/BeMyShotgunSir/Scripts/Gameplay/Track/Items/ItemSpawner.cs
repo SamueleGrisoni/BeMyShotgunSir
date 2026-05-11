@@ -51,8 +51,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             PowerUpSpawnable item = _itemData.PowerUpItems[itemInfo.index];
             foreach (PolygonSpawnArea polygonSpawnArea in chunk.AreaGroup[itemInfo.areaGroupIndex].ItemSpawnPoints)
             {
-                //Debug.Log("Spawning power-up: " + item.name + " in area group: " + itemInfo.areaGroupIndex);
-                NetworkObject nob = Instantiate(item, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation);
+                PowerUpSpawnable nob = Instantiate(item, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation);
+                nob.SetChunkIndex(chunk.ChunkNumber);
                 Spawn(nob);
             }
         }

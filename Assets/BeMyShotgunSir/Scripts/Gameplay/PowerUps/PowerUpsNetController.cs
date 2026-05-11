@@ -49,6 +49,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         }
     }
 
+    public class SpawnedPowerUpData
+    {
+        public PowerUpSpawnable reference;
+        public int ChunkIndex;
+        public SpawnedPowerUpData(PowerUpSpawnable reference, int chunkIndex)
+        {
+            this.reference = reference;
+            ChunkIndex = chunkIndex;
+        }
+    }
+
     #endregion
 
     #region Interfaces
@@ -91,6 +102,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public IReadOnlyDictionary<PowerUp, SOPowerUp> Definitions => _definitions;
         private int _nextPowerUpInstanceId = 0;
         private Dictionary<int, PowerUpRuntime> _activePowerUps;
+        private List<SpawnedPowerUpData> _spawnedPowerUps = new List<SpawnedPowerUpData>();
 
         private float _tickTimer = 0;
         [SerializeField] private float _tICK_INTERVAL = 0.3f;
@@ -121,8 +133,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             UnsubscribeEvents();
         }
 
-        public void OnPowerUpSpawned(IPowerUpSpawnable powerUpSpawnable) =>
+        [Server]
+        public void OnPowerUpSpawned(PowerUpSpawnable powerUpSpawnable)
+        {
+            _spawnedPowerUps.Add(new SpawnedPowerUpData(powerUpSpawnable, powerUpSpawnable.ChunkIndex ?? -1));
             powerUpSpawnable.Initialize(this);
+        }
+
+        [Server]
+        public void DespawnSurpassedPowerUp(int chunkIndex) //TODO this should be called whenever all the players surpass a special chunk
+        {
+            List<SpawnedPowerUpData> toDespawn = _spawnedPowerUps.FindAll(data => data.ChunkIndex < chunkIndex);
+            foreach (SpawnedPowerUpData data in toDespawn)
+            {
+                if (data.reference != null && data.reference.IsSpawned)
+                {
+                    data.reference.Despawn();
+                    Log.DLazy(() => $"Despawning power-up {data.reference.name} in chunk {data.ChunkIndex} because it has been surpassed by all players.", this, _log);
+                }
+                else
+                {
+                    Log.WLazy(() => $"Trying to despawn power-up in chunk {data.ChunkIndex} but reference is null or not spawned.", this, _log);
+                }
+            }
+            _spawnedPowerUps.RemoveAll(data => data.ChunkIndex < chunkIndex);
+        }
 
         [Server]
         public int GetInstanceId() => _nextPowerUpInstanceId++;
