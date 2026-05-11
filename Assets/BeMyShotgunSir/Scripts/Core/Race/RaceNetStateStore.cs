@@ -99,9 +99,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public struct PuSlot
     {
         public int SlotIndex;
-        public PowerUp? PowerUp;
+        public PowerUp PowerUp;
 
-        public PuSlot(int slotIndex, PowerUp? powerUp)
+        public PuSlot(int slotIndex, PowerUp powerUp)
         {
             SlotIndex = slotIndex;
             PowerUp = powerUp;
@@ -118,32 +118,32 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public PuSlot Slot5;
         public int MaxPowerUps => 5;
         public PowerUp? SelectedSlot;
-        public bool IsFull => Slot1.PowerUp.HasValue && Slot2.PowerUp.HasValue && Slot3.PowerUp.HasValue && Slot4.PowerUp.HasValue && Slot5.PowerUp.HasValue;
-        public bool IsEmpty => !Slot1.PowerUp.HasValue && !Slot2.PowerUp.HasValue && !Slot3.PowerUp.HasValue && !Slot4.PowerUp.HasValue && !Slot5.PowerUp.HasValue;
+        public bool IsFull => Slot1.PowerUp != PowerUp.None && Slot2.PowerUp != PowerUp.None && Slot3.PowerUp != PowerUp.None && Slot4.PowerUp != PowerUp.None && Slot5.PowerUp != PowerUp.None;
+        public bool IsEmpty => Slot1.PowerUp == PowerUp.None && Slot2.PowerUp == PowerUp.None && Slot3.PowerUp == PowerUp.None && Slot4.PowerUp == PowerUp.None && Slot5.PowerUp == PowerUp.None;
 
-        public InventoryData(int teamId, PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null)
+        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp? selectedSlot = null)
         {
             TeamId = teamId;
-            Slot1 = slot1 != null ? new PuSlot(1, slot1) : new PuSlot(1, null);
-            Slot2 = slot2 != null ? new PuSlot(2, slot2) : new PuSlot(2, null);
-            Slot3 = slot3 != null ? new PuSlot(3, slot3) : new PuSlot(3, null);
-            Slot4 = slot4 != null ? new PuSlot(4, slot4) : new PuSlot(4, null);
-            Slot5 = slot5 != null ? new PuSlot(5, slot5) : new PuSlot(5, null);
+            Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : new PuSlot(1, PowerUp.None);
+            Slot2 = slot2 != PowerUp.None ? new PuSlot(2, slot2) : new PuSlot(2, PowerUp.None);
+            Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : new PuSlot(3, PowerUp.None);
+            Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : new PuSlot(4, PowerUp.None);
+            Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : new PuSlot(5, PowerUp.None);
             SelectedSlot = selectedSlot;
         }
 
-        public InventoryData(InventoryData other, PowerUp? slot1 = null, PowerUp? slot2 = null, PowerUp? slot3 = null, PowerUp? slot4 = null, PowerUp? slot5 = null, PowerUp? selectedSlot = null)
+        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp? selectedSlot = null)
         {
             TeamId = other.TeamId;
-            Slot1 = slot1 != null ? new PuSlot(1, slot1) : other.Slot1;
-            Slot2 = slot2 != null ? new PuSlot(2, slot2) : other.Slot2;
-            Slot3 = slot3 != null ? new PuSlot(3, slot3) : other.Slot3;
-            Slot4 = slot4 != null ? new PuSlot(4, slot4) : other.Slot4;
-            Slot5 = slot5 != null ? new PuSlot(5, slot5) : other.Slot5;
+            Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : other.Slot1;
+            Slot2 = slot2 != PowerUp.None ? new PuSlot(2, slot2) : other.Slot2;
+            Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : other.Slot3;
+            Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : other.Slot4;
+            Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : other.Slot5;
             SelectedSlot = selectedSlot != null ? selectedSlot : other.SelectedSlot;
         }
 
-        public override string ToString() => $"Slot1: {Slot1}, Slot2: {Slot2}, Slot3: {Slot3}, Slot4: {Slot4}, Slot5: {Slot5}, SelectedSlot: {SelectedSlot}";
+        public override string ToString() => $"Slot1: {Slot1.PowerUp}, Slot2: {Slot2.PowerUp}, Slot3: {Slot3.PowerUp}, Slot4: {Slot4.PowerUp}, Slot5: {Slot5.PowerUp}, SelectedSlot: {SelectedSlot}";
     }
 
     public struct ActivePowerUpsInfo
@@ -319,6 +319,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     driverConnectionId: teamInfo.Value.DriverConnectionId,
                     shotgunConnectionId: teamInfo.Value.ShotgunConnectionId
                 );
+            }
+
+            foreach (KeyValuePair<int, RaceTeamData> teamData in _raceTeamData)
+            {
+                _racePlayerInventories[teamData.Key] = new InventoryData(teamId: teamData.Key);
             }
         }
 

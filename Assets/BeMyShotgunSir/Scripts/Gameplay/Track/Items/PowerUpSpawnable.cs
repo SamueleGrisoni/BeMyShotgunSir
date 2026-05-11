@@ -80,8 +80,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
                     int? teamId = movementController.TeamId;
                     if (teamId.HasValue)
                     {
-                        _netController.AddPowerUpToTeam(teamId.Value, PowerUpType);
-                        NetworkObject.Despawn();
+                        if (_netController.AddPowerUpToTeam(teamId.Value, PowerUpType))
+                            NetworkObject.Despawn();
                     }
                     else
                         Log.ELazy(() => $"Driver has no team assigned. Power-up pickup failed. Driver: {other.gameObject.name}", this);

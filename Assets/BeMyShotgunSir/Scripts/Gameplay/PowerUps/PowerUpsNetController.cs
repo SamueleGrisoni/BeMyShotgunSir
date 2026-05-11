@@ -55,7 +55,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
     public interface IPowerUpsNetController
     {
-        void AddPowerUpToTeam(int teamId, PowerUp powerUpType);
+        bool AddPowerUpToTeam(int teamId, PowerUp powerUpType);
     }
 
     public class StrategyContext
@@ -172,17 +172,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         }
 
         [Server]
-        public void AddPowerUpToTeam(int teamId, PowerUp powerUpType)
+        public bool AddPowerUpToTeam(int teamId, PowerUp powerUpType)
         {
             if (!RaceNetStateRead.TryGetTeamInventory(teamId, out InventoryData inventory))
             {
                 Log.WLazy(() => $"Trying to add power-up to team {teamId} but no inventory found.", this);
-                return;
+                return false;
             }
             if (inventory.IsFull)
             {
                 Log.WLazy(() => $"Trying to add power-up to team {teamId} but inventory is full.", this);
-                return;
+                return false;
             }
 
             if (inventory.Slot1.PowerUp == PowerUp.None)
@@ -198,6 +198,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
             _raceNetState.SetPlayerInventory(teamId, inventory);
             Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
+            return true;
         }
 
         [ServerRpc(RequireOwnership = false)]
