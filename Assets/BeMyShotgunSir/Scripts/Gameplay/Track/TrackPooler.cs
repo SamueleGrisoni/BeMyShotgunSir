@@ -17,7 +17,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public void SetTrackData(SOTrack trackData)
         {
             _trackData = trackData;
-            InitPools(trackData);
+            InitPools();
         }
 
         public PooledRoadChunk GetPooledRoadChunk(int index) => _roadChunkPools[index].Get();
@@ -26,10 +26,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private void Start()
         {
             if (_trackData != null)
-                InitPools(_trackData);
+                InitPools();
         }
 
-        private void InitPools(SOTrack trackData)
+        private void InitPools()
         {
             if (_trackData == null)
             {
@@ -37,18 +37,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 return;
             }
 
-            _roadChunkPools = new Dictionary<int, ObjectPool<PooledRoadChunk>>(trackData.RoadChunks.Length);
-            _specialRoadChunkPools = new Dictionary<int, ObjectPool<PooledRoadChunk>>(trackData.SpecialRoadChunks.Length);
+            _roadChunkPools = new Dictionary<int, ObjectPool<PooledRoadChunk>>(_trackData.RoadChunks.Length);
+            _specialRoadChunkPools = new Dictionary<int, ObjectPool<PooledRoadChunk>>(_trackData.SpecialRoadChunks.Length);
 
-            for (int i = 0; i < trackData.RoadChunks.Length; i++)
-                SetupRoadPool(trackData, trackData.RoadChunks[i].gameObject, i, _roadChunkPools);
-            for (int i = 0; i < trackData.SpecialRoadChunks.Length; i++)
+            for (int i = 0; i < _trackData.RoadChunks.Length; i++)
+                SetupRoadPool(_trackData.RoadChunks[i].gameObject, i, _roadChunkPools);
+            for (int i = 0; i < _trackData.SpecialRoadChunks.Length; i++)
             {
-                SetupRoadPool(trackData, trackData.SpecialRoadChunks[i].gameObject, i, _specialRoadChunkPools);
+                SetupRoadPool(_trackData.SpecialRoadChunks[i].gameObject, i, _specialRoadChunkPools);
             }
         }
 
-        private void SetupRoadPool(SOTrack trackData, GameObject roadChunkPrefab, int index, Dictionary<int, ObjectPool<PooledRoadChunk>> dict)
+        private void SetupRoadPool(GameObject roadChunkPrefab, int index, Dictionary<int, ObjectPool<PooledRoadChunk>> dict)
         {
             dict[index] = new ObjectPool<PooledRoadChunk>(
                 createFunc: () =>
@@ -57,7 +57,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     PooledRoadChunk pooledRoadChunk = newRoadChunk.AddComponent<PooledRoadChunk>();
                     pooledRoadChunk.SetPool(dict[index]);
                     pooledRoadChunk.Component = newRoadChunk.GetComponent<RoadChunk>();
-                    pooledRoadChunk.Component.SetIndexInCurrentTrack(index);
                     newRoadChunk.SetActive(false);
                     return pooledRoadChunk;
                 },
@@ -69,14 +68,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 actionOnGet: obj => obj.transform.SetParent(_roadChunksActiveParent.transform),
                 actionOnDestroy: obj => Destroy(obj.gameObject),
                 collectionCheck: false,
-                defaultCapacity: trackData.RoadChunkInitPoolSize,
-                maxSize: trackData.MaxPoolSize
+                defaultCapacity: _trackData.RoadChunkInitPoolSize,
+                maxSize: _trackData.MaxPoolSize
             );
 
             // Pre-warm
-            var temp = new PooledRoadChunk[trackData.RoadChunkInitPoolSize];
-            for (int j = 0; j < trackData.RoadChunkInitPoolSize; j++) temp[j] = dict[index].Get();
-            for (int j = 0; j < trackData.RoadChunkInitPoolSize; j++) dict[index].Release(temp[j]);
+            var temp = new PooledRoadChunk[_trackData.RoadChunkInitPoolSize];
+            for (int j = 0; j < _trackData.RoadChunkInitPoolSize; j++) temp[j] = dict[index].Get();
+            for (int j = 0; j < _trackData.RoadChunkInitPoolSize; j++) dict[index].Release(temp[j]);
         }
     }
 }

@@ -9,22 +9,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
     {
         private bool _log = true;
         private PolygonSpawnArea _currentSpawnArea;
-
-        [Header("Building Prefabs")]
-        [SerializeField] private List<Building> _bigBuildingPrefabs;
-        [SerializeField] private List<Building> _mediumBuildingPrefabs;
-        [SerializeField] private List<Building> _smallBuildingPrefabs;
-        [SerializeField] private List<CityProps> _propsPrefabs;
         [SerializeField] private SOEnvironment _environmentData;
+        [SerializeField] private EnvironmentPooler _environmentPooler;
         private List<Bounds> _spawnPrefabsBounds = new List<Bounds>();
         private Random _rng;
 
-        public void Init(int seed) =>
+        public void Init(int seed)
+        {
             _rng = new Random(seed);
+            if (!_environmentData)
+            {
+                Log.WLazy(() => "[EnvironmentSpawner] No environment data assigned.", this);
+                return;
+            }
+            if(!_environmentPooler)
+            {
+                Log.WLazy(() => "[EnvironmentSpawner] No environment pooler assigned.", this);
+                return;
+            }
+            _environmentPooler.SetEnvironmentData(_environmentData);
+        }
+
 
         public void PopulateChunk(RoadChunk chunk)
         {
-            if (!ValidateInspectorData(chunk))
+            if (!AreSpawnAreasValid(chunk))
             {
                 return;
             }
@@ -70,55 +79,69 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
 
         private void SpawnProps()
         {
-            if (_propsPrefabs == null || _propsPrefabs.Count == 0) return;
-            //todo use RNG from server to ensure same environment for all players
             int propsToSpawn = _rng.Next(_environmentData.MaxPropsPerSpawnArea / 3, _environmentData.MaxPropsPerSpawnArea + 1);
             for (int i = 0; i < propsToSpawn; i++)
             {
-                CityProps randomPrefab = _propsPrefabs[_rng.Next(0, _propsPrefabs.Count - 1)];
-                TrySpawnPlaceable(randomPrefab);
+                PooledCityProps pooledProps = _environmentPooler
+                    .GetPropsPrefab(_rng.Next(0, _environmentData.CityProps.Length - 1));
+
+                if (!TrySpawnPlaceable(pooledProps.Component))
+                    pooledProps.ReturnToPool();
             }
-            if (_rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
+            //todo fix easter egg
+            /*if (_rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
             {
                 Log.DLazy(() => "Something funny spawned!", this, _log);
                 Instantiate(_propsPrefabs[^1].gameObject,
                     _currentSpawnArea.transform.position + Vector3.up * 50f, default,
                     _currentSpawnArea.transform);
-            }
+            }*/
         }
 
         private void SpawnBuildings()
         {
-            SpawnBuildingDimension(_bigBuildingPrefabs, _environmentData.MaxSpawnAttemptsPerBigBuilding);
-            SpawnBuildingDimension(_mediumBuildingPrefabs, _environmentData.MaxSpawnAttemptsPerMediumBuilding);
-            SpawnBuildingDimension(_smallBuildingPrefabs, _environmentData.MaxSpawnAttemptsPerSmallBuilding);
+            SpawnBuildingDimension(
+                _environmentData.BigBuildings,
+                _environmentData.MaxSpawnAttemptsPerBigBuilding,
+                i => _environmentPooler.GetBigBuildingPooled(i));
+
+            SpawnBuildingDimension(
+                _environmentData.MediumBuildings,
+                _environmentData.MaxSpawnAttemptsPerMediumBuilding,
+                i => _environmentPooler.GetMediumBuildingPooled(i));
+
+            SpawnBuildingDimension(
+                _environmentData.SmallBuildings,
+                _environmentData.MaxSpawnAttemptsPerSmallBuilding,
+                i => _environmentPooler.GetSmallBuildingPooled(i));
         }
 
-        private void SpawnBuildingDimension(List<Building> prefabs, int maxFailures)
+        private void SpawnBuildingDimension(Building[] prefabs, int maxFailures, System.Func<int, PooledBuilding> getFromPool)
         {
-            if (prefabs == null || prefabs.Count == 0) return;
+            if (prefabs == null || prefabs.Length == 0) return;
 
             int failedAttempts = 0;
             while (failedAttempts < maxFailures)
             {
-                //Todo use RNG from server to ensure same environment for all players
-                Building randomPrefab = prefabs[_rng.Next(0, prefabs.Count)];
+                int prefabIndex = _rng.Next(0, prefabs.Length);
+                PooledBuilding pooledBuilding = getFromPool(prefabIndex);
 
-                if (TrySpawnPlaceable(randomPrefab))
+                if (TrySpawnPlaceable(pooledBuilding.Component))
                 {
                     failedAttempts = 0;
                 }
                 else
                 {
+                    pooledBuilding.ReturnToPool();
                     failedAttempts++;
                 }
             }
         }
 
-        private bool TrySpawnPlaceable(Placeable prefab)
+        private bool TrySpawnPlaceable(Placeable instance)
         {
             Bounds areaBounds = _currentSpawnArea.ComputePolygonBounds();
-            Bounds prefabBounds = prefab.GetFlatBounds();
+            Bounds prefabBounds = instance.GetFlatBounds();
             float width = prefabBounds.size.x;
             float depth = prefabBounds.size.z;
 
@@ -140,7 +163,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
                     if (_currentSpawnArea.IsBoundsFullyInsidePolygon(candidateBounds) && !OverlapsExistingPrefabs(candidateBounds))
                     {
                         Vector3 lookDir = _currentSpawnArea.GetDirectionToClosestEdge(candidateCenter);
-                        Place(prefab, candidateCenter, lookDir);
+                        Place(instance, candidateCenter, lookDir);
                         _spawnPrefabsBounds.Add(candidateBounds);
                         return true;
                     }
@@ -163,35 +186,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             return false;
         }
 
-        private void Place(Placeable prefab, Vector3 worldPos, Vector3 edgeDir)
+        private void Place(Placeable instance, Vector3 worldPos, Vector3 edgeDir)
         {
-            var rotation = Quaternion.LookRotation(edgeDir, Vector3.up);
-            //Todo spawning should be handle with pooling
-            Instantiate(prefab.gameObject, worldPos, rotation, _currentSpawnArea.transform);
-        }
-
-        private bool ValidateInspectorData(RoadChunk chunk)
-        {
-            if (!AreSpawnAreasValid(chunk))
-            {
-                return false;
-            }
-            if (_bigBuildingPrefabs == null || _bigBuildingPrefabs.Count == 0)
-            {
-                Log.WLazy(() => "[EnvironmentSpawnerEnvironmentSpanwer] No big building prefabs assigned.", this);
-                return false;
-            }
-            if (_mediumBuildingPrefabs == null || _mediumBuildingPrefabs.Count == 0)
-            {
-                Log.WLazy(() => "[EnvironmentSpawnerEnvironmentSpanwer] No medium building prefabs assigned.", this);
-                return false;
-            }
-            if (_smallBuildingPrefabs == null || _smallBuildingPrefabs.Count == 0)
-            {
-                Log.WLazy(() => "[EnvironmentSpawnerEnvironmentSpanwer] No small building prefabs assigned.", this);
-                return false;
-            }
-            return true;
+            instance.transform.SetPositionAndRotation(worldPos, Quaternion.LookRotation(edgeDir, Vector3.up));
+            instance.transform.SetParent(_currentSpawnArea.transform, true);
+            instance.gameObject.SetActive(true);
         }
     }
 }
