@@ -1,4 +1,5 @@
 using BeMyShotgunSir.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
@@ -97,8 +98,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public int? TeamId => _driverController == null ? null : _driverController.TeamId;
         public IDriverInputConsumer InputConsumer;
 
-        public void Initialize(IDriverInputConsumer inputConsumer)
+        public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer)
         {
+            //TODO set context references here
             InputConsumer = inputConsumer;
             InputConsumer.OnBoostPressed += ExecuteCommit;
             InputConsumer.OnEarlyCommitmentPressed += ExecuteEarlyCommitment;

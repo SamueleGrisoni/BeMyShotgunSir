@@ -333,7 +333,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no inventory found.", this);
                 return;
             }
-            if (inventory.SelectedSlot == PowerUp.None)
+            if (actionType == PowerUpActionType.Aim && inventory.SelectedSlot == PowerUp.None)
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no power-up selected.", this);
                 return;

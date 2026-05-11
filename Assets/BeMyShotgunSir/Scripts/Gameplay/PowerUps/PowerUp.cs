@@ -34,8 +34,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
     public enum PowerUpActionType
     {
         None,
-        CustomAction1,
-        CustomAction2
+        Aim,
+        BumpToSteal,
     }
 
     public struct PowerUpIdentifier
