@@ -281,7 +281,7 @@ namespace BeMyShotgunSir.Scripts.UI
                 new Translate(new Length(delta, LengthUnit.Pixel), new Length(0, LengthUnit.Pixel))
             );
 
-            _inputPublisher.SetSteerInput((int)(_steerValue * 100f)); // Convert to int range -100 to 100
+            _inputPublisher.SetSteerInput(_steerValue);
             Debug.Log($"[Steer] Value={_steerValue:F2}");
         }
 
@@ -294,6 +294,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _steerJoystick.style.translate = new StyleTranslate(
                 new Translate(new Length(0, LengthUnit.Pixel), new Length(0, LengthUnit.Pixel))
             );
+
+            _inputPublisher.SetSteerInput(0);
         }
 
 
