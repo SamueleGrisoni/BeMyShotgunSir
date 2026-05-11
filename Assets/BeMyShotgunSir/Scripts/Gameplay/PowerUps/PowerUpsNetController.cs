@@ -184,21 +184,32 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to add power-up to team {teamId} but inventory is full.", this);
                 return false;
             }
-
-            if (inventory.Slot1.PowerUp == PowerUp.None)
-                inventory.Slot1 = new PuSlot(1, powerUpType);
-            else if (inventory.Slot2.PowerUp == PowerUp.None)
-                inventory.Slot2 = new PuSlot(2, powerUpType);
-            else if (inventory.Slot3.PowerUp == PowerUp.None)
-                inventory.Slot3 = new PuSlot(3, powerUpType);
-            else if (inventory.Slot4.PowerUp == PowerUp.None)
-                inventory.Slot4 = new PuSlot(4, powerUpType);
-            else if (inventory.Slot5.PowerUp == PowerUp.None)
-                inventory.Slot5 = new PuSlot(5, powerUpType);
-
+            inventory = inventory.SetFreeSlot(powerUpType);
             _raceNetState.SetPlayerInventory(teamId, inventory);
             Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
             return true;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void EquipPowerUp_ServerRpc(int slotIndex, NetworkConnection connection = null)
+        {
+            if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
+            {
+                if (slotIndex < 0 || slotIndex >= inventory.MaxPowerUps)
+                {
+                    Log.WLazy(() => $"Trying to equip power-up for client {connection.ClientId} with invalid slot index {slotIndex}.", this);
+                    return;
+                }
+                PowerUp selectedPowerUp = inventory.GetPowerUpInSlot(slotIndex);
+                if (selectedPowerUp == PowerUp.None)
+                {
+                    Log.WLazy(() => $"Trying to equip power-up for client {connection.ClientId} with empty slot index {slotIndex}.", this);
+                    return;
+                }
+                inventory.SelectedSlot = selectedPowerUp;
+                _raceNetState.SetPlayerInventory(playerState.TeamId, inventory);
+                Log.DLazy(() => $"Client {connection.ClientId} equipped power-up {selectedPowerUp} in slot {slotIndex}.", this, _log);
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -206,12 +217,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         {
             if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
             {
-                if (inventory.SelectedSlot == null || inventory.SelectedSlot == PowerUp.None)
+                if (inventory.SelectedSlot == PowerUp.None)
                 {
                     Log.WLazy(() => $"Trying to use power-up for team {playerState.TeamId} but no slot selected.", this);
                     return;
                 }
-                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot.Value);
+                var powerUpInfo = new InfoUsePowerUp(playerState.TeamId, inventory.SelectedSlot);
                 if (IsUsingMaxNumberOfPowerUps(teamData))
                 {
                     Log.WLazy(() => $"Trying to use power-up {powerUpInfo.PowerUp} for team {powerUpInfo.OwnerTeamId} but already using max number of power-ups.", this);
@@ -322,12 +333,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no inventory found.", this);
                 return;
             }
-            if (inventory.SelectedSlot == null || inventory.SelectedSlot == PowerUp.None)
+            if (inventory.SelectedSlot == PowerUp.None)
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no power-up selected.", this);
                 return;
             }
-            PowerUp selectedPowerUp = inventory.SelectedSlot.Value;
+            PowerUp selectedPowerUp = inventory.SelectedSlot;
             if (!_raceNetState.TryGetTeamData(connection.ClientId, out RaceTeamData teamData))
             {
                 Log.WLazy(() => $"Trying to trigger action {actionType} for client {connection.ClientId} but no team data found.", this);

@@ -93,6 +93,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public bool IsTargetedByPowerUp(PowerUp powerUp) => TargetedByPowerUps.Any(identifier => identifier.PowerUp == powerUp);
         public bool HasActivePowerUp(PowerUp powerUp) => ActivePowerUps.Any(identifier => identifier.PowerUp == powerUp);
+        public bool HasPlayerConnectionId(int connectionId) => DriverConnectionId == connectionId || ShotgunConnectionId == connectionId;
 
     }
 
@@ -117,11 +118,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public PuSlot Slot4;
         public PuSlot Slot5;
         public int MaxPowerUps => 5;
-        public PowerUp? SelectedSlot;
+        public PowerUp SelectedSlot;
         public bool IsFull => Slot1.PowerUp != PowerUp.None && Slot2.PowerUp != PowerUp.None && Slot3.PowerUp != PowerUp.None && Slot4.PowerUp != PowerUp.None && Slot5.PowerUp != PowerUp.None;
         public bool IsEmpty => Slot1.PowerUp == PowerUp.None && Slot2.PowerUp == PowerUp.None && Slot3.PowerUp == PowerUp.None && Slot4.PowerUp == PowerUp.None && Slot5.PowerUp == PowerUp.None;
 
-        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp? selectedSlot = null)
+        public InventoryData(int teamId, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp selectedSlot = PowerUp.None)
         {
             TeamId = teamId;
             Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : new PuSlot(1, PowerUp.None);
@@ -129,10 +130,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : new PuSlot(3, PowerUp.None);
             Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : new PuSlot(4, PowerUp.None);
             Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : new PuSlot(5, PowerUp.None);
-            SelectedSlot = selectedSlot;
+            SelectedSlot = selectedSlot != PowerUp.None ? selectedSlot : PowerUp.None;
         }
 
-        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp? selectedSlot = null)
+        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PowerUp selectedSlot = PowerUp.None)
         {
             TeamId = other.TeamId;
             Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : other.Slot1;
@@ -140,7 +141,56 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : other.Slot3;
             Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : other.Slot4;
             Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : other.Slot5;
-            SelectedSlot = selectedSlot != null ? selectedSlot : other.SelectedSlot;
+            SelectedSlot = selectedSlot != PowerUp.None ? selectedSlot : other.SelectedSlot;
+        }
+
+        public PowerUp GetPowerUpInSlot(int slotIndex)
+        {
+            return slotIndex switch
+            {
+                1 => Slot1.PowerUp,
+                2 => Slot2.PowerUp,
+                3 => Slot3.PowerUp,
+                4 => Slot4.PowerUp,
+                5 => Slot5.PowerUp,
+                _ => PowerUp.None
+            };
+        }
+
+        public InventoryData SetFreeSlot(PowerUp powerUp, bool updateSelectedSlot = false)
+        {
+            if (IsEmpty)
+                updateSelectedSlot = true;
+            if (Slot1.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot1: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+            if (Slot2.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot2: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+            if (Slot3.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot3: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+            if (Slot4.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot4: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+            if (Slot5.PowerUp == PowerUp.None)
+                return new InventoryData(this, slot5: powerUp, selectedSlot: updateSelectedSlot ? powerUp : SelectedSlot);
+
+            Log.WLazy(() => $"Trying to add power-up {powerUp} to inventory but no free slots available.", this);
+            return this;
+        }
+
+        public InventoryData RemovePowerUp(PowerUp powerUp)
+        {
+            if (Slot1.PowerUp == powerUp)
+                return new InventoryData(this, slot1: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+            if (Slot2.PowerUp == powerUp)
+                return new InventoryData(this, slot2: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+            if (Slot3.PowerUp == powerUp)
+                return new InventoryData(this, slot3: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+            if (Slot4.PowerUp == powerUp)
+                return new InventoryData(this, slot4: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+            if (Slot5.PowerUp == powerUp)
+                return new InventoryData(this, slot5: PowerUp.None, selectedSlot: SelectedSlot == powerUp ? PowerUp.None : SelectedSlot);
+
+            Log.WLazy(() => $"Trying to remove power-up {powerUp} from inventory but it was not found in any slot.", this);
+            return this;
         }
 
         public override string ToString() => $"Slot1: {Slot1.PowerUp}, Slot2: {Slot2.PowerUp}, Slot3: {Slot3.PowerUp}, Slot4: {Slot4.PowerUp}, Slot5: {Slot5.PowerUp}, SelectedSlot: {SelectedSlot}";

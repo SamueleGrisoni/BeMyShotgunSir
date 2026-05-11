@@ -11,13 +11,16 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 {
     public interface IRaceDataView : IDataView
     {
+        int ClientId { get; }
         ILobbyDataView LobbyDataView { get; }
         int? Seed { get; }
         IReadOnlyDictionary<int, RacePlayerState> PlayerStates { get; }
         IReadOnlyDictionary<int, RaceTeamData> TeamData { get; }
+        IReadOnlyDictionary<int, InventoryData> TeamInventories { get; }
         IReadOnlyList<int> Leaderboard { get; }
         event Action OnSeedChanged;
         event Action OnRacePlayerStatesChanged;
+        event Action OnInventoryChanged;
         event Action OnRaceTeamDataChanged;
         event Action OnLeaderboardChanged;
     }
@@ -27,6 +30,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private bool _log = false;
         private LobbyViewModel _lobbyViewModel;
         private IRaceNetStateSubscribe _netState;
+        public int ClientId { get; private set; }
 
         public event Action OnSeedChanged;
         public event Action OnRacePlayerStatesChanged;
@@ -37,17 +41,19 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public int? Seed => _netState.Seed;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _netState.PlayerStates;
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _netState.TeamData;
+        public IReadOnlyDictionary<int, InventoryData> TeamInventories => _netState.PlayerInventories;
         public IReadOnlyList<int> Leaderboard => _netState.Leaderboard;
         public ILobbyDataView LobbyDataView => _lobbyViewModel;
 
-        public RaceViewModel(LobbyViewModel lobbyViewModel, IRaceNetStateSubscribe netState)
+        public RaceViewModel(LobbyViewModel lobbyViewModel, IRaceNetStateSubscribe netState, int clientId)
         {
+            ClientId = clientId;
             _lobbyViewModel = lobbyViewModel;
             _netState = netState;
             _netState.Seed_Sub.OnChange += OnSeedChanged_Propagate;
             _netState.PlayerStates_Sub.OnChange += OnPlayerStatesChanged_Propagate;
             _netState.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;
-            _netState.PlayerInventories_Sub.OnChange += OnPlayerStatesChanged_Propagate; //inventory changes can affect player states (e.g. stunned), so we treat them as the same for the sake of UI updates
+            _netState.PlayerInventories_Sub.OnChange += OnInventoryChanged_Propagate;
             _netState.Leaderboard_Sub.OnChange += OnLeaderboardChanged_Propagate;
         }
 
@@ -57,13 +63,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnSeedChanged?.Invoke();
             OnRacePlayerStatesChanged?.Invoke();
             OnRaceTeamDataChanged?.Invoke();
+            OnInventoryChanged?.Invoke();
             OnLeaderboardChanged?.Invoke();
         }
 
         private void OnSeedChanged_Propagate(int? _, int? __, bool ___) => OnSeedChanged?.Invoke();
         private void OnPlayerStatesChanged_Propagate(SyncDictionaryOperation _, int __, RacePlayerState ___, bool ____) => OnRacePlayerStatesChanged?.Invoke();
+        private void OnInventoryChanged_Propagate(SyncDictionaryOperation op, int key, InventoryData value, bool asServer) => OnInventoryChanged?.Invoke();
         private void OnRaceTeamDataChanged_Propagate(SyncDictionaryOperation _, int __, RaceTeamData ___, bool ____) => OnRaceTeamDataChanged?.Invoke();
-        private void OnPlayerStatesChanged_Propagate(SyncDictionaryOperation op, int key, InventoryData value, bool asServer) => OnInventoryChanged?.Invoke();
         private void OnLeaderboardChanged_Propagate(SyncListOperation _, int __, int ___, int ____, bool _____) => OnLeaderboardChanged?.Invoke();
     }
 }
