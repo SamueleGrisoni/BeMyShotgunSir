@@ -4561,7 +4561,7 @@ MonoBehaviour:
   <TurnWeight>k__BackingField: 0
   <AreaGroup>k__BackingField: []
   <LeftBarrierObject>k__BackingField: {fileID: 8471153308056349933}
-  <RightBarrierObject>k__BackingField: {fileID: 0}
+  <RightBarrierObject>k__BackingField: {fileID: 1669818755782259872}
 --- !u!1 &4510935052927764433
 GameObject:
   m_ObjectHideFlags: 0
