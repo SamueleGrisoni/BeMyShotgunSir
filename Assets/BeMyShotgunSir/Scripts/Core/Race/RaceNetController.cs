@@ -4,6 +4,7 @@ using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.Players;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
@@ -60,6 +61,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         //CONTEXT
         private LobbyNetStateStore _lobbyNetState;
         private RaceNetStateStore _netState;
+        private PowerUpsNetController _powerUpsNetController;
         public IRaceNetStateRead NetState => _netState;
         private IRaceNetStateSubscribe _netStateSubscribe => _netState;
         private RaceClientProjector _clientProjector;
@@ -87,8 +89,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             TryGetComponent(out _netState);
             TryGetComponent(out _clientProjector);
+            TryGetComponent(out _powerUpsNetController);
 
-            if (_netState == null || _clientProjector == null)
+            if (_netState == null || _clientProjector == null || _powerUpsNetController == null)
                 Log.ELazy(() => $"One or more required components are missing on RaceNetController.", this);
 
             _teamProgress = new Dictionary<int, TeamProgress>();
@@ -147,6 +150,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 // Rimuoviamo e logghiamo
                 CrossroadSegmentInfo finishedCrossroad = _crossroadSegmentInfoQueue.Dequeue();
+                _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
             }
         }
