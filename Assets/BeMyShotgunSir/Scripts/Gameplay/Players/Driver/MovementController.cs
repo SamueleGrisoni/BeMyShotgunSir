@@ -1,3 +1,4 @@
+using System;
 using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
@@ -131,9 +132,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private float _bumpRadius;
         [SerializeField] private float _bumpForce;
 
-        [SerializeField] private float _hoverHeight;
-        [SerializeField] private float _springStrength;
-        [SerializeField] private float _springDamper;
+        [SerializeField] private float _decadimentoSteerInput = 0.05f;
 
         private PredictionRigidbody _predictionRigidbody;
         private Vector3 _currentLinearVelocity;
@@ -180,7 +179,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
-        private void LateUpdate() => _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+        private void LateUpdate()
+        {
+            _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+        }
 
         public override void OnStartNetwork()
         {
@@ -210,22 +212,34 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             else
             {
-                float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput / 100; // TODO poi marco lo aggiustaz
+                float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput;
                 rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving, _input.EarlyCommitment);
                 _isBoosting = false;
             }
             return rd;
         }
 
+        private float _predictedTicks;
+
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
             if (state.IsFuture() && !IsOwner)
             {
+                _predictedTicks++;
                 data = _lastReplicateData;
+
+                if (_predictedTicks > 1)
+                {
+                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _decadimentoSteerInput);
+                }
+
+                _lastReplicateData = data;
+                Debug.Log($"Predicted ticks {_predictedTicks}");
             }
             else
             {
+                _predictedTicks = 0;
                 _lastReplicateData = data;
             }
             _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left ?
@@ -254,21 +268,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                     float pushStrength = 1f - (distance / _bumpRadius);
 
-                    if (lateralPushDirection.sqrMagnitude > 0.001f)
+                    MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
+                    if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
                     {
                         Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
                         repulsionForce += finalPush;
 
-                        //Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
-                        //Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                        //Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
                         //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
-                    }
-
-                    MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
-                    if (otherDriver != null && !otherDriver.IsBoosting()) // TODO qui puoi mettere che se hai lo scudo non ricevi la collisione aumentata
-                    {
-                        repulsionForce *= (float)TimeManager.TickDelta;
                     }
                 }
             }
@@ -277,7 +286,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
-
 
             if (state != ReplicateState.Replayed)
                 _currentSteerInput = data.SteerInput;
@@ -393,21 +401,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             _currentLinearVelocity = predictedVelocity;
         }
-        void IDrivingStateContext.ApplyGravity(float gravity)
-        {
-            /*
-            if (Physics.Raycast(_predictionRigidbody.Rigidbody.position, Vector3.down, out RaycastHit hit, _hoverHeight * 2f ))
-            {
-                float compression = _hoverHeight - hit.distance;
-                if (compression > 0)
-                {
-                    float upwardAcceleration = (compression * _springStrength) - (_currentLinearVelocity.y * _springDamper);
-                    _currentLinearVelocity += Vector3.up * upwardAcceleration * (float)TimeManager.TickDelta;
-                }
-            }
-            */
-            _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
-        }
+        void IDrivingStateContext.ApplyGravity(float gravity) => _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
         void IDrivingStateContext.ApplyLateralGrip(float lateralGripFactor)
         {
             Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;

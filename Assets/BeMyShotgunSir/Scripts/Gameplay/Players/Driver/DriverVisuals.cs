@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
+using TMPro;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.Players.Driver
@@ -13,8 +14,8 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
         [SerializeField] private Transform _visualModel;
-        [SerializeField] private float _smoothingSpeed = 100f;
-        [SerializeField] private float _smoothingSpeedNonOwner = 10f;
+        [SerializeField] private float _smoothingSpeedFast = 100f;
+        [SerializeField] private float _smoothingSpeedSlow = 15f;
 
         [SerializeField] private Transform _handle;
         [SerializeField] private List<ParticleSystem> _driftParticles = new List<ParticleSystem>();
@@ -30,16 +31,18 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             //_parent.position = _movement.MovementPosition;
             //_parent.rotation = _movement.ParentRotation;
             //_sidecar.localRotation = _movement.SidecarLocalRotation;
-            if (IsOwner || IsServerInitialized) { 
-                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeed);
-                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeed);
-                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeed);
+            if (IsServerInitialized) { 
+                //_parent.position = Vector3.SmoothDamp(_parent.position, _movement.transform.position, ref _positionVelocity, _positionSmoothTime);
+                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedFast);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedFast);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedFast);
             }
             else
             {
-                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedNonOwner);
-                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedNonOwner);
-                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedNonOwner);
+                //_parent.position = Vector3.SmoothDamp(_parent.position, _movement.transform.position, ref _positionVelocity, _positionSmoothTime);
+                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedSlow);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedSlow);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedSlow);
             }
 
             AnimateSteer();

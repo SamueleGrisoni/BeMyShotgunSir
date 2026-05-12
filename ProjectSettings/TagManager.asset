@@ -25,6 +25,8 @@ TagManager:
   - RightCollider
   - Invisibility PowerUp
   - Armor PowerUp
+  - LeftWallCollider
+  - RightWallCollider
   - 
   - 
   - 

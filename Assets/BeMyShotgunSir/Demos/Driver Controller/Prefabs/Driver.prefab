@@ -53,7 +53,8 @@ MonoBehaviour:
   _parent: {fileID: 4998179860331136265}
   _sidecar: {fileID: 6190171562437922324}
   _visualModel: {fileID: 7985624542521542911}
-  _smoothingSpeed: 100
+  _smoothingSpeedFast: 100
+  _smoothingSpeedSlow: 15
   _handle: {fileID: 6147583942181700300}
   _driftParticles:
   - {fileID: 5030383773740591651}
@@ -190,9 +191,7 @@ MonoBehaviour:
     m_Bits: 256
   _bumpRadius: 1.1
   _bumpForce: 100
-  _hoverHeight: 0.55
-  _springStrength: 300
-  _springDamper: 50
+  _decadimentoSteerInput: 0.09
 --- !u!54 &2139825348868955056
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -251,7 +250,7 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: -8584231495647204995
-  _localLevelOfDetailCalculationType: 1
+  _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
   NetworkObserver: {fileID: 0}
@@ -263,7 +262,7 @@ MonoBehaviour:
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
+  _ownerSmoothedProperties: 0
   _adaptiveInterpolation: 3
   _spectatorSmoothedProperties: 255
   _spectatorInterpolation: 2
