@@ -64,6 +64,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public virtual void OnActivate(PowerUpRuntime runtime, StrategyContext context)
         {
+            if (runtime.Definition.IsOwnerTargeted)
+            {
+                UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+                if (raceNetStateStore.TryGetTeamNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject ownerNob))
+                    runtime.TargetNob = ownerNob;
+                else
+                    Log.WLazy(() => $"Trying to activate power-up {runtime.Definition.PowerUpType} for team {runtime.ActivePowerUpData.OwnerTeamId} but no team nob found.", this);
+                runtime.ActivePowerUpData.TargetTeamId = runtime.ActivePowerUpData.OwnerTeamId;
+            }
+            runtime.ActivePowerUpData.PowerUpState = PowerUpState.Active;
             if (runtime.Definition.PowerUpClass == PowerUpClass.TimeBased || runtime.Definition.PowerUpClass == PowerUpClass.OneShot)
                 runtime.Definition.OnUse(runtime, context);
         }
@@ -78,7 +88,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 Log.DLazy(() => $"Changed target of power-up instance {instanceId} to team {targetTeamId}.", this);
             }
         }
-        public abstract void OnUse(PowerUpRuntime runtime, StrategyContext context);
+        public virtual void OnUse(PowerUpRuntime runtime, StrategyContext context)
+        {
+            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+
+            raceNetStateStore.TryGetTeamInventory(runtime.ActivePowerUpData.OwnerTeamId, out InventoryData inventory);
+            raceNetStateStore.SetTeamInventory(runtime.ActivePowerUpData.OwnerTeamId, inventory.UpdateSelectedSlot(SelectedSlotPolicy.CLosestNonEmptyIndex));
+
+            raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
+            teamData = teamData.AddActivePowerUpResult(new PowerUpIdentifier(runtime.Definition.PowerUpType, runtime.ActivePowerUpData.ManagerInstanceId));
+            raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+
+            Log.DLazy(() => $"Using power-up {runtime.Definition.PowerUpType} instance {runtime.ActivePowerUpData.ManagerInstanceId} of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
+        }
         public virtual void OnTick(float dt, PowerUpRuntime runtime, StrategyContext context)
         {
             if (runtime.ActivePowerUpData.PowerUpState == PowerUpState.Ticking)
@@ -95,9 +117,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public virtual void OnExpire(PowerUpRuntime runtime, StrategyContext context)
         {
-            UnwrapContext(context, out RaceNetStateStore _, out PowerUpsNetController powerUpsNetController);
+            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
             runtime.ActivePowerUpData.PowerUpState = PowerUpState.Expired;
             powerUpsNetController.RemoveActivePowerUp(runtime.ActivePowerUpData.ManagerInstanceId);
+            //TODO clean activePowerUp in team data?
+            raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
+            teamData = teamData.RemoveActivePowerUpResult(runtime.ActivePowerUpData.ManagerInstanceId);
+            raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+
+            Log.DLazy(() => $"Power-up {runtime.Definition.PowerUpType} instance {runtime.ActivePowerUpData.ManagerInstanceId} of team {runtime.ActivePowerUpData.OwnerTeamId} has expired.", this);
         }
 
         public void UnwrapContext(StrategyContext context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController)

@@ -1,4 +1,3 @@
-using System;
 using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;

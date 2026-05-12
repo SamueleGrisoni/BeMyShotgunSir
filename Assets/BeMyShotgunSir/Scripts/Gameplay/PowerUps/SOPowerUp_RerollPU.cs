@@ -12,9 +12,11 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
         public override void OnUse(PowerUpRuntime runtime, StrategyContext context)
         {
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData.ActivePowerUpInfo.isRerollPowerUpActive = true;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+
             if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
                 // driverNob.GetComponent<DriverController>().ApplyRerollEffect(); //TODO
                 Log.DLazy(() => $"Applying Reroll effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
@@ -23,6 +25,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
 
             Log.DLazy(() => $"Team {runtime.ActivePowerUpData.OwnerTeamId} is using Reroll.", this);
             OnExpire(runtime, context);
+            base.OnUse(runtime, context);
         }
 
         public override void OnChangeTarget(PowerUpRuntime runtime, int instanceId, int targetTeamId, StrategyContext context)

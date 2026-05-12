@@ -70,8 +70,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             DriverNob = null;
             ShotgunNob = null;
             IsTeamSpawned = false;
-            ActivePowerUps = new PowerUpIdentifier[BMMSDefaults.MAX_ACTIVE_POWER_UPS];
-            TargetedByPowerUps = new PowerUpIdentifier[BMMSDefaults.MAX_TARGETED_BY_POWER_UPS];
+            ActivePowerUps = new PowerUpIdentifier[1];
+            TargetedByPowerUps = new PowerUpIdentifier[1];
             ActivePowerUpInfo = default;
         }
 
@@ -90,7 +90,33 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             ActivePowerUpInfo = activePowerUpInfo ?? other.ActivePowerUpInfo;
         }
 
-        public override string ToString() => $"TeamId: {TeamId}, DriverConnectionId: {DriverConnectionId}, ShotgunConnectionId: {ShotgunConnectionId}, IsTeamSpawned: {IsTeamSpawned}, TeamNob: {TeamNob}, DriverNob: {DriverNob}, ShotgunNob: {ShotgunNob}, ActivePowerUps: [{string.Join(", ", ActivePowerUps)}], TargetedByPowerUps: [{string.Join(", ", TargetedByPowerUps)}], ActivePowerUpInfo: {ActivePowerUpInfo}";
+        public RaceTeamData RemoveActivePowerUpResult(int instanceId)
+        {
+            PowerUpIdentifier[] newActivePowerUps = ActivePowerUps.Where(identifier => identifier.InstanceId != instanceId).ToArray();
+            return new RaceTeamData(this, activePowerUps: newActivePowerUps);
+        }
+
+        public RaceTeamData AddActivePowerUpResult(PowerUpIdentifier identifier)
+        {
+            PowerUpIdentifier[] newActivePowerUps = ActivePowerUps.Append(identifier).ToArray();
+            return new RaceTeamData(this, activePowerUps: newActivePowerUps);
+        }
+
+        public RaceTeamData RemoveTargetedByPowerUpResult(int instanceId)
+        {
+            PowerUpIdentifier[] newTargetedByPowerUps = TargetedByPowerUps.Where(identifier => identifier.InstanceId != instanceId).ToArray();
+            return new RaceTeamData(this, targetedByPowerUps: newTargetedByPowerUps);
+        }
+
+        public RaceTeamData AddTargetedByPowerUpResult(PowerUpIdentifier identifier, int targetTeamId)
+        {
+            if (targetTeamId != TeamId)
+                return this;
+            PowerUpIdentifier[] newTargetedByPowerUps = TargetedByPowerUps.Append(identifier).ToArray();
+            return new RaceTeamData(this, targetedByPowerUps: newTargetedByPowerUps);
+        }
+
+        public override string ToString() => $"TeamId: {TeamId}, \nDriverConnectionId: {DriverConnectionId}, \nShotgunConnectionId: {ShotgunConnectionId}, \nIsTeamSpawned: {IsTeamSpawned}, \nTeamNob: {TeamNob}, \nDriverNob: {DriverNob}, \nShotgunNob: {ShotgunNob}, \nActivePowerUps: [{string.Join(",\n ", ActivePowerUps)}], \nTargetedByPowerUps: [{string.Join(",\n ", TargetedByPowerUps)}], \nActivePowerUpInfo: {ActivePowerUpInfo}";
 
         public bool IsTargetedByPowerUp(PowerUp powerUp) => TargetedByPowerUps.Any(identifier => identifier.PowerUp == powerUp);
         public bool HasActivePowerUp(PowerUp powerUp) => ActivePowerUps.Any(identifier => identifier.PowerUp == powerUp);
@@ -108,6 +134,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             SlotIndex = slotIndex;
             PowerUp = powerUp;
         }
+
+        public override string ToString() => $"SlotIndex: {SlotIndex}, PowerUp: {PowerUp}";
     }
 
     public struct InventoryData
@@ -192,6 +220,86 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             Log.WLazy(() => $"Trying to remove power-up {powerUp} from inventory but it was not found in any slot.", this);
             return this;
+        }
+
+        public InventoryData UpdateSelectedSlot(SelectedSlotPolicy policy)
+        {
+            return policy switch
+            {
+                SelectedSlotPolicy.LowerNonEmptyIndex => UpdateSelectedSlot(-1),
+                SelectedSlotPolicy.CLosestNonEmptyIndex => UpdateSelectedSlot(-2),
+                _ => this
+            };
+        }
+
+        /// <summary>
+        /// Updates the selected slot based on the given slot index. If slotIndex is -1, it selects the first non-empty slot.
+        /// If slotIndex is -2, it tries to keep the current selected slot if it's not empty,
+        /// otherwise it selects the closest non-empty slot. For any other positive slotIndex,
+        ///  it selects that specific slot if it's not empty. Returns the updated InventoryData with the new selected slot.
+        /// </summary>
+        /// <param name="slotIndex"></param>
+        /// <returns></returns>
+        public InventoryData UpdateSelectedSlot(int slotIndex = -1)
+        {
+            if (slotIndex == -1)
+            {
+                if (Slot1.PowerUp != PowerUp.None)
+                    slotIndex = 1;
+                else if (Slot2.PowerUp != PowerUp.None)
+                    slotIndex = 2;
+                else if (Slot3.PowerUp != PowerUp.None)
+                    slotIndex = 3;
+                else if (Slot4.PowerUp != PowerUp.None)
+                    slotIndex = 4;
+                else if (Slot5.PowerUp != PowerUp.None)
+                    slotIndex = 5;
+                else
+                    return new InventoryData(this, selectedSlot: null);
+            }
+            else if (slotIndex == -2)
+            {
+                if (!SelectedSlot.HasValue)
+                    return new InventoryData(this, selectedSlot: null);
+
+                int currentIndex = SelectedSlot.Value.SlotIndex;
+                if (GetPowerUpInSlot(currentIndex) != PowerUp.None)
+                    slotIndex = currentIndex;
+                else
+                {
+                    bool found = false;
+                    for (int offset = 1; offset <= MaxPowerUps && !found; offset++)
+                    {
+                        int leftIndex = currentIndex - offset;
+                        if (leftIndex >= 1 && GetPowerUpInSlot(leftIndex) != PowerUp.None)
+                        {
+                            slotIndex = leftIndex;
+                            found = true;
+                            break;
+                        }
+
+                        int rightIndex = currentIndex + offset;
+                        if (rightIndex <= MaxPowerUps && GetPowerUpInSlot(rightIndex) != PowerUp.None)
+                        {
+                            slotIndex = rightIndex;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                        return new InventoryData(this, selectedSlot: null);
+                }
+            }
+            return slotIndex switch
+            {
+                1 when Slot1.PowerUp != PowerUp.None => new InventoryData(this, selectedSlot: new PuSlot(1, Slot1.PowerUp)),
+                2 when Slot2.PowerUp != PowerUp.None => new InventoryData(this, selectedSlot: new PuSlot(2, Slot2.PowerUp)),
+                3 when Slot3.PowerUp != PowerUp.None => new InventoryData(this, selectedSlot: new PuSlot(3, Slot3.PowerUp)),
+                4 when Slot4.PowerUp != PowerUp.None => new InventoryData(this, selectedSlot: new PuSlot(4, Slot4.PowerUp)),
+                5 when Slot5.PowerUp != PowerUp.None => new InventoryData(this, selectedSlot: new PuSlot(5, Slot5.PowerUp)),
+                _ => new InventoryData(this, selectedSlot: null)
+            };
         }
 
         public override string ToString() => $"Slot1: {Slot1.PowerUp}, Slot2: {Slot2.PowerUp}, Slot3: {Slot3.PowerUp}, Slot4: {Slot4.PowerUp}, Slot5: {Slot5.PowerUp}, SelectedSlot: {SelectedSlot}";
@@ -305,18 +413,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private Dictionary<int, NetworkObject> _teamNobs = new();
         public IReadOnlyDictionary<int, NetworkObject> TeamNobs => _teamNobs;
 
-        public void PrintRaceState(bool log = true)
-        {
-            if (!log) return;
-            Log.DLazy(() =>
-            {
-                string playerStatesStr = string.Join(", ", PlayerStates.Select(kvp => $"[ConnectionId: {kvp.Key}, State: {kvp.Value}]"));
-                string teamDataStr = string.Join(", ", TeamData.Select(kvp => $"[TeamId: {kvp.Key}, Data: {kvp.Value}]"));
-                string inventoryStr = string.Join(", ", PlayerInventories.Select(kvp => $"[TeamId: {kvp.Key}, Inventory: {kvp.Value}]"));
-                return $"Race State: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, Leaderboard: [{string.Join(", ", Leaderboard)}]";
-            }, this, _log);
-        }
-
         [Server]
         public void RegisterTeamNob(int teamId, NetworkObject nob)
         {
@@ -356,6 +452,22 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         # endregion
 
+        # region Local Only
+
+        public void PrintRaceState(bool log = true)
+        {
+            if (!log) return;
+            Log.DLazy(() =>
+            {
+                string playerStatesStr = string.Join(", ", PlayerStates.Select(kvp => $"[ConnectionId: {kvp.Key}, State: {kvp.Value}]"));
+                string teamDataStr = string.Join(", ", TeamData.Select(kvp => $"[TeamId: {kvp.Key}, Data: {kvp.Value}]"));
+                string inventoryStr = string.Join(", ", PlayerInventories.Select(kvp => $"[TeamId: {kvp.Key}, Inventory: {kvp.Value}]"));
+                return $"Race State: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, Leaderboard: [{string.Join(", ", Leaderboard)}]";
+            }, this, _log);
+        }
+
+        # endregion
+
         # region Networked state and methods
         // Networked state
         /// <summary> synced </summary>
@@ -372,6 +484,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncDictionary<int, TeamTrackProgress> _teamTrackProgress = new();
         /// <summary> synced </summary>
         private readonly SyncVar<bool> _raceTimerExpired = new(false);
+
+        public string GetDescription()
+        {
+            string playerStatesStr = string.Join(", ", PlayerStates.Select(kvp => $"[ConnectionId: {kvp.Key}, State: {kvp.Value}]"));
+            string teamDataStr = string.Join(", ", TeamData.Select(kvp => $"[TeamId: {kvp.Key}, Data: {kvp.Value}]"));
+            string inventoryStr = string.Join(", ", PlayerInventories.Select(kvp => $"[TeamId: {kvp.Key}, Inventory: {kvp.Value}]"));
+            string trackProgressStr = string.Join(", ", TeamTrackProgress.Select(kvp => $"[TeamId: {kvp.Key}, Progress: {kvp.Value}]"));
+            string leaderboardStr = string.Join(", ", Leaderboard);
+            return $"RaceNetState: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, TeamTrackProgress: {trackProgressStr}, Leaderboard: [{leaderboardStr}], RaceTimerExpired: {RaceTimerExpired}";
+        }
+
 
         // State Projector accessors
         SyncVar<int?> IRaceNetStateSubscribe.Seed_Sub => _seed;
@@ -502,7 +625,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public void SetTeamTrackProgress(int teamId, TeamTrackProgress trackProgress) => _teamTrackProgress[teamId] = trackProgress;
 
         [Server]
-        public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
+        public void SetRaceTimerExpired(bool isExpired = true)
+        {
+
+            _raceTimerExpired.Value = isExpired;
+
+        }
+
+        [Server]
+        public void SetTeamInventory(int teamId, InventoryData inventoryData) => _racePlayerInventories[teamId] = inventoryData;
 
         #endregion
 

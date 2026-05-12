@@ -31,6 +31,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         Expired
     }
 
+    public enum SelectedSlotPolicy
+    {
+        LowerNonEmptyIndex,
+        CLosestNonEmptyIndex,
+    }
+
     public enum PowerUpActionType
     {
         None,

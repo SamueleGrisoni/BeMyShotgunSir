@@ -1,6 +1,5 @@
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
-using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.PowerUps
@@ -11,11 +10,14 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
         public override void OnUse(PowerUpRuntime runtime, StrategyContext context)
         {
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData.ActivePowerUpInfo.isArmorActive = true;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
-            Log.DLazy(() => $"Team {runtime.ActivePowerUpData.OwnerTeamId} is using Armor.", this);
+
+            runtime.ActivePowerUpData.PowerUpState = PowerUpState.Ticking;
             powerUpsNetController.AddActivePowerUp(runtime);
+            base.OnUse(runtime, context);
         }
 
         public override void OnExpire(PowerUpRuntime runtime, StrategyContext context)

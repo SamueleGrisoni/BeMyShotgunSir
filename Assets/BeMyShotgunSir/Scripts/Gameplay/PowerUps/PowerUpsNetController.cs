@@ -36,7 +36,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public float TotalDuration;
         public float RemainingDuration;
 
-        public ActivePowerUp(InfoUsePowerUp info, int managerInstanceId, SOPowerUp definition, PowerUpState? powerUpState = PowerUpState.None, float? remainingDuration = -1)
+        public ActivePowerUp(InfoUsePowerUp info, int managerInstanceId, SOPowerUp definition, PowerUpState? powerUpState = PowerUpState.None)
         {
             OwnerTeamId = info.OwnerTeamId;
             PowerUp = info.PowerUp;
@@ -45,7 +45,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             PowerUpClass = definition.PowerUpClass;
             PowerUpState = powerUpState ?? PowerUpState.None;
             TotalDuration = definition.Duration;
-            RemainingDuration = remainingDuration ?? definition.Duration;
+            RemainingDuration = definition.Duration;
         }
     }
 
@@ -123,6 +123,62 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public void OnEnable() => PowerUpSpawnable.OnPowerUpSpawned += OnPowerUpSpawned;
 
+        public void DebugUpdate() //DEBUG
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                Log.DLazy(() => $"Current active power-ups: {string.Join(", ", _activePowerUps.Values)}", this, _log);
+            }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                Log.DLazy(() => $"Current spawned power-ups: {string.Join(", ", _spawnedPowerUps)}", this, _log);
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Log.DLazy(() => $"Current race net state: {_raceNetState.GetDescription()}", this, _log);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Armor);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Invisibility);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.RerollPowerUp);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.RoadBlock);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Shield);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Spear);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.StealPowerUp);
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                _raceNetState.TryGetInventorySelectedSlot(teamData.TeamId, out PowerUp selectedPowerUp);
+                ActivatePowerUp(new InfoUsePowerUp(teamData.TeamId, selectedPowerUp));
+            }
+        }
         public void OnDisable() => UnsubscribeEvents();
 
         private void UnsubscribeEvents() => PowerUpSpawnable.OnPowerUpSpawned -= OnPowerUpSpawned;
@@ -194,11 +250,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             if (!IsServerInitialized)
                 return;
 
+            DebugUpdate(); //DEBUG
+
             _tickTimer += Time.deltaTime;
             if (_tickTimer >= _tICK_INTERVAL)
             {
                 _tickTimer = 0;
-                foreach (KeyValuePair<int, PowerUpRuntime> kvp in _activePowerUps)
+                var activePowerUpsSnapshot = new Dictionary<int, PowerUpRuntime>(_activePowerUps);
+                foreach (KeyValuePair<int, PowerUpRuntime> kvp in activePowerUpsSnapshot)
                 {
                     PowerUpRuntime powerUpRuntime = kvp.Value;
                     powerUpRuntime.Definition.OnTick(_tICK_INTERVAL, powerUpRuntime, _strategyContext);
@@ -401,6 +460,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 return;
             }
         }
-
     }
 }

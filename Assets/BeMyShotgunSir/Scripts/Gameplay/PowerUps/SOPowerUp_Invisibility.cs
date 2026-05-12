@@ -15,14 +15,16 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData.ActivePowerUpInfo.isInvisibilityActive = true;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+
             if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
                 // driverNob.GetComponent<DriverController>().ApplyInvisibilityEffect(); //TODO
                 Log.DLazy(() => $"Applying Invisibility effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
             else
                 Log.WLazy(() => $"Trying to apply Invisibility effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);
 
-            Log.DLazy(() => $"Team {runtime.ActivePowerUpData.OwnerTeamId} is using Invisibility.", this);
+            runtime.ActivePowerUpData.PowerUpState = PowerUpState.Ticking;
             powerUpsNetController.AddActivePowerUp(runtime);
+            base.OnUse(runtime, context);
         }
 
         public override void OnExpire(PowerUpRuntime runtime, StrategyContext context)
