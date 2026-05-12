@@ -402,18 +402,5 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             }
         }
 
-        // public bool GetCollisionBehaviour(int teamId, int otherId)
-        // {
-        //     if (!_raceNetState.TryGetTeamData(teamId, out RaceTeamData teamData) || !_raceNetState.TryGetTeamData(otherId, out RaceTeamData otherTeamData))
-        //     {
-        //         Log.WLazy(() => $"Trying to get collision behaviour for team {teamId} and other team {otherId} but no data found for one of the teams.", this);
-        //         return new PowerUpCollisionBehaviour[] { PowerUpCollisionBehaviour.Standard };
-        //     }
-        //     if (teamData.ActivePowerUps.Length == 0 || otherTeamData.ActivePowerUps.Length == 0)
-
-        //     {
-
-        //     }
-        // }
     }
 }
