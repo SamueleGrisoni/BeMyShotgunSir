@@ -2,6 +2,7 @@ using System;
 using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
@@ -98,24 +99,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private DriverController _driverController;
         public int? TeamId => _driverController == null ? null : _driverController.TeamId;
         public IDriverInputConsumer InputConsumer;
-
+        private RaceNetContext _raceNetContext;
         public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer)
         {
             //TODO set context references here
+            _raceNetContext = context;
             InputConsumer = inputConsumer;
-            InputConsumer.OnBoostPressed += ExecuteCommit;
+            InputConsumer.OnBoostPressed += ExecuteBoost;
             InputConsumer.OnEarlyCommitmentPressed += ExecuteEarlyCommitment;
         }
-        public void ExecuteCommit()
-        {
-            Debug.Log("Boost button pressed from movement controller");
-            _isBoosting = true;
-        }
-        public void ExecuteEarlyCommitment(CommitmentDirection direction)
-        {
-            Debug.Log($"Early commitment pressed from movement controller: {direction}");
-            _commitmentDirection = direction;
-        }
+        public void ExecuteBoost() => _isBoosting = true;
+        public void ExecuteEarlyCommitment(CommitmentDirection direction) => _commitmentDirection = direction;
 
         [SerializeField] private bool _isDebugInputEnabled = false;
         [SerializeField] private DriverInput _input;
@@ -126,6 +120,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
         [SerializeField] private Transform _sidecarModel;
+        [SerializeField] private Transform _boxCollider;
         [SerializeField] private Collider _commitmentCollider;
 
         [SerializeField] private LayerMask _sidecarLayerMask;
@@ -161,6 +156,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private bool _isOilAnimationActive;
         private float _oilAnimationTimer;
 
+        private int _currentChunkId;
+
+
         private void Awake()
         {
             _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
@@ -175,14 +173,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _isOilAnimationActive = false;
             _isBoosting = false;
             _commitmentDirection = CommitmentDirection.Default;
+            _currentChunkId = 0;
         }
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
-        private void LateUpdate()
-        {
-            _movement.transform.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-        }
+        private void LateUpdate() => _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
 
         public override void OnStartNetwork()
         {
@@ -194,7 +190,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
-            InputConsumer.OnBoostPressed -= ExecuteCommit;
+            InputConsumer.OnBoostPressed -= ExecuteBoost;
+            InputConsumer.OnEarlyCommitmentPressed -= ExecuteEarlyCommitment;
         }
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
@@ -235,7 +232,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 }
 
                 _lastReplicateData = data;
-                Debug.Log($"Predicted ticks {_predictedTicks}");
+                Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
             }
             else
             {
@@ -448,6 +445,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         GroundType IDrivingStateContext.CheckGround()
         {
+            //return GroundType.Normal;
             if (Physics.SphereCast(_movement.position, 0.3f, Vector3.down, out RaycastHit hit, 0.6f))
             {
                 if (hit.collider.CompareTag("Grass"))
@@ -507,5 +505,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [ObserversRpc]
         private void SendOilAnimation() => _driverVisual.OilAnimation();
 
+        [Server]
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Portal"))
+            {
+                RoadChunk roadChunk = other.transform.parent.GetComponent<RoadChunk>();
+                if (roadChunk != null)
+                {
+                    _currentChunkId = roadChunk.ChunkNumber;
+                    if (TeamId.HasValue)
+                    {
+                        _raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress trackProgress);
+                        trackProgress.CurrentChunkId = _currentChunkId;
+                        _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
+                    }
+                }
+            }
+        }
     }
 }

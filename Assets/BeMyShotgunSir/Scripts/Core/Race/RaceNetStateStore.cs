@@ -503,6 +503,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [Server]
         public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
 
+        [Server]
+        public void SetTeamTrackProgress(int teamId, TeamTrackProgress teamTrackProgress) => _teamTrackProgress[teamId] = teamTrackProgress;
+
         #endregion
 
         #region Getters

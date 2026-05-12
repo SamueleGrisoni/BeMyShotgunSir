@@ -11,6 +11,7 @@ TagManager:
   - Grass
   - Oil
   - Driver
+  - Portal
   layers:
   - Default
   - TransparentFX
@@ -27,8 +28,6 @@ TagManager:
   - Armor PowerUp
   - LeftWallCollider
   - RightWallCollider
-  - 
-  - 
   - 
   - 
   - 

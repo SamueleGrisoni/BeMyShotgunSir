@@ -185,6 +185,7 @@ MonoBehaviour:
   _parent: {fileID: 4998179860331136265}
   _sidecar: {fileID: 6190171562437922324}
   _sidecarModel: {fileID: 7985624542521542911}
+  _boxCollider: {fileID: 8359259767688481148}
   _commitmentCollider: {fileID: 869496521538249166}
   _sidecarLayerMask:
     serializedVersion: 2
