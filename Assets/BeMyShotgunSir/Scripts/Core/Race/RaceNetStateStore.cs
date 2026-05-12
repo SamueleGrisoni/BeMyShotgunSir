@@ -498,13 +498,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _leaderboard.Add(teamId);
         }
 
+        [Server]
         public void SetTeamTrackProgress(int teamId, TeamTrackProgress trackProgress) => _teamTrackProgress[teamId] = trackProgress;
 
         [Server]
         public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
-
-        [Server]
-        public void SetTeamTrackProgress(int teamId, TeamTrackProgress teamTrackProgress) => _teamTrackProgress[teamId] = teamTrackProgress;
 
         #endregion
 
