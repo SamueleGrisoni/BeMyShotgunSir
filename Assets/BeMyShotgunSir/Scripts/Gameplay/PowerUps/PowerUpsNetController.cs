@@ -125,15 +125,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public void DebugUpdate() //DEBUG
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.M))
             {
                 Log.DLazy(() => $"Current active power-ups: {string.Join(", ", _activePowerUps.Values)}", this, _log);
             }
-            if (Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKeyDown(KeyCode.N))
             {
                 Log.DLazy(() => $"Current spawned power-ups: {string.Join(", ", _spawnedPowerUps)}", this, _log);
             }
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.B))
             {
                 Log.DLazy(() => $"Current race net state: {_raceNetState.GetDescription()}", this, _log);
             }
