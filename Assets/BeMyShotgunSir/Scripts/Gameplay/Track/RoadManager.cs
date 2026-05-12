@@ -50,6 +50,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private float _serverBufferDistance = 150f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
+        private int _earlyCommitmentDirection = 0; // 0 means no early commitment set yet, -1 means early commitment to left, 1 means early commitment to right
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
         public static event Action<CrossroadSegmentInfo> OnCrossroadProvided;
         public static event Action<int> OnCommonGenerated;
@@ -60,6 +61,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
             TrackGenerator.OnCommonGenerated += PropagateCommonGenerated;
             TrackGenerator.OnCrossroadGenerated += PropagateOnCrossroad;
+            //todo subscribe to earlyCommitEvent
         }
 
         public override void OnStartServer()
@@ -243,6 +245,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private void RemoveChunk(PooledRoadChunk chunk)
         {
+            if (chunk.Component is ForkRoadChunk)
+            {
+                chunk.Component.GetComponent<ForkRoadChunk>().LeftBarrierObject.SetActive(false);
+                chunk.Component.GetComponent<ForkRoadChunk>().RightBarrierObject.SetActive(false);
+            }
             _activeRoadChunks.RemoveFirst();
             _environmentSpawner.ClearSpawnedProps(chunk.Component);
             _itemSpawner.ClearItemsFromChunk(chunk.Component);

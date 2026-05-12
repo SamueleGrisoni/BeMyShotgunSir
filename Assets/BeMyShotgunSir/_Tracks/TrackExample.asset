@@ -25,7 +25,7 @@ MonoBehaviour:
   - {fileID: 8446912763485860601, guid: f908588fa65678c4f89611be27431bfe, type: 3}
   - {fileID: 9120054269515418538, guid: bba72a6c7a0512147ae54880f89c3b9e, type: 3}
   <SpecialRoadChunks>k__BackingField:
-  - {fileID: 1942636121062602937, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
+  - {fileID: 8465149092158662063, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
   - {fileID: 8453271865772463337, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
   - {fileID: 2292866343609022809, guid: e0d49705d61bd2645889f4eb1314d3ea, type: 3}
   - {fileID: 2457545915473961, guid: bbc407e8db209984694b12576a44350b, type: 3}
@@ -33,10 +33,6 @@ MonoBehaviour:
   - {fileID: 7101941440651399722, guid: 856ff99035371204d982bb2dc57eff9c, type: 3}
   - {fileID: 3095469888323919585, guid: c8bae53e10d71f84197095f2d66ecc1d, type: 3}
   <RoadChunkInitPoolSize>k__BackingField: 10
-  <EnvChunks>k__BackingField: []
-  <EnvChunkInitPoolSize>k__BackingField: 15
-  <RandomProps>k__BackingField: []
-  <RandomPropInitPoolSize>k__BackingField: 15
   <StraightPercentage>k__BackingField: 50
   <MinimumTrackLength>k__BackingField: 5
   <MaximumTrackLength>k__BackingField: 5

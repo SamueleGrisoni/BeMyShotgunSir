@@ -144,15 +144,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.START_LINE,
                     RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE, 0),
+                    RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
+            _numChunksGenerated++;
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.STRAIGHT,
                     RoadChunkType.STRAIGHT,
-                    RoadChunkPosition.MIDDLE, 1),
+                    RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
-            _numChunksGenerated += 2;
 
             _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
             EnqueueCommonSegment();
