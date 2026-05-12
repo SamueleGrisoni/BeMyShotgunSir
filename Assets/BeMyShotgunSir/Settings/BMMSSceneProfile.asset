@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.ColorAdjustments
-  active: 0
+  active: 1
   postExposure:
     m_OverrideState: 1
     m_Value: 0.04
@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Value: -12
   saturation:
     m_OverrideState: 1
-    m_Value: 4.7
+    m_Value: 22.4
 --- !u!114 &-5874844539011564895
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70afe9e12c7a7ed47911bb608a23a8ff, type: 3}
   m_Name: SplitToning
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.SplitToning
-  active: 0
+  active: 1
   shadows:
     m_OverrideState: 1
     m_Value: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
@@ -62,10 +62,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.LensDistortion
-  active: 0
+  active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.187
+    m_Value: 0.295
   xMultiplier:
     m_OverrideState: 1
     m_Value: 1
@@ -77,7 +77,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   scale:
     m_OverrideState: 1
-    m_Value: 1.11
+    m_Value: 0.99
 --- !u!114 &-3357603926938260329
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   color:
     m_OverrideState: 1
     m_Value: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
   m_Name: WhiteBalance
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.WhiteBalance
-  active: 0
+  active: 1
   temperature:
     m_OverrideState: 1
     m_Value: -2.4
@@ -137,16 +137,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.LiftGammaGain
-  active: 0
+  active: 1
   lift:
     m_OverrideState: 1
-    m_Value: {x: 0.9703843, y: 1, z: 0.9665973, w: -0.019900536}
+    m_Value: {x: 1, y: 1, z: 1, w: -0.017296612}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 0.97359324, y: 0.981676, z: 1, w: 0.23880598}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.12848963}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.989035, z: 0.9957731, w: 0.099501856}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.09883848}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: SampleSceneProfile
+  m_Name: BMMSSceneProfile
   m_EditorClassIdentifier: 
   components:
   - {fileID: -3357603926938260329}
