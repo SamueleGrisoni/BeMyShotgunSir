@@ -10,7 +10,6 @@ namespace BeMyShotgunSir.Scripts.UI
     {
         [SerializeField] private UIController_Race _uiControllerRace;
         [SerializeField] private UIDocument _hudDriverDocument;
-        [SerializeField] private RaceBindTarget[] _raceBindTargets;
 
         #region Bindings
         private RaceCommand _command;
@@ -29,11 +28,6 @@ namespace BeMyShotgunSir.Scripts.UI
             }
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
-
-            //TODO: Race View Model events
-            // _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
-            // _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
-            // _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
         }
         public override void OnFinalBindComplete()
         {
@@ -49,8 +43,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
 
         private VisualElement _root;
-
-
 
         private void OnEnable()
         {

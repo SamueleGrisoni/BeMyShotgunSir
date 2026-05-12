@@ -10,6 +10,7 @@
 
 .power-up-bar {
     flex-grow: 1;
+    align-self: stretch;
 }
 
 .shout-box {

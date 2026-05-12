@@ -1,5 +1,6 @@
 
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
 
@@ -11,12 +12,15 @@ namespace BeMyShotgunSir.Scripts.UI
         [Header("UI Controllers")]
         [Header("HUD Driver")]
         [SerializeField] private HUDDriverViewController _hudDriverViewController;
+        [Header("HUD Shotgun")]
+        [SerializeField] private HUDShotgunViewController _hudShotgunViewController;
 
         #region Bindings
-        [SerializeField] private InterfaceSerializer<RaceBindTarget, IRaceBindTarget>[] _bindTargets;
-        private IRaceBindTarget[] _coercedTargets;
         private RaceCommand _command;
         private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
         #endregion
 
         public override void OnInitialBindComplete()
@@ -28,11 +32,6 @@ namespace BeMyShotgunSir.Scripts.UI
             }
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
-
-            //TODO: Race View Model events
-            // _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
-            // _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
-            // _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
         }
         public override void OnFinalBindComplete()
         {
@@ -41,34 +40,65 @@ namespace BeMyShotgunSir.Scripts.UI
                 Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
                 return;
             }
+            _roadManager = _finalBindSource.RoadManager;
+            _inputPublisher = _finalBindSource.InputPublisher;
+            _role = _finalBindSource.Role;
+
+            switch (_role)
+            {
+                case RaceRole.Driver:
+                    ShowScreen(UIScreen.HUDDriver, true);
+                    break;
+                case RaceRole.Shotgun:
+                    ShowScreen(UIScreen.HUDShotgun, true);
+                    break;
+                default:
+                    Log.ELazy(() => "Unknown role: " + _role, this);
+                    break;
+            }
         }
+
+
+        #region private fields
+        private GameObject _hudDriverGO;
+        private GameObject _hudShotgunGO;
+        #endregion
 
         private void Awake()
         {
+            _hudDriverGO = _hudDriverViewController.gameObject;
+            _hudShotgunGO = _hudShotgunViewController.gameObject;
         }
 
         private void Start()
         {
-            ShowScreen(UIScreen.Lobby, true);
+            // ShowScreen(UIScreen.Lobby, true);
         }
 
         public void ShowScreen(UIScreen screen, bool show)
         {
             switch (screen)
             {
-                case UIScreen.Lobby:
+                case UIScreen.HUDDriver:
+                    _hudDriverGO.SetActive(show);
                     _hudDriverViewController.Show(show);
-                    HideAllScreensExcept(lobby: true);
+                    // HideAllScreensExcept(hudDriver: show);
+                    break;
+                case UIScreen.HUDShotgun:
+                    _hudShotgunGO.SetActive(show);
+                    _hudShotgunViewController.Show(show);
+                    // HideAllScreensExcept(hudShotgun: show);
                     break;
                 default:
-                    Debug.LogWarning("Unknown screen: " + screen);
+                    Log.DLazy(() => "Unknown screen: " + screen, this);
                     break;
             }
         }
 
-        private void HideAllScreensExcept(bool lobby = false)
+        private void HideAllScreensExcept(bool hudDriver = false, bool hudShotgun = false)
         {
-            if (!lobby) _hudDriverViewController.Show(false);
+            if (!hudDriver) _hudDriverViewController.Show(false);
+            if (!hudShotgun) _hudShotgunViewController.Show(false);
         }
     }
 }

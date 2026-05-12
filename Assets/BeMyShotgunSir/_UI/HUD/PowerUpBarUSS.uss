@@ -33,7 +33,7 @@
     flex-grow: 1;
 }
 
-.power-up-3 .frame {
+.power-up.selected .frame {
     display: flex;
 }
 

@@ -13,7 +13,8 @@ namespace BeMyShotgunSir.Scripts.UI
         SettingsMenu,
         CustomizationMenu,
         ShopMenu,
-        HUD
+        HUDDriver,
+        HUDShotgun
     }
 
     public enum UIOverlay

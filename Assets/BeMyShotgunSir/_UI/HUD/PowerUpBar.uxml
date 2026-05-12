@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/PowerUpBarUSS.uss?fileID=7433441132597879392&amp;guid=52556431bb561463894cd4db5cec4325&amp;type=3#PowerUpBarUSS"/>
     <ui:VisualElement name="UIRoot" class="uiroot">
         <ui:VisualElement name="ContentArea" class="content-area">
-            <ui:VisualElement name="PowerUpBar" class="earlycommitment-container" style="flex-direction: row; align-items: center; justify-content: center; flex-grow: 1;">
+            <ui:VisualElement name="PowerUpList" class="power-up-bar" style="flex-direction: row; align-items: center; justify-content: center; flex-grow: 1;">
                 <ui:VisualElement name="PowerUp1" class="power-up power-up-1">
                     <ui:VisualElement name="Frame" class="frame"/>
                     <ui:VisualElement name="Icon" class="icon"/>
