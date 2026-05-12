@@ -52,7 +52,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_high_grass_01_Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2330386539717806373, guid: b8c08e9315d806f46a9f92b2de567aec, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

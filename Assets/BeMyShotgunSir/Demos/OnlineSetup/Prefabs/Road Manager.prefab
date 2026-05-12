@@ -77,6 +77,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.EnvironmentManager
   _environmentData: {fileID: 11400000, guid: 05623181645398b4a938f6e01054eaaa, type: 2}
   _environmentPooler: {fileID: 1998809859264160918}
+  _easterEggPropsPrefab: {fileID: 2452451734585529808, guid: 723ef5276e09d9a4083e6af5922339dc, type: 3}
 --- !u!1 &684905868410937984
 GameObject:
   m_ObjectHideFlags: 0

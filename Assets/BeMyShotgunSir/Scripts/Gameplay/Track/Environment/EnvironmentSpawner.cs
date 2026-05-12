@@ -11,6 +11,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
         private PolygonSpawnArea _currentSpawnArea;
         [SerializeField] private SOEnvironment _environmentData;
         [SerializeField] private EnvironmentPooler _environmentPooler;
+        [SerializeField] private CityProps _easterEggPropsPrefab;
         private List<Bounds> _spawnPrefabsBounds = new List<Bounds>();
         private Random _rng;
 
@@ -83,19 +84,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Environment
             for (int i = 0; i < propsToSpawn; i++)
             {
                 PooledCityProps pooledProps = _environmentPooler
-                    .GetPropsPrefab(_rng.Next(0, _environmentData.CityProps.Length - 1));
+                    .GetPropsPrefab(_rng.Next(0, _environmentData.CityProps.Length));
 
                 if (!TrySpawnPlaceable(pooledProps.Component))
                     pooledProps.ReturnToPool();
             }
-            //todo fix easter egg
-            /*if (_rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
+            if (_rng.Next(0, 100) < _environmentData.ChanceToSpawnSomethingFunny)
             {
                 Log.DLazy(() => "Something funny spawned!", this, _log);
-                Instantiate(_propsPrefabs[^1].gameObject,
+                Instantiate(_easterEggPropsPrefab.gameObject,
                     _currentSpawnArea.transform.position + Vector3.up * 50f, default,
                     _currentSpawnArea.transform);
-            }*/
+            }
         }
 
         private void SpawnBuildings()
