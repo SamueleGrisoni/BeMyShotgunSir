@@ -14,7 +14,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 case RoadChunkType.TURN:
                 case RoadChunkType.STRAIGHT:
-                case RoadChunkType.START_FINISH_LINE:
+                case RoadChunkType.START_LINE:
                     PlaceNormalRoadChunk(chunk, position, activeRoadChunkCount);
                     break;
                 case RoadChunkType.STARTING_CROSSROAD:

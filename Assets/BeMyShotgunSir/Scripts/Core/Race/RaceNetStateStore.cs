@@ -329,12 +329,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public struct PortalInfo
     {
         public int Id;
-        public RoadChunkType Position;
+        public RoadChunkType Type;
 
-        public PortalInfo(int id, RoadChunkType position)
+        public PortalInfo(int id, RoadChunkType type)
         {
             Id = id;
-            Position = position;
+            Type = type;
         }
     }
 

@@ -54,7 +54,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
     public class TrackGenerator : MonoBehaviour
     {
-        private enum SpecialRoadChunkIndex { STARTING_CROSSROAD = 0, ENDING_CROSSROAD = 1, START_LINE = 2, STRAIGHT = 3, LEFT_HALF_CIRCLE = 4, RIGHT_HALF_CIRCLE = 5, AUSTIN_SNAKE = 6 }
+        private enum SpecialRoadChunkIndex { STARTING_CROSSROAD = 0, ENDING_CROSSROAD = 1, START_LINE = 2, STRAIGHT = 3, LEFT_HALF_CIRCLE = 4, RIGHT_HALF_CIRCLE = 5, AUSTIN_SNAKE = 6, FINISH_LINE = 7 }
 
         [SerializeField] private SOTrack _trackData;
         [SerializeField] private ItemGenerator _itemGenerator;
@@ -160,6 +160,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             EnqueueSplitSegment();
         }
 
+        public void SetFinalSequence(RoadChunkType? lastSpecialChunkTypeFirstTeam)
+        {
+            if (lastSpecialChunkTypeFirstTeam == RoadChunkType.STARTING_CROSSROAD) //first team is in a split
+            {
+                GenerateFinalSequence();
+            }
+            else if (lastSpecialChunkTypeFirstTeam == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunkTypeFirstTeam == RoadChunkType.START_LINE) //first team is in a common segment
+            {
+                _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
+                EnqueueSplitSegment();
+                GenerateFinalSequence();
+            }
+            else
+            {
+                Log.ELazy(() => "GenerateFinalSequence called with invalid lastSpecialChunkTypeFirstTeam: " + lastSpecialChunkTypeFirstTeam, this);
+                return;
+            }
+        }
+
         private void GenerateFinalSequence()
         {
             _numChunksGenerated++;
@@ -173,7 +192,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _numChunksGenerated++;
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
-                    (int)SpecialRoadChunkIndex.START_LINE, //todo this should be a new prefab with a finish line trigger or something
+                    (int)SpecialRoadChunkIndex.FINISH_LINE,
                     RoadChunkType.STRAIGHT,
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));

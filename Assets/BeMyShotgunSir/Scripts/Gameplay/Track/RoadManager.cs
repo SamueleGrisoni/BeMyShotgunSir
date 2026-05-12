@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
@@ -54,6 +55,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
         public static event Action<CrossroadSegmentInfo> OnCrossroadProvided;
         public static event Action<int> OnCommonGenerated;
+        private bool _hasFinishLineSpawned = false;
 
         public override void OnStartNetwork()
         {
@@ -61,7 +63,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
             TrackGenerator.OnCommonGenerated += PropagateCommonGenerated;
             TrackGenerator.OnCrossroadGenerated += PropagateOnCrossroad;
-            //todo subscribe to earlyCommitEvent
         }
 
         public override void OnStartServer()
@@ -129,6 +130,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             // vedi tu se una certa iscrizione ti serve solo lato client o solo lato server o host
             //poi quando hai ottenuto il finish line chunk id puoi settarlo in autonomia nello store
             // context.NetState.SetFinishLineChunkId(finishlinechunkid);
+            context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);;
             if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
@@ -146,7 +148,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (_activeRoadChunks == null) _activeRoadChunks = new LinkedList<PooledRoadChunk>();
             SpawnRoadChunk(true);
             RoadChunk comp = _activeRoadChunks.First.Value.Component;
-            if (comp is StartFinishLineRoadChunk startFinish)
+            if (comp is StartLineRoadChunk startFinish)
                 _spawnPoints = startFinish.GridPositions;
             else
                 Log.WLazy(() => $"First road chunk is not a StartFinishLineRoadChunk, spawn points cannot be initialized properly.", this);
@@ -269,10 +271,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 generatedRoadChunkInfoList =
                     _trackGenerator.PeekStartFinishLine();
             }
-
             foreach (GeneratedRoadChunkInfoWithItems chunkInfoWithItems in
                 generatedRoadChunkInfoList)
             {
+                if (chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.FINISH_LINE)
+                {
+                    if (_hasFinishLineSpawned)
+                    {
+                        break;
+                    }
+                    _hasFinishLineSpawned = true;
+                }
                 int nextChunkIndex = chunkInfoWithItems.roadChunkInfo.index;
                 PooledRoadChunk nextChunk =
                     chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.TURN
@@ -294,6 +303,29 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
                 _activeRoadChunks.AddLast(nextChunk);
             }
+        }
+
+        private void OnTimerRaceExpired(RaceNetContext context)
+        {
+            if (!_isServer)
+            {
+                return;
+            }
+
+            bool canGetFirstTeamProgress = context.NetState.TryGetTeamTrackProgress(context.NetState.Leaderboard[0], out TeamTrackProgress progress);
+            if (!canGetFirstTeamProgress)
+            {
+                Log.WLazy(() => "Cannot get first team progress on timer expired, cannot set finish line chunk id", this);
+                return;
+            }
+
+            RoadChunkType? firstTeamLastSpecialChunkType = progress.LastSpecialChunkType?.Type;
+            if (firstTeamLastSpecialChunkType == null)
+            {
+                Log.WLazy(() => "First team last special chunk type is null on timer expired, defaulting to start line", this);
+                firstTeamLastSpecialChunkType = RoadChunkType.START_LINE;
+            }
+            _trackGenerator.SetFinalSequence(firstTeamLastSpecialChunkType);
         }
     }
 }

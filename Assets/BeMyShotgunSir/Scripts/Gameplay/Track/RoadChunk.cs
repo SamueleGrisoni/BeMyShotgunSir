@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
-    public enum RoadChunkType { STRAIGHT,TURN,STARTING_CROSSROAD, ENDING_CROSSROAD, START_FINISH_LINE}
+    public enum RoadChunkType { STRAIGHT,TURN,STARTING_CROSSROAD, ENDING_CROSSROAD, START_LINE, FINISH_LINE}
     public class RoadChunk : MonoBehaviour
     {
         public virtual RoadChunkType Type { get; set; } = RoadChunkType.TURN;

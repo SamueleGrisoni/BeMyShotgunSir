@@ -79,7 +79,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
-        [SerializeField] private float _maxRaceTime = 150f;
+        [SerializeField] private float _maxRaceTime = 30f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
         [SerializeField] private TeamNetController _teamPrefab;
         [SerializeField] private DriverController _driverPrefab;
@@ -138,7 +138,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         currentProgress,
                         nextSpecialChunkId: nextId,
                         lastSpecialChunkType: new PortalInfo(crossroad.chunkNumber, crossroad.type),
-                        isFinishLineNext: crossroad.type == RoadChunkType.START_FINISH_LINE
+                        isFinishLineNext: crossroad.type == RoadChunkType.START_LINE
                     );
 
                     if (!updated.IsEqual(value))

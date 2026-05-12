@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track
 {
-    public class StartFinishLineRoadChunk : RoadChunk
+    public class StartLineRoadChunk : RoadChunk
     {
-        public override RoadChunkType Type => RoadChunkType.START_FINISH_LINE;
+        public override RoadChunkType Type => RoadChunkType.START_LINE;
         [field: SerializeField] public List<Transform> GridPositions { get; private set; }
     }
 }
