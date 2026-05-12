@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.Players;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
@@ -7,6 +8,7 @@ using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
@@ -55,6 +57,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private LobbyNetStateStore _lobbyNetState;
         private RaceNetStateStore _netState;
         public IRaceNetStateRead NetState => _netState;
+        private IRaceNetStateSubscribe _netStateSubscribe => _netState;
         private RaceClientProjector _clientProjector;
 
         //Specific
@@ -65,11 +68,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private List<Transform> _spawnPoints;
         private Dictionary<int, TeamProgress> _teamProgress;
         private float _leaderboardUpdateTimer = 0f;
-        [SerializeField] private float _maxRaceTime = 150f;
         private float _raceTimer = 0f;
+        private Queue<CrossroadSegmentInfo> _crossroadSegmentInfoQueue = new Queue<CrossroadSegmentInfo>();
 
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
+        [SerializeField] private float _maxRaceTime = 150f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
         [SerializeField] private TeamNetController _teamPrefab;
         [SerializeField] private DriverController _driverPrefab;
@@ -84,7 +88,66 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => $"One or more required components are missing on RaceNetController.", this);
 
             _teamProgress = new Dictionary<int, TeamProgress>();
+            RoadManager.OnCrossroadProvided += OnCrossroadProvided;
+            _netStateSubscribe.TeamTrackProgress_Sub.OnChange += OnTeamTrackProgressChanged;
+
         }
+
+        private void OnTeamTrackProgressChanged(SyncDictionaryOperation op, int key, TeamTrackProgress value, bool asServer) //TODO test
+        {
+            // 1. Uscita immediata se non server o se non ci sono incroci da monitorare
+            if (!asServer || _crossroadSegmentInfoQueue.Count == 0)
+                return;
+
+            _netState.TryGetTeamTrackProgress(key, out TeamTrackProgress currentProgress);
+
+            // 2. Aggiornamento progresso del player (Scanning della coda)
+            for (int i = 0; i < _crossroadSegmentInfoQueue.Count; i++)
+            {
+                CrossroadSegmentInfo crossroad = _crossroadSegmentInfoQueue.ElementAt(i);
+                if (currentProgress.CurrentChunkId == crossroad.chunkNumber)
+                {
+                    int nextId = (_crossroadSegmentInfoQueue.Count > i + 1)
+                        ? _crossroadSegmentInfoQueue.ElementAt(i + 1).chunkNumber
+                        : currentProgress.NextSpecialChunkId;
+
+                    var updated = new TeamTrackProgress(
+                        currentProgress,
+                        nextSpecialChunkId: nextId,
+                        lastSpecialChunkType: new PortalInfo(crossroad.chunkNumber, crossroad.type),
+                        isFinishLineNext: crossroad.type == RoadChunkType.START_FINISH_LINE
+                    );
+
+                    if (!updated.IsEqual(value))
+                        _netState.SetTeamTrackProgress(key, updated);
+
+                    break;
+                }
+            }
+
+            // 3. Controllo se il team ha superato l'elemento in testa
+            bool allPlayersSurpassedCrossroad = true;
+            int headChunkId = _crossroadSegmentInfoQueue.Peek().chunkNumber;
+
+            foreach (TeamTrackProgress progress in _netState.TeamTrackProgress.Values)
+            {
+                // Se un player non ha valore o il suo ID è <= a quello in testa, il team non ha ancora superato l'incrocio
+                if (!progress.LastSpecialChunkType.HasValue || progress.LastSpecialChunkType.Value.Id <= headChunkId)
+                {
+                    allPlayersSurpassedCrossroad = false;
+                    break;
+                }
+            }
+
+            if (allPlayersSurpassedCrossroad)
+            {
+                // Rimuoviamo e logghiamo
+                CrossroadSegmentInfo finishedCrossroad = _crossroadSegmentInfoQueue.Dequeue();
+                Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
+            }
+        }
+
+        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _crossroadSegmentInfoQueue.Enqueue(info);
 
         public void OnEnable() =>
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
@@ -102,7 +165,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public void SetLobbyNetState(LobbyNetStateStore lobbyNetState) =>
             _lobbyNetState = lobbyNetState;
-
 
         [Server]
         public void InitRace(int seed = -1)
@@ -137,7 +199,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _spawnPoints = spawnPoints;
             _trackOrigin = trackOrigin;
         }
-
 
         [ServerRpc(RequireOwnership = false)]
         public void SetServerTrackReady_ServerRpc(NetworkConnection connection = null)

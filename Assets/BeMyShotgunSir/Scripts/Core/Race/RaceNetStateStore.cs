@@ -221,6 +221,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         public int Id;
         public RoadChunkType Position;
+
+        public PortalInfo(int id, RoadChunkType position)
+        {
+            Id = id;
+            Position = position;
+        }
     }
 
     public struct TeamTrackProgress
@@ -230,23 +236,25 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public PortalInfo? LastSpecialChunkType;
         public bool IsFinishLineNext;
 
-        public TeamTrackProgress(int nextForkId = 0, int nextJunctionId = 0, PortalInfo? lastSpecialPortalType = null, bool isFinishLineNext = false)
+        public TeamTrackProgress(int currentChunkId = 0, int nextSpecialChunkId = 0, PortalInfo? lastSpecialChunkType = null, bool isFinishLineNext = false)
         {
-            CurrentChunkId = nextForkId;
-            NextSpecialChunkId = nextJunctionId;
-            LastSpecialChunkType = lastSpecialPortalType;
+            CurrentChunkId = currentChunkId;
+            NextSpecialChunkId = nextSpecialChunkId;
+            LastSpecialChunkType = lastSpecialChunkType;
             IsFinishLineNext = isFinishLineNext;
         }
 
-        public TeamTrackProgress(TeamTrackProgress other, int? nextForkId = null, int? nextJunctionId = null, PortalInfo? lastSpecialPortalType = null, bool? isFinishLineNext = null)
+        public TeamTrackProgress(TeamTrackProgress other, int? currentChunkId = null, int? nextSpecialChunkId = null, PortalInfo? lastSpecialChunkType = null, bool? isFinishLineNext = null)
         {
-            CurrentChunkId = nextForkId ?? other.CurrentChunkId;
-            NextSpecialChunkId = nextJunctionId ?? other.NextSpecialChunkId;
-            LastSpecialChunkType = lastSpecialPortalType ?? other.LastSpecialChunkType;
+            CurrentChunkId = currentChunkId ?? other.CurrentChunkId;
+            NextSpecialChunkId = nextSpecialChunkId ?? other.NextSpecialChunkId;
+            LastSpecialChunkType = lastSpecialChunkType ?? other.LastSpecialChunkType;
             IsFinishLineNext = isFinishLineNext ?? other.IsFinishLineNext;
         }
 
-        public override string ToString() => $"TeamTrackProgress: NextForkId: {CurrentChunkId}, NextJunctionId: {NextSpecialChunkId}, LastSpecialPortalType: {LastSpecialChunkType}, IsFinishLineNext: {IsFinishLineNext}";
+        public override string ToString() => $"TeamTrackProgress: CurrentChunkId: {CurrentChunkId}, NextSpecialChunkId: {NextSpecialChunkId}, LastSpecialChunkType: {LastSpecialChunkType}, IsFinishLineNext: {IsFinishLineNext}";
+
+        public bool IsEqual(TeamTrackProgress other) => CurrentChunkId == other.CurrentChunkId && NextSpecialChunkId == other.NextSpecialChunkId && LastSpecialChunkType.Equals(other.LastSpecialChunkType) && IsFinishLineNext == other.IsFinishLineNext;
     }
 
     #endregion
@@ -489,6 +497,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             foreach (int teamId in orderedTeamIds)
                 _leaderboard.Add(teamId);
         }
+
+        public void SetTeamTrackProgress(int teamId, TeamTrackProgress trackProgress) => _teamTrackProgress[teamId] = trackProgress;
 
         [Server]
         public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
