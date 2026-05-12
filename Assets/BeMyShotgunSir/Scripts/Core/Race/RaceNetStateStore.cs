@@ -586,6 +586,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             _raceTimerExpired.Value = false;
             _finishLineChunkId.Value = -1;
+
+            EventPropagationSetup();
         }
 
         # endregion

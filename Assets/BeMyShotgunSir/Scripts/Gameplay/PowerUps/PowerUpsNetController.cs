@@ -244,7 +244,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             }
         }
 
-        [Server]
         private void Update()
         {
             if (!IsServerInitialized)

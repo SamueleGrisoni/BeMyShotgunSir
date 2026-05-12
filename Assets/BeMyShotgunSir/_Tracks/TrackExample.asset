@@ -27,7 +27,7 @@ MonoBehaviour:
   <SpecialRoadChunks>k__BackingField:
   - {fileID: 8465149092158662063, guid: cccb19aac8f17a4449eaed618737f2b0, type: 3}
   - {fileID: 8453271865772463337, guid: be3a82fb81b2ed0489b1249e4f3d4b47, type: 3}
-  - {fileID: 2292866343609022809, guid: e0d49705d61bd2645889f4eb1314d3ea, type: 3}
+  - {fileID: 2292866343609022809, guid: dbc874632309c24408d9af9d42d2cd37, type: 3}
   - {fileID: 2457545915473961, guid: bbc407e8db209984694b12576a44350b, type: 3}
   - {fileID: 3776542401026265335, guid: e64dda8ac6e00e34aadeca7e951ce913, type: 3}
   - {fileID: 7101941440651399722, guid: 856ff99035371204d982bb2dc57eff9c, type: 3}

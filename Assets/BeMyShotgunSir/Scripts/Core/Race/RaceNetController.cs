@@ -96,6 +96,22 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             _teamProgress = new Dictionary<int, TeamProgress>();
             RoadManager.OnCrossroadProvided += OnCrossroadProvided;
+        }
+
+        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _crossroadSegmentInfoQueue.Enqueue(info);
+
+        public void OnEnable() =>
+            RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
+
+        public override void OnStopNetwork()
+        {
+            base.OnStopNetwork();
+            UnsubscribeEvents();
+        }
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
             _netStateSubscribe.TeamTrackProgress_Sub.OnChange += OnTeamTrackProgressChanged;
         }
 
@@ -153,17 +169,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
             }
-        }
-
-        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _crossroadSegmentInfoQueue.Enqueue(info);
-
-        public void OnEnable() =>
-            RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
-
-        public override void OnStopNetwork()
-        {
-            base.OnStopNetwork();
-            UnsubscribeEvents();
         }
 
         private void OnDisable() => UnsubscribeEvents();
