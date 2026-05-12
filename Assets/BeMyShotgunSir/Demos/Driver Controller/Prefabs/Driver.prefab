@@ -177,7 +177,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 3192123921943259604}
   _networkObjectCache: {fileID: 3192123921943259604}
   _driverController: {fileID: 3998145195957461452}
-  _isDebugInputEnabled: 1
+  _isDebugInputEnabled: 0
   _input: {fileID: 7387308273733314743}
   _stats: {fileID: 3826133632397438374}
   _driverVisual: {fileID: 7322070008880661126}
@@ -360,7 +360,7 @@ MonoBehaviour:
     FieldOfView: 80
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 300
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
