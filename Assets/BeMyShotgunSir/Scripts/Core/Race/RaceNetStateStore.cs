@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Lobby;
@@ -392,6 +393,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncDictionary<int, InventoryData> PlayerInventories_Sub { get; }
         SyncDictionary<int, TeamTrackProgress> TeamTrackProgress_Sub { get; }
         SyncVar<bool> RaceTimerExpired_Sub { get; }
+        SyncVar<int> FinishLineChunkId_Sub { get; }
     }
 
     public interface IRaceNetStateStore : IRaceNetStateSubscribe { }
@@ -450,9 +452,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             return nob != null;
         }
 
-        # endregion
+        #endregion
 
-        # region Local Only
+        #region Local Only
 
         public void PrintRaceState(bool log = true)
         {
@@ -466,9 +468,32 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }, this, _log);
         }
 
+        //Event Propagation
+
+        public event Action OnRaceTimerExpired;
+        public event Action<int> OnFinishLineChunkIdSet;
+        private void EventPropagationSetup()
+        {
+            _raceTimerExpired.OnChange += OnRaceTimerExpired_Propagate;
+            _finishLineChunkId.OnChange += OnFinishLineChunkIdSet_Propagate;
+        }
+
+        private void OnRaceTimerExpired_Propagate(bool prev, bool next, bool asServer)
+        {
+            if (!prev && next)
+                OnRaceTimerExpired?.Invoke();
+        }
+
+        private void OnFinishLineChunkIdSet_Propagate(int prev, int _, bool __)
+        {
+            if (prev < 0 && _finishLineChunkId.Value >= 0)
+                OnFinishLineChunkIdSet?.Invoke(_finishLineChunkId.Value);
+        }
+
         # endregion
 
         # region Networked state and methods
+
         // Networked state
         /// <summary> synced </summary>
         private readonly SyncVar<int?> _seed = new();
@@ -484,6 +509,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private readonly SyncDictionary<int, TeamTrackProgress> _teamTrackProgress = new();
         /// <summary> synced </summary>
         private readonly SyncVar<bool> _raceTimerExpired = new(false);
+        /// <summary> synced </summary>
+        private readonly SyncVar<int> _finishLineChunkId = new(-1);
 
         public string GetDescription()
         {
@@ -495,7 +522,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             return $"RaceNetState: Seed: {Seed}, PlayerStates: {playerStatesStr}, TeamData: {teamDataStr}, PlayerInventories: {inventoryStr}, TeamTrackProgress: {trackProgressStr}, Leaderboard: [{leaderboardStr}], RaceTimerExpired: {RaceTimerExpired}";
         }
 
-
         // State Projector accessors
         SyncVar<int?> IRaceNetStateSubscribe.Seed_Sub => _seed;
         SyncDictionary<int, RacePlayerState> IRaceNetStateSubscribe.PlayerStates_Sub => _racePlayerStates;
@@ -504,6 +530,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         SyncList<int> IRaceNetStateSubscribe.Leaderboard_Sub => _leaderboard;
         SyncDictionary<int, TeamTrackProgress> IRaceNetStateSubscribe.TeamTrackProgress_Sub => _teamTrackProgress;
         SyncVar<bool> IRaceNetStateSubscribe.RaceTimerExpired_Sub => _raceTimerExpired;
+        SyncVar<int> IRaceNetStateSubscribe.FinishLineChunkId_Sub => _finishLineChunkId;
 
         // State Read-only accessors
         public int? Seed => _seed.Value;
@@ -513,6 +540,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyList<int> Leaderboard => _leaderboard;
         public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _teamTrackProgress;
         public bool RaceTimerExpired => _raceTimerExpired.Value;
+        public int FinishLineChunkId => _finishLineChunkId.Value;
 
         [Server]
         public void InitializeFromLobby(ILobbyNetStateRead lobbyState)
@@ -557,6 +585,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 _racePlayerInventories[teamData.Key] = new InventoryData(teamId: teamData.Key);
             }
             _raceTimerExpired.Value = false;
+            _finishLineChunkId.Value = -1;
         }
 
         # endregion
@@ -625,15 +654,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public void SetTeamTrackProgress(int teamId, TeamTrackProgress trackProgress) => _teamTrackProgress[teamId] = trackProgress;
 
         [Server]
-        public void SetRaceTimerExpired(bool isExpired = true)
-        {
-
-            _raceTimerExpired.Value = isExpired;
-
-        }
+        public void SetRaceTimerExpired(bool isExpired = true) => _raceTimerExpired.Value = isExpired;
 
         [Server]
         public void SetTeamInventory(int teamId, InventoryData inventoryData) => _racePlayerInventories[teamId] = inventoryData;
+
+        [Server]
+        public void SetFinishLineChunkId(int chunkId)
+        {
+            if (_finishLineChunkId.Value < 0)
+                _finishLineChunkId.Value = chunkId;
+        }
+
 
         #endregion
 

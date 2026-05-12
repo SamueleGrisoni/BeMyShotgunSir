@@ -40,7 +40,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         void InitRace(int seed);
     }
 
-    public interface IRaceNetController : INetController, IRaceNetController_Command, IRaceNetController_Manager { }
+    public interface IRaceNetController : INetController, IRaceNetController_Command, IRaceNetController_Manager
+    {
+        void SetServerTrackReady_ServerRpc(NetworkConnection connection = null);
+        void SetTrackReady_ServerRpc(NetworkConnection connection = null);
+    }
 
     #endregion
 
@@ -90,9 +94,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _teamProgress = new Dictionary<int, TeamProgress>();
             RoadManager.OnCrossroadProvided += OnCrossroadProvided;
             _netStateSubscribe.TeamTrackProgress_Sub.OnChange += OnTeamTrackProgressChanged;
-
         }
 
+        [Server]
         private void OnTeamTrackProgressChanged(SyncDictionaryOperation op, int key, TeamTrackProgress value, bool asServer) //TODO test
         {
             // 1. Uscita immediata se non server o se non ci sono incroci da monitorare
@@ -190,7 +194,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
             _roadManager = manager;
             _roadManager.SetSeed(NetState.Seed);
-            _roadManager.SetRaceNetController(this);
+            _roadManager.SetContext(new RaceNetContext(null, null, this, _netState, _clientProjector, null, null));
         }
 
         [Server]

@@ -8,13 +8,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         public LobbyNetContext LobbyNetContext { get; }
         public IRaceManager Manager { get; }
-        public IRaceNetController NetController { get; }
+        public RaceNetController NetController { get; }
         public RaceNetStateStore NetState { get; }
         public RaceClientProjector ClientProjector { get; }
         public PowerUpsNetController PowerUpsNetController { get; }
         public InputPublisher InputPublisher { get; }
 
-        public RaceNetContext(LobbyNetContext lobbyNetContext, IRaceManager manager, IRaceNetController netController, RaceNetStateStore netState, RaceClientProjector clientProjector, PowerUpsNetController powerUpsNetController, InputPublisher inputPublisher)
+        public RaceNetContext(LobbyNetContext lobbyNetContext, IRaceManager manager, RaceNetController netController, RaceNetStateStore netState, RaceClientProjector clientProjector, PowerUpsNetController powerUpsNetController, InputPublisher inputPublisher)
         {
             LobbyNetContext = lobbyNetContext;
             Manager = manager;

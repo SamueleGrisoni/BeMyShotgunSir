@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
     public interface IRoadManager
     {
         void SetSeed(int? seed);
-        void SetRaceNetController(RaceNetController raceNetController);
+        void SetContext(RaceNetContext context);
         void SetDriver(Transform driver);
         void UpdateFirstPlayer(Transform playerTransform);
         void UpdateLastPlayer(Transform playerTransform);
@@ -119,9 +119,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _seed = seed;
         }
 
-        public void SetRaceNetController(RaceNetController raceNetController)
+        public void SetContext(RaceNetContext context)
         {
-            if (_raceNetController == null) _raceNetController = raceNetController;
+            //TODO
+            // context.NetState.OnRaceTimerExpired += qualcosa;
+            // context.NetState.OnFinishLineChunkIdSet += qualcosa;
+            // vedi tu se una certa iscrizione ti serve solo lato client o solo lato server o host
+            //poi quando hai ottenuto il finish line chunk id puoi settarlo in autonomia nello store
+            // context.NetState.SetFinishLineChunkId(finishlinechunkid);
+            if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
             {
