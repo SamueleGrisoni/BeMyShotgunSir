@@ -28,7 +28,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         bool IsOilAnimationActive { get; set; }
         void ChangeState(IDrivingState state, ReplicateData data, bool isReplayed);
         void ApplyAcceleration(Vector3 direction, float accelerationForce, float maxSpeed);
-        void ApplyGravity(float gravity);
         void ApplySteering(float steerAmount, float steeringForce);
         void ApplyVisualRotation(Quaternion targetRot, float steerAngularRotationSlerp);
         void ApplyLateralGrip(float lateralGripFactor);

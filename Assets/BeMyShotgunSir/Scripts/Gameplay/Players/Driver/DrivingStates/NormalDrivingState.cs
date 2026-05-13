@@ -5,10 +5,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
 {
     public class NormalDrivingState : IDrivingState
     {
-        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
-        {
-            Log.DLazy(() => $"Enter normal state", this, controller.Log);
-        }
+        public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => $"Enter normal state", this, controller.Log);
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             GroundType groundType = controller.CheckGround();
@@ -32,7 +29,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.BoostState, data, isReplayed);
                 return;
             }
-            if (!data.IsStarting)
+            if (data.IsStarting)
             {
                 controller.ChangeState(controller.IdleState, data, isReplayed);
                 return;
@@ -44,11 +41,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplySteering(data.SteerInput, controller.NormalStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.NormalStats.LateralGripFactor);
-            controller.ApplyGravity(controller.NormalStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
-        {
-            Log.DLazy(() => "Exiting normal state", this, controller.Log);
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting normal state", this, controller.Log);
     }
 }

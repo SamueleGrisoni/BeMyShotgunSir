@@ -35,15 +35,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     {
         public float SteerInput;
         public bool IsDrifting;
-        //public float DriftInput;
         public bool IsBoosting;
         public bool IsStarting;
         public CommitmentDirection CommitmentDirection;
-        public ReplicateData(float steerInput, bool isDrifting, /*float driftInput,*/ bool isBoosting, bool isStarting, CommitmentDirection commitmentDirection) : this()
+        public ReplicateData(float steerInput, bool isDrifting, bool isBoosting, bool isStarting, CommitmentDirection commitmentDirection) : this()
         {
             SteerInput = steerInput;
             IsDrifting = isDrifting;
-            //DriftInput = driftInput;
             IsBoosting = isBoosting;
             IsStarting = isStarting;
             CommitmentDirection = commitmentDirection;
@@ -105,10 +103,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _raceNetContext = context;
             InputConsumer = inputConsumer;
             InputConsumer.OnBoostPressed += ExecuteBoost;
-            InputConsumer.OnEarlyCommitmentPressed += ExecuteEarlyCommitment;
+            InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
         }
         public void ExecuteBoost() => _isBoosting = true;
-        public void ExecuteEarlyCommitment(CommitmentDirection direction) => _commitmentDirection = direction;
+        public void ExecuteInputEarlyCommitment(CommitmentDirection direction)
+        {
+            _commitmentDirection = direction;
+            ExecuteEarlyCommitment();
+        }
 
         [SerializeField] private bool _isDebugInputEnabled = false;
         [SerializeField] private DriverInput _input;
@@ -121,6 +123,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Transform _sidecarModel;
         [SerializeField] private Transform _boxCollider;
         [SerializeField] private Collider _commitmentCollider;
+        [SerializeField] private Collider _obstacleCollider;
 
         [SerializeField] private LayerMask _sidecarLayerMask;
         [SerializeField] private float _bumpRadius;
@@ -146,6 +149,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _oilState = new OilDrivingState();
 
         private bool _isBoosting;
+        private bool _isStarting;
         private CommitmentDirection _commitmentDirection;
         private float _currentBatteryCharge;
         private float _batteryChargeTimer;
@@ -154,9 +158,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private float _currentSteerInput;
         private bool _isOilAnimationActive;
         private float _oilAnimationTimer;
+        private ReplicateData _lastReplicateData;
+
 
         private int _currentChunkId;
-
+        private float _currentPossibleChargeEarlyCommitment;
+        private bool _earlyCommitmentEnabled;
 
         private void Awake()
         {
@@ -173,11 +180,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _isBoosting = false;
             _commitmentDirection = CommitmentDirection.Default;
             _currentChunkId = 0;
+            _earlyCommitmentEnabled = false;
         }
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
-
-        private void LateUpdate() => _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
 
         public override void OnStartNetwork()
         {
@@ -190,12 +196,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             TimeManager.OnTick -= TimeManager_OnTick;
             TimeManager.OnPostTick -= TimeManager_OnPostTick;
             InputConsumer.OnBoostPressed -= ExecuteBoost;
-            InputConsumer.OnEarlyCommitmentPressed -= ExecuteEarlyCommitment;
+            InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
         }
 
         private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
 
-        private ReplicateData _lastReplicateData;
         private ReplicateData CreateReplicateData()
         {
             if (!IsOwner)
@@ -204,19 +209,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             ReplicateData rd = new();
             if (_isDebugInputEnabled)
             {
-                rd = new(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting, _input.EarlyCommitment);
+                rd = new(_input.SteerInput, _input.IsDrifting, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
+                _input.IsStarting = false;
             }
             else
             {
                 float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput;
-                rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving, _input.EarlyCommitment);
+                rd = new(steerInput, InputConsumer.IsDrifting, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
                 _isBoosting = false;
             }
             return rd;
         }
 
         private float _predictedTicks;
-
+        [SerializeField] private bool _debugPowerUp = true; // TODO temporaneo
+        
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
@@ -242,42 +249,68 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                                                     LayerMask.NameToLayer("LeftCollider") :
                                                     LayerMask.NameToLayer("RightCollider");
 
+            RaceTeamData teamData = default;
+            if (_debugPowerUp)
+            {
+                teamData.ActivePowerUpInfo.isArmorActive = _input.IsArmorActive;
+                teamData.ActivePowerUpInfo.isStealPowerUpActive = _input.IsStealActive;
+            }
+            else if (TeamId.HasValue)
+            {
+                _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
+            }
+
+            _obstacleCollider.gameObject.layer = teamData.ActivePowerUpInfo.isArmorActive ?
+                                                        LayerMask.NameToLayer("ArmorLayer") :
+                                                        LayerMask.NameToLayer("ObstacleCollider");
+
             bool isReplayed = state.ContainsReplayed();
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
             _currentDrivingState?.RunInputs(this, data, isReplayed);
-
+            
             Vector3 repulsionForce = Vector3.zero;
-            Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
-            foreach (Collider hitCollider in hitColliders)
+            if (!teamData.ActivePowerUpInfo.isArmorActive)
             {
-                if (hitCollider.transform.root == _parent.root) continue;
-
-                Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
-                rawPushDirection.y = 0;
-                float distance = rawPushDirection.magnitude;
-                if (distance > 0 && distance < _bumpRadius)
+                Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
+                foreach (Collider hitCollider in hitColliders)
                 {
-                    Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-                    forwardDir.y = 0;
+                    if (hitCollider.transform.root == _parent.root) continue;
 
-                    var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-
-                    float pushStrength = 1f - (distance / _bumpRadius);
-
-                    MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
-                    if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
+                    if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
                     {
-                        Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
-                        repulsionForce += finalPush;
+                        Log.DLazy(() => $"Detection for steal power up active", this);
+                    }
 
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
-                        //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                    Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
+                    rawPushDirection.y = 0;
+                    float distance = rawPushDirection.magnitude;
+                    if (distance > 0 && distance < _bumpRadius)
+                    {
+                        Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+                        forwardDir.y = 0;
+
+                        var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+
+                        float pushStrength = 1f - (distance / _bumpRadius);
+
+                        MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
+                        if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
+                        {
+                            Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
+                            repulsionForce += finalPush;
+
+                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+                            //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
+                        }
                     }
                 }
             }
             _currentLinearVelocity += repulsionForce;
+            ApplyGroundSnap();
+
+            _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
 
             Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
@@ -302,7 +335,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _parentRotation = Quaternion.Euler(0, data.ParentRotationY, 0);
             _sidecarLocalRotation = Quaternion.Euler(0, data.SidecarLocalRotationY, 0);
 
-            //_currentLinearVelocity = data.CurrentLinearVelocity;
+            _currentLinearVelocity = data.CurrentLinearVelocity;
             _driftDirection = data.DriftDirection;
             _currentBatteryCharge = data.CurrentBatteryCharge;
             _batteryChargeTimer = data.BatteryChargeTimer;
@@ -397,7 +430,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             _currentLinearVelocity = predictedVelocity;
         }
-        void IDrivingStateContext.ApplyGravity(float gravity) => _currentLinearVelocity += Vector3.down * gravity * (float)TimeManager.TickDelta;
         void IDrivingStateContext.ApplyLateralGrip(float lateralGripFactor)
         {
             Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
@@ -422,6 +454,25 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 steerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
         }
+        [SerializeField] private float _groundCheckDistance = 0.8f;
+        [SerializeField] private float _groundedYVelocityReset = -0.5f;
+        [SerializeField] private float _groundSnapGravity = 20f;
+        private void ApplyGroundSnap() // TODO aggiungere check: se il sidecar si allontana troppo dal terreno (sia sopra che sotto) teletrasporta
+        {
+            bool isGrounded = Physics.SphereCast(
+                _movement.position, 0.3f, Vector3.down,
+                out RaycastHit hit, _groundCheckDistance
+            );
+
+            if (isGrounded)
+            {
+                _currentLinearVelocity.y = 0f;
+            }
+            else
+            {
+                _currentLinearVelocity.y -= _groundSnapGravity * (float)TimeManager.TickDelta;
+            }
+        }
         void IDrivingStateContext.OilAnimation()
         {
             if (_isOilAnimationActive)
@@ -442,19 +493,27 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentStateType = GetStateType(state);
             _currentDrivingState?.Enter(this, data, isReplayed);
         }
+
+        private int _onGrassBuffer = 0;
+        [SerializeField] private int _onGrassBufferMin;
         GroundType IDrivingStateContext.CheckGround()
         {
-            //return GroundType.Normal;
             if (Physics.SphereCast(_movement.position, 0.3f, Vector3.down, out RaycastHit hit, 0.6f))
             {
                 if (hit.collider.CompareTag("Grass"))
                 {
-                    Log.DLazy(() => "Colpito l'erba", this, _log);
-                    return GroundType.Grass;
+                    //Debug.Log("Hit grass");
+                    _onGrassBuffer++;
+                    if (_onGrassBuffer > _onGrassBufferMin) return GroundType.Grass;
                 }
-                else if (hit.collider.CompareTag("Oil"))
+                else
                 {
-                    Log.DLazy(() => "Passato su una chiazza di olio", this, _log);
+                    _onGrassBuffer = 0;
+                }
+                
+                if (hit.collider.CompareTag("Oil"))
+                {
+                    //Log.DLazy(() => "Passato su una chiazza di olio", this);
                     return GroundType.Oil;
                 }
             }
@@ -504,6 +563,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [ObserversRpc]
         private void SendOilAnimation() => _driverVisual.OilAnimation();
 
+        private bool _earlyCommitmentNotUsed;
         [Server]
         private void OnTriggerEnter(Collider other)
         {
@@ -518,9 +578,44 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                         _raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress trackProgress);
                         trackProgress.CurrentChunkId = _currentChunkId;
                         _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
+
+                        PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
+                        if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD)
+                        {
+                            float lenght = trackProgress.NextSpecialChunkId - (lastSpecialChunk.Id + 1);
+                            float position = trackProgress.NextSpecialChunkId - _currentChunkId;
+                            _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
+                            Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
+                            _earlyCommitmentEnabled = true;
+                        }
+                        else
+                        {
+                            _earlyCommitmentEnabled = false;
+                            _earlyCommitmentNotUsed = true;
+                        }
+
                     }
                 }
             }
         }
+        [ServerRpc]
+        public void ExecuteEarlyCommitment()
+        {
+            if (_earlyCommitmentEnabled && _earlyCommitmentNotUsed)
+            {
+                _currentBatteryCharge += _currentPossibleChargeEarlyCommitment;
+                if (_currentBatteryCharge >= 200) // TODO mettere valore nelle stats
+                    _currentBatteryCharge = 200;
+                _earlyCommitmentNotUsed = false;
+            }
+        }
+
+        // TODO temporaneo
+        public void ExecuteEarlyCommitmentDebug(CommitmentDirection commitmentDirection)
+        {
+            _commitmentDirection = commitmentDirection;
+            ExecuteEarlyCommitment();
+        }
+
     }
 }

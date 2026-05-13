@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
-using TMPro;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.Players.Driver
@@ -22,24 +21,20 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private List<TrailRenderer> _trailRendereresDrift = new List<TrailRenderer>();
         [SerializeField] private List<ParticleSystem> _boostParticles = new List<ParticleSystem>();
 
-        private void Awake()
-        {
-        }
-
         private void LateUpdate()
         {
             //_parent.position = _movement.MovementPosition;
             //_parent.rotation = _movement.ParentRotation;
             //_sidecar.localRotation = _movement.SidecarLocalRotation;
-            if (IsServerInitialized) { 
-                //_parent.position = Vector3.SmoothDamp(_parent.position, _movement.transform.position, ref _positionVelocity, _positionSmoothTime);
+
+            if (IsServerInitialized)
+            {
                 _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedFast);
                 _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedFast);
                 _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedFast);
             }
             else
             {
-                //_parent.position = Vector3.SmoothDamp(_parent.position, _movement.transform.position, ref _positionVelocity, _positionSmoothTime);
                 _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedSlow);
                 _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedSlow);
                 _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedSlow);

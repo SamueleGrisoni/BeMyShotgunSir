@@ -7,10 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            if (!isReplayed)
-            {
-                Log.DLazy(() => $"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}", this);
-            }
+            Log.DLazy(() => $"Enter boost state. I am arriving from {controller.PreviousDrivingState.GetType().Name}", this, controller.Log);
             if (controller.CurrentBatteryCharge <= 0)
             {
                 controller.ChangeState(controller.NormalState, data, isReplayed);
@@ -57,13 +54,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplySteering(data.SteerInput, controller.BoostStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.BoostStats.SteerAngularRotation, 0), controller.BoostStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.BoostStats.LateralGripFactor);
-            controller.ApplyGravity(controller.BoostStats.Gravity);
         }
-        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
-        {
-            if (isReplayed) {
-                Log.DLazy(() => "Exiting boost state", this, controller.Log);
-            }
-        }
+        public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting boost state", this, controller.Log);
     }
 }

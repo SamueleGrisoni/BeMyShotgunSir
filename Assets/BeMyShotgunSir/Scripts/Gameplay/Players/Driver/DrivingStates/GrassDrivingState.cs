@@ -20,7 +20,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplySteering(data.SteerInput, controller.GrassStats.SteeringForce);
             controller.ApplyVisualRotation(Quaternion.Euler(0, data.SteerInput * controller.GrassStats.SteerAngularRotation, 0), controller.GrassStats.SteerAngularRotationSlerp);
             controller.ApplyLateralGrip(controller.GrassStats.LateralGripFactor);
-            controller.ApplyGravity(controller.GrassStats.Gravity);
         }
         public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting grass state", this, controller.Log);
     }

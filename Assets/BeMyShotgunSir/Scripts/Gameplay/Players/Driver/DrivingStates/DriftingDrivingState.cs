@@ -7,10 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            Log.DLazy(() => $"Enter drift", this, controller.Log);
             controller.DriftDirection = Mathf.Sign(data.SteerInput);
-
-            //if (controller.IsOnwer || controller.IsServer) // TODO forse non è necessario
             controller.BatteryChargeTimer = 0f;
         }
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
@@ -58,7 +55,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 ? Mathf.Lerp(1f, 2f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
                 : Mathf.Lerp(2f, 1f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
             controller.ApplyVisualRotation(Quaternion.Euler(0, controller.DriftDirection * driftControl * controller.NormalStats.SteerAngularRotation, 0), controller.NormalStats.SteerAngularRotationSlerp);
-            controller.ApplyGravity(controller.NormalStats.Gravity);
         }
         public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => Log.DLazy(() => "Exiting drift state", this, controller.Log);
     }
