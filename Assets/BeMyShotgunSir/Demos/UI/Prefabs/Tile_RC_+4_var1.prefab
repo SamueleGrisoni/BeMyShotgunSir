@@ -47,3 +47,4 @@ MonoBehaviour:
   _anchorInPx: 72
   _anchorOutPx: 144
   _icon: {fileID: 21300000, guid: 9b935e671148f4db3972f9d265342ef2, type: 3}
+  _turnWeight: 4

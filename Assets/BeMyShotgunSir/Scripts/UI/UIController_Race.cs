@@ -80,12 +80,12 @@ namespace BeMyShotgunSir.Scripts.UI
             switch (screen)
             {
                 case UIScreen.HUDDriver:
-                    _hudDriverGO.SetActive(show);
+                    _hudShotgunGO.SetActive(false);
                     _hudDriverViewController.Show(show);
                     // HideAllScreensExcept(hudDriver: show);
                     break;
                 case UIScreen.HUDShotgun:
-                    _hudShotgunGO.SetActive(show);
+                    _hudDriverGO.SetActive(false);
                     _hudShotgunViewController.Show(show);
                     // HideAllScreensExcept(hudShotgun: show);
                     break;

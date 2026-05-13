@@ -50,16 +50,16 @@ namespace BeMyShotgunSir.Scripts.UI
         #region Visual Elements
         private VisualElement _root;
         private VisualElement _buttonContainer;
-        private VisualElement _shoutWheelButton;
-        private VisualElement _raceMapButton;
+        private Button _shoutWheelButton;
+        private Button _raceMapButton;
         #endregion
 
         private void OnEnable()
         {
             _root = _hudShotgunDocument.rootVisualElement;
             _buttonContainer = _root.Q<VisualElement>("ButtonContainer");
-            _shoutWheelButton = _buttonContainer.Q<VisualElement>("ShoutWheelButton");
-            _raceMapButton = _buttonContainer.Q<VisualElement>("MapButton");
+            _shoutWheelButton = _buttonContainer.Q<Button>("ShoutWheelButton");
+            _raceMapButton = _buttonContainer.Q<Button>("MapButton");
 
             StartCoroutine(InitNextFrame());
 
@@ -70,12 +70,12 @@ namespace BeMyShotgunSir.Scripts.UI
             yield return null;
 
             // _shoutWheelButton.RegisterCallback<PointerDownEvent>(ShoutWheelButtonHandler);
-            // _raceMapButton.RegisterCallback<PointerDownEvent>(RaceMapButtonHandler);
+            _raceMapButton.clicked += RaceMapButtonHandler;
 
         }
 
         // private void ShowShoutWheel(bool show) => _shoutWheelViewController.Show(show);
-        // private void ShowRaceMap(bool show) => _raceMapViewController.Show(show);
+        private void RaceMapButtonHandler() => _raceMapViewController.Show(!_raceMapViewController.IsShowing);
 
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

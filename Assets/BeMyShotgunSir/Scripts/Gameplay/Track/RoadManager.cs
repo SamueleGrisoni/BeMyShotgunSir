@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Race;
@@ -95,6 +96,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Log.DLazy(() => "Receive info for " + info.roadChunkInfo.type, this, _log);
             }
             Log.DLazy(() => "Invoking OnSplitGeneratedProvided with split info count: " + splitInfo.Count, this);
+            // OnSplitGeneratedProvided?.Invoke(splitInfo);
+            StartCoroutine(NextFramePropagateSplit(splitInfo));
+        }
+
+        IEnumerator NextFramePropagateSplit(List<GeneratedRoadChunkInfoWithItems> splitInfo)
+        {
+            //DANGER: this is a workaround
+            yield return null;
             OnSplitGeneratedProvided?.Invoke(splitInfo);
         }
 
