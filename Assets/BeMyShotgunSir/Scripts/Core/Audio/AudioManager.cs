@@ -144,12 +144,14 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             if (name == SceneName.Init)
             {
                 _mainSource.clip = _soundTracks.InitSceneMusic;
+                _mainSource.volume = _soundTracks.InitSceneMusicVolume;
                 _mainSource.loop = true;
                 _mainSource.Play();
             }
             if (name == SceneName.Lobby)
             {
                 _mainSource.clip = _soundTracks.LobbySceneMusic;
+                _mainSource.volume = _soundTracks.LobbySceneMusicVolume;
                 _mainSource.loop = true;
                 _mainSource.Play();
             }
@@ -194,6 +196,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             if (request.Type != RequestEnum.Loading)
                 return;
             _mainSource.clip = _soundTracks.LoadingMusic;
+            _mainSource.volume = _soundTracks.LoadingMusicVolume;
             _mainSource.loop = true;
             _mainSource.Play();
         }
@@ -203,6 +206,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             if (request.Type != RequestEnum.StartRace)
                 return;
             _mainSource.clip = _soundTracks.RaceSceneMusic;
+            _mainSource.volume = _soundTracks.RaceSceneMusicVolume;
             _mainSource.loop = true;
             _mainSource.Play();
         }
