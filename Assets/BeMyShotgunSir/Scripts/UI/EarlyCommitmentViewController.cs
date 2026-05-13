@@ -100,8 +100,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void Update()
         {
-            if (Show) ShowEarlyCommitment();
-            else HideEarlyCommitment();
+            // if (Show) ShowEarlyCommitment();
+            // else HideEarlyCommitment();
         }
 
         private void OnDisable()
