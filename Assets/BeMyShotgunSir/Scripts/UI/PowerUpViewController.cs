@@ -124,7 +124,7 @@ namespace BeMyShotgunSir.Scripts.UI
                 if (_role != RaceRole.Shotgun)
                     return;
                 Log.DLazy(() => $"Power-up {index + 1} pointer down", this);
-                _command.EquipPowerUp(index);
+                _command.EquipPowerUp(index + 1);
 
                 _isPointerDown = true;
                 _pointerDownPos = evt.position;
