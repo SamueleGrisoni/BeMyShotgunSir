@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
@@ -8,7 +7,6 @@ using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using FishNet.Object.Prediction;
-using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using GameKit.Dependencies.Utilities;
 using UnityEngine;
@@ -102,15 +100,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public int? TeamId => _driverController == null ? null : _driverController.TeamId;
         public IDriverInputConsumer InputConsumer;
         private RaceNetContext _raceNetContext;
-        public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer)
+        public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer, DriverController driverController)
         {
-            //TODO set context references here
+            _driverController = driverController;
             _raceNetContext = context;
             InputConsumer = inputConsumer;
             InputConsumer.OnBoostPressed += ExecuteBoost;
             InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
-
         }
+
         public void ExecuteBoost() => _isBoosting = true;
         public void ExecuteInputEarlyCommitment(CommitmentDirection direction)
         {

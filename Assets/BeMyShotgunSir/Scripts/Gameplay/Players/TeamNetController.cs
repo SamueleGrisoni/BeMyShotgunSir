@@ -42,7 +42,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         private DriverController _driverController;
         private ShotgunController _shotgunController;
         private RaceRole _assignedRole;
-        private event Action OnMemberSetUpComplete;
 
         private readonly SyncVar<int?> _syncTeamId = new(null);
 
@@ -58,6 +57,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             _syncTeamId.Value = teamId;
             OnTeamIdAssigned?.Invoke();
             Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
+            if (TeamId.HasValue)
+            {
+                _raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress progress);
+                _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, new TeamTrackProgress(progress, 0, null, new PortalInfo(0, RoadChunkType.START_LINE)));
+            }
+            else
+                Log.ELazy(() => $"MovementController initialized without TeamId.", this);
         }
 
         public override void OnStartNetwork()
@@ -85,18 +91,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             TrySetUpTeam();
         }
 
-        public void OnDriverSpawned(DriverController driverController, int? driverTeamId) => TrySetUpTeam();
-
-        public void OnShotgunSpawned(ShotgunController shotgunController, int? shotgunTeamId) => TrySetUpTeam();
+        public void OnDriverSpawned(DriverController driverController)
+        {
+            if (_setUpDone)
+                return;
+            TrySetUpTeam();
+        }
+        public void OnShotgunSpawned(ShotgunController shotgunController)
+        {
+            if (_setUpDone)
+                return;
+            TrySetUpTeam();
+        }
 
         private void TrySetUpTeam()
         {
+            if (_setUpDone)
+                return;
             TryResolveSpawnedMembers();
             TrySetUpTeam(null, null, false);
         }
 
         private void TryResolveSpawnedMembers()
         {
+            if (_setUpDone)
+                return;
             if (_driverController == null)
                 _driverController = GetComponentInChildren<DriverController>(true);
 
@@ -106,6 +125,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
         private void TrySetUpTeam(int? _, int? __, bool ___)
         {
+            if (_setUpDone)
+                return;
             if (_syncTeamId.Value is not int teamId)
                 return;
 

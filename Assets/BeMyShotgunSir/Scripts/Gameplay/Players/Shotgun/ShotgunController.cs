@@ -11,7 +11,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     {
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<ShotgunController, int?> OnShotgunSpawned;
+        public static event Action<ShotgunController> OnShotgunSpawned;
         public static event Action OnShotgunInitialized;
         public IShotgunInputConsumer _inputConsumer;
         private TeamNetController _teamNetController;
@@ -19,13 +19,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         private RaceNetStateStore _netState;
         public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
         public void SetName(string name) => transform.name = name;
-
-        [Server]
-        public void SetTeamController(TeamNetController teamNetController)
-        {
-            if (_teamNetController == null)
-                _teamNetController = teamNetController;
-        }
 
         public override void OnStartClient()
         {
@@ -35,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                 Log.ELazy(() => $"ShotgunController has no TeamNetController on start. TeamId will be null.", this);
                 return;
             }
-            OnShotgunSpawned?.Invoke(this, _teamNetController.TeamId);
+            OnShotgunSpawned?.Invoke(this);
         }
 
         public void Initialize(RaceNetContext context, TeamNetController teamNetController)

@@ -13,7 +13,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         //utility
         private bool _log = true;
         private bool _isInitialized = false;
-        public static event Action<DriverController, int?> OnDriverSpawned;
+        public static event Action<DriverController> OnDriverSpawned;
 
         //CONTEXT
         private RaceNetContext _raceNetContext;
@@ -29,16 +29,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private MovementController _movementController;
         public Transform GetMovementTransform() => _movementController != null ? _movementController.transform : null;
 
-
-        [Server]
-        public void SetTeamController(TeamNetController teamController)
-        {
-            if (_teamNetController == null)
-                _teamNetController = teamController;
-
-            _netState.SetTeamTrackProgress(TeamId.Value, new TeamTrackProgress(0, 0, new PortalInfo(0, Track.RoadChunkType.START_LINE)));
-        }
-
         public void SetName(string name) => transform.name = name;
 
         public void Initialize(RaceNetContext context, TeamNetController teamNetController)
@@ -47,7 +37,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 return;
 
             _inputConsumer = context.InputPublisher;
-            _movementController.Initialize(new RaceNetContext(null, null, null, context.NetState, context.ClientProjector, context.PowerUpsNetController, null), _inputConsumer);
+            _movementController.Initialize(new RaceNetContext(null, null, null, context.NetState, context.ClientProjector, context.PowerUpsNetController, null), _inputConsumer, this);
             _teamNetController = teamNetController;
 
             if (_inputConsumer == null || _teamNetController == null)
@@ -57,6 +47,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             _isInitialized = true;
         }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
@@ -65,7 +56,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 Log.ELazy(() => $"DriverController has no TeamNetController on start. TeamId will be null.", this);
                 return;
             }
-            OnDriverSpawned?.Invoke(this, _teamNetController.TeamId);
+            OnDriverSpawned?.Invoke(this);
         }
     }
 }

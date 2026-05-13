@@ -97,6 +97,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             _teamProgress = new Dictionary<int, TeamProgress>();
             RoadManager.OnCrossroadProvided += OnCrossroadProvided;
+            _specialSegmentInfoQueue.Enqueue(new CrossroadSegmentInfo(RoadChunkType.START_LINE, 0));
         }
 
         private void OnCrossroadProvided(CrossroadSegmentInfo info) => _specialSegmentInfoQueue.Enqueue(info);
@@ -292,14 +293,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         //driver setup
                         DriverController player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
                         player.name = "Driver Team " + teamState.TeamId + " Player " + teamData.DriverConnectionId;
-                        player.SetTeamController(team);
                         player.NetworkObject.SetParent(team);
                         Spawn(player, _lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
 
                         //Shotgun setup
                         ShotgunController shotgun = Instantiate(_shotgunPrefab, spawnPoint.position, spawnPoint.rotation);
                         shotgun.name = "Shotgun Team " + teamState.TeamId + " Player " + teamData.ShotgunConnectionId;
-                        shotgun.SetTeamController(team);
                         shotgun.NetworkObject.SetParent(player);
                         Spawn(shotgun, _lobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection);
 
