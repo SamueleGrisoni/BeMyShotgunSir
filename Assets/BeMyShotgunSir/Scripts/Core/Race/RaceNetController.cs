@@ -282,7 +282,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     && NetState.PlayerStates[teamData.DriverConnectionId].IsTrackReady
                     && NetState.PlayerStates[teamData.ShotgunConnectionId].IsTrackReady)
                     {
-                        TeamNetController team = Instantiate(_teamPrefab);
+                        TeamNetController team = Instantiate(_teamPrefab, spawnPoint.position, spawnPoint.rotation);
                         team.name = "Team " + teamState.TeamId;
                         Spawn(team, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
                         team.SetTeamId(teamState.TeamId);
@@ -296,7 +296,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         Spawn(player, _lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
 
                         //Shotgun setup
-                        ShotgunController shotgun = Instantiate(_shotgunPrefab);
+                        ShotgunController shotgun = Instantiate(_shotgunPrefab, spawnPoint.position, spawnPoint.rotation);
                         shotgun.name = "Shotgun Team " + teamState.TeamId + " Player " + teamData.ShotgunConnectionId;
                         shotgun.SetTeamId(teamState.TeamId);
                         shotgun.NetworkObject.SetParent(player);
