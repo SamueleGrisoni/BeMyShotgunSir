@@ -288,7 +288,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         {
             if (_raceNetState.TryUnwrapConnectionState(connection.ClientId, out RacePlayerState playerState, out RaceTeamData teamData, out InventoryData inventory))
             {
-                if (slotIndex < 0 || slotIndex >= inventory.MaxPowerUps)
+                if (slotIndex < 0 || slotIndex > inventory.MaxPowerUps)
                 {
                     Log.WLazy(() => $"Trying to equip power-up for client {connection.ClientId} with invalid slot index {slotIndex}.", this);
                     return;

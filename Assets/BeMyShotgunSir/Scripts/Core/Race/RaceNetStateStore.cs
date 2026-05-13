@@ -424,7 +424,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         public bool TryGetTeamNob(int teamId, out NetworkObject nob) =>
-            _teamNobs.TryGetValue(teamId, out nob);
+            nob = _raceTeamData[teamId].TeamNob;
 
         public bool TryGetTeamNobByPlayerId(int connectionId, out NetworkObject nob)
         {
@@ -623,19 +623,19 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             switch (slot)
             {
                 case 1:
-                    inventoryData = new InventoryData(inventoryData, slot1: inventoryData.Slot1.PowerUp);
+                    inventoryData = new InventoryData(inventoryData, selectedSlot: new PuSlot(1, inventoryData.Slot1.PowerUp));
                     break;
                 case 2:
-                    inventoryData = new InventoryData(inventoryData, slot2: inventoryData.Slot2.PowerUp);
+                    inventoryData = new InventoryData(inventoryData, selectedSlot: new PuSlot(2, inventoryData.Slot2.PowerUp));
                     break;
                 case 3:
-                    inventoryData = new InventoryData(inventoryData, slot3: inventoryData.Slot3.PowerUp);
+                    inventoryData = new InventoryData(inventoryData, selectedSlot: new PuSlot(3, inventoryData.Slot3.PowerUp));
                     break;
                 case 4:
-                    inventoryData = new InventoryData(inventoryData, slot4: inventoryData.Slot4.PowerUp);
+                    inventoryData = new InventoryData(inventoryData, selectedSlot: new PuSlot(4, inventoryData.Slot4.PowerUp));
                     break;
                 case 5:
-                    inventoryData = new InventoryData(inventoryData, slot5: inventoryData.Slot5.PowerUp);
+                    inventoryData = new InventoryData(inventoryData, selectedSlot: new PuSlot(5, inventoryData.Slot5.PowerUp));
                     break;
                 default:
                     Log.WLazy(() => $"Trying to set selected power-up for team {teamId} but invalid slot index {slot}.", this);
@@ -952,12 +952,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.WLazy(() => $"No player state found for ConnectionId: {connectionId}.", this);
                 return false;
             }
-            if (!TryGetTeamDataByPlayer(playerState, out RaceTeamData t))
+            if (!TryGetTeamDataByPlayer(p, out RaceTeamData t))
             {
                 Log.WLazy(() => $"No team data found for player {p.TeamId}.", this);
                 return false;
             }
-            if (!TryGetTeamInventory(playerState.TeamId, out InventoryData i))
+            if (!TryGetTeamInventory(p.TeamId, out InventoryData i))
             {
                 Log.WLazy(() => $"No inventory found for team {p.TeamId}.", this);
                 return false;
