@@ -584,6 +584,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             {
                 _racePlayerInventories[teamData.Key] = new InventoryData(teamId: teamData.Key);
             }
+
             _raceTimerExpired.Value = false;
             _finishLineChunkId.Value = -1;
 

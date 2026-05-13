@@ -177,7 +177,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 3192123921943259604}
   _networkObjectCache: {fileID: 3192123921943259604}
   _driverController: {fileID: 3998145195957461452}
-  _isDebugInputEnabled: 0
+  _isDebugInputEnabled: 1
   _input: {fileID: 7387308273733314743}
   _stats: {fileID: 3826133632397438374}
   _driverVisual: {fileID: 7322070008880661126}
@@ -195,9 +195,13 @@ MonoBehaviour:
   _bumpForce: 100
   _decadimentoSteerInput: 0.09
   _debugPowerUp: 1
-  _groundCheckDistance: 0.254
-  _groundedYVelocityReset: -0.5
-  _groundSnapGravity: 20
+  _hoverHeight: 0.02
+  _springForce: 50
+  _damping: 5
+  _customGravity: 20
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 262144
   _onGrassBufferMin: 10
 --- !u!54 &2139825348868955056
 Rigidbody:
@@ -207,7 +211,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1694670322626515296}
   serializedVersion: 5
-  m_Mass: 300
+  m_Mass: 1
   m_LinearDamping: 1
   m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}

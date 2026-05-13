@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 5413536126770501135}
   - component: {fileID: 623974033050916267}
   - component: {fileID: 8326117476068633067}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: SM_track_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +473,7 @@ GameObject:
   - component: {fileID: 4825674178480860736}
   - component: {fileID: 2233849945020917269}
   - component: {fileID: 426877925044236197}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: TopRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -701,7 +701,7 @@ GameObject:
   - component: {fileID: 4532895328454322264}
   - component: {fileID: 6780677465730620268}
   - component: {fileID: 4569637786863643654}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Ground
   m_TagString: Grass
   m_Icon: {fileID: 0}
@@ -966,7 +966,7 @@ GameObject:
   - component: {fileID: 5031189140611866345}
   - component: {fileID: 6340862944448602383}
   - component: {fileID: 8804660196711671861}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: SM_track_05 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1130,7 +1130,7 @@ GameObject:
   - component: {fileID: 4857303307424917254}
   - component: {fileID: 3012506531307927135}
   - component: {fileID: 3860983356025399812}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: LowRightEx
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1295,7 +1295,7 @@ GameObject:
   - component: {fileID: 5606871219803658879}
   - component: {fileID: 3365908546191039664}
   - component: {fileID: 8865560805038633064}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: SM_track_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

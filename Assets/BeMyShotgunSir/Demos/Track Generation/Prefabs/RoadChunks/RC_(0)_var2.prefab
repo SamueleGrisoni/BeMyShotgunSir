@@ -2835,7 +2835,7 @@ GameObject:
   - component: {fileID: 8428645839849381674}
   - component: {fileID: 4385549266393309770}
   - component: {fileID: 5229840859729331258}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Ground
   m_TagString: Grass
   m_Icon: {fileID: 0}
@@ -8623,7 +8623,7 @@ GameObject:
   - component: {fileID: 8125078453014310162}
   - component: {fileID: 1167224422552856977}
   - component: {fileID: 8597473714694295183}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: SM_track_08
   m_TagString: Untagged
   m_Icon: {fileID: 0}

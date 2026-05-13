@@ -223,9 +223,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 229345072}
+  - component: {fileID: 229345073}
   m_Layer: 0
   m_Name: Portals
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -248,6 +249,27 @@ Transform:
   - {fileID: 806943375}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &229345073
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229345071}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &428502520
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,13 +435,20 @@ PrefabInstance:
       value: OilSpill
       objectReference: {fileID: 0}
     - target: {fileID: 5877528760467732744, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 5877528760467732744, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
       propertyPath: m_TagString
       value: Oil
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5877528760467732744, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1823702005}
   m_SourcePrefab: {fileID: 100100000, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
 --- !u!1 &697757432
 GameObject:
@@ -1011,7 +1040,7 @@ GameObject:
   - component: {fileID: 1079468288}
   - component: {fileID: 1079468287}
   - component: {fileID: 1079468286}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1644,6 +1673,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1823702004 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5877528760467732744, guid: 7b8e17b3893c1ec41b6061bc85c43bcc, type: 3}
+  m_PrefabInstance: {fileID: 605296249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1823702005
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823702004}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9327507, y: 2.3879058, z: 1.829304}
+  m_Center: {x: -0.6718445, y: 0.88153183, z: -0.6201211}
 --- !u!1 &1984654128
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
     {
         public void Enter(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
-            controller.DriftDirection = Mathf.Sign(data.SteerInput);
+            controller.DriftDirection = data.DriftIntent;
             controller.BatteryChargeTimer = 0f;
         }
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
@@ -47,8 +47,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             controller.ApplyAcceleration(controller.ParentForward, controller.NormalStats.AccelerationForce, controller.NormalStats.MaxSpeed);
 
             float steerControl = controller.DriftDirection == 1
-                ? Mathf.Lerp(0f, 2f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
-                : Mathf.Lerp(2f, 0f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
+                ? Mathf.Lerp(0f, 1.5f, Mathf.InverseLerp(-1f, 1f, data.SteerInput))
+                : Mathf.Lerp(1.5f, 0f, Mathf.InverseLerp(-1f, 1f, data.SteerInput));
             controller.ApplySteering(steerControl * controller.DriftDirection, controller.NormalStats.SteeringForce);
 
             float driftControl = controller.DriftDirection == 1

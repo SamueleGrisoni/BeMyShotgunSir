@@ -31,9 +31,9 @@ TagManager:
   - 
   - ObstacleCollider
   - ArmorLayer
-  - 
-  - 
-  - 
+  - GroundLayer
+  - ChunkPortals
+  - PowerUpPickable
   - 
   - 
   - 

@@ -19,7 +19,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.OilState, data, isReplayed);
                 return;
             }
-            if (data.IsDrifting && data.SteerInput != 0)
+            if (data.IsDrifting && data.DriftIntent != 0)
             {
                 controller.ChangeState(controller.DriftingState, data, isReplayed);
                 return;
