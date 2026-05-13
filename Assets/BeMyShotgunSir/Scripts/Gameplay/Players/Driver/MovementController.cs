@@ -195,7 +195,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void LateUpdate()
         {
-            Debug.Log($"Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
+            Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
         }
 
         public override void OnStartNetwork()
@@ -242,7 +242,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 {
                     _activeDriftIntent = 0f;
                 }
-                else if (_activeDriftIntent == 0f & Mathf.Abs(steerInput) > 0.1f)
+                else if (_activeDriftIntent == 0f && Mathf.Abs(steerInput) > 0.1f)
                 {
                     _activeDriftIntent = Mathf.Sign(InputConsumer.SteerInput);
                 }
@@ -609,6 +609,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (other.CompareTag("Portal"))
             {
+                Debug.Log("hit portale");
                 RoadChunk roadChunk = other.transform.parent.GetComponent<RoadChunk>();
                 if (roadChunk != null)
                 {

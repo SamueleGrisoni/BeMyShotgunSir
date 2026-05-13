@@ -35,6 +35,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (_teamNetController == null)
                 _teamNetController = teamController;
+
+            _netState.SetTeamTrackProgress(TeamId.Value, new TeamTrackProgress(0, 0, new PortalInfo(0, Track.RoadChunkType.START_LINE)));
         }
 
         public void SetName(string name) => transform.name = name;
