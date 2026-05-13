@@ -45,8 +45,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
-
-
         }
 
         #region Visual Elements
@@ -123,6 +121,8 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             powerUpElement.RegisterCallback<PointerDownEvent>(evt =>
             {
+                if (_role != RaceRole.Shotgun)
+                    return;
                 Log.DLazy(() => $"Power-up {index + 1} pointer down", this);
                 _command.EquipPowerUp(index);
 
@@ -133,6 +133,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
             powerUpElement.RegisterCallback<PointerUpEvent>(evt =>
             {
+                if (_role != RaceRole.Shotgun)
+                    return;
                 if (!_isPointerDown)
                     return;
                 _isPointerDown = false;
@@ -152,8 +154,9 @@ namespace BeMyShotgunSir.Scripts.UI
             });
 
             powerUpElement.RegisterCallback<PointerCancelEvent>(evt =>
-
             {
+                if (_role != RaceRole.Shotgun)
+                    return;
                 _isPointerDown = false;
 
                 if (powerUpElement.HasPointerCapture(evt.pointerId))
@@ -199,8 +202,8 @@ namespace BeMyShotgunSir.Scripts.UI
                     _powerUps[i - 1].style.display = DisplayStyle.None;
                 }
             }
-
-            SelectPowerUp(inventory.SelectedSlot.Value.SlotIndex - 1);
+            if (inventory.SelectedSlot.HasValue)
+                SelectPowerUp(inventory.SelectedSlot.Value.SlotIndex - 1);
         }
 
         private void InitPowerUpBar()
