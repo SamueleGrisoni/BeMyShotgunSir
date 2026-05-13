@@ -13,11 +13,11 @@
         <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
             <ui:Instance template="TopBar" name="TopBar"/>
             <ui:Instance template="InfoBar" name="InfoBar" class="info-bar"/>
-            <ui:VisualElement name="ShoutWheelContainer" style="width: 1100px; height: 1400px; align-self: center; position: absolute; top: 400px; display: none;">
-                <ui:Instance template="ShoutWheel" name="ShoutWheel" style="flex-grow: 1;"/>
-            </ui:VisualElement>
             <ui:VisualElement name="RaceMapContainer" style="width: 1170px; height: 1720px; align-self: center; position: absolute; bottom: 550px;">
                 <ui:Instance template="RaceMap" name="RaceMap" style="flex-grow: 1;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ShoutWheelContainer" style="width: 1100px; height: 1400px; align-self: center; position: absolute; top: 400px; display: flex;">
+                <ui:Instance template="ShoutWheel" name="ShoutWheel" style="flex-grow: 1;"/>
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container">
                 <ui:Button name="ShoutWheelButton" class="shotgun-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_ShoutWheelButton.png?fileID=2800000&amp;guid=f39a05480cd29405290870ff935e875a&amp;type=3#HUD_Shotgun_ShoutWheelButton&quot;);"/>

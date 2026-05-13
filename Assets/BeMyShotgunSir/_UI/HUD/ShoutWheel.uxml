@@ -5,24 +5,24 @@
             <ui:VisualElement name="ShoutWheel" class="shoutwheel-container" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Base.png?fileID=2800000&amp;guid=31e5a110543614850b06cec3cde7f7a7&amp;type=3#ShoutWheel_Base&quot;); width: 1070px; aspect-ratio: 1; align-self: center; top: 0; position: absolute;">
                 <ui:VisualElement name="WheelContainer" class="wheel-container">
                     <ui:VisualElement name="Row1" class="row row-1">
-                        <ui:VisualElement name="Item1" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Spear.png?fileID=2800000&amp;guid=3d1cd456b13f343aaa1f688ad96f9015&amp;type=3#PowerUp_Spear&quot;);"/>
+                        <ui:VisualElement name="PowerUp" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/PowerUp_Spear.png?fileID=2800000&amp;guid=3d1cd456b13f343aaa1f688ad96f9015&amp;type=3#PowerUp_Spear&quot;);"/>
                     </ui:VisualElement>
                     <ui:VisualElement name="Row2" class="row row-2" style="bottom: 5%;">
-                        <ui:VisualElement name="Item2" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Sorry.png?fileID=2800000&amp;guid=d7de97f4f30ef48e1afd289b174f0f08&amp;type=3#ShoutWheel_Emoji_Sorry&quot;);"/>
-                        <ui:VisualElement name="Item3" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_BadDriver.png?fileID=2800000&amp;guid=2bbc54adb0f07459fbc0cb2a94d946a5&amp;type=3#ShoutWheel_Emoji_BadDriver&quot;);"/>
+                        <ui:VisualElement name="Sorry" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Sorry.png?fileID=2800000&amp;guid=d7de97f4f30ef48e1afd289b174f0f08&amp;type=3#ShoutWheel_Emoji_Sorry&quot;);"/>
+                        <ui:VisualElement name="BadDriver" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_BadDriver.png?fileID=2800000&amp;guid=2bbc54adb0f07459fbc0cb2a94d946a5&amp;type=3#ShoutWheel_Emoji_BadDriver&quot;);"/>
                     </ui:VisualElement>
                     <ui:VisualElement name="Row3" class="row row-3" style="top: 5%;">
-                        <ui:VisualElement name="Item4" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Faster.png?fileID=2800000&amp;guid=d684ca7a3d48c4036a3c919440e36e49&amp;type=3#ShoutWheel_Emoji_Faster&quot;);"/>
-                        <ui:VisualElement name="Item5" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Bravo.png?fileID=2800000&amp;guid=1fee231939d83478580b0586df9d3fdd&amp;type=3#ShoutWheel_Emoji_Bravo&quot;);"/>
+                        <ui:VisualElement name="Fast" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Faster.png?fileID=2800000&amp;guid=d684ca7a3d48c4036a3c919440e36e49&amp;type=3#ShoutWheel_Emoji_Faster&quot;);"/>
+                        <ui:VisualElement name="NicePlay" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Bravo.png?fileID=2800000&amp;guid=1fee231939d83478580b0586df9d3fdd&amp;type=3#ShoutWheel_Emoji_Bravo&quot;);"/>
                     </ui:VisualElement>
                     <ui:VisualElement name="Row4" class="row row-4">
-                        <ui:VisualElement name="Item6" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Warning.png?fileID=2800000&amp;guid=df2ca4bbcc4454b5fae8c47df197fdb6&amp;type=3#ShoutWheel_Emoji_Warning&quot;);"/>
+                        <ui:VisualElement name="Caution" class="shoutwheel-item" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Emoji_Warning.png?fileID=2800000&amp;guid=df2ca4bbcc4454b5fae8c47df197fdb6&amp;type=3#ShoutWheel_Emoji_Warning&quot;);"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Directions" style="flex-grow: 1; flex-direction: row; justify-content: space-between; position: absolute; bottom: 0; width: 100%;">
-                <ui:Button name="Left" parse-escape-sequences="true" class="direction-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Left.png?fileID=2800000&amp;guid=55bd7964c4945426b84ac8825a22251e&amp;type=3#ShoutWheel_Left&quot;);"/>
-                <ui:Button name="Right" class="direction-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Right.png?fileID=2800000&amp;guid=8dad40ab15bbd48a295c79f0d3047b46&amp;type=3#ShoutWheel_Right&quot;);"/>
+                <ui:Button name="GoLeft" parse-escape-sequences="true" class="direction-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Left.png?fileID=2800000&amp;guid=55bd7964c4945426b84ac8825a22251e&amp;type=3#ShoutWheel_Left&quot;);"/>
+                <ui:Button name="GoRight" class="direction-button" style="background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/ShoutWheel_Right.png?fileID=2800000&amp;guid=8dad40ab15bbd48a295c79f0d3047b46&amp;type=3#ShoutWheel_Right&quot;);"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

@@ -69,14 +69,21 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             yield return null;
 
-            // _shoutWheelButton.RegisterCallback<PointerDownEvent>(ShoutWheelButtonHandler);
+            _shoutWheelButton.clicked += ShoutWheelButtonHandler;
             _raceMapButton.clicked += RaceMapButtonHandler;
-
         }
 
-        // private void ShowShoutWheel(bool show) => _shoutWheelViewController.Show(show);
-        private void RaceMapButtonHandler() => _raceMapViewController.Show(!_raceMapViewController.IsShowing);
+        private void ShoutWheelButtonHandler()
+        {
+            _shoutWheelViewController.Show(!_shoutWheelViewController.IsShowing);
+            _raceMapViewController.Show(false);
+        }
 
+        private void RaceMapButtonHandler()
+        {
+            _raceMapViewController.Show(!_raceMapViewController.IsShowing);
+            _shoutWheelViewController.Show(false);
+        }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
 

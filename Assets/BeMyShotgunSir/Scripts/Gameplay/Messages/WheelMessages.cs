@@ -10,5 +10,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Messages
         Fast,
         NicePlay,
         PowerUp,
+        BadDriver
     }
 }

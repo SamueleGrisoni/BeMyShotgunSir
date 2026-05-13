@@ -15,6 +15,7 @@
     align-items: center;
     flex-direction: row;
     height: 20%;
+    pointer-events: none;
 }
 
 .shoutwheel-item {
