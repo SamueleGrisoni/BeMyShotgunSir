@@ -4,7 +4,6 @@ using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
 {
@@ -20,15 +19,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         private RaceNetStateStore _netState;
         public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
         public void SetName(string name) => transform.name = name;
-        private readonly SyncVar<int?> _syncTeamId = new(null);
 
         [Server]
-        public void SetTeamId(int? teamId) => _syncTeamId.Value = teamId;
+        public void SetTeamController(TeamNetController teamNetController)
+        {
+            if (_teamNetController == null)
+                _teamNetController = teamNetController;
+        }
 
         public override void OnStartClient()
         {
             base.OnStartClient();
-            OnShotgunSpawned?.Invoke(this, _syncTeamId.Value);
+            if (_teamNetController == null)
+            {
+                Log.ELazy(() => $"ShotgunController has no TeamNetController on start. TeamId will be null.", this);
+                return;
+            }
+            OnShotgunSpawned?.Invoke(this, _teamNetController.TeamId);
         }
 
         public void Initialize(RaceNetContext context, TeamNetController teamNetController)

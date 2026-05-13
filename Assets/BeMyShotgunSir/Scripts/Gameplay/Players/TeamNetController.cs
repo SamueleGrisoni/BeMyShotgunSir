@@ -36,6 +36,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         //Specific
         private IRoadManager _roadManager;
         public int? TeamId => _syncTeamId.Value;
+        public event Action OnTeamIdAssigned;
         private int? _driverConnectionId = null;
         private int? _shotgunConnectionId = null;
         private DriverController _driverController;
@@ -55,6 +56,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         public void SetTeamId(int teamId)
         {
             _syncTeamId.Value = teamId;
+            OnTeamIdAssigned?.Invoke();
             Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
         }
 

@@ -4,7 +4,6 @@ using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
@@ -30,10 +29,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private MovementController _movementController;
         public Transform GetMovementTransform() => _movementController != null ? _movementController.transform : null;
 
-        private readonly SyncVar<int?> _syncTeamId = new(null);
 
         [Server]
-        public void SetTeamId(int? teamId) => _syncTeamId.Value = teamId;
+        public void SetTeamController(TeamNetController teamController)
+        {
+            if (_teamNetController == null)
+                _teamNetController = teamController;
+        }
 
         public void SetName(string name) => transform.name = name;
 
@@ -56,7 +58,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public override void OnStartClient()
         {
             base.OnStartClient();
-            OnDriverSpawned?.Invoke(this, _syncTeamId.Value);
+            if (_teamNetController == null)
+            {
+                Log.ELazy(() => $"DriverController has no TeamNetController on start. TeamId will be null.", this);
+                return;
+            }
+            OnDriverSpawned?.Invoke(this, _teamNetController.TeamId);
         }
     }
 }

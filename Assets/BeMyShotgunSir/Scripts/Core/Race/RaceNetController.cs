@@ -291,14 +291,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         //driver setup
                         DriverController player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
                         player.name = "Driver Team " + teamState.TeamId + " Player " + teamData.DriverConnectionId;
-                        player.SetTeamId(teamState.TeamId);
+                        player.SetTeamController(team);
                         player.NetworkObject.SetParent(team);
                         Spawn(player, _lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
 
                         //Shotgun setup
                         ShotgunController shotgun = Instantiate(_shotgunPrefab, spawnPoint.position, spawnPoint.rotation);
                         shotgun.name = "Shotgun Team " + teamState.TeamId + " Player " + teamData.ShotgunConnectionId;
-                        shotgun.SetTeamId(teamState.TeamId);
+                        shotgun.SetTeamController(team);
                         shotgun.NetworkObject.SetParent(player);
                         Spawn(shotgun, _lobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection);
 

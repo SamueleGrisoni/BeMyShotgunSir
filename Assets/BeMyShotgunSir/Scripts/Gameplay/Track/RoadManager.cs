@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
@@ -139,7 +138,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             // vedi tu se una certa iscrizione ti serve solo lato client o solo lato server o host
             //poi quando hai ottenuto il finish line chunk id puoi settarlo in autonomia nello store
             // context.NetState.SetFinishLineChunkId(finishlinechunkid);
-            context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);;
+            context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);
             if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
