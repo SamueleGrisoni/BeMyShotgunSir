@@ -32,3 +32,50 @@
     flex-direction: column-reverse;
     justify-content: center;
 }
+
+.fog-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.fog-tile {
+    position: absolute;
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: 0.25s;
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-background-image-tint-color: rgb(80, 80, 80);
+}
+
+.fog-tile.revealed {
+    opacity: 0;
+}
+
+.power-up-icon {
+    width: 200px;
+    aspect-ratio: 1;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.power-up-column {
+    flex-direction: column-reverse;
+    width: 50%;
+}
+
+.left-column {
+    align-items: flex-start;
+}
+
+.right-column {
+    align-items: flex-end;
+}
+
+.power-up-area {
+    position: absolute;
+    width: 90%;
+    align-self: center;
+    flex-direction: row;
+    justify-content: space-between;
+    top: 150px;
+}

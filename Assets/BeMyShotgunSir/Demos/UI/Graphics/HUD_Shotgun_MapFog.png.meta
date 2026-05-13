@@ -1,0 +1,1985 @@
+fileFormatVersion: 2
+guid: 298a30ae241b2482eb85572aa9a4506d
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf16ad9eb5f9141dabe3a1814cf85aec
+      internalID: -1032105966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_1
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c972bf1b155ad42aab8b840cc8660666
+      internalID: 1829867595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_2
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 111c935d32e75478889fd5474ab03745
+      internalID: -1587370574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_3
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6657f771f9caa48469389ff4443d6a7c
+      internalID: 1094921515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_4
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8af04e422603e45af8ea9aa094e74356
+      internalID: -1251232192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_5
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fa425ca0a3814547bab6e5cd1f898de
+      internalID: 120115450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_6
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6553d75acaa61444aab433b7e4299b1f
+      internalID: -968773330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_7
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 1548
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a83b716be47d744d898271d837c96131
+      internalID: -1183780857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef7a4a17c2bc345fba4a9388f663de29
+      internalID: 373331770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_9
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21abba53541ba4cf0a340fd0be2499bb
+      internalID: -222960500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_10
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4e7a18e0942e47be8ad4cf217397251
+      internalID: -725378469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_11
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1561353bbc9624478875a8530f325805
+      internalID: -1474551762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_12
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c54a48c0df61b471aa7c3334cb10da53
+      internalID: -1722137865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_13
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02eb3715a725b4bc584b09c3eabfd544
+      internalID: -1268015483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_14
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c49abebc93aca4ceabfc8211db5589f2
+      internalID: 1187199458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_15
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 1376
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1608adc56ab8d413bbeafb5ca5b440f1
+      internalID: 1875699646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44897438e134449b0979401110025cbc
+      internalID: -1693758389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_17
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 845eabf6878614af4a2866841d64602e
+      internalID: -116814219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_18
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f0a131f876884357b3838535f8b95e9
+      internalID: -1327964623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_19
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7240b675d7a824921869ff4073932be1
+      internalID: 2121675572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_20
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b3a50c0d06724e04bd813ceef7e4a33
+      internalID: 1267506015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_21
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 765a890928c954e9ca3c4208473ba8e6
+      internalID: 1017553345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_22
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2293280ecbdf4d10b55e12209ce1851
+      internalID: -2054182664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_23
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 1204
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc656cb76696046209e9c5352a744179
+      internalID: 1508581909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63e7afcf7c257466d8137167361528ac
+      internalID: 1191726187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_25
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ccdeced3ffcb443793b240388ef58c1
+      internalID: 365874696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_26
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52e131b53df504a94a93897b67eb3f2e
+      internalID: -429209440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_27
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c4ba45ce941c46fc9ea4f1eb0e44a40
+      internalID: -309858511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_28
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8125a3502e6834be280ca45bbd2ae223
+      internalID: -1769678709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_29
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfaa3ab51a967434aa9acce4a0bca536
+      internalID: -2074344243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_30
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 837ed8c55151c47fb823dbcdf68fef10
+      internalID: 1809647253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_31
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 1032
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7280928bbac3347c6a59af71728c5654
+      internalID: 1342029465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c0ab7eb9c6114b29bd4b7f7b65e92df
+      internalID: -1093316554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_33
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbd94d8031ce740e4b64921dcc92be94
+      internalID: 492266184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_34
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a896ab48da11481cbaef45526a215fa
+      internalID: -858953549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_35
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73d10769e319a40d58bfe188d6efe58a
+      internalID: 1665937161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_36
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b783b8ea6116c46e4a54c82a9583ec0c
+      internalID: 9924132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_37
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 397b5523b0b0a430c8fb2c39733e82f6
+      internalID: -77744009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_38
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e207e43cb44645f5a928b050ad53232
+      internalID: 963804210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_39
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 860
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f220096b12a0d43419d7665a2ff223b1
+      internalID: -1841936707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 910e2ea0f84874896826e71ebc1859e8
+      internalID: -1031930177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_41
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 550201792f2354f4aac1e30e0f864553
+      internalID: -1078306183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_42
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40bef5117ce734e61a4470220113732d
+      internalID: 42151150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_43
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bba1319c2a1074ebf80cf4ed884e9b0f
+      internalID: -116455242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_44
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1143e2e2a2d74a26acfd68cb2c83759
+      internalID: 991603937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_45
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3a0afa45d903494e91da8f4fc06a2f3
+      internalID: -647246529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_46
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47e18ce7bb25d44fbbd7ec424e736ce5
+      internalID: -947065556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_47
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 688
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dca1299e236f496e8976dea85a4fdfc
+      internalID: -820433641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b6cfd51e56ae4f73be5d125e3832aaa
+      internalID: -447353618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_49
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 408ee7327f02e432586fcd344aaa6f0f
+      internalID: 1742783198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_50
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41fbd9b2f67404440b4e2fefea933ae7
+      internalID: -927922947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_51
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f31725116fdf748a8b2998b059d2bd1a
+      internalID: 1835586416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_52
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53a33cd3f976e46c9ad7f0225cd5e041
+      internalID: 809436214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_53
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ce7336f267e048f1a484d0f775a2304
+      internalID: -1559634635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_54
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c00d19d0dac240809ee40651b6432cb
+      internalID: 2140865647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_55
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 516
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7b5cf9a2bd4a494db4ee15a6d992a9c
+      internalID: 2077097042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1e7fe6c504a646649a22ef83238081a
+      internalID: -1376657968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_57
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c55e559ba123490bb9731487677a23e
+      internalID: -684669301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_58
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 101a3675b0af14193b9b1c271af6e5d6
+      internalID: 960171128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_59
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d942d438166a403ea9304463e3a61e7
+      internalID: 1870086327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_60
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c04890ff21c0546b5a75bf4e6651fdfb
+      internalID: 1390153105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_61
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a54315d21e7344b6945619f3a2aed58
+      internalID: -691343676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_62
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9079b8975bf6147d994c1623ce5e2672
+      internalID: 144684905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_63
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 344
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57eed8ace2a3243e0b594c7a01e2bbd8
+      internalID: -823144681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_64
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba70ed7d6c55e487aa1eadbc99862e7c
+      internalID: 37359338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_65
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94d3f5249610e431ca93e4435ca3ded1
+      internalID: 1092120261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_66
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2cc6cd845b0e40a48125bc4a9bf891d
+      internalID: 313071461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_67
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0c738bfbeb894973baae0f2338e0c0e
+      internalID: -1642007061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_68
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 570b9832a21394cd7be9fc0baab1672c
+      internalID: 2059066402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_69
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 900dcd7ccfdfe4dc7bde38b30c9b714c
+      internalID: 417128346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_70
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd8652dafed5d4617a03b29958fe2dc9
+      internalID: 1622835269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_71
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 172
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceb047a87e2304e48aeb089fda4966c2
+      internalID: 1512304934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f1dd5278bc4045acad6cf279b8170b5
+      internalID: 1417895811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_73
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e35f5e66db974534855764657ca93d6
+      internalID: 1479719065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_74
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8875718d13604b93bbd3f8b83899b11
+      internalID: -699430376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_75
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4625ddfa349634405b856f99638169b3
+      internalID: 312671216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_76
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0aac96c5db4f342dd8a5d56ebda00e43
+      internalID: 1157471167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_77
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6efa4b720d80f42a18f047bc4842f2b0
+      internalID: -1204666433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_78
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73a8b8d398e5b41e085edcd72eefd722
+      internalID: -976912016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD_Shotgun_MapFog_79
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 0
+        width: 146
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 806417ec8aac54b35ad31b2f8845126f
+      internalID: 1913619497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: d70fe53f9706644ac8cac879ed044e49
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":8.0,"y":10.0},"gridSpriteSize":{"x":146.0,"y":172.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      HUD_Shotgun_MapFog_0: -1032105966
+      HUD_Shotgun_MapFog_1: 1829867595
+      HUD_Shotgun_MapFog_10: -725378469
+      HUD_Shotgun_MapFog_11: -1474551762
+      HUD_Shotgun_MapFog_12: -1722137865
+      HUD_Shotgun_MapFog_13: -1268015483
+      HUD_Shotgun_MapFog_14: 1187199458
+      HUD_Shotgun_MapFog_15: 1875699646
+      HUD_Shotgun_MapFog_16: -1693758389
+      HUD_Shotgun_MapFog_17: -116814219
+      HUD_Shotgun_MapFog_18: -1327964623
+      HUD_Shotgun_MapFog_19: 2121675572
+      HUD_Shotgun_MapFog_2: -1587370574
+      HUD_Shotgun_MapFog_20: 1267506015
+      HUD_Shotgun_MapFog_21: 1017553345
+      HUD_Shotgun_MapFog_22: -2054182664
+      HUD_Shotgun_MapFog_23: 1508581909
+      HUD_Shotgun_MapFog_24: 1191726187
+      HUD_Shotgun_MapFog_25: 365874696
+      HUD_Shotgun_MapFog_26: -429209440
+      HUD_Shotgun_MapFog_27: -309858511
+      HUD_Shotgun_MapFog_28: -1769678709
+      HUD_Shotgun_MapFog_29: -2074344243
+      HUD_Shotgun_MapFog_3: 1094921515
+      HUD_Shotgun_MapFog_30: 1809647253
+      HUD_Shotgun_MapFog_31: 1342029465
+      HUD_Shotgun_MapFog_32: -1093316554
+      HUD_Shotgun_MapFog_33: 492266184
+      HUD_Shotgun_MapFog_34: -858953549
+      HUD_Shotgun_MapFog_35: 1665937161
+      HUD_Shotgun_MapFog_36: 9924132
+      HUD_Shotgun_MapFog_37: -77744009
+      HUD_Shotgun_MapFog_38: 963804210
+      HUD_Shotgun_MapFog_39: -1841936707
+      HUD_Shotgun_MapFog_4: -1251232192
+      HUD_Shotgun_MapFog_40: -1031930177
+      HUD_Shotgun_MapFog_41: -1078306183
+      HUD_Shotgun_MapFog_42: 42151150
+      HUD_Shotgun_MapFog_43: -116455242
+      HUD_Shotgun_MapFog_44: 991603937
+      HUD_Shotgun_MapFog_45: -647246529
+      HUD_Shotgun_MapFog_46: -947065556
+      HUD_Shotgun_MapFog_47: -820433641
+      HUD_Shotgun_MapFog_48: -447353618
+      HUD_Shotgun_MapFog_49: 1742783198
+      HUD_Shotgun_MapFog_5: 120115450
+      HUD_Shotgun_MapFog_50: -927922947
+      HUD_Shotgun_MapFog_51: 1835586416
+      HUD_Shotgun_MapFog_52: 809436214
+      HUD_Shotgun_MapFog_53: -1559634635
+      HUD_Shotgun_MapFog_54: 2140865647
+      HUD_Shotgun_MapFog_55: 2077097042
+      HUD_Shotgun_MapFog_56: -1376657968
+      HUD_Shotgun_MapFog_57: -684669301
+      HUD_Shotgun_MapFog_58: 960171128
+      HUD_Shotgun_MapFog_59: 1870086327
+      HUD_Shotgun_MapFog_6: -968773330
+      HUD_Shotgun_MapFog_60: 1390153105
+      HUD_Shotgun_MapFog_61: -691343676
+      HUD_Shotgun_MapFog_62: 144684905
+      HUD_Shotgun_MapFog_63: -823144681
+      HUD_Shotgun_MapFog_64: 37359338
+      HUD_Shotgun_MapFog_65: 1092120261
+      HUD_Shotgun_MapFog_66: 313071461
+      HUD_Shotgun_MapFog_67: -1642007061
+      HUD_Shotgun_MapFog_68: 2059066402
+      HUD_Shotgun_MapFog_69: 417128346
+      HUD_Shotgun_MapFog_7: -1183780857
+      HUD_Shotgun_MapFog_70: 1622835269
+      HUD_Shotgun_MapFog_71: 1512304934
+      HUD_Shotgun_MapFog_72: 1417895811
+      HUD_Shotgun_MapFog_73: 1479719065
+      HUD_Shotgun_MapFog_74: -699430376
+      HUD_Shotgun_MapFog_75: 312671216
+      HUD_Shotgun_MapFog_76: 1157471167
+      HUD_Shotgun_MapFog_77: -1204666433
+      HUD_Shotgun_MapFog_78: -976912016
+      HUD_Shotgun_MapFog_79: 1913619497
+      HUD_Shotgun_MapFog_8: 373331770
+      HUD_Shotgun_MapFog_9: -222960500
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
