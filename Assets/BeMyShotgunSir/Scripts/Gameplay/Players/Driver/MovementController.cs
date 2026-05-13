@@ -107,10 +107,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             InputConsumer = inputConsumer;
             InputConsumer.OnBoostPressed += ExecuteBoost;
             InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
+            //InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
         }
 
         public void ExecuteBoost() => _isBoosting = true;
-        public void ExecuteInputEarlyCommitment(CommitmentDirection direction)
+        private void ExecuteInputEarlyCommitment(CommitmentDirection direction)
         {
             _commitmentDirection = direction;
             ExecuteEarlyCommitment();
@@ -193,7 +194,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void LateUpdate()
         {
-            Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
+            //Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
         }
 
         public override void OnStartNetwork()
@@ -240,9 +241,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 {
                     _activeDriftIntent = 0f;
                 }
-                else if (_activeDriftIntent == 0f && Mathf.Abs(steerInput) > 0.1f)
+                else if (_activeDriftIntent == 0f && Mathf.Abs(InputConsumer.DriftInput) > 0.1f)
                 {
-                    _activeDriftIntent = Mathf.Sign(InputConsumer.SteerInput);
+                    _activeDriftIntent = Mathf.Sign(InputConsumer.DriftInput);
                 }
                 rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
                 _isBoosting = false;
@@ -347,6 +348,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             if (state != ReplicateState.Replayed)
                 _currentSteerInput = data.SteerInput;
+
+            if (IsOwner)
+            {
+                InputConsumer.ChargeBattery = _currentBatteryCharge;
+            }
         }
 
         private void TimeManager_OnPostTick() => CreateReconcile();
@@ -628,6 +634,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                                 _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
                                 Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
                                 _earlyCommitmentEnabled = true;
+
                             }
                             else
                             {
@@ -655,6 +662,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             _commitmentDirection = commitmentDirection;
             ExecuteEarlyCommitment();
+            InputConsumer.GiveBatteryChargeEarlyCommitment(-100);
         }
 
     }
