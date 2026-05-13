@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 660814e8afa7a8748b28b9fff9801e49, type: 3}
   m_Name: _SoundTracks_
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.SOSoundTracks
-  <LobbyTrack>k__BackingField: {fileID: 8300000, guid: 8d18fc599cef3874b871f6dedc338e25, type: 3}
-  <LobbyTrackVolume>k__BackingField: 0.1
-  <GameTrack>k__BackingField: {fileID: 0}
+  <InitSceneMusic>k__BackingField: {fileID: 8300000, guid: 648fc4c616f1fc34e98ea37f31582a3f, type: 3}
+  <InitSceneMusicVolume>k__BackingField: 0.5
+  <LoadingMusic>k__BackingField: {fileID: 8300000, guid: d2ae2a1238b443340aa91ca330de61fd, type: 3}
+  <LoadingMusicVolume>k__BackingField: 0.5
+  <LobbySceneMusic>k__BackingField: {fileID: 8300000, guid: b285f2ee2081812408fb535e39f5b794, type: 3}
+  <LobbySceneMusicVolume>k__BackingField: 0.5
+  <RaceSceneMusic>k__BackingField: {fileID: 8300000, guid: e8aaf591da28cc645a7d58c37c2d34a4, type: 3}
+  <RaceSceneMusicVolume>k__BackingField: 0.5

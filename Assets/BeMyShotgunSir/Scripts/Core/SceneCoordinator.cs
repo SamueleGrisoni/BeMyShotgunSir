@@ -18,6 +18,11 @@ namespace BeMyShotgunSir.Scripts.Core
         private bool _log = true;
         public readonly FishNetSceneAdapter FishnetSceneManager = new FishNetSceneAdapter();
 
+        private void Awake()
+        {
+            FishnetSceneManager.Initialize();
+        }
+
         public void LoadInitScene()
         {
             if (UnitySceneManager.GetSceneByName(SceneName.Init.ToString()).isLoaded)

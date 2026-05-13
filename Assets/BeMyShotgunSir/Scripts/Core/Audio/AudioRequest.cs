@@ -4,9 +4,22 @@ using BeMyShotgunSir.Scripts.Utils;
 
 namespace BeMyShotgunSir.Scripts.Core.Audio
 {
+    public enum RequestEnum
+    {
+        Play = 0,
+        Loading,
+        StartRace,
+        RaceFinish,
+        // ui
+        UIClick,
+    }
+
     public class AudioRequest
     {
+        public RequestEnum Type { get; private set; } = RequestEnum.Play;
         public AudioClip Clip { get; private set; }
+        public bool AsMain { get; private set; } = false;
+        public bool StopMain { get; private set; } = false;
         public Vector3 StartingPosition { get; private set; }
         public MixerGroupEnum MixerGroup { get; private set; } = MixerGroupEnum.Master;
         public float Volume { get; private set; } = 1f;
@@ -14,6 +27,11 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         public float SpatialBlend { get; private set; } = 1f; // Default to 3D sound
         public bool Loop { get; private set; } = false;
         private AudioSource _boundSource; //if the request is played in a source, this will hold a reference to it for runtime updates
+
+        public AudioRequest(RequestEnum type)
+        {
+            Type = type;
+        }
 
         public AudioRequest(SOSoundSource soundSource, Vector3 startingPosition = default)
         {
@@ -46,6 +64,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         public AudioRequest As2D() { SpatialBlend = 0f; return this; }
         public AudioRequest As3D() { SpatialBlend = 1f; return this; }
         public AudioRequest Looping(bool loop = true) { Loop = loop; return this; }
+        public AudioRequest AsMainSource(bool asMain = true) { AsMain = asMain; return this; }
         public void BindSource(AudioSource source)
         {
             if (_boundSource == null)
@@ -61,6 +80,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             }
             _boundSource.Stop();
         }
+
         public void UpdatePitch(float newPitch)
         {
             Pitch = newPitch;

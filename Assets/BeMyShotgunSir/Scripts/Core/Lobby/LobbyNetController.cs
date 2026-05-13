@@ -1,3 +1,4 @@
+using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Managing.Server;
@@ -253,6 +254,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", " Server");
             Spawn(_activeRaceManager);
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
         }
     }
 }

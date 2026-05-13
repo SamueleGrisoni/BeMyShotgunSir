@@ -1,4 +1,5 @@
 using System;
+using BeMyShotgunSir.Scripts.Core.Init;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Utils;
@@ -21,15 +22,24 @@ namespace BeMyShotgunSir.Scripts.Core
 
         public SceneManager _fishNetSceneManager;
         private bool _isInitialized = false;
-        private void Initialize()
+        public void Initialize()
         {
+            if (_isInitialized)
+                return;
             _fishNetSceneManager = InstanceFinder.SceneManager;
             _fishNetSceneManager.OnLoadEnd += HandleSceneLoadEnd;
             _fishNetSceneManager.OnUnloadEnd += HandleSceneUnloadEnd;
 
+            InitSceneBootstrapper.OnInitSceneInitialized += HandleInitSceneInitialized;
             LobbySceneBootstrapper.OnLobbySceneInitialized += HandleLobbySceneInitialized;
             RaceSceneBootstrapper.OnRaceSceneInitialized += HandleRaceSceneInitialized;
             _isInitialized = true;
+        }
+
+        private void HandleInitSceneInitialized()
+        {
+            Log.DLazy(() => "Init scene initialized.", this, _log);
+            OnSceneInitialized?.Invoke(SceneName.Init);
         }
 
         private void HandleLobbySceneInitialized()

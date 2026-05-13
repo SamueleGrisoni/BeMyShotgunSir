@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Gameplay.Players;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
@@ -75,7 +76,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private Dictionary<int, TeamProgress> _teamProgress;
         private float _leaderboardUpdateTimer = 0f;
         private float _raceTimer = 0f;
-        private Queue<CrossroadSegmentInfo> _crossroadSegmentInfoQueue = new Queue<CrossroadSegmentInfo>();
+        private Queue<CrossroadSegmentInfo> _specialSegmentInfoQueue = new Queue<CrossroadSegmentInfo>();
 
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
@@ -98,7 +99,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             RoadManager.OnCrossroadProvided += OnCrossroadProvided;
         }
 
-        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _crossroadSegmentInfoQueue.Enqueue(info);
+        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _specialSegmentInfoQueue.Enqueue(info);
 
         public void OnEnable() =>
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
@@ -119,19 +120,19 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnTeamTrackProgressChanged(SyncDictionaryOperation op, int key, TeamTrackProgress value, bool asServer) //TODO test
         {
             // 1. Uscita immediata se non server o se non ci sono incroci da monitorare
-            if (!asServer || _crossroadSegmentInfoQueue.Count == 0)
+            if (!asServer || _specialSegmentInfoQueue.Count == 0)
                 return;
 
             _netState.TryGetTeamTrackProgress(key, out TeamTrackProgress currentProgress);
 
             // 2. Aggiornamento progresso del player (Scanning della coda)
-            for (int i = 0; i < _crossroadSegmentInfoQueue.Count; i++)
+            for (int i = 0; i < _specialSegmentInfoQueue.Count; i++)
             {
-                CrossroadSegmentInfo crossroad = _crossroadSegmentInfoQueue.ElementAt(i);
+                CrossroadSegmentInfo crossroad = _specialSegmentInfoQueue.ElementAt(i);
                 if (currentProgress.CurrentChunkId == crossroad.chunkNumber)
                 {
-                    int nextId = (_crossroadSegmentInfoQueue.Count > i + 1)
-                        ? _crossroadSegmentInfoQueue.ElementAt(i + 1).chunkNumber
+                    int nextId = (_specialSegmentInfoQueue.Count > i + 1)
+                        ? _specialSegmentInfoQueue.ElementAt(i + 1).chunkNumber
                         : currentProgress.NextSpecialChunkId;
 
                     var updated = new TeamTrackProgress(
@@ -150,7 +151,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             // 3. Controllo se il team ha superato l'elemento in testa
             bool allPlayersSurpassedCrossroad = true;
-            int headChunkId = _crossroadSegmentInfoQueue.Peek().chunkNumber;
+            int headChunkId = _specialSegmentInfoQueue.Peek().chunkNumber;
 
             foreach (TeamTrackProgress progress in _netState.TeamTrackProgress.Values)
             {
@@ -165,7 +166,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (allPlayersSurpassedCrossroad)
             {
                 // Rimuoviamo e logghiamo
-                CrossroadSegmentInfo finishedCrossroad = _crossroadSegmentInfoQueue.Dequeue();
+                CrossroadSegmentInfo finishedCrossroad = _specialSegmentInfoQueue.Dequeue();
                 _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
             }
@@ -345,6 +346,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (NetState.AreAllPlayersReady())
             {
                 _isRaceStarted = true;
+                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
                 Log.DLazy(() => $"All players are ready. Starting race.", this);
             }
         }
