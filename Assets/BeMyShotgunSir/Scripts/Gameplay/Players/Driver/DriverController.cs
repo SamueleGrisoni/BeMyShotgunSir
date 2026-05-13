@@ -22,6 +22,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private LobbyNetStateStore _lobbyNetStateStore;
         private RaceNetStateStore _netState;
         private TeamNetController _teamNetController;
+        private ShotgunController _shotgunController;
         public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
 
         //specific
@@ -31,11 +32,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         public void SetName(string name) => transform.name = name;
 
-        public void Initialize(RaceNetContext context, TeamNetController teamNetController)
+        public void Initialize(RaceNetContext context, TeamNetController teamNetController, ShotgunController shotgunController)
         {
             if (_isInitialized)
                 return;
-
+            _shotgunController = shotgunController;
             _inputConsumer = context.InputPublisher;
             _movementController.Initialize(new RaceNetContext(null, null, null, context.NetState, context.ClientProjector, context.PowerUpsNetController, null), _inputConsumer, this);
             _teamNetController = teamNetController;

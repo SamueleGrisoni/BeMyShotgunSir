@@ -141,8 +141,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                 return;
             }
 
-            _driverController.Initialize(_raceNetContext, this);
-            _shotgunController.Initialize(_raceNetContext, this);
+            _driverController.Initialize(_raceNetContext, this, _shotgunController);
+            _shotgunController.Initialize(_raceNetContext, this, _driverController);
             _driverController.SetName($"Driver, TeamId: {_syncTeamId.Value}, DriverId: {_driverConnectionId}");
             _shotgunController.SetName($"Shotgun, TeamId: {_syncTeamId.Value}, ShotgunId: {_shotgunConnectionId}");
 

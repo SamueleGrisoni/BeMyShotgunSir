@@ -1,5 +1,6 @@
 using System;
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
@@ -15,6 +16,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         public static event Action OnShotgunInitialized;
         public IShotgunInputConsumer _inputConsumer;
         private TeamNetController _teamNetController;
+        private DriverController _driverController;
         private PowerUpsNetController _powerUpsNetController;
         private RaceNetStateStore _netState;
         public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
@@ -31,7 +33,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             OnShotgunSpawned?.Invoke(this);
         }
 
-        public void Initialize(RaceNetContext context, TeamNetController teamNetController)
+        public void Initialize(RaceNetContext context, TeamNetController teamNetController, DriverController driverController)
         {
             if (_isInitialized)
                 return;
@@ -39,6 +41,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             if (_inputConsumer == null)
                 _inputConsumer = context.InputPublisher;
             _teamNetController = teamNetController;
+            _driverController = driverController;
 
             _isInitialized = true;
             Log.DLazy(() => $"ShotgunController initialized with teamId {_teamNetController.TeamId}.", this);
