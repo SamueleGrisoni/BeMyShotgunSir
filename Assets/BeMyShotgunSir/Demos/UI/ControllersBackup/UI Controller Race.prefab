@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3457012918948728169
+--- !u!1 &4588137099071420742
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,212 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6892319970410772666}
-  - component: {fileID: 1947058889921366770}
-  - component: {fileID: 9137308160754361815}
-  - component: {fileID: 7206797820760516103}
-  - component: {fileID: 5032375426986719161}
-  - component: {fileID: 4362835341060076392}
-  - component: {fileID: 7815538466840212379}
-  - component: {fileID: 6898447353345368445}
-  m_Layer: 0
-  m_Name: Shotgun
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6892319970410772666
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7083423564783109265}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1947058889921366770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 315cb36e0e7144238985b98c1b5e8f92, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &9137308160754361815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bd5e3fcea20a4f42aebb271d978e45a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDShotgunViewController
-  _hudShotgunDocument: {fileID: 1947058889921366770}
-  _topBarViewController: {fileID: 7206797820760516103}
-  _infoBarViewController: {fileID: 5032375426986719161}
-  _shoutWheelViewController: {fileID: 4362835341060076392}
-  _raceMapViewController: {fileID: 7815538466840212379}
-  _powerUpViewController: {fileID: 6898447353345368445}
---- !u!114 &7206797820760516103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
-  _topBarDocument: {fileID: 1947058889921366770}
---- !u!114 &5032375426986719161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc9c98fcf84a74b2d9e275ca20e79bd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.InfoBarViewController
---- !u!114 &4362835341060076392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a10c1e671f5d422eac690517dd22fe0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.ShoutWheelViewController
-  _hudDocument: {fileID: 1947058889921366770}
---- !u!114 &7815538466840212379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 473e3ee5ac753411db2268346a3549ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.RaceMapViewController
-  _hudDocument: {fileID: 1947058889921366770}
-  _tilesRC:
-  - {fileID: 2935506388020526948, guid: 6de13c26177cb44dc9ef05350ed2c04b, type: 3}
-  - {fileID: 6426572494250142434, guid: 6bfa52b09b45d4452a96cbff1e8fa536, type: 3}
-  - {fileID: 6933658706565655350, guid: 863b027a27d174491a7c804b98bd205b, type: 3}
-  - {fileID: 5744089890033289867, guid: bee6fb05fe24d43d490f69b50cc2326c, type: 3}
-  - {fileID: 4982415664987258019, guid: 8bb84274e662d45898dc638a3742f669, type: 3}
-  - {fileID: 3986526273246020431, guid: 423f89f340af04faba9240c73b466464, type: 3}
-  - {fileID: 6961653162248213082, guid: 7191d5fc5496a4c6b9a88f5bbca922f6, type: 3}
-  - {fileID: 5115586881992350864, guid: 4e69fd56c309c45f4be81eebce41dac1, type: 3}
-  - {fileID: 6511426155499482266, guid: 57eef84a035bd4094a60b6ea0f58b981, type: 3}
-  _forkTileRC: {fileID: 387596927975374334, guid: 067515a5a16e74d00a618697431dfcc8, type: 3}
-  _junctionTileRC: {fileID: 7649554479988010358, guid: 9391d8aea948c4b248e316221f08ad5b, type: 3}
-  _maxLenght: 0
---- !u!114 &6898447353345368445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3457012918948728169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
-  _hudDocument: {fileID: 1947058889921366770}
-  _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
-  _swipeThreshold: 80
---- !u!1 &5567254757283670583
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7083423564783109265}
-  - component: {fileID: 539170583446399107}
-  m_Layer: 0
-  m_Name: HUD
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7083423564783109265
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5567254757283670583}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5706027388084987259}
-  - {fileID: 6892319970410772666}
-  m_Father: {fileID: 5855155916782994081}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &539170583446399107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5567254757283670583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b018773188a4306b440861259bd332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!1 &6148515939639176563
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5855155916782994081}
-  - component: {fileID: 480811163044934695}
+  - component: {fileID: 4019022606681929960}
+  - component: {fileID: 164436529400926304}
   m_Layer: 0
   m_Name: UI Controller Race
   m_TagString: Untagged
@@ -221,37 +17,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5855155916782994081
+--- !u!4 &4019022606681929960
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6148515939639176563}
+  m_GameObject: {fileID: 4588137099071420742}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.47103, y: -0.02222, z: 0.61692}
+  m_LocalPosition: {x: -11.30634, y: 8.50394, z: 15.99799}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7083423564783109265}
+  - {fileID: 3489471632035928267}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &480811163044934695
+--- !u!114 &164436529400926304
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6148515939639176563}
+  m_GameObject: {fileID: 4588137099071420742}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15ba0f9807b1b448d98100499735626e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.UIController_Race
-  _hudDriverViewController: {fileID: 317141471107323126}
-  _hudShotgunViewController: {fileID: 9137308160754361815}
---- !u!1 &8244968580822164013
+  _hudDriverViewController: {fileID: 2247915037296563853}
+  _hudShotgunViewController: {fileID: 2028083175073570356}
+--- !u!1 &5102840038780894827
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -259,13 +55,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5706027388084987259}
-  - component: {fileID: 7715568326897044422}
-  - component: {fileID: 317141471107323126}
-  - component: {fileID: 3071477233494163692}
-  - component: {fileID: 1151237078484017960}
-  - component: {fileID: 5864885423493849368}
-  - component: {fileID: 4950111605904849626}
+  - component: {fileID: 5487724171421242337}
+  - component: {fileID: 5124482825123569876}
+  - component: {fileID: 2247915037296563853}
+  - component: {fileID: 3056120180109181573}
+  - component: {fileID: 1181507877119989208}
+  - component: {fileID: 7329364042237008986}
+  - component: {fileID: 4264459334644341571}
   m_Layer: 0
   m_Name: Driver
   m_TagString: Untagged
@@ -273,28 +69,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5706027388084987259
+--- !u!4 &5487724171421242337
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7083423564783109265}
+  m_Father: {fileID: 3489471632035928267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7715568326897044422
+--- !u!114 &5124482825123569876
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -311,73 +107,362 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &317141471107323126
+--- !u!114 &2247915037296563853
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f31059872fe54a6db51459306df497b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDDriverViewController
-  _uiControllerRace: {fileID: 480811163044934695}
-  _hudDriverDocument: {fileID: 7715568326897044422}
---- !u!114 &3071477233494163692
+  _uiControllerRace: {fileID: 164436529400926304}
+  _hudDriverDocument: {fileID: 5124482825123569876}
+--- !u!114 &3056120180109181573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
-  _topBarDocument: {fileID: 7715568326897044422}
---- !u!114 &1151237078484017960
+  _topBarDocument: {fileID: 5124482825123569876}
+--- !u!114 &1181507877119989208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
-  _hudDocument: {fileID: 7715568326897044422}
+  _hudDocument: {fileID: 5124482825123569876}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _swipeThreshold: 80
---- !u!114 &5864885423493849368
+--- !u!114 &7329364042237008986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d141806fb746608f5032e52696e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.EarlyCommitmentController
-  _hudDocument: {fileID: 7715568326897044422}
+  _hudDocument: {fileID: 5124482825123569876}
   CommitmentValue: 0
   Show: 0
---- !u!114 &4950111605904849626
+--- !u!114 &4264459334644341571
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8244968580822164013}
+  m_GameObject: {fileID: 5102840038780894827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3c020507a290447ba6f8ca748c89cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BottomBarController
-  _hudDocument: {fileID: 7715568326897044422}
+  _hudDocument: {fileID: 5124482825123569876}
+--- !u!1 &7275156916646142051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6716092770049399596}
+  - component: {fileID: 3251128307289740864}
+  - component: {fileID: 2028083175073570356}
+  - component: {fileID: 6263044155476646706}
+  - component: {fileID: 5098705519525793333}
+  - component: {fileID: 7577613670292266336}
+  - component: {fileID: 7030735980930187838}
+  - component: {fileID: 7914441003672711150}
+  m_Layer: 0
+  m_Name: Shotgun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6716092770049399596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3489471632035928267}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3251128307289740864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 315cb36e0e7144238985b98c1b5e8f92, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &2028083175073570356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd5e3fcea20a4f42aebb271d978e45a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDShotgunViewController
+  _hudShotgunDocument: {fileID: 3251128307289740864}
+  _topBarViewController: {fileID: 6263044155476646706}
+  _infoBarViewController: {fileID: 5098705519525793333}
+  _shoutWheelViewController: {fileID: 7577613670292266336}
+  _raceMapViewController: {fileID: 7030735980930187838}
+  _powerUpViewController: {fileID: 7914441003672711150}
+--- !u!114 &6263044155476646706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
+  _topBarDocument: {fileID: 3251128307289740864}
+--- !u!114 &5098705519525793333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9c98fcf84a74b2d9e275ca20e79bd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.InfoBarViewController
+--- !u!114 &7577613670292266336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a10c1e671f5d422eac690517dd22fe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.ShoutWheelViewController
+  _hudDocument: {fileID: 3251128307289740864}
+--- !u!114 &7030735980930187838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473e3ee5ac753411db2268346a3549ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.RaceMapViewController
+  _hudDocument: {fileID: 3251128307289740864}
+  _tilesRC:
+  - {fileID: 2935506388020526948, guid: 6de13c26177cb44dc9ef05350ed2c04b, type: 3}
+  - {fileID: 6426572494250142434, guid: 6bfa52b09b45d4452a96cbff1e8fa536, type: 3}
+  - {fileID: 6933658706565655350, guid: 863b027a27d174491a7c804b98bd205b, type: 3}
+  - {fileID: 5744089890033289867, guid: bee6fb05fe24d43d490f69b50cc2326c, type: 3}
+  - {fileID: 4982415664987258019, guid: 8bb84274e662d45898dc638a3742f669, type: 3}
+  - {fileID: 3986526273246020431, guid: 423f89f340af04faba9240c73b466464, type: 3}
+  - {fileID: 6961653162248213082, guid: 7191d5fc5496a4c6b9a88f5bbca922f6, type: 3}
+  - {fileID: 5115586881992350864, guid: 4e69fd56c309c45f4be81eebce41dac1, type: 3}
+  - {fileID: 6511426155499482266, guid: 57eef84a035bd4094a60b6ea0f58b981, type: 3}
+  _forkTileRC: {fileID: 387596927975374334, guid: 067515a5a16e74d00a618697431dfcc8, type: 3}
+  _junctionTileRC: {fileID: 7649554479988010358, guid: 9391d8aea948c4b248e316221f08ad5b, type: 3}
+  _fogSprites:
+  - {fileID: -1032105966, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1829867595, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1587370574, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1094921515, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1251232192, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 120115450, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -968773330, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1183780857, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 373331770, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -222960500, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -725378469, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1474551762, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1722137865, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1268015483, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1187199458, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1875699646, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1693758389, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -116814219, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1327964623, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 2121675572, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1267506015, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1017553345, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -2054182664, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1508581909, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1191726187, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 365874696, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -429209440, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -309858511, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1769678709, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -2074344243, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1809647253, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1342029465, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1093316554, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 492266184, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -858953549, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1665937161, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 9924132, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -77744009, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 963804210, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1841936707, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1031930177, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1078306183, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 42151150, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -116455242, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 991603937, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -647246529, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -947065556, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -820433641, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -447353618, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1742783198, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -927922947, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1835586416, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 809436214, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1559634635, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 2140865647, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 2077097042, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1376657968, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -684669301, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 960171128, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1870086327, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1390153105, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -691343676, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 144684905, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -823144681, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 37359338, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1092120261, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 313071461, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1642007061, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 2059066402, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 417128346, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1622835269, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1512304934, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1417895811, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1479719065, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -699430376, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 312671216, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1157471167, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -1204666433, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: -976912016, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  - {fileID: 1913619497, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
+  _fogColumns: 8
+  _fogRows: 10
+  _revealStepDelay: 0.5
+  _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
+  _powerUpsData: {fileID: 11400000, guid: abf26ee10e594fe4db43417fdeb2873d, type: 2}
+--- !u!114 &7914441003672711150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275156916646142051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
+  _hudDocument: {fileID: 3251128307289740864}
+  _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
+  _swipeThreshold: 80
+--- !u!1 &9166716996341449404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3489471632035928267}
+  - component: {fileID: 6013925633440783216}
+  m_Layer: 0
+  m_Name: HUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3489471632035928267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9166716996341449404}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5487724171421242337}
+  - {fileID: 6716092770049399596}
+  m_Father: {fileID: 4019022606681929960}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6013925633440783216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9166716996341449404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b018773188a4306b440861259bd332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
