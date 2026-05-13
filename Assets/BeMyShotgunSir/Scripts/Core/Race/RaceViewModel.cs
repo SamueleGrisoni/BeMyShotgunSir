@@ -24,6 +24,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         event Action OnInventoryChanged;
         event Action OnRaceTeamDataChanged;
         event Action OnLeaderboardChanged;
+        event Action OnTeamTrackProgressChanged;
     }
 
     public class RaceViewModel : IRaceDataView
@@ -38,13 +39,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public event Action OnRaceTeamDataChanged;
         public event Action OnLeaderboardChanged;
         public event Action OnInventoryChanged;
+        public event Action OnTeamTrackProgressChanged;
 
         public int? Seed => _netState.Seed;
+        public ILobbyDataView LobbyDataView => _lobbyViewModel;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _netState.PlayerStates;
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _netState.TeamData;
         public IReadOnlyDictionary<int, InventoryData> TeamInventories => _netState.PlayerInventories;
         public IReadOnlyList<int> Leaderboard => _netState.Leaderboard;
-        public ILobbyDataView LobbyDataView => _lobbyViewModel;
+        public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _netState.TeamTrackProgress;
 
         public RaceViewModel(LobbyViewModel lobbyViewModel, IRaceNetStateSubscribe netState, int clientId)
         {
@@ -56,6 +59,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _netState.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;
             _netState.PlayerInventories_Sub.OnChange += OnInventoryChanged_Propagate;
             _netState.Leaderboard_Sub.OnChange += OnLeaderboardChanged_Propagate;
+            _netState.TeamTrackProgress_Sub.OnChange += OnTeamTrackProgressChanged_Propagate;
         }
 
 
@@ -66,6 +70,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnRaceTeamDataChanged?.Invoke();
             OnInventoryChanged?.Invoke();
             OnLeaderboardChanged?.Invoke();
+            OnTeamTrackProgressChanged?.Invoke();
         }
 
         private void OnSeedChanged_Propagate(int? _, int? __, bool ___) => OnSeedChanged?.Invoke();
@@ -73,6 +78,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnInventoryChanged_Propagate(SyncDictionaryOperation op, int key, InventoryData value, bool asServer) => OnInventoryChanged?.Invoke();
         private void OnRaceTeamDataChanged_Propagate(SyncDictionaryOperation _, int __, RaceTeamData ___, bool ____) => OnRaceTeamDataChanged?.Invoke();
         private void OnLeaderboardChanged_Propagate(SyncListOperation _, int __, int ___, int ____, bool _____) => OnLeaderboardChanged?.Invoke();
+        private void OnTeamTrackProgressChanged_Propagate(SyncDictionaryOperation _, int __, TeamTrackProgress ___, bool ____) => OnTeamTrackProgressChanged?.Invoke();
 
         public bool TryGetTeamIdFromClientId(int clientId, out int? teamId)
         {
