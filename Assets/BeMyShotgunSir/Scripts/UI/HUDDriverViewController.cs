@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
@@ -10,6 +11,7 @@ namespace BeMyShotgunSir.Scripts.UI
     {
         [SerializeField] private UIController_Race _uiControllerRace;
         [SerializeField] private UIDocument _hudDriverDocument;
+        [SerializeField] private TopBarViewController _topBarViewController;
 
         #region Bindings
         private RaceCommand _command;
@@ -39,6 +41,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
+            _viewModel.OnTeamTrackProgressChanged += UpdateTeamProgress;
         }
 
 
@@ -47,6 +51,14 @@ namespace BeMyShotgunSir.Scripts.UI
         private void OnEnable()
         {
             _root = _hudDriverDocument.rootVisualElement;
+        }
+
+        private void UpdateTeamProgress()
+        {
+            foreach (KeyValuePair<int, RaceTeamData> teamsId in _viewModel.TeamData)
+            {
+                _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
+            }
         }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

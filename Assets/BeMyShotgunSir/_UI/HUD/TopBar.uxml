@@ -1,22 +1,14 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBar.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBar"/>
-    <ui:VisualElement name="TopBar" __unity-builder-selected-element="" class="top-bar">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBarUSS.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBarUSS"/>
+    <ui:VisualElement name="TopBar" class="top-bar">
         <ui:VisualElement name="MapBarContainer" class="map-bar-container">
-            <ui:VisualElement name="MapBar" class="map-bar">
-                <!-- <ui:VisualElement name="BarCapLeft" class="bar-cap"/>
-                <ui:VisualElement name="BarTrack" class="bar-track"/>
-                <ui:VisualElement name="BarCapRight" class="bar-cap"/> -->
-            </ui:VisualElement>
-            <ui:VisualElement name="PlayerRow" class="marker-row">
-                <ui:VisualElement name="Player1Marker" class="player-marker player1-marker">
-                    <ui:VisualElement name="Player1Icon" class="player-icon player1-icon"/>
-                    <!-- <ui:VisualElement name="Player1Needle" class="player-needle"/> -->
+            <ui:VisualElement name="MapBar" class="map-bar"/>
+            <ui:VisualElement name="MarkerRow" class="marker-row">
+                <ui:VisualElement name="Team1Marker" class="team-marker team1-marker">
+                    <ui:VisualElement name="Team1Icon" class="team-icon team1-icon"/>
                 </ui:VisualElement>
-            <!-- </ui:VisualElement>
-            <ui:VisualElement name="Player2Row" class="marker-row">  -->
-                <ui:VisualElement name="Player2Marker" class="player-marker player2-marker">
-                    <!-- <ui:VisualElement name="Player2Needle" class="player-needle"/> -->
-                    <ui:VisualElement name="Player2Icon" class="player-icon player2-icon"/>
+                <ui:VisualElement name="Team2Marker" class="team-marker team2-marker">
+                    <ui:VisualElement name="Team2Icon" class="team-icon team2-icon"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
