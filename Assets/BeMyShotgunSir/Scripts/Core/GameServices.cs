@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using FishNet.Managing;
 using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Lobby;
@@ -71,10 +69,6 @@ namespace BeMyShotgunSir.Scripts.Core
 
         #region Local
 
-        [field: SerializeField] public Camera MainCamera { get; private set; }
-        [field: SerializeField] public EventSystem EventSystem { get; private set; }
-        [field: SerializeField] public AudioListener AudioListener { get; private set; }
-        [field: SerializeField] public Volume GlobalVolume { get; private set; }
         [SerializeField] private SceneCoordinator _sceneCoordinator;
         public UIFlowState UIFlowState { get; private set; }
         public SceneCoordinator SceneCoordinator => _sceneCoordinator;
