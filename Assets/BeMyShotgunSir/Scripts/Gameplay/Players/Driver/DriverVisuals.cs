@@ -15,7 +15,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
         [SerializeField] private Transform _sidecar;
-        [SerializeField] private Transform _visualModel;
+        [SerializeField] public Transform _visualModel;
         [SerializeField] private float _smoothingSpeedFast = 100f;
         [SerializeField] private float _smoothingSpeedSlow = 15f;
 

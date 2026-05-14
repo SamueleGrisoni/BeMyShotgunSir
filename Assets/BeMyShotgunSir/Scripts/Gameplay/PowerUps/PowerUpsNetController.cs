@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;
@@ -146,6 +147,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             {
                 _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
                 AddPowerUpToTeam(teamData.TeamId, PowerUp.Invisibility);
+                Log.ELazy(() => $"Added Invisibility power-up to team {teamData.TeamId} for testing.", this);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
@@ -176,6 +178,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             {
                 _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
                 _raceNetState.TryGetInventorySelectedSlot(teamData.TeamId, out PowerUp selectedPowerUp);
+                Log.ELazy(() => $"Selected power-up: {selectedPowerUp}", this);
                 ActivatePowerUp(new InfoUsePowerUp(teamData.TeamId, selectedPowerUp));
             }
         }

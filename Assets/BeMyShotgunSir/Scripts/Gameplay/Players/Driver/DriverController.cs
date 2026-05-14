@@ -1,4 +1,5 @@
 using System;
+using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
@@ -40,6 +41,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _inputConsumer = context.InputPublisher;
             _movementController.Initialize(new RaceNetContext(null, null, null, context.NetState, context.ClientProjector, context.PowerUpsNetController, null), _inputConsumer, this);
             _teamNetController = teamNetController;
+            _netState = context.NetState;
 
             if (_inputConsumer == null || _teamNetController == null)
                 Log.ELazy(() => $"DriverController initialized with missing parameters.", this);
@@ -58,6 +60,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 return;
             }
             OnDriverSpawned?.Invoke(this);
+        }
+
+        [ObserversRpc(BufferLast = true)]
+        public void ApplyInvisibilityEffect(bool isApplying)
+        {
+            if (!TeamId.HasValue)
+            {
+                Log.ELazy(() => $"Trying to apply Invisibility effect for driver with no team. Ignoring.", this);
+                return;
+            }
+            bool isMemberOfTeam = _netState.IsTeamMember(LocalConnection.ClientId, TeamId.Value);
+            bool shouldHide = isApplying && !isMemberOfTeam;
+            transform.GetComponentInChildren<DriverVisuals>()._visualModel.gameObject.SetActive(!shouldHide);
         }
     }
 }

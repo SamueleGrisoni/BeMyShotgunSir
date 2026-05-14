@@ -989,12 +989,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         public bool IsTeamMember(int localConnectionId, int teamId)
         {
-            if (!TryGetTeamDataByPlayerId(localConnectionId, out RaceTeamData teamData))
+            if(!TryGetTeamDataByPlayerId(localConnectionId, out RaceTeamData teamData))
             {
-                Log.WLazy(() => $"No team data found for player {localConnectionId}.", this);
                 return false;
             }
-            return teamData.DriverConnectionId == localConnectionId || teamData.ShotgunConnectionId == localConnectionId;
+            return teamData.TeamId == teamId;
         }
 
         public bool DidAllTeamsReachedChunk(int chunkId)

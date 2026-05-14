@@ -1,4 +1,6 @@
+using System;
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
@@ -9,6 +11,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
     [CreateAssetMenu(fileName = "SOInvisibility_PU", menuName = "Be My Shotgun, Sir!/PowerUp/Invisibility", order = 0)]
     public class SOInvisibility_PU : SOPowerUp //TODO
     {
+        public static Action<bool> OnInvisibilityEffectApplied;
         public override void OnUse(PowerUpRuntime runtime, StrategyContext context)
         {
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
@@ -16,9 +19,11 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             teamData.ActivePowerUpInfo.isInvisibilityActive = true;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
 
-            if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
-                // driverNob.GetComponent<DriverController>().ApplyInvisibilityEffect(); //TODO
-                Log.DLazy(() => $"Applying Invisibility effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
+            if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId,
+                    out NetworkObject driverNob))
+            {
+                driverNob.GetComponent<DriverController>().ApplyInvisibilityEffect(true);
+            }
             else
                 Log.WLazy(() => $"Trying to apply Invisibility effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);
 
@@ -34,7 +39,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             teamData.ActivePowerUpInfo.isInvisibilityActive = false;
             if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
             {
-                // driverNob.GetComponent<DriverController>().RemoveInvisibilityEffect(); //TODO
+                driverNob.GetComponent<DriverController>().ApplyInvisibilityEffect(false);
             }
             else
                 Log.WLazy(() => $"Trying to remove Invisibility effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);

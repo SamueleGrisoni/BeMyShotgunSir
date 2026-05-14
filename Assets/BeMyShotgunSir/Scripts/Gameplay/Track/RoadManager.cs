@@ -51,7 +51,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         [SerializeField] private float _serverBufferDistance = 150f;
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
-        private int _earlyCommitmentDirection = 0; // 0 means no early commitment set yet, -1 means early commitment to left, 1 means early commitment to right
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
         public static event Action<CrossroadSegmentInfo> OnCrossroadProvided;
         public static event Action<int> OnCommonGenerated;
@@ -132,13 +131,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public void SetContext(RaceNetContext context)
         {
-            //TODO
-            // context.NetState.OnFinishLineChunkIdSet += qualcosa;
-            // vedi tu se una certa iscrizione ti serve solo lato client o solo lato server o host
-            //poi quando hai ottenuto il finish line chunk id puoi settarlo in autonomia nello store
-            // context.NetState.SetFinishLineChunkId(finishlinechunkid);
             context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);
-            //context.NetState.OnFinishLineChunkIdSet += OnFinishLineChunkIdSet;
             if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
@@ -331,7 +324,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
 
             int finishLineId = _trackGenerator.ServerSetFinalSequence(firstTeamLastSpecialChunkType);
-
+            context.NetState.SetFinishLineChunkId(finishLineId);
             Log.DLazy(() => $"Timer expired, set finish line chunk id to {finishLineId} based on first team last special chunk type {firstTeamLastSpecialChunkType}", this);
 
             RpcSetFinishLineChunkId(finishLineId);
