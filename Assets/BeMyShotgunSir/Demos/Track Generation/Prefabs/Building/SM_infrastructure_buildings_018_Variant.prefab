@@ -52,13 +52,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -6829014719471199206, guid: 1ee06319e707c294aa39c2000db14d5f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7455898901918495748, guid: 1ee06319e707c294aa39c2000db14d5f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8044983368199898160}
+    - targetCorrespondingSourceObject: {fileID: 7455898901918495748, guid: 1ee06319e707c294aa39c2000db14d5f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9147028526876688873}
   m_SourcePrefab: {fileID: 100100000, guid: 1ee06319e707c294aa39c2000db14d5f, type: 3}
 --- !u!1 &3528752209470198760 stripped
 GameObject:
@@ -77,3 +81,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67209665df62a8d40868dbf8a0495920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.Building
+--- !u!65 &9147028526876688873
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3528752209470198760}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 17.6, y: 11.261422, z: 13.820173}
+  m_Center: {x: 0, y: 5.630711, z: 0.31008673}

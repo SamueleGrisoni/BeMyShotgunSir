@@ -52,13 +52,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1733296674880563527, guid: 88572786359853f4592ef504c48ca0e2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8535329567929034361, guid: 88572786359853f4592ef504c48ca0e2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 998211565805863728}
+    - targetCorrespondingSourceObject: {fileID: 8535329567929034361, guid: 88572786359853f4592ef504c48ca0e2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6804508477595532461}
+    - targetCorrespondingSourceObject: {fileID: 8535329567929034361, guid: 88572786359853f4592ef504c48ca0e2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2228643544903103264}
   m_SourcePrefab: {fileID: 100100000, guid: 88572786359853f4592ef504c48ca0e2, type: 3}
 --- !u!1 &2665655105310544815 stripped
 GameObject:
@@ -77,3 +84,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67209665df62a8d40868dbf8a0495920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.Building
+--- !u!65 &-6804508477595532461
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2665655105310544815}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.2527013, y: 5.420753, z: 8.501589}
+  m_Center: {x: -1.8936021, y: 2.7103765, z: -0.3828373}
+--- !u!65 &2228643544903103264
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2665655105310544815}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.838749, y: 5.420753, z: 3.8807976}
+  m_Center: {x: 4.146282, y: 2.7103765, z: -0.5664152}

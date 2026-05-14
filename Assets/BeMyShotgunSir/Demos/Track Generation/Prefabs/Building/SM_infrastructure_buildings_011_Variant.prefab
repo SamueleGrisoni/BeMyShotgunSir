@@ -52,13 +52,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_infrastructure_buildings_011_Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8472421299905576238, guid: b8f433399e37bf642b96faa0b7e0db70, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2183339163836636814, guid: b8f433399e37bf642b96faa0b7e0db70, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4962170125007320267}
+    - targetCorrespondingSourceObject: {fileID: 2183339163836636814, guid: b8f433399e37bf642b96faa0b7e0db70, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9095707576298892129}
   m_SourcePrefab: {fileID: 100100000, guid: b8f433399e37bf642b96faa0b7e0db70, type: 3}
 --- !u!1 &3044694643496914596 stripped
 GameObject:
@@ -77,3 +81,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67209665df62a8d40868dbf8a0495920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.Building
+--- !u!65 &9095707576298892129
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3044694643496914596}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 20.900002, y: 12.842318, z: 18.7}
+  m_Center: {x: 0.38189888, y: 6.421159, z: 0.3911891}

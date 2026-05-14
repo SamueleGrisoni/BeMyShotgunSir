@@ -52,13 +52,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_cottage_05_Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8540016436444402503, guid: 115649458b6f3b146b1e60af7d870c03, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 927078531658266681, guid: 115649458b6f3b146b1e60af7d870c03, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5859721025867575758}
+    - targetCorrespondingSourceObject: {fileID: 927078531658266681, guid: 115649458b6f3b146b1e60af7d870c03, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2200902635782147797}
+    - targetCorrespondingSourceObject: {fileID: 927078531658266681, guid: 115649458b6f3b146b1e60af7d870c03, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 746804766108036593}
   m_SourcePrefab: {fileID: 100100000, guid: 115649458b6f3b146b1e60af7d870c03, type: 3}
 --- !u!1 &1564433201814402485 stripped
 GameObject:
@@ -77,3 +84,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67209665df62a8d40868dbf8a0495920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.Building
+--- !u!65 &-2200902635782147797
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564433201814402485}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.5364933, y: 4.4, z: 7.700405}
+  m_Center: {x: -2.2148552, y: 2.2, z: 0.2657137}
+--- !u!65 &746804766108036593
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564433201814402485}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.2226744, y: 4.4, z: 4.2793117}
+  m_Center: {x: 2.1520524, y: 2.2, z: 0.13588119}

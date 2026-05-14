@@ -61,7 +61,6 @@ MonoBehaviour:
   - {fileID: 3687187491510905890, guid: f59af7538e0e060429edcb330a045ecd, type: 3}
   - {fileID: 393752332917596868, guid: 25a5a2895a523074d9c7fe7bb66eccb8, type: 3}
   <BigBuildings>k__BackingField:
-  - {fileID: 2289531015057189976, guid: e0d2f82921aee32479faadef82fbbb3a, type: 3}
   - {fileID: 5434365452255889922, guid: d4c7f99741bc66c4dacb570f6675b815, type: 3}
   - {fileID: 7023724294605883493, guid: 24a654f551f86fa4e883b1b1dd91de52, type: 3}
   - {fileID: 1339410876563643730, guid: 2737934c3e071e34ba1e6b08af14d87f, type: 3}
