@@ -71,6 +71,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
         private int _numChunksGenerated = 0;
         private int _finishLineChunkNumber = -1;
+        private bool _hasFinishLineBeenGenerated = false;
 
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGenerated;
         public static event Action<int> OnCommonGenerated;
@@ -199,11 +200,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     RoadChunkType.FINISH_LINE,
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
+            _hasFinishLineBeenGenerated = true;
             return _numChunksGenerated;
         }
 
         private void GenerateNextSequence(GeneratedRoadChunkInfo lastDequeuedChunk)
         {
+            if (_hasFinishLineBeenGenerated)
+            {
+                return;
+            }
             if (lastDequeuedChunk.type == RoadChunkType.ENDING_CROSSROAD)
             {
                 _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
