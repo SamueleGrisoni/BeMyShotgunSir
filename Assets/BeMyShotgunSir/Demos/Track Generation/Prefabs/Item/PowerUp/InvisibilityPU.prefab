@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4404535628354932104}
   - component: {fileID: 4838409433761128962}
   - component: {fileID: 308776339835955965}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: InvisibilityPU
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 4166990365770639917}
   - component: {fileID: 5963988614279531684}
   - component: {fileID: 6317252308000870874}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: InvisibilityVIsual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
