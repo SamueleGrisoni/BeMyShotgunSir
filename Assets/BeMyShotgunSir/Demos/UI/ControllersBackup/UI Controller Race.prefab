@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4588137099071420742
+--- !u!1 &476402763850849732
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,54 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4019022606681929960}
-  - component: {fileID: 164436529400926304}
+  - component: {fileID: 2426601392817452865}
+  - component: {fileID: 5479285995781867501}
+  m_Layer: 0
+  m_Name: HUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2426601392817452865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476402763850849732}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 86194884342702254}
+  - {fileID: 4903317620341241623}
+  m_Father: {fileID: 7500121610005409698}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5479285995781867501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476402763850849732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b018773188a4306b440861259bd332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!1 &2018905628089166425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7500121610005409698}
+  - component: {fileID: 5231385197563997750}
   m_Layer: 0
   m_Name: UI Controller Race
   m_TagString: Untagged
@@ -17,37 +63,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4019022606681929960
+--- !u!4 &7500121610005409698
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4588137099071420742}
+  m_GameObject: {fileID: 2018905628089166425}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -11.30634, y: 8.50394, z: 15.99799}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3489471632035928267}
+  - {fileID: 2426601392817452865}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &164436529400926304
+--- !u!114 &5231385197563997750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4588137099071420742}
+  m_GameObject: {fileID: 2018905628089166425}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15ba0f9807b1b448d98100499735626e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.UIController_Race
-  _hudDriverViewController: {fileID: 2247915037296563853}
-  _hudShotgunViewController: {fileID: 2028083175073570356}
---- !u!1 &5102840038780894827
+  _hudDriverViewController: {fileID: 8600282154147348440}
+  _hudShotgunViewController: {fileID: 3042457647788643203}
+--- !u!1 &6923618394139418947
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,13 +101,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5487724171421242337}
-  - component: {fileID: 5124482825123569876}
-  - component: {fileID: 2247915037296563853}
-  - component: {fileID: 3056120180109181573}
-  - component: {fileID: 1181507877119989208}
-  - component: {fileID: 7329364042237008986}
-  - component: {fileID: 4264459334644341571}
+  - component: {fileID: 86194884342702254}
+  - component: {fileID: 3169041127172394584}
+  - component: {fileID: 8600282154147348440}
+  - component: {fileID: 8106864560479443483}
+  - component: {fileID: 347712972222433254}
+  - component: {fileID: 6563088459439131413}
+  - component: {fileID: 4647715154906779022}
   m_Layer: 0
   m_Name: Driver
   m_TagString: Untagged
@@ -69,28 +115,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5487724171421242337
+--- !u!4 &86194884342702254
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3489471632035928267}
+  m_Father: {fileID: 2426601392817452865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5124482825123569876
+--- !u!114 &3169041127172394584
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -107,77 +153,77 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &2247915037296563853
+--- !u!114 &8600282154147348440
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f31059872fe54a6db51459306df497b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDDriverViewController
-  _uiControllerRace: {fileID: 164436529400926304}
-  _hudDriverDocument: {fileID: 5124482825123569876}
---- !u!114 &3056120180109181573
+  _uiControllerRace: {fileID: 5231385197563997750}
+  _hudDriverDocument: {fileID: 3169041127172394584}
+  _topBarViewController: {fileID: 8106864560479443483}
+--- !u!114 &8106864560479443483
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
-  _topBarDocument: {fileID: 5124482825123569876}
---- !u!114 &1181507877119989208
+  _topBarDocument: {fileID: 3169041127172394584}
+  _markerLerpSpeed: 8
+--- !u!114 &347712972222433254
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
-  _hudDocument: {fileID: 5124482825123569876}
+  _hudDocument: {fileID: 3169041127172394584}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _swipeThreshold: 80
---- !u!114 &7329364042237008986
+--- !u!114 &6563088459439131413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d141806fb746608f5032e52696e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.EarlyCommitmentController
-  _hudDocument: {fileID: 5124482825123569876}
-  CommitmentValue: 0
-  Show: 0
---- !u!114 &4264459334644341571
+  _hudDocument: {fileID: 3169041127172394584}
+--- !u!114 &4647715154906779022
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5102840038780894827}
+  m_GameObject: {fileID: 6923618394139418947}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3c020507a290447ba6f8ca748c89cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BottomBarController
-  _hudDocument: {fileID: 5124482825123569876}
---- !u!1 &7275156916646142051
+  _hudDocument: {fileID: 3169041127172394584}
+--- !u!1 &8409240005055016923
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,14 +231,14 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6716092770049399596}
-  - component: {fileID: 3251128307289740864}
-  - component: {fileID: 2028083175073570356}
-  - component: {fileID: 6263044155476646706}
-  - component: {fileID: 5098705519525793333}
-  - component: {fileID: 7577613670292266336}
-  - component: {fileID: 7030735980930187838}
-  - component: {fileID: 7914441003672711150}
+  - component: {fileID: 4903317620341241623}
+  - component: {fileID: 9041091428175540355}
+  - component: {fileID: 3042457647788643203}
+  - component: {fileID: 5952783131457508608}
+  - component: {fileID: 7672918707532822766}
+  - component: {fileID: 6241677923421877382}
+  - component: {fileID: 6110983337148655240}
+  - component: {fileID: 2199131623316645021}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -200,28 +246,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6716092770049399596
+--- !u!4 &4903317620341241623
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3489471632035928267}
+  m_Father: {fileID: 2426601392817452865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3251128307289740864
+--- !u!114 &9041091428175540355
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -238,75 +284,77 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &2028083175073570356
+--- !u!114 &3042457647788643203
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bd5e3fcea20a4f42aebb271d978e45a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDShotgunViewController
-  _hudShotgunDocument: {fileID: 3251128307289740864}
-  _topBarViewController: {fileID: 6263044155476646706}
-  _infoBarViewController: {fileID: 5098705519525793333}
-  _shoutWheelViewController: {fileID: 7577613670292266336}
-  _raceMapViewController: {fileID: 7030735980930187838}
-  _powerUpViewController: {fileID: 7914441003672711150}
---- !u!114 &6263044155476646706
+  _hudShotgunDocument: {fileID: 9041091428175540355}
+  _topBarViewController: {fileID: 5952783131457508608}
+  _infoBarViewController: {fileID: 7672918707532822766}
+  _shoutWheelViewController: {fileID: 6241677923421877382}
+  _raceMapViewController: {fileID: 6110983337148655240}
+  _powerUpViewController: {fileID: 2199131623316645021}
+--- !u!114 &5952783131457508608
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
-  _topBarDocument: {fileID: 3251128307289740864}
---- !u!114 &5098705519525793333
+  _topBarDocument: {fileID: 9041091428175540355}
+  _markerLerpSpeed: 8
+--- !u!114 &7672918707532822766
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc9c98fcf84a74b2d9e275ca20e79bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.InfoBarViewController
---- !u!114 &7577613670292266336
+  _hudDocument: {fileID: 9041091428175540355}
+--- !u!114 &6241677923421877382
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a10c1e671f5d422eac690517dd22fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.ShoutWheelViewController
-  _hudDocument: {fileID: 3251128307289740864}
---- !u!114 &7030735980930187838
+  _hudDocument: {fileID: 9041091428175540355}
+--- !u!114 &6110983337148655240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 473e3ee5ac753411db2268346a3549ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.RaceMapViewController
-  _hudDocument: {fileID: 3251128307289740864}
+  _hudDocument: {fileID: 9041091428175540355}
   _tilesRC:
   - {fileID: 2935506388020526948, guid: 6de13c26177cb44dc9ef05350ed2c04b, type: 3}
   - {fileID: 6426572494250142434, guid: 6bfa52b09b45d4452a96cbff1e8fa536, type: 3}
@@ -405,64 +453,18 @@ MonoBehaviour:
   _revealStepDelay: 0.5
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _powerUpsData: {fileID: 11400000, guid: abf26ee10e594fe4db43417fdeb2873d, type: 2}
---- !u!114 &7914441003672711150
+--- !u!114 &2199131623316645021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275156916646142051}
+  m_GameObject: {fileID: 8409240005055016923}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
-  _hudDocument: {fileID: 3251128307289740864}
+  _hudDocument: {fileID: 9041091428175540355}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _swipeThreshold: 80
---- !u!1 &9166716996341449404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3489471632035928267}
-  - component: {fileID: 6013925633440783216}
-  m_Layer: 0
-  m_Name: HUD
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3489471632035928267
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9166716996341449404}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5487724171421242337}
-  - {fileID: 6716092770049399596}
-  m_Father: {fileID: 4019022606681929960}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6013925633440783216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9166716996341449404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b018773188a4306b440861259bd332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
