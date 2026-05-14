@@ -125,59 +125,59 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public void DebugUpdate() //DEBUG
         {
-            // if (Input.GetKeyDown(KeyCode.M))
-            // {
-            //     Log.DLazy(() => $"Current active power-ups: {string.Join(", ", _activePowerUps.Values)}", this, _log);
-            // }
-            // if (Input.GetKeyDown(KeyCode.N))
-            // {
-            //     Log.DLazy(() => $"Current spawned power-ups: {string.Join(", ", _spawnedPowerUps)}", this, _log);
-            // }
-            // if (Input.GetKeyDown(KeyCode.B))
-            // {
-            //     Log.DLazy(() => $"Current race net state: {_raceNetState.GetDescription()}", this, _log);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha0))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.Armor);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha1))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.Invisibility);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha2))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.RerollPowerUp);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha3))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.RoadBlock);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha4))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.Shield);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha5))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.Spear);
-            // }
-            // if (Input.GetKeyDown(KeyCode.Alpha6))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     AddPowerUpToTeam(teamData.TeamId, PowerUp.StealPowerUp);
-            // }
-            // if (Input.GetKeyDown(KeyCode.U))
-            // {
-            //     _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-            //     _raceNetState.TryGetInventorySelectedSlot(teamData.TeamId, out PowerUp selectedPowerUp);
-            //     ActivatePowerUp(new InfoUsePowerUp(teamData.TeamId, selectedPowerUp));
-            // }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                Log.DLazy(() => $"Current active power-ups: {string.Join(", ", _activePowerUps.Values)}", this, _log);
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                Log.DLazy(() => $"Current spawned power-ups: {string.Join(", ", _spawnedPowerUps)}", this, _log);
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                Log.DLazy(() => $"Current race net state: {_raceNetState.GetDescription()}", this, _log);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Armor);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Invisibility);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.RerollPowerUp);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.RoadBlock);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Shield);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.Spear);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                AddPowerUpToTeam(teamData.TeamId, PowerUp.StealPowerUp);
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
+                _raceNetState.TryGetInventorySelectedSlot(teamData.TeamId, out PowerUp selectedPowerUp);
+                ActivatePowerUp(new InfoUsePowerUp(teamData.TeamId, selectedPowerUp));
+            }
         }
         public void OnDisable() => UnsubscribeEvents();
 

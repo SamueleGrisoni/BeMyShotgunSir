@@ -345,10 +345,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (NetState.AreAllPlayersReady())
             {
                 _isRaceStarted = true;
-                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
+                StartRace_ObservesrRpc();
                 Log.DLazy(() => $"All players are ready. Starting race.", this);
             }
         }
+
+        [ObserversRpc]
+        private void StartRace_ObservesrRpc() => GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
 
         private void Update()
         {

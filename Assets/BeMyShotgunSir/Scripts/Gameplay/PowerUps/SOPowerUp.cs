@@ -93,8 +93,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
 
             raceNetStateStore.TryGetTeamInventory(runtime.ActivePowerUpData.OwnerTeamId, out InventoryData inventory);
-            raceNetStateStore.SetTeamInventory(runtime.ActivePowerUpData.OwnerTeamId, inventory.UpdateSelectedSlot(SelectedSlotPolicy.CLosestNonEmptyIndex));
-
+            raceNetStateStore.SetTeamInventory(runtime.ActivePowerUpData.OwnerTeamId, inventory.RemoveAndUpdateSelected());
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData = teamData.AddActivePowerUpResult(new PowerUpIdentifier(runtime.Definition.PowerUpType, runtime.ActivePowerUpData.ManagerInstanceId));
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);

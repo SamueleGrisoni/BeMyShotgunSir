@@ -163,14 +163,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             SelectedSlot = selectedSlot;
         }
 
-        public InventoryData(InventoryData other, PowerUp slot1 = PowerUp.None, PowerUp slot2 = PowerUp.None, PowerUp slot3 = PowerUp.None, PowerUp slot4 = PowerUp.None, PowerUp slot5 = PowerUp.None, PuSlot? selectedSlot = null)
+        public InventoryData(InventoryData other, PuSlot? slot1 = null, PuSlot? slot2 = null, PuSlot? slot3 = null, PuSlot? slot4 = null, PuSlot? slot5 = null, PuSlot? selectedSlot = null)
         {
             TeamId = other.TeamId;
-            Slot1 = slot1 != PowerUp.None ? new PuSlot(1, slot1) : other.Slot1;
-            Slot2 = slot2 != PowerUp.None ? new PuSlot(2, slot2) : other.Slot2;
-            Slot3 = slot3 != PowerUp.None ? new PuSlot(3, slot3) : other.Slot3;
-            Slot4 = slot4 != PowerUp.None ? new PuSlot(4, slot4) : other.Slot4;
-            Slot5 = slot5 != PowerUp.None ? new PuSlot(5, slot5) : other.Slot5;
+            Slot1 = slot1 ?? other.Slot1;
+            Slot2 = slot2 ?? other.Slot2;
+            Slot3 = slot3 ?? other.Slot3;
+            Slot4 = slot4 ?? other.Slot4;
+            Slot5 = slot5 ?? other.Slot5;
             SelectedSlot = selectedSlot ?? other.SelectedSlot;
         }
 
@@ -192,35 +192,44 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (IsEmpty)
                 updateSelectedSlot = true;
             if (Slot1.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot1: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(1, powerUp) : SelectedSlot);
+                return new InventoryData(this, slot1: new PuSlot(1, powerUp), selectedSlot: updateSelectedSlot ? new PuSlot(1, powerUp) : SelectedSlot);
             if (Slot2.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot2: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(2, powerUp) : SelectedSlot);
+                return new InventoryData(this, slot2: new PuSlot(2, powerUp), selectedSlot: updateSelectedSlot ? new PuSlot(2, powerUp) : SelectedSlot);
             if (Slot3.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot3: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(3, powerUp) : SelectedSlot);
+                return new InventoryData(this, slot3: new PuSlot(3, powerUp), selectedSlot: updateSelectedSlot ? new PuSlot(3, powerUp) : SelectedSlot);
             if (Slot4.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot4: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(4, powerUp) : SelectedSlot);
+                return new InventoryData(this, slot4: new PuSlot(4, powerUp), selectedSlot: updateSelectedSlot ? new PuSlot(4, powerUp) : SelectedSlot);
             if (Slot5.PowerUp == PowerUp.None)
-                return new InventoryData(this, slot5: powerUp, selectedSlot: updateSelectedSlot ? new PuSlot(5, powerUp) : SelectedSlot);
+                return new InventoryData(this, slot5: new PuSlot(5, powerUp), selectedSlot: updateSelectedSlot ? new PuSlot(5, powerUp) : SelectedSlot);
 
             Log.WLazy(() => $"Trying to add power-up {powerUp} to inventory but no free slots available.", this);
             return this;
         }
 
-        public InventoryData RemovePowerUp(PowerUp powerUp)
+        public InventoryData RemoveAndUpdateSelected()
         {
-            if (Slot1.PowerUp == powerUp)
-                return new InventoryData(this, slot1: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 1 ? new PuSlot(1, powerUp) : SelectedSlot);
-            if (Slot2.PowerUp == powerUp)
-                return new InventoryData(this, slot2: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 2 ? new PuSlot(2, powerUp) : SelectedSlot);
-            if (Slot3.PowerUp == powerUp)
-                return new InventoryData(this, slot3: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 3 ? new PuSlot(3, powerUp) : SelectedSlot);
-            if (Slot4.PowerUp == powerUp)
-                return new InventoryData(this, slot4: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 4 ? new PuSlot(4, powerUp) : SelectedSlot);
-            if (Slot5.PowerUp == powerUp)
-                return new InventoryData(this, slot5: PowerUp.None, selectedSlot: SelectedSlot.Value.SlotIndex == 5 ? new PuSlot(5, powerUp) : SelectedSlot);
+            if (SelectedSlot == null)
+            {
+                Log.WLazy(() => $"Trying to remove power-up but it was already null.", this);
+                return this;
+            }
+            InventoryData updatedInventory = SelectedSlot.Value.SlotIndex switch
+            {
+                1 => new InventoryData(this, slot1: new PuSlot(1, PowerUp.None), selectedSlot: SelectedSlot.Value),
+                2 => new InventoryData(this, slot2: new PuSlot(2, PowerUp.None), selectedSlot: SelectedSlot.Value),
+                3 => new InventoryData(this, slot3: new PuSlot(3, PowerUp.None), selectedSlot: SelectedSlot.Value),
+                4 => new InventoryData(this, slot4: new PuSlot(4, PowerUp.None), selectedSlot: SelectedSlot.Value),
+                5 => new InventoryData(this, slot5: new PuSlot(5, PowerUp.None), selectedSlot: SelectedSlot.Value),
+                _ => this
+            };
 
-            Log.WLazy(() => $"Trying to remove power-up {powerUp} from inventory but it was not found in any slot.", this);
-            return this;
+            if (updatedInventory.Equals(this))
+            {
+                Log.WLazy(() => $"Trying to remove power-up but selected slot index is invalid.", this);
+                return this;
+            }
+
+            return updatedInventory.UpdateSelectedSlot(SelectedSlotPolicy.CLosestNonEmptyIndex);
         }
 
         public InventoryData UpdateSelectedSlot(SelectedSlotPolicy policy)
@@ -406,7 +415,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public sealed class RaceNetStateStore : NetworkBehaviour, IRaceNetStateStore
     {
 
-        # region Server-only state and methods
+        #region Server-only state and methods
         //utility
         private bool _log = true;
 
@@ -423,16 +432,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _teamNobs[teamId] = nob;
         }
 
-        public bool TryGetTeamNob(int teamId, out NetworkObject nob) =>
-            nob = _raceTeamData[teamId].TeamNob;
-
-        public bool TryGetTeamNobByPlayerId(int connectionId, out NetworkObject nob)
+        public bool TryGetTeamNob(int teamId, out NetworkObject nob)
         {
             nob = default;
-            if (!TryGetPlayerState(connectionId, out RacePlayerState playerState))
+            if (!TryGetTeamData(teamId, out RaceTeamData teamData))
                 return false;
-            return TryGetTeamNob(playerState.TeamId, out nob);
+            nob = teamData.TeamNob;
+            return nob != null;
         }
+
 
         public bool TryGetDriverNob(int teamId, out NetworkObject nob)
         {
@@ -490,9 +498,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 OnFinishLineChunkIdSet?.Invoke(_finishLineChunkId.Value);
         }
 
-        # endregion
+        #endregion
 
-        # region Networked state and methods
+        #region Networked state and methods
 
         // Networked state
         /// <summary> synced </summary>
@@ -591,7 +599,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             EventPropagationSetup();
         }
 
-        # endregion
+        #endregion
 
         #region Setters
 

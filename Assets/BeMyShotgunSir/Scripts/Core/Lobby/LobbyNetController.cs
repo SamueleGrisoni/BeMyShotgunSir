@@ -254,7 +254,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
 
             _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", " Server");
             Spawn(_activeRaceManager);
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
+            InitRace_ObserversRpc();
         }
+
+        [ObserversRpc]
+        private void InitRace_ObserversRpc() => GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
     }
 }

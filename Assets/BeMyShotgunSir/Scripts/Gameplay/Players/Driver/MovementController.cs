@@ -608,9 +608,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private bool _earlyCommitmentNotUsed;
         private bool _earlyCommitmentEnabled;
+
+
         [Server]
         private void OnTriggerEnter(Collider other)
         {
+            if (!IsServerInitialized) return;
             if (other.CompareTag("Portal"))
             {
                 Debug.Log("hit portale");
