@@ -317,6 +317,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             if (!_isServer)
             {
+                //Log.WLazy(() => "Timer expired but not server, ignoring", this);
                 return;
             }
 
@@ -334,8 +335,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 firstTeamLastSpecialChunkType = RoadChunkType.START_LINE;
             }
             int finishLineId = _trackGenerator.ServerSetFinalSequence(firstTeamLastSpecialChunkType);
-                context.NetState.SetFinishLineChunkId(finishLineId);
-                Log.DLazy(() => $"Timer expired, set finish line chunk id to {finishLineId} based on first team last special chunk type {firstTeamLastSpecialChunkType}", this);
+            context.NetState.SetFinishLineChunkId(finishLineId);
+            Log.DLazy(() => $"Timer expired, set finish line chunk id to {finishLineId} based on first team last special chunk type {firstTeamLastSpecialChunkType}", this);
         }
 
         private void OnFinishLineChunkIdSet(int finishLineChunkId)

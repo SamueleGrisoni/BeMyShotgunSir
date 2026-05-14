@@ -450,7 +450,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2204479149634885745}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
@@ -934,30 +934,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4998179860331136265}
     m_Modifications:
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.69126093
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7226053
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -92.54
-      objectReference: {fileID: 0}
-    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_Name
-      value: Sidecar
-      objectReference: {fileID: 0}
     - target: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -997,6 +973,30 @@ PrefabInstance:
     - target: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.69126093
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7226053
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -92.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_Name
+      value: Sidecar
       objectReference: {fileID: 0}
     - target: {fileID: 2732889835624388037, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_IsActive

@@ -495,7 +495,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void OnFinishLineChunkIdSet_Propagate(int prev, int _, bool __)
         {
             if (prev < 0 && _finishLineChunkId.Value >= 0)
+            {
+                //Log.ELazy(() => $"Finish line chunk ID set to {_finishLineChunkId.Value}. Propagating event.", this);
                 OnFinishLineChunkIdSet?.Invoke(_finishLineChunkId.Value);
+            }
+
         }
 
         #endregion
@@ -597,6 +601,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _finishLineChunkId.Value = -1;
 
             EventPropagationSetup();
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (!IsHostInitialized)
+                EventPropagationSetup();
         }
 
         #endregion
