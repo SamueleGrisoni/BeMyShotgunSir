@@ -356,6 +356,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [TargetRpc]
         private void Send_ExecuteDriverFeedback(NetworkConnection conn, DriverFeedback driverFeedback) => InputConsumer.SendDriveFeedbackToShotgun(driverFeedback);
 
+        [Server]
+        private void Server_BatteryEarlyCommitment(float batteryCharge)
+        {
+            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection conn))
+            {
+                if (conn != null)
+                    Send_BatteryEarlyCommitment(conn, batteryCharge);
+            }
+        }
+        [TargetRpc]
+        private void Send_BatteryEarlyCommitment(NetworkConnection conn, float batteryCharge) => InputConsumer.BatteryChargeEarlyCommitment(batteryCharge);
+
         #endregion
 
         #region Tick loop
@@ -670,7 +682,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                                 float lenght = trackProgress.NextSpecialChunkId - (lastSpecialChunk.Id + 1);
                                 float position = trackProgress.NextSpecialChunkId - _currentChunkId;
                                 _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
-                                InputConsumer.GiveBatteryChargeEarlyCommitment(_currentPossibleChargeEarlyCommitment);
+                                Server_BatteryEarlyCommitment(_currentPossibleChargeEarlyCommitment);
                                 Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
                                 _earlyCommitmentEnabled = true;
                             }
