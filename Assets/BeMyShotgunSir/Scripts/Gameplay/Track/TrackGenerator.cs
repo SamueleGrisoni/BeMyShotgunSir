@@ -70,6 +70,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         private int _maxWeight;
         private Dictionary<int, int> _weightToChunkIndexMap = new Dictionary<int, int>();
         private int _numChunksGenerated = 0;
+        private int _finishLineChunkNumber = -1;
 
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGenerated;
         public static event Action<int> OnCommonGenerated;
@@ -176,6 +177,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             return -1;
         }
 
+        public void SetFinishLineChunkId(int chunkId)
+        {
+            _finishLineChunkNumber = chunkId;
+        }
+
         private int GenerateFinalSequence()
         {
             _numChunksGenerated++;
@@ -219,6 +225,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 _chunksRemainingInCurrentState--;
             }
             OnCommonGenerated?.Invoke(crossroadSegmentChunkCount);
+            if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 == _finishLineChunkNumber)
+            {
+                GenerateFinalSequence();
+            }
         }
 
         private void EnqueueSplitSegment()

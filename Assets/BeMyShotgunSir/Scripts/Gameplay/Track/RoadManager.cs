@@ -346,7 +346,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 return;
             }
             Log.WLazy(() => $"Finish line chunk id set to {finishLineChunkId}", this);
-            //_trackGenerator.SetFinishLineChunkId(finishLineChunkId);
+            //
+            _trackGenerator.SetFinishLineChunkId(finishLineChunkId);
         }
     }
 }
