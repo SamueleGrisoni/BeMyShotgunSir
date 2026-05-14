@@ -10,8 +10,27 @@ using UnityEngine.UIElements;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
+
     public class RaceMapViewController : RaceBindTarget
     {
+        private struct CachedSplitMap
+        {
+            public int StartChunkId;
+            public int EndChunkId;
+            public List<GeneratedRoadChunkInfoWithItems> SplitData;
+
+            public CachedSplitMap(
+                int startChunkId,
+                int endChunkId,
+                List<GeneratedRoadChunkInfoWithItems> splitData
+            )
+            {
+                StartChunkId = startChunkId;
+                EndChunkId = endChunkId;
+                SplitData = splitData;
+            }
+        }
+
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private RoadChunkTile[] _tilesRC;
         [SerializeField] private RoadChunkTile _forkTileRC;
@@ -71,10 +90,16 @@ namespace BeMyShotgunSir.Scripts.UI
         #region private fields
         private int _tileLeftAnchorOut;
         private int _tileRightAnchorOut;
+
         private List<GeneratedRoadChunkInfoWithItems> _currentSplitData = new List<GeneratedRoadChunkInfoWithItems>();
         private readonly List<GeneratedItemInfo> _leftPowerUps = new();
         private readonly List<GeneratedItemInfo> _rightPowerUps = new();
-        private Coroutine _fogRevealCoroutine;
+
+        private readonly List<CachedSplitMap> _cachedSplitMaps = new();
+        private CachedSplitMap? _currentCachedMap;
+        private int _revealedFogSteps;
+        private readonly List<Vector2Int> _leftFogRevealOrder = new();
+        private readonly List<Vector2Int> _rightFogRevealOrder = new();
 
 
         private bool _isShowing = false;
@@ -108,7 +133,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _rightColumn = _raceMap.Q<VisualElement>("RightColumn");
 
             BuildFogGrid();
-            StartCoroutine(TimedRandomFogRevealRoutine());
+            BuildFogRevealOrder();
+            ResetFogRevealProgress();
 
             Show(false);
         }
@@ -122,15 +148,19 @@ namespace BeMyShotgunSir.Scripts.UI
                 return;
             }
 
-            _currentSplitData = splitData;
-            ClearRaceMap();
-            ClearPowerUps();
+            if (!TryGetSplitBounds(splitData, out int startChunkId, out int endChunkId))
+            {
+                Log.ELazy(() => "Cannot cache split map because bounds are invalid.", this);
+                return;
+            }
 
-            BuildRaceMap();
-            PopulatePowerUps();
+            _cachedSplitMaps.Add(new CachedSplitMap(startChunkId, endChunkId, splitData));
+
+            TryLoadMapForCurrentTeamProgress();
         }
         #endregion
 
+        #region Race Map Construction and Update Methods
         private void BuildRaceMap()
         {
             var forkTile = new VisualElement();
@@ -246,6 +276,201 @@ namespace BeMyShotgunSir.Scripts.UI
                 _mapTiles.RemoveAt(0);
             }
         }
+        #endregion
+
+        #region Map Caching and Loading Methods
+
+        private bool TryGetSplitBounds(List<GeneratedRoadChunkInfoWithItems> splitData, out int startChunkId, out int endChunkId)
+        {
+            startChunkId = -1;
+            endChunkId = -1;
+
+            foreach (GeneratedRoadChunkInfoWithItems data in splitData)
+            {
+                GeneratedRoadChunkInfo info = data.roadChunkInfo;
+
+                if (info.type == RoadChunkType.STARTING_CROSSROAD)
+                    startChunkId = info.chunkNumber;
+
+                if (info.type == RoadChunkType.ENDING_CROSSROAD)
+                    endChunkId = info.chunkNumber;
+            }
+
+            return startChunkId >= 0 && endChunkId > startChunkId;
+        }
+
+        private void TryLoadMapForCurrentTeamProgress()
+        {
+            if (_viewModel == null)
+                return;
+
+            bool hasTeamId = _viewModel.TryGetTeamIdFromClientId(
+                _viewModel.ClientId,
+                out int? teamId
+            );
+
+            if (!hasTeamId || teamId == null)
+                return;
+
+            if (!_viewModel.TeamTrackProgress.TryGetValue((int)teamId, out TeamTrackProgress progress))
+                return;
+
+            TryLoadMapForProgress(progress);
+        }
+
+        private void TryLoadMapForProgress(TeamTrackProgress progress)
+        {
+            CachedSplitMap? targetMap = FindMapForProgress(progress);
+
+            if (targetMap == null)
+                return;
+
+            if (_currentCachedMap.HasValue &&
+                _currentCachedMap.Value.StartChunkId == targetMap.Value.StartChunkId &&
+                _currentCachedMap.Value.EndChunkId == targetMap.Value.EndChunkId)
+            {
+                return;
+            }
+
+            LoadCachedMap(targetMap.Value);
+        }
+
+        private CachedSplitMap? FindMapForProgress(TeamTrackProgress progress)
+        {
+            for (int i = 0; i < _cachedSplitMaps.Count; i++)
+            {
+                CachedSplitMap map = _cachedSplitMaps[i];
+
+                if (!progress.LastSpecialChunkType.HasValue)
+                    return null;
+
+                if ((progress.LastSpecialChunkType.Value.Type == RoadChunkType.START_LINE ||
+                    progress.LastSpecialChunkType.Value.Type == RoadChunkType.ENDING_CROSSROAD) && progress.NextSpecialChunkId == map.StartChunkId)
+                {
+                    return map;
+                }
+            }
+
+            return null;
+        }
+        private void LoadCachedMap(CachedSplitMap cachedMap)
+        {
+            _currentCachedMap = cachedMap;
+            _currentSplitData = cachedMap.SplitData;
+
+            ClearRaceMap();
+            ClearPowerUps();
+
+            BuildRaceMap();
+            PopulatePowerUps();
+
+            ResetFogRevealProgress();
+            BuildFogRevealOrder();
+        }
+
+        #endregion
+
+        #region Fog Methods
+
+        private void UpdateFogFromProgress(TeamTrackProgress progress)
+        {
+            if (!progress.LastSpecialChunkType.HasValue)
+                return;
+
+            PortalInfo lastSpecial = progress.LastSpecialChunkType.Value;
+
+            if (lastSpecial.Type != RoadChunkType.START_LINE &&
+                lastSpecial.Type != RoadChunkType.ENDING_CROSSROAD)
+                return;
+
+            int start = lastSpecial.Id;
+            int end = progress.NextSpecialChunkId;
+            int current = progress.CurrentChunkId;
+
+            if (end <= start)
+                return;
+
+            float traveledPercent = Mathf.InverseLerp(start, end, current);
+            float fogPercentage = (1f - traveledPercent) * 100f;
+
+            SetFogFromRoadPercentage(fogPercentage);
+        }
+
+        private void SetFogFromRoadPercentage(float roadPercentage)
+        {
+            roadPercentage = Mathf.Clamp(roadPercentage, 0f, 100f);
+
+            float revealedPercent = 1f - roadPercentage / 100f;
+
+            int maxSteps = Mathf.Max(
+                _leftFogRevealOrder.Count,
+                _rightFogRevealOrder.Count
+            );
+
+            int targetSteps = Mathf.CeilToInt(revealedPercent * maxSteps);
+
+            if (targetSteps <= _revealedFogSteps)
+                return;
+
+            RevealFogSteps(_revealedFogSteps, targetSteps);
+            _revealedFogSteps = targetSteps;
+        }
+
+        private void RevealFogSteps(int fromStep, int toStep)
+        {
+            for (int i = fromStep; i < toStep; i++)
+            {
+                if (i < _leftFogRevealOrder.Count)
+                {
+                    Vector2Int tile = _leftFogRevealOrder[i];
+                    RevealFogTile(tile.x, tile.y);
+                }
+
+                if (i < _rightFogRevealOrder.Count)
+                {
+                    Vector2Int tile = _rightFogRevealOrder[i];
+                    RevealFogTile(tile.x, tile.y);
+                }
+            }
+        }
+
+        private void BuildFogRevealOrder()
+        {
+            _leftFogRevealOrder.Clear();
+            _rightFogRevealOrder.Clear();
+
+            int halfColumns = _fogColumns / 2;
+
+            for (int y = 0; y < _fogRows; y++)
+            {
+                for (int x = 0; x < _fogColumns; x++)
+                {
+                    if (x < halfColumns)
+                        _leftFogRevealOrder.Add(new Vector2Int(x, y));
+                    else
+                        _rightFogRevealOrder.Add(new Vector2Int(x, y));
+                }
+            }
+
+            Shuffle(_leftFogRevealOrder);
+            Shuffle(_rightFogRevealOrder);
+        }
+
+        private void ResetFogRevealProgress()
+        {
+            _revealedFogSteps = 0;
+
+            if (_fogTiles == null)
+                return;
+
+            for (int y = 0; y < _fogRows; y++)
+            {
+                for (int x = 0; x < _fogColumns; x++)
+                {
+                    _fogTiles[x, y]?.RemoveFromClassList("revealed");
+                }
+            }
+        }
 
         private void BuildFogGrid()
         {
@@ -292,43 +517,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _fogTiles[x, y]?.AddToClassList("revealed");
         }
 
-        private IEnumerator TimedRandomFogRevealRoutine()
-        {
-            int halfColumns = _fogColumns / 2;
-
-            List<Vector2Int> leftTiles = new();
-            List<Vector2Int> rightTiles = new();
-
-            for (int y = 0; y < _fogRows; y++)
-            {
-                for (int x = 0; x < _fogColumns; x++)
-                {
-                    if (x < halfColumns)
-                        leftTiles.Add(new Vector2Int(x, y));
-                    else
-                        rightTiles.Add(new Vector2Int(x, y));
-                }
-            }
-
-            Shuffle(leftTiles);
-            Shuffle(rightTiles);
-
-            int steps = Mathf.Max(leftTiles.Count, rightTiles.Count);
-
-            for (int i = 0; i < steps; i++)
-            {
-                if (i < leftTiles.Count)
-                    RevealFogTile(leftTiles[i].x, leftTiles[i].y);
-
-                if (i < rightTiles.Count)
-                    RevealFogTile(rightTiles[i].x, rightTiles[i].y);
-
-                yield return new WaitForSeconds(_revealStepDelay);
-            }
-
-            _fogRevealCoroutine = null;
-        }
-
         private void Shuffle<T>(List<T> list)
         {
             for (int i = 0; i < list.Count; i++)
@@ -337,6 +525,10 @@ namespace BeMyShotgunSir.Scripts.UI
                 (list[i], list[randomIndex]) = (list[randomIndex], list[i]);
             }
         }
+
+        #endregion
+
+        #region Power-Up Methods
 
         private void ClearPowerUps()
         {
@@ -403,12 +595,20 @@ namespace BeMyShotgunSir.Scripts.UI
             return _powerUpIcons.GetIcon(powerUp);
         }
 
+        #endregion
+
 
         #region Public Methods
         public void Show(bool show)
         {
             _raceMap.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
             _isShowing = show;
+        }
+
+        public void UpdateMapFromTeamProgress(TeamTrackProgress progress)
+        {
+            TryLoadMapForProgress(progress);
+            UpdateFogFromProgress(progress);
         }
 
         #endregion

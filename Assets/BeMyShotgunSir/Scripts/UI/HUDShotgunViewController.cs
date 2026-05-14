@@ -45,6 +45,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
+            _viewModel.OnTeamTrackProgressChanged += UpdateTeamProgress;
         }
 
         #region Visual Elements
@@ -84,6 +86,29 @@ namespace BeMyShotgunSir.Scripts.UI
             _raceMapViewController.Show(!_raceMapViewController.IsShowing);
             _shoutWheelViewController.Show(false);
         }
+
+        private void UpdateTeamProgress()
+        {
+            _viewModel.TeamTrackProgress.TryGetValue((int)(_viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : -1), out TeamTrackProgress progress);
+
+            if (progress.CurrentChunkId > progress.LastSpecialChunkType.Value.Id && progress.LastSpecialChunkType.Value.Type == RoadChunkType.STARTING_CROSSROAD)
+            {
+                _raceMapButton.style.display = DisplayStyle.None;
+                _raceMapViewController.Show(false);
+            }
+            else
+            {
+                _raceMapButton.style.display = DisplayStyle.Flex;
+                _raceMapViewController.Show(true);
+                _shoutWheelViewController.Show(false);
+            }
+
+            _raceMapViewController.UpdateMapFromTeamProgress(progress);
+        }
+
+
+
+
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
 
