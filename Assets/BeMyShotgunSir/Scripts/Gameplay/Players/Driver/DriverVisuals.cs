@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Core;
+using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
 using UnityEngine;
@@ -8,6 +10,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
     public class DriverVisuals : NetworkBehaviour
     {
+        [SerializeField] private AudioSource _audioSource;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
@@ -69,15 +72,20 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         private void AnimateBoost()
         {
             if (!IsOwner) return;
-            
+
             bool isBoosting = _movement.IsBoosting();
             foreach (ParticleSystem p in _boostParticles)
             {
                 ParticleSystem.EmissionModule emission = p.emission;
                 emission.enabled = isBoosting;
-            } 
+            }
         }
-        public void OilAnimation() => StartCoroutine(ExecuteOilAnimation());
+        public void OilAnimation()
+        {
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
+            StartCoroutine(ExecuteOilAnimation());
+        }
+
         private IEnumerator ExecuteOilAnimation()
         {
             float timer = 0f;

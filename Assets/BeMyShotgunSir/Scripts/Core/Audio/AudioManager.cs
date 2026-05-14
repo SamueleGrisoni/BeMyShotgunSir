@@ -77,16 +77,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                 Log.ELazy(() => "Cannot execute audio request because the request is null.", this);
                 return;
             }
-            if (request.StopMain)
-            {
-                if (_mainSource == null)
-                {
-                    Log.ELazy(() => "Cannot stop main audio because MainSource is not assigned.", this);
-                    return;
-                }
-                _mainSource.Stop();
-                return;
-            }
 
             if (request.Clip == null)
             {
@@ -121,11 +111,11 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                         pooled.ReturnToPool(request.Clip.length);
                 }
             }
-            else
+            else if (targetSource == null)
             {
                 finalSource.gameObject.transform.position = request.StartingPosition;
-                finalSource.Play();
             }
+            finalSource.Play();
         }
 
         private void ApplyRequestToSource(AudioRequest request, AudioSource finalSource)
@@ -174,14 +164,81 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                         ExecuteAudioRequest(request, targetSource);
                         break;
                     case RequestEnum.Loading:
-                        HandleLoadingMusicRequest(sender, request);
-                        break;
+                        if (request.Type != RequestEnum.Loading)
+                            return;
+                        _mainSource.clip = _soundTracks.LoadingMusic;
+                        _mainSource.volume = _soundTracks.LoadingMusicVolume;
+                        _mainSource.loop = true;
+                        _mainSource.Play(); break;
                     case RequestEnum.StartRace:
-                        HandleStartRaceMusicRequest(sender, request);
-                        break;
+                        if (request.Type != RequestEnum.StartRace)
+                            return;
+                        _mainSource.clip = _soundTracks.RaceSceneMusic;
+                        _mainSource.volume = _soundTracks.RaceSceneMusicVolume;
+                        _mainSource.loop = true;
+                        _mainSource.Play(); break;
                     case RequestEnum.RaceFinish:
                         break;
                     case RequestEnum.UIClick:
+                        break;
+                    case RequestEnum.PlayerJoin:
+                        if (request.Type != RequestEnum.PlayerJoin)
+                            return;
+                        int index = Random.Range(0, _soundTracks.JoinSound.Clips.Length);
+                        request.WithMixerGroup(MixerGroupEnum.SFX)
+                        .WithClip(_soundTracks.JoinSound.Clips[index].Clip)
+                        .WithVolume(_soundTracks.JoinSound.Clips[index].Volume);
+                        ExecuteAudioRequest(request, targetSource);
+                        break;
+                    case RequestEnum.PlayerLeave:
+                        if (request.Type != RequestEnum.PlayerLeave)
+                            return;
+                        request.WithMixerGroup(MixerGroupEnum.SFX)
+                        .WithClip(_soundTracks.LeaveSound)
+                        .WithVolume(_soundTracks.LeaveSoundVolume);
+                        ExecuteAudioRequest(request, targetSource);
+                        break;
+                    case RequestEnum.Stop:
+                        if (request.Type != RequestEnum.Stop)
+                            return;
+                        if (targetSource != null)
+                        {
+                            targetSource.Stop();
+                            return;
+                        }
+                        if (_mainSource == null)
+                        {
+                            Log.ELazy(() => "Cannot stop main audio because MainSource is not assigned.", this);
+                            return;
+                        }
+                        _mainSource.Stop();
+                        break;
+                    case RequestEnum.PlayerReady:
+                        if (request.Type != RequestEnum.PlayerReady)
+                            return;
+                        request.WithMixerGroup(MixerGroupEnum.SFX)
+                    .WithClip(_soundTracks.ReadySound).As2D()
+                    .WithVolume(_soundTracks.ReadySoundVolume);
+                        ExecuteAudioRequest(request, targetSource);
+
+                        break;
+                    case RequestEnum.LetsGo:
+                        if (request.Type != RequestEnum.LetsGo)
+                            return;
+                        request.WithMixerGroup(MixerGroupEnum.SFX)
+                        .WithClip(_soundTracks.LetsGoSound).As2D()
+                        .WithVolume(_soundTracks.LetsGoSoundVolume);
+                        ExecuteAudioRequest(request, targetSource);
+                        break;
+                    case RequestEnum.OilSlip:
+
+                        if (request.Type != RequestEnum.OilSlip)
+                            return;
+                        int oilIndex = Random.Range(0, _soundTracks.OilSlipSound.Clips.Length);
+                        request.WithMixerGroup(MixerGroupEnum.SFX)
+                        .WithClip(_soundTracks.OilSlipSound.Clips[oilIndex].Clip)
+                        .WithVolume(_soundTracks.OilSlipSound.Clips[oilIndex].Volume);
+                        ExecuteAudioRequest(request, targetSource);
                         break;
                     default:
                         break;
@@ -189,26 +246,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                 return;
             }
             ExecuteAudioRequest(request, targetSource);
-        }
-
-        public void HandleLoadingMusicRequest(IEventSender sender, AudioRequest request)
-        {
-            if (request.Type != RequestEnum.Loading)
-                return;
-            _mainSource.clip = _soundTracks.LoadingMusic;
-            _mainSource.volume = _soundTracks.LoadingMusicVolume;
-            _mainSource.loop = true;
-            _mainSource.Play();
-        }
-
-        public void HandleStartRaceMusicRequest(IEventSender sender, AudioRequest request)
-        {
-            if (request.Type != RequestEnum.StartRace)
-                return;
-            _mainSource.clip = _soundTracks.RaceSceneMusic;
-            _mainSource.volume = _soundTracks.RaceSceneMusicVolume;
-            _mainSource.loop = true;
-            _mainSource.Play();
         }
     }
 }

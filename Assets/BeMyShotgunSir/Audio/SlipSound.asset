@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76b36b502c967b44fa75bb84b08a5b52, type: 3}
-  m_Name: PlayerJoinedSound
+  m_Name: SlipSound
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.SOSoundSource
   <MixerGroup>k__BackingField: 0
   <Clips>k__BackingField:
-  - <Clip>k__BackingField: {fileID: 8300000, guid: 60f6e1d079d3ced43b84ca0a2e244fe4, type: 3}
-    <Volume>k__BackingField: 0.146
+  - <Clip>k__BackingField: {fileID: 8300000, guid: 28cc3105c659aae459c8abf014de87d6, type: 3}
+    <Volume>k__BackingField: 0.511

@@ -1,4 +1,5 @@
 using System;
+using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Managing.Client;
 using FishNet.Managing.Server;
@@ -167,6 +168,7 @@ namespace BeMyShotgunSir.Scripts.Core
         {
             if (args.ConnectionState == LocalConnectionState.Started)
             {
+                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerJoin), null);
                 Log.DLazy(() => "Server connection started.", this, _log);
                 EnterLobby();
                 return;
@@ -174,6 +176,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
+                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerLeave), null);
                 Log.WLazy(() => "Server connection stopped.", this);
                 QuitLobby();
             }
@@ -186,6 +189,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Started)
             {
+                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerJoin), null);
                 Log.DLazy(() => "Client connection started.", this, _log);
                 EnterLobby();
                 return;
@@ -193,6 +197,7 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
+                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerLeave), null);
                 Log.WLazy(() => "Client connection stopped.", this);
                 QuitLobby();
             }

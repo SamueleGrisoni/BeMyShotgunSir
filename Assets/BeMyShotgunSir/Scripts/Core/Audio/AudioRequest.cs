@@ -7,9 +7,15 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
     public enum RequestEnum
     {
         Play = 0,
+        Stop,
         Loading,
         StartRace,
         RaceFinish,
+        PlayerJoin,
+        PlayerLeave,
+        OilSlip,
+        PlayerReady,
+        LetsGo,
         // ui
         UIClick,
     }
@@ -19,7 +25,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         public RequestEnum Type { get; private set; } = RequestEnum.Play;
         public AudioClip Clip { get; private set; }
         public bool AsMain { get; private set; } = false;
-        public bool StopMain { get; private set; } = false;
         public Vector3 StartingPosition { get; private set; }
         public MixerGroupEnum MixerGroup { get; private set; } = MixerGroupEnum.Master;
         public float Volume { get; private set; } = 1f;
@@ -58,6 +63,8 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
             StartingPosition = startingPosition;
         }
 
+
+        public AudioRequest WithClip(AudioClip clip) { Clip = clip; return this; }
         public AudioRequest WithVolume(float volume) { Volume = volume; return this; }
         public AudioRequest WithMixerGroup(MixerGroupEnum mixerGroup) { MixerGroup = mixerGroup; return this; }
         public AudioRequest WithPitch(float pitch) { Pitch = pitch; return this; }

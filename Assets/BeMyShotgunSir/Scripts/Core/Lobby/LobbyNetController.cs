@@ -106,12 +106,15 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             {
                 if (!_netState.ContainsPlayer(connection.ClientId))
                 {
+                    GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerJoin), null);
+
                     string defaultName = "Player " + connection.ClientId;
                     _netState.AddPlayer(connection, defaultName);
                 }
             }
             else if (args.ConnectionState == RemoteConnectionState.Stopped)
             {
+                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerLeave), null);
                 _netState.RemovePlayer(connection.ClientId);
             }
         }
@@ -183,7 +186,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 _netState.AddTeamInfo(currentTeamId, new LobbyTeamInfo(currentTeamId, clientId, teammateConnectionId));
                 _netState.SetPlayerTeam(clientId, currentTeamId);
                 _netState.SetPlayerTeam(teammateConnectionId, currentTeamId);
+                TeamMateSelected_TargetRpc(conn, teammateState.PlayerName);
+                TeamMateSelected_TargetRpc(_serverManager.Clients[teammateConnectionId], playerState.PlayerName);
+                //MEMO qui potremmo aggiunngere un audio per notificare gli altri player
             }
+        }
+
+        [TargetRpc]
+        private void TeamMateSelected_TargetRpc(NetworkConnection conn, string teammateName)
+        {
+            Log.DLazy(() => $"Teammate {teammateName} selected.", this, _log);
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerReady), null);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -258,6 +271,10 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         }
 
         [ObserversRpc]
-        private void InitRace_ObserversRpc() => GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
+        private void InitRace_ObserversRpc()
+        {
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.LetsGo), null);
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
+        }
     }
 }

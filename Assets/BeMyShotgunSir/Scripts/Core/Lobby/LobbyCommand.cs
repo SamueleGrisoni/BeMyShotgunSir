@@ -1,3 +1,5 @@
+using BeMyShotgunSir.Scripts.Core.Audio;
+
 namespace BeMyShotgunSir.Scripts.Core.Lobby
 {
     public class LobbyCommand : ICommand
@@ -18,8 +20,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             _netController.UpdatePlayerName_ServerRpc(name);
         }
 
-        public void SetPlayerReady_Request(bool isReady) =>
+        public void SetPlayerReady_Request(bool isReady)
+        {
+            AudioRequest request = isReady ? new AudioRequest(RequestEnum.PlayerReady) : new AudioRequest(RequestEnum.PlayerLeave);
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, request, null);
             _netController.UpdatePlayerReady_ServerRpc(isReady);
+        }
 
         public void SelectTeamMate_Request(int teammateConnectionId) =>
             _netController.SelectTeamMate_ServerRpc(teammateConnectionId);
