@@ -22,7 +22,7 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action<DriverFeedback> OnDriverFeedbackPressed;
         // From Driver
         float ChargeBattery { set; }
-        void GiveBatteryChargeEarlyCommitment(float batteryCharge);
+        void BatteryChargeEarlyCommitment(float batteryCharge);
         void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback);
     }
 
@@ -84,7 +84,11 @@ namespace BeMyShotgunSir.Scripts.UI
         public void SetIsMoving(bool isMoving) => _isMoving = isMoving;
 
         public float GetBatteryCharge() => _chargeBattery;
-        public void GiveBatteryChargeEarlyCommitment(float batteryCharge) => OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
+        public void BatteryChargeEarlyCommitment(float batteryCharge)
+        {
+            OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
+            Debug.Log("Early commitment from the shotgun");
+        }
         public void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback) => OnDriverSendFeedback?.Invoke(driverFeedback);
 
 
