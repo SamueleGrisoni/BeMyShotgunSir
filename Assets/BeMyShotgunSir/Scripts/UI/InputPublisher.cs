@@ -1,5 +1,6 @@
 using System;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
+using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
@@ -22,6 +23,7 @@ namespace BeMyShotgunSir.Scripts.UI
         // From Driver
         float ChargeBattery { set; }
         void GiveBatteryChargeEarlyCommitment(float batteryCharge);
+        void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback);
     }
 
     public interface IShotgunInputConsumer
@@ -64,14 +66,13 @@ namespace BeMyShotgunSir.Scripts.UI
         public event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         public event Action<DriverFeedback> OnDriverFeedbackPressed;
         public event Action<float> OnBatteryChargeEarlyCommitment;
-
+        public event Action<DriverFeedback> OnDriverSendFeedback;
 
         public float SteerInput => _steerInput;
         public float DriftInput => _driftInput;
         public bool IsDrifting => _isDrifting;
         public bool IsMoving => _isMoving;
         public float ChargeBattery { set => _chargeBattery = value; }
-        public void GiveBatteryChargeEarlyCommitment(float batteryCharge) => OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
 
 
         public void SetSteerInput(float input) => _steerInput = input;
@@ -83,6 +84,8 @@ namespace BeMyShotgunSir.Scripts.UI
         public void SetIsMoving(bool isMoving) => _isMoving = isMoving;
 
         public float GetBatteryCharge() => _chargeBattery;
+        public void GiveBatteryChargeEarlyCommitment(float batteryCharge) => OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
+        public void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback) => OnDriverSendFeedback?.Invoke(driverFeedback);
 
 
         #endregion

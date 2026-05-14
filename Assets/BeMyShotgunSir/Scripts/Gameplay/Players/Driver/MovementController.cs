@@ -1,10 +1,13 @@
 using System;
 using BeMyShotgunSir.Gameplay.Players.Driver;
+using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Messages;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -69,8 +72,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public float OilAnimationTimer;
         public DrivingStateTpye StateType;
         public DrivingStateTpye PreviousStateType;
+        public int GrassBuffer;
         public ReconcileData(PredictionRigidbody pr, float parentRotationY, float sidecarLocalRotationY, Vector3 currentLinearVelocity,
-                                float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, float oilAnimationTimer, DrivingStateTpye stateType, DrivingStateTpye previousStateType) : this()
+                                float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, float oilAnimationTimer, DrivingStateTpye stateType, DrivingStateTpye previousStateType, int grassBuffer) : this()
         {
             PredictionRigidbody = pr;
             ParentRotationY = parentRotationY;
@@ -83,6 +87,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             OilAnimationTimer = oilAnimationTimer;
             StateType = stateType;
             PreviousStateType = previousStateType;
+            GrassBuffer = grassBuffer;
         }
         private uint _tick;
         public void Dispose() { }
@@ -94,30 +99,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
-        private bool _log = false;
-        bool IDrivingStateContext.Log => _log;
+        #region Inspector
+
         [SerializeField] private DriverController _driverController;
-        public int? TeamId => _driverController == null ? null : _driverController.TeamId;
-        public IDriverInputConsumer InputConsumer;
-        private RaceNetContext _raceNetContext;
-        public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer, DriverController driverController)
-        {
-            _driverController = driverController;
-            _raceNetContext = context;
-            InputConsumer = inputConsumer;
-            InputConsumer.OnBoostPressed += ExecuteBoost;
-            InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
-            //InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
-        }
-
-        public void ExecuteBoost() => _isBoosting = true;
-        private void ExecuteInputEarlyCommitment(CommitmentDirection direction)
-        {
-            _commitmentDirection = direction;
-            ExecuteEarlyCommitment();
-        }
-
-        [SerializeField] private bool _isDebugInputEnabled = false;
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private DriverVisuals _driverVisual;
@@ -134,258 +118,47 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private float _bumpRadius;
         [SerializeField] private float _bumpForce;
 
-        [SerializeField] private float _decadimentoSteerInput = 0.05f;
+        [SerializeField] private float _steerInputDecay = 0.05f;
 
-        private PredictionRigidbody _predictionRigidbody;
-        private Vector3 _currentLinearVelocity;
-        private Quaternion _parentRotation;
-        private Quaternion _sidecarLocalRotation;
+        [Header("Ground Snap")]
+        [SerializeField] private float _hoverHeight = 0.256f;
+        [SerializeField] private float _springForce = 50f;
+        [SerializeField] private float _damping = 5f;
+        [SerializeField] private float _customGravity = 20f;
+        [SerializeField] private LayerMask _groundMask;
 
-        private IDrivingState _currentDrivingState;
-        private IDrivingState _previousDrivingState;
-        private DrivingStateTpye _currentStateType;
-        private DrivingStateTpye _previousStateType;
+        [Header("Debug")]
+        [SerializeField] private bool _log = false;
+        [SerializeField] private bool _isDebugInputEnabled = false;
+        [SerializeField] private bool _debugPowerUp = true; // TODO: rimuovere
 
-        private IDrivingState _idleState = new IdleDrivingState();
-        private IDrivingState _normalState = new NormalDrivingState();
-        private IDrivingState _driftingState = new DriftingDrivingState();
-        private IDrivingState _boostState = new BoostDrivingState();
-        private IDrivingState _grassState = new GrassDrivingState();
-        private IDrivingState _oilState = new OilDrivingState();
+        [Header("Grass")]
+        [SerializeField] private int _onGrassBufferMin;
 
-        private bool _isBoosting;
-        private bool _isStarting;
-        private CommitmentDirection _commitmentDirection;
-        private float _currentBatteryCharge;
-        private float _batteryChargeTimer;
-        private float _boostTimer;
-        private float _driftDirection;
-        private float _currentSteerInput;
-        private bool _isOilAnimationActive;
-        private float _oilAnimationTimer;
-        private ReplicateData _lastReplicateData;
+        #endregion
 
-
-        private int _currentChunkId;
-        private float _currentPossibleChargeEarlyCommitment;
-        //private bool _earlyCommitmentEnabled;
-
-        private void Awake()
+        #region Public
+        public int? TeamId => _driverController == null ? null : _driverController.TeamId;
+        public IDriverInputConsumer InputConsumer;
+        public Vector3 MovementPosition => _movement.transform.position;
+        public Quaternion ParentRotation => _parentRotation;
+        public Quaternion SidecarLocalRotation => _sidecarLocalRotation;
+        public bool IsOilAnimationActive
         {
-            _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
-            _predictionRigidbody.Initialize(_movement);
-            _parentRotation = _parent.rotation;
-            _sidecarLocalRotation = _sidecar.localRotation;
-            _currentDrivingState = _idleState;
-            _currentStateType = DrivingStateTpye.Idle;
-            _previousDrivingState = _idleState;
-            _previousStateType = DrivingStateTpye.Idle;
-            _currentLinearVelocity = Vector3.zero;
-            _isOilAnimationActive = false;
-            _isBoosting = false;
-            _commitmentDirection = CommitmentDirection.Default;
-            _currentChunkId = 0;
-            _earlyCommitmentEnabled = false;
-            _earlyCommitmentNotUsed = true;
-            _currentPossibleChargeEarlyCommitment = 0;
+            get => _isOilAnimationActive;
+            set => _isOilAnimationActive = value;
         }
 
-        private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
+        public bool IsBoosting() => _currentStateType == DrivingStateTpye.Boost;
+        public bool IsDrifting() => _currentStateType == DrivingStateTpye.Drifting;
+        public float CurrentSteerInput => _currentSteerInput;
+        public float CurrentOilAnimationTimer => _oilAnimationTimer;
 
-        private void LateUpdate()
-        {
-            //Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
-        }
+        #endregion
 
-        public override void OnStartNetwork()
-        {
-            TimeManager.OnTick += TimeManager_OnTick;
-            TimeManager.OnPostTick += TimeManager_OnPostTick;
-        }
+        #region  IDrivingStateContext state
 
-        public override void OnStopNetwork()
-        {
-            TimeManager.OnTick -= TimeManager_OnTick;
-            TimeManager.OnPostTick -= TimeManager_OnPostTick;
-            InputConsumer.OnBoostPressed -= ExecuteBoost;
-            InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
-        }
-
-        private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
-
-        private float _activeDriftIntent = 0f;
-        private ReplicateData CreateReplicateData()
-        {
-            if (!IsOwner)
-                return default;
-
-            ReplicateData rd = new();
-            if (_isDebugInputEnabled)
-            {
-                if (!_input.IsDrifting)
-                {
-                    _activeDriftIntent = 0f;
-                }
-                else if (_activeDriftIntent == 0f && Mathf.Abs(_input.SteerInput) > 0.1f)
-                {
-                    _activeDriftIntent = Mathf.Sign(_input.SteerInput);
-                }
-                rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
-                _input.IsStarting = false;
-            }
-            else
-            {
-                float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput;
-
-                if (!InputConsumer.IsDrifting)
-                {
-                    _activeDriftIntent = 0f;
-                }
-                else if (_activeDriftIntent == 0f && Mathf.Abs(InputConsumer.DriftInput) > 0.1f)
-                {
-                    _activeDriftIntent = Mathf.Sign(InputConsumer.DriftInput);
-                }
-                rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
-                _isBoosting = false;
-            }
-            return rd;
-        }
-
-        private float _predictedTicks;
-        [SerializeField] private bool _debugPowerUp = true; // TODO temporaneo
-
-        [Replicate]
-        private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
-        {
-            if (state.IsFuture() && !IsOwner)
-            {
-                _predictedTicks++;
-                data = _lastReplicateData;
-
-                if (_predictedTicks > 1)
-                {
-                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _decadimentoSteerInput);
-                }
-
-                _lastReplicateData = data;
-                Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
-            }
-            else
-            {
-                _predictedTicks = 0;
-                _lastReplicateData = data;
-            }
-            _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left ?
-                                                    LayerMask.NameToLayer("LeftCollider") :
-                                                    LayerMask.NameToLayer("RightCollider");
-
-            RaceTeamData teamData = default;
-            if (_debugPowerUp)
-            {
-                teamData.ActivePowerUpInfo.isArmorActive = _input.IsArmorActive;
-                teamData.ActivePowerUpInfo.isStealPowerUpActive = _input.IsStealActive;
-            }
-            else if (TeamId.HasValue)
-            {
-                _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
-            }
-
-            _obstacleCollider.gameObject.layer = teamData.ActivePowerUpInfo.isArmorActive ?
-                                                        LayerMask.NameToLayer("ArmorLayer") :
-                                                        LayerMask.NameToLayer("ObstacleCollider");
-
-            bool isReplayed = state.ContainsReplayed();
-            _currentDrivingState?.CheckStateChange(this, data, isReplayed);
-            _currentDrivingState?.RunInputs(this, data, isReplayed);
-
-            Vector3 repulsionForce = Vector3.zero;
-            if (!teamData.ActivePowerUpInfo.isArmorActive)
-            {
-                Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
-                foreach (Collider hitCollider in hitColliders)
-                {
-                    if (hitCollider.transform.root == _parent.root) continue;
-
-                    if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
-                    {
-                        Log.DLazy(() => $"Detection for steal power up active", this);
-                    }
-
-                    Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
-                    rawPushDirection.y = 0;
-                    float distance = rawPushDirection.magnitude;
-                    if (distance > 0 && distance < _bumpRadius)
-                    {
-                        Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-                        forwardDir.y = 0;
-
-                        var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-
-                        float pushStrength = 1f - (distance / _bumpRadius);
-
-                        MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
-                        if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
-                        {
-                            Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
-                            repulsionForce += finalPush;
-
-                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
-                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
-                            //Debug.Log($"RawPushDirection: {rawPushDirection} | lateral {lateralPushDirection} | force {repulsionForce}");
-                        }
-                    }
-                }
-            }
-            _currentLinearVelocity += repulsionForce;
-            ApplyGroundSnap();
-
-            _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-
-            Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
-            _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
-            _predictionRigidbody.Simulate();
-
-            if (state != ReplicateState.Replayed)
-                _currentSteerInput = data.SteerInput;
-
-            if (IsOwner)
-            {
-                InputConsumer.ChargeBattery = _currentBatteryCharge;
-            }
-        }
-
-        private void TimeManager_OnPostTick() => CreateReconcile();
-
-        public override void CreateReconcile()
-        {
-            var rd = new ReconcileData(_predictionRigidbody, _parentRotation.eulerAngles.y, _sidecarLocalRotation.eulerAngles.y, _currentLinearVelocity, _driftDirection,
-                                        _currentBatteryCharge, _batteryChargeTimer, _boostTimer, _oilAnimationTimer, _currentStateType, _previousStateType);
-            ReconcileState(rd);
-        }
-
-        [Reconcile]
-        private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable)
-        {
-            _parentRotation = Quaternion.Euler(0, data.ParentRotationY, 0);
-            _sidecarLocalRotation = Quaternion.Euler(0, data.SidecarLocalRotationY, 0);
-
-            _currentLinearVelocity = data.CurrentLinearVelocity;
-            _driftDirection = data.DriftDirection;
-            _currentBatteryCharge = data.CurrentBatteryCharge;
-            _batteryChargeTimer = data.BatteryChargeTimer;
-            _boostTimer = data.BoostTimer;
-            //_oilAnimationTimer = data.OilAnimationTimer;
-
-            _currentStateType = data.StateType;
-            _currentDrivingState = GetStateType(data.StateType);
-
-            _previousStateType = data.PreviousStateType;
-            _previousDrivingState = GetStateType(data.PreviousStateType);
-
-            _predictionRigidbody.Reconcile(data.PredictionRigidbody);
-        }
-
+        bool IDrivingStateContext.Log => _log;
         Vector3 IDrivingStateContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDrivingStateContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
         SOSidecarStats IDrivingStateContext.NormalStats => _stats.NormalStats;
@@ -443,27 +216,377 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         bool IDrivingStateContext.IsOnwer => IsOwner;
         bool IDrivingStateContext.IsServer => IsServerInitialized;
 
-        void IDrivingStateContext.ApplyAcceleration(Vector3 direction, float accelerationForce, float maxSpeed)
+        #endregion
+
+        #region Private state
+        private RaceNetContext _raceNetContext;
+
+        private PredictionRigidbody _predictionRigidbody;
+        private Vector3 _currentLinearVelocity;
+        private Quaternion _parentRotation;
+        private Quaternion _sidecarLocalRotation;
+
+        private IDrivingState _currentDrivingState;
+        private IDrivingState _previousDrivingState;
+        private DrivingStateTpye _currentStateType;
+        private DrivingStateTpye _previousStateType;
+
+        private IDrivingState _idleState = new IdleDrivingState();
+        private IDrivingState _normalState = new NormalDrivingState();
+        private IDrivingState _driftingState = new DriftingDrivingState();
+        private IDrivingState _boostState = new BoostDrivingState();
+        private IDrivingState _grassState = new GrassDrivingState();
+        private IDrivingState _oilState = new OilDrivingState();
+
+        private bool _isBoosting;
+        private bool _isStarting;
+        private CommitmentDirection _commitmentDirection;
+        private float _currentBatteryCharge;
+        private float _batteryChargeTimer;
+        private float _boostTimer;
+        private float _driftDirection;
+        private float _currentSteerInput;
+        private bool _isOilAnimationActive;
+        private float _oilAnimationTimer;
+        private ReplicateData _lastReplicateData;
+        private float _activeDriftIntent = 0f;
+        private float _predictedTicks;
+        private int _onGrassBuffer = 0;
+        private bool _earlyCommitmentNotUsed;
+        private bool _earlyCommitmentEnabled;
+        private int _currentChunkId;
+        private float _currentPossibleChargeEarlyCommitment;
+
+        #endregion
+
+        #region Lifecycle
+
+        private void Awake()
         {
-            Vector3 predictedVelocity = _predictionRigidbody.Rigidbody.linearVelocity + direction * (accelerationForce * (float)TimeManager.TickDelta);
-            Vector3 horrizontalLinearVelocity = new(predictedVelocity.x, 0, predictedVelocity.z);
-            if (horrizontalLinearVelocity.magnitude > maxSpeed)
+            _predictionRigidbody = ObjectCaches<PredictionRigidbody>.Retrieve();
+            _predictionRigidbody.Initialize(_movement);
+
+            _parentRotation = _parent.rotation;
+            _sidecarLocalRotation = _sidecar.localRotation;
+            _currentLinearVelocity = Vector3.zero;
+
+            _currentDrivingState = _idleState;
+            _currentStateType = DrivingStateTpye.Idle;
+            _previousDrivingState = _idleState;
+            _previousStateType = DrivingStateTpye.Idle;
+
+            _isBoosting = false;
+            _isOilAnimationActive = false;
+            _commitmentDirection = CommitmentDirection.Default;
+            _currentChunkId = 0;
+            _earlyCommitmentEnabled = false;
+            _earlyCommitmentNotUsed = true;
+            _currentPossibleChargeEarlyCommitment = 0;
+        }
+
+        private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
+
+        private void LateUpdate()
+        {
+            //Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
+        }
+
+        #endregion
+
+        #region Initialization
+
+        public void Initialize(RaceNetContext context, IDriverInputConsumer inputConsumer, DriverController driverController)
+        {
+            _driverController = driverController;
+            _raceNetContext = context;
+            InputConsumer = inputConsumer;
+            InputConsumer.OnBoostPressed += ExecuteBoost;
+            InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
+            InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
+        }
+
+        #endregion
+
+        #region Fishnet network callbacks
+
+        public override void OnStartNetwork()
+        {
+            TimeManager.OnTick += TimeManager_OnTick;
+            TimeManager.OnPostTick += TimeManager_OnPostTick;
+        }
+
+        public override void OnStopNetwork()
+        {
+            TimeManager.OnTick -= TimeManager_OnTick;
+            TimeManager.OnPostTick -= TimeManager_OnPostTick;
+            if (InputConsumer != null)
             {
-                Vector3 currentHorizontalVel = new(_predictionRigidbody.Rigidbody.linearVelocity.x, 0, _predictionRigidbody.Rigidbody.linearVelocity.z);
-                if (currentHorizontalVel.magnitude > maxSpeed)
+                InputConsumer.OnBoostPressed -= ExecuteBoost;
+                InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
+            }
+        }
+
+        #endregion
+
+        #region Input events
+
+        public void ExecuteBoost() => _isBoosting = true;
+        private void ExecuteInputEarlyCommitment(CommitmentDirection direction)
+        {
+            _commitmentDirection = direction;
+            ExecuteEarlyCommitment();
+        }
+        public void ExecuteEarlyCommitmentDebug(CommitmentDirection commitmentDirection)
+        {
+            _commitmentDirection = commitmentDirection;
+            ExecuteEarlyCommitment();
+        }
+
+        [ServerRpc]
+        private void ExecuteDriverFeedback(DriverFeedback driverFeedback) => ExecuteDriverFeedback_Server(driverFeedback);
+        [Server]
+        private void ExecuteDriverFeedback_Server(DriverFeedback driverFeedback)
+        {
+            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection conn))
+            {
+                if (conn != null)
+                    Send_ExecuteDriverFeedback(conn, driverFeedback);
+            }
+        }
+        [TargetRpc]
+        private void Send_ExecuteDriverFeedback(NetworkConnection conn, DriverFeedback driverFeedback) => InputConsumer.SendDriveFeedbackToShotgun(driverFeedback);
+
+        #endregion
+
+        #region Tick loop
+
+        private void TimeManager_OnTick() => RunInputs(CreateReplicateData());
+
+        private ReplicateData CreateReplicateData()
+        {
+            if (!IsOwner)
+                return default;
+
+            ReplicateData rd = new();
+            if (_isDebugInputEnabled)
+            {
+                UpdateActiveDriftIntent(_input.IsDrifting, _input.SteerInput);
+                rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
+                _input.IsStarting = false;
+            }
+            else
+            {
+                float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput;
+                UpdateActiveDriftIntent(InputConsumer.IsDrifting, steerInput);
+                rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
+                _isBoosting = false;
+            }
+            return rd;
+        }
+
+        private void UpdateActiveDriftIntent(bool isDrifting, float steerInput)
+        {
+            if (!isDrifting)
+                _activeDriftIntent = 0f;
+            else if (_activeDriftIntent == 0f && Mathf.Abs(steerInput) > 0.1f)
+                _activeDriftIntent = Mathf.Sign(steerInput);
+        }
+
+        [Replicate]
+        private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
+        {
+            if (state.IsFuture() && !IsOwner)
+            {
+                _predictedTicks++;
+                data = _lastReplicateData;
+
+                if (_predictedTicks > 1)
+                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
+
+                _lastReplicateData = data;
+                Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
+            }
+            else
+            {
+                _predictedTicks = 0;
+                _lastReplicateData = data;
+            }
+
+            _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
+                ? LayerMask.NameToLayer("LeftCollider")
+                : LayerMask.NameToLayer("RightCollider");
+
+            RaceTeamData teamData = default;
+            if (_debugPowerUp)
+            {
+                teamData.ActivePowerUpInfo.isArmorActive = _input.IsArmorActive;
+                teamData.ActivePowerUpInfo.isStealPowerUpActive = _input.IsStealActive;
+            }
+            else if (TeamId.HasValue)
+            {
+                _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
+            }
+
+            bool isReplayed = state.ContainsReplayed();
+            _currentDrivingState?.CheckStateChange(this, data, isReplayed);
+            _currentDrivingState?.RunInputs(this, data, isReplayed);
+
+            ApplyBumpRepulsion(teamData);
+            ApplyGroundSnap();
+
+            _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+
+            Vector3 velocityDifference = _currentLinearVelocity - _predictionRigidbody.Rigidbody.linearVelocity;
+            _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
+            _predictionRigidbody.Simulate();
+
+            if (state != ReplicateState.Replayed)
+                _currentSteerInput = data.SteerInput;
+        }
+
+        private void ApplyBumpRepulsion(RaceTeamData teamData)
+        {
+            Vector3 repulsionForce = Vector3.zero;
+            if (!teamData.ActivePowerUpInfo.isArmorActive)
+            {
+                Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
+                foreach (Collider hitCollider in hitColliders)
                 {
-                    float recoveryDrag = 0.1f;
-                    Vector3 targetVel = currentHorizontalVel.normalized * maxSpeed;
-                    var smoothedVel = Vector3.MoveTowards(currentHorizontalVel, targetVel, recoveryDrag * (float)TimeManager.TickDelta);
-                    predictedVelocity = new Vector3(smoothedVel.x, predictedVelocity.y, smoothedVel.z);
+                    if (hitCollider.transform.root == _parent.root) continue;
+
+                    if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
+                    {
+                        Log.DLazy(() => $"Detection for steal power up active", this);
+                    }
+
+                    Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
+                    rawPushDirection.y = 0;
+                    float distance = rawPushDirection.magnitude;
+                    if (distance > 0 && distance < _bumpRadius)
+                    {
+                        Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+                        forwardDir.y = 0;
+
+                        var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+
+                        float pushStrength = 1f - (distance / _bumpRadius);
+
+                        MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
+                        if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
+                        {
+                            Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
+                            repulsionForce += finalPush;
+
+                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+                        }
+                    }
+                }
+            }
+            if (repulsionForce != null)
+                _predictionRigidbody.AddForce(repulsionForce, ForceMode.Impulse);
+
+        }
+
+        #endregion
+
+        #region  Reconcile
+
+        private void TimeManager_OnPostTick() => CreateReconcile();
+
+        public override void CreateReconcile()
+        {
+            var rd = new ReconcileData(
+                _predictionRigidbody,
+                _parentRotation.eulerAngles.y,
+                _sidecarLocalRotation.eulerAngles.y,
+                _currentLinearVelocity,
+                _driftDirection,
+                _currentBatteryCharge,
+                _batteryChargeTimer,
+                _boostTimer,
+                _oilAnimationTimer,
+                _currentStateType,
+                _previousStateType,
+                _onGrassBuffer);
+            ReconcileState(rd);
+        }
+
+        [Reconcile]
+        private void ReconcileState(ReconcileData data, Channel channel = Channel.Unreliable)
+        {
+            _parentRotation = Quaternion.Euler(0, data.ParentRotationY, 0);
+            _sidecarLocalRotation = Quaternion.Euler(0, data.SidecarLocalRotationY, 0);
+
+            _currentLinearVelocity = data.CurrentLinearVelocity;
+            _driftDirection = data.DriftDirection;
+            _currentBatteryCharge = data.CurrentBatteryCharge;
+            _batteryChargeTimer = data.BatteryChargeTimer;
+            _boostTimer = data.BoostTimer;
+            //_oilAnimationTimer = data.OilAnimationTimer;
+
+            _currentStateType = data.StateType;
+            _currentDrivingState = GetStateType(data.StateType);
+
+            _previousStateType = data.PreviousStateType;
+            _previousDrivingState = GetStateType(data.PreviousStateType);
+
+            _onGrassBuffer = data.GrassBuffer;
+
+            _predictionRigidbody.Reconcile(data.PredictionRigidbody);
+        }
+
+        #endregion
+
+        #region IDrivingStateContext methods
+
+        void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data, bool isReplayed)
+        {
+            _currentDrivingState?.Exit(this, data, isReplayed);
+            _previousDrivingState = _currentDrivingState;
+            _previousStateType = _currentStateType;
+            _currentDrivingState = state;
+            _currentStateType = GetStateType(state);
+            _currentDrivingState?.Enter(this, data, isReplayed);
+        }
+
+        GroundType IDrivingStateContext.CheckGround()
+        {
+            if (Physics.SphereCast(_movement.position, 0.3f, Vector3.down, out RaycastHit hit, 0.6f))
+            {
+                if (hit.collider.CompareTag("Grass"))
+                {
+                    //Debug.Log("Hit grass");
+                    _onGrassBuffer++;
+                    if (_onGrassBuffer > _onGrassBufferMin) return GroundType.Grass;
                 }
                 else
                 {
-                    Vector3 limitedHorizontalVel = horrizontalLinearVelocity.normalized * maxSpeed;
-                    predictedVelocity = new Vector3(limitedHorizontalVel.x, predictedVelocity.y, limitedHorizontalVel.z);
+                    _onGrassBuffer = 0;
+                }
+
+                if (hit.collider.CompareTag("Oil"))
+                {
+                    Log.DLazy(() => "Passato su una chiazza di olio", this);
+                    return GroundType.Oil;
                 }
             }
-            _currentLinearVelocity = predictedVelocity;
+            return GroundType.Normal;
+        }
+
+        float IDrivingStateContext.TickDelta() => (float)TimeManager.TickDelta;
+
+        void IDrivingStateContext.ApplyAcceleration(Vector3 direction, float accelerationForce, float maxSpeed)
+        {
+            float mass = _predictionRigidbody.Rigidbody.mass;
+            float drag = _predictionRigidbody.Rigidbody.linearDamping;
+            float dt = (float)TimeManager.TickDelta;
+
+            Vector3 addedVelocity = (direction * accelerationForce / mass) * dt;
+            float dragMultiplier = Mathf.Clamp01(1f - (drag * dt));
+
+            _currentLinearVelocity = (_predictionRigidbody.Rigidbody.linearVelocity + addedVelocity) * dragMultiplier;
         }
         void IDrivingStateContext.ApplyLateralGrip(float lateralGripFactor)
         {
@@ -489,12 +612,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 steerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
         }
-        [SerializeField] private float _hoverHeight = 0.256f;
-        [SerializeField] private float _springForce = 50f;
-        [SerializeField] private float _damping = 5f;
-        [SerializeField] private float _customGravity = 20f;
-        [SerializeField] private LayerMask _groundMask;
+        void IDrivingStateContext.OilAnimation()
+        {
+            if (_isOilAnimationActive)
+            {
+                SendOilAnimation();
+                _isOilAnimationActive = false;
+            }
+        }
 
+        #endregion
+
+        #region Ground snap
         private void ApplyGroundSnap() // TODO aggiungere check: se il sidecar si allontana troppo dal terreno (sia sopra che sotto) teletrasporta
         {
             float sphereRadious = 0.5f;
@@ -506,64 +635,77 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                 float upwardVelocity = Vector3.Dot(_currentLinearVelocity, Vector3.up);
                 float force = (error * _springForce) - (upwardVelocity * _damping);
-                //_currentLinearVelocity += Vector3.up * force * (float)TimeManager.TickDelta;
                 _predictionRigidbody.AddForce(Vector3.up * force, ForceMode.Acceleration);
 
             }
             else
             {
-                //_currentLinearVelocity += Vector3.down * _customGravity * (float)TimeManager.TickDelta;
                 _predictionRigidbody.AddForce(Vector3.down * _customGravity, ForceMode.Acceleration);
             }
         }
-        void IDrivingStateContext.OilAnimation()
+
+        #endregion
+
+        #region Portal / early commitment
+
+        private void OnTriggerEnter(Collider other)
         {
-            if (_isOilAnimationActive)
+            if (other.CompareTag("Portal") && IsServerInitialized)
             {
-                SendOilAnimation();
-                _isOilAnimationActive = false;
+                Debug.Log("hit portale");
+                RoadChunk roadChunk = other.transform.parent.GetComponent<RoadChunk>();
+                if (roadChunk != null)
+                {
+                    _currentChunkId = roadChunk.ChunkNumber;
+                    if (TeamId.HasValue)
+                    {
+                        if (_raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress trackProgress))
+                        {
+                            trackProgress.CurrentChunkId = _currentChunkId;
+                            _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
+
+                            PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
+                            if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE) // TODO per ora viene ignorato il primo rettilineo
+                            {
+                                float lenght = trackProgress.NextSpecialChunkId - (lastSpecialChunk.Id + 1);
+                                float position = trackProgress.NextSpecialChunkId - _currentChunkId;
+                                _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
+                                InputConsumer.GiveBatteryChargeEarlyCommitment(_currentPossibleChargeEarlyCommitment);
+                                Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
+                                _earlyCommitmentEnabled = true;
+                            }
+                            else
+                            {
+                                _earlyCommitmentEnabled = false;
+                                _earlyCommitmentNotUsed = true;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data, bool isReplayed)
+        [ServerRpc]
+        public void ExecuteEarlyCommitment()
         {
-            _currentDrivingState?.Exit(this, data, isReplayed);
-
-            _previousDrivingState = _currentDrivingState;
-            _previousStateType = _currentStateType;
-
-            _currentDrivingState = state;
-            _currentStateType = GetStateType(state);
-            _currentDrivingState?.Enter(this, data, isReplayed);
-        }
-
-        private int _onGrassBuffer = 0;
-        [SerializeField] private int _onGrassBufferMin;
-        GroundType IDrivingStateContext.CheckGround()
-        {
-            if (Physics.SphereCast(_movement.position, 0.3f, Vector3.down, out RaycastHit hit, 0.6f))
+            if (_earlyCommitmentNotUsed && _earlyCommitmentEnabled)
             {
-                if (hit.collider.CompareTag("Grass"))
-                {
-                    //Debug.Log("Hit grass");
-                    _onGrassBuffer++;
-                    if (_onGrassBuffer > _onGrassBufferMin) return GroundType.Grass;
-                }
-                else
-                {
-                    _onGrassBuffer = 0;
-                }
-
-                if (hit.collider.CompareTag("Oil"))
-                {
-                    Log.DLazy(() => "Passato su una chiazza di olio", this);
-                    return GroundType.Oil;
-                }
+                _currentBatteryCharge = Math.Min(_currentBatteryCharge + _currentPossibleChargeEarlyCommitment, 200);
+                Log.DLazy(() => $"Commitmen executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
+                _earlyCommitmentNotUsed = false;
             }
-            return GroundType.Normal;
         }
-        float IDrivingStateContext.TickDelta() => (float)TimeManager.TickDelta;
 
+        #endregion
+
+        #region RPC
+
+        [ObserversRpc]
+        private void SendOilAnimation() => _driverVisual.OilAnimation();
+
+        #endregion
+
+        #region State mapping helpers
         private IDrivingState GetStateType(DrivingStateTpye stateType)
         {
             switch (stateType)
@@ -589,84 +731,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             else return DrivingStateTpye.Normal;
         }
 
-        public Vector3 MovementPosition => _movement.transform.position;
-        public Quaternion ParentRotation => _parentRotation;
-        public Quaternion SidecarLocalRotation => _sidecarLocalRotation;
-        public bool IsOilAnimationActive
-        {
-            get => _isOilAnimationActive;
-            set => _isOilAnimationActive = value;
-        }
-
-        public bool IsBoosting() => _currentStateType == DrivingStateTpye.Boost;
-        public bool IsDrifting() => _currentStateType == DrivingStateTpye.Drifting;
-        public float CurrentSteerInput => _currentSteerInput;
-        public float CurrentOilAnimationTimer => _oilAnimationTimer;
-
-        [ObserversRpc]
-        private void SendOilAnimation() => _driverVisual.OilAnimation();
-
-        private bool _earlyCommitmentNotUsed;
-        private bool _earlyCommitmentEnabled;
-
-
-        [Server]
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!IsServerInitialized) return;
-            if (other.CompareTag("Portal"))
-            {
-                Debug.Log("hit portale");
-                RoadChunk roadChunk = other.transform.parent.GetComponent<RoadChunk>();
-                if (roadChunk != null)
-                {
-                    _currentChunkId = roadChunk.ChunkNumber;
-                    if (TeamId.HasValue)
-                    {
-                        if (_raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress trackProgress))
-                        {
-                            trackProgress.CurrentChunkId = _currentChunkId;
-                            _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
-
-                            PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
-                            if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE) // TODO per ora viene ignorato il primo rettilineo
-                            {
-                                // I am in the straight
-                                float lenght = trackProgress.NextSpecialChunkId - (lastSpecialChunk.Id + 1);
-                                float position = trackProgress.NextSpecialChunkId - _currentChunkId;
-                                _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
-                                Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
-                                _earlyCommitmentEnabled = true;
-
-                            }
-                            else
-                            {
-                                _earlyCommitmentEnabled = false;
-                                _earlyCommitmentNotUsed = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        [ServerRpc]
-        public void ExecuteEarlyCommitment()
-        {
-            if (_earlyCommitmentNotUsed && _earlyCommitmentEnabled)
-            {
-                _currentBatteryCharge = Math.Min(_currentBatteryCharge + _currentPossibleChargeEarlyCommitment, 200);
-                Log.DLazy(() => $"Commitmen executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
-                _earlyCommitmentNotUsed = false;
-            }
-        }
-
-        // TODO temporaneo
-        public void ExecuteEarlyCommitmentDebug(CommitmentDirection commitmentDirection)
-        {
-            _commitmentDirection = commitmentDirection;
-            ExecuteEarlyCommitment();
-            InputConsumer.GiveBatteryChargeEarlyCommitment(-100);
-        }
-
+        #endregion
     }
 }

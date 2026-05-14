@@ -22,7 +22,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             controller.ApplyAcceleration(controller.SidecarForward, 0f, controller.NormalStats.MaxSpeed);
-            controller.OilAnimation();
+            if (controller.IsServer)
+            {
+                controller.OilAnimation();
+            }
         }
         public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {

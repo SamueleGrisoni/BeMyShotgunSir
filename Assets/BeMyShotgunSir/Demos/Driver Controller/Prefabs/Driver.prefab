@@ -177,7 +177,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 3192123921943259604}
   _networkObjectCache: {fileID: 3192123921943259604}
   _driverController: {fileID: 3998145195957461452}
-  _isDebugInputEnabled: 1
   _input: {fileID: 7387308273733314743}
   _stats: {fileID: 3826133632397438374}
   _driverVisual: {fileID: 7322070008880661126}
@@ -193,15 +192,17 @@ MonoBehaviour:
     m_Bits: 256
   _bumpRadius: 1.1
   _bumpForce: 100
-  _decadimentoSteerInput: 0.09
-  _debugPowerUp: 1
-  _hoverHeight: 0.02
+  _steerInputDecay: 0.05
+  _hoverHeight: 0.005
   _springForce: 50
   _damping: 5
   _customGravity: 20
   _groundMask:
     serializedVersion: 2
     m_Bits: 262144
+  _log: 0
+  _isDebugInputEnabled: 1
+  _debugPowerUp: 1
   _onGrassBufferMin: 10
 --- !u!54 &2139825348868955056
 Rigidbody:
@@ -481,7 +482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7758443056320947815}
   - component: {fileID: 4712929775903902836}
-  m_Layer: 16s
+  m_Layer: 16
   m_Name: ObstaclesCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -834,6 +835,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4998179860331136265}
     m_Modifications:
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.69126093
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7226053
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -92.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_Name
+      value: Sidecar
+      objectReference: {fileID: 0}
     - target: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -873,30 +898,6 @@ PrefabInstance:
     - target: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.69126093
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7226053
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -92.54
-      objectReference: {fileID: 0}
-    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_Name
-      value: Sidecar
       objectReference: {fileID: 0}
     - target: {fileID: 2732889835624388037, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_IsActive
