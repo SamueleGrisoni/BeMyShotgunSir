@@ -5,6 +5,7 @@ using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
+using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using Unity.Cinemachine;
@@ -36,7 +37,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         //Specific
         private IRoadManager _roadManager;
         public int? TeamId => _syncTeamId.Value;
-        public event Action OnTeamIdAssigned;
         private int? _driverConnectionId = null;
         private int? _shotgunConnectionId = null;
         private DriverController _driverController;
@@ -51,12 +51,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
         }
 
-        [Server]
         public void SetTeamId(int teamId)
         {
-            _syncTeamId.Value = teamId;
-            OnTeamIdAssigned?.Invoke();
-            Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
+            if (InstanceFinder.IsServerStarted)
+            {
+                _syncTeamId.Value = teamId;
+                Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
+            }
         }
 
         public override void OnStartNetwork()

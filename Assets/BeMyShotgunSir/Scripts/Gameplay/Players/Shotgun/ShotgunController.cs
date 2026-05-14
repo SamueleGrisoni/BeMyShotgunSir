@@ -41,7 +41,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             _teamNetController = teamNetController;
             _driverController = driverController;
             _netState = context.NetState;
-            _inputConsumer.OnWheelMessagePressed += WheelMessagesToDriver;
+            if (_inputConsumer != null)
+                _inputConsumer.OnWheelMessagePressed += WheelMessagesToDriver;
 
             _isInitialized = true;
             Log.DLazy(() => $"ShotgunController initialized with teamId {_teamNetController.TeamId}.", this);

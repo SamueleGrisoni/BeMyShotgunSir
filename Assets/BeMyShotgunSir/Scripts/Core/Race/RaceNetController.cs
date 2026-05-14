@@ -286,8 +286,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     {
                         TeamNetController team = Instantiate(_teamPrefab, spawnPoint.position, spawnPoint.rotation);
                         team.name = "Team " + teamState.TeamId;
-                        Spawn(team, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
                         team.SetTeamId(teamState.TeamId);
+                        Spawn(team, null, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.Race.ToString()));
 
                         //MEMO I could move the setup logic into the team net controller changing ownership after spawn
                         //driver setup

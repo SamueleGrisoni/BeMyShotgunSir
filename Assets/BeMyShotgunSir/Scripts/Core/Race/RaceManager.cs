@@ -151,7 +151,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             if (_netState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData))
             {
-                if (_netState.IsTeamMember(teamData.TeamId))
+                if (initializer.TeamId.HasValue && initializer.TeamId.Value == teamData.TeamId)
                 {
                     _playerRole = _netState.PlayerStates[LocalConnection.ClientId].Role;
                     _inputPublisher = new InputPublisher();
