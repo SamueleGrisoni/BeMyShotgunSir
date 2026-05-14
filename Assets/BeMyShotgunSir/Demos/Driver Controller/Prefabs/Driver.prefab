@@ -203,7 +203,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 262144
   _log: 0
-  _isDebugInputEnabled: 0
+  _isDebugInputEnabled: 1
   _debugPowerUp: 1
   _onGrassBufferMin: 10
 --- !u!54 &2139825348868955056
