@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
@@ -57,6 +56,10 @@ namespace BeMyShotgunSir.Scripts.UI
         private Button _raceMapButton;
         #endregion
 
+        #region private fields
+        private int _finishLineChunkId = -1;
+        #endregion
+
         private void OnEnable()
         {
             _root = _hudShotgunDocument.rootVisualElement;
@@ -66,6 +69,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             StartCoroutine(InitNextFrame());
 
+            TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
         }
 
         IEnumerator InitNextFrame()
@@ -88,11 +92,29 @@ namespace BeMyShotgunSir.Scripts.UI
             _shoutWheelViewController.Show(false);
         }
 
+        private void OnFinishLineGenerated(int finishLineChunkId)
+        {
+            _finishLineChunkId = finishLineChunkId;
+        }
+
         private void UpdateTeamProgress()
         {
             _viewModel.TeamTrackProgress.TryGetValue((int)(_viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : -1), out TeamTrackProgress progress);
 
-            if (progress.CurrentChunkId > progress.LastSpecialChunkType.Value.Id && progress.LastSpecialChunkType.Value.Type == RoadChunkType.STARTING_CROSSROAD)
+            if (!progress.LastSpecialChunkType.HasValue)
+                return;
+
+            #region debug
+            if (progress.NextSpecialChunkId == _finishLineChunkId)
+            {
+                Log.DLazy(() => "Next special chunk is the finish line!", this);
+            }
+            #endregion
+            Log.DLazy(() => "Current chunk id: " + progress.CurrentChunkId + ", Next special chunk id: " + progress.NextSpecialChunkId + ", Finish line chunk id: " + _finishLineChunkId, this);
+
+            if (progress.CurrentChunkId > progress.LastSpecialChunkType.Value.Id
+                && progress.LastSpecialChunkType.Value.Type == RoadChunkType.STARTING_CROSSROAD
+                || progress.NextSpecialChunkId == _finishLineChunkId)
             {
                 _raceMapButton.style.display = DisplayStyle.None;
                 _raceMapViewController.Show(false);
@@ -111,9 +133,6 @@ namespace BeMyShotgunSir.Scripts.UI
             //     _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
             // }
         }
-
-
-
 
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

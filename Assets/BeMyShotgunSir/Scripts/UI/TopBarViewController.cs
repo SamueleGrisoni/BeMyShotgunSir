@@ -141,6 +141,10 @@ namespace BeMyShotgunSir.Scripts.UI
                     _team2Marker.AddToClassList("my-team");
                     _team1Marker.RemoveFromClassList("my-team");
                     break;
+                case 2:
+                    _team2Marker.AddToClassList("my-team");
+                    _team1Marker.RemoveFromClassList("my-team");
+                    break;
             }
         }
 

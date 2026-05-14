@@ -118,7 +118,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             _commitmentValue = commitmentValue;
 
-            Log.DLazy(() => $"[{GetInstanceID()}] GO={gameObject.name} Role={_role} " + $"Value={commitmentValue} HUD={_hudDocument.GetInstanceID()} " + $"Publisher={_inputPublisher}", this);
+            // Log.DLazy(() => $"[{GetInstanceID()}] GO={gameObject.name} Role={_role} " + $"Value={commitmentValue} HUD={_hudDocument.GetInstanceID()} " + $"Publisher={_inputPublisher}", this);
 
             if (commitmentValue > 0f)
             {
@@ -145,7 +145,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _commitBarMaskLeft.style.height = Length.Percent(_currentCommitmentFill * 100);
             _commitBarMaskRight.style.height = Length.Percent(_currentCommitmentFill * 100);
 
-            Log.DLazy(() => $"[{GetInstanceID()}] Written height: {_commitBarMaskLeft.style.height}", this);
+            // Log.DLazy(() => $"[{GetInstanceID()}] Written height: {_commitBarMaskLeft.style.height}", this);
         }
 
         private void ShowEarlyCommitment(bool show) => _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
