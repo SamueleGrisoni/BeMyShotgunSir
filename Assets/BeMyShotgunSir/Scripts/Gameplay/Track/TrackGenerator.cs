@@ -160,26 +160,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             EnqueueSplitSegment();
         }
 
-        public void SetFinalSequence(RoadChunkType? lastSpecialChunkTypeFirstTeam)
+        public int ServerSetFinalSequence(RoadChunkType? lastSpecialChunkTypeFirstTeam)
         {
             if (lastSpecialChunkTypeFirstTeam == RoadChunkType.STARTING_CROSSROAD) //first team is in a split
             {
-                GenerateFinalSequence();
+                return GenerateFinalSequence();
             }
-            else if (lastSpecialChunkTypeFirstTeam == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunkTypeFirstTeam == RoadChunkType.START_LINE) //first team is in a common segment
+            if (lastSpecialChunkTypeFirstTeam == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunkTypeFirstTeam == RoadChunkType.START_LINE) //first team is in a common segment
             {
-                _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
-                EnqueueSplitSegment();
-                GenerateFinalSequence();
+                _chunksRemainingInCurrentState = _rng.Next(_trackData.MinimumTrackLength, _trackData.MaximumTrackLength);
+                EnqueueCommonSegment();
+                return GenerateFinalSequence();
             }
-            else
-            {
-                Log.ELazy(() => "GenerateFinalSequence called with invalid lastSpecialChunkTypeFirstTeam: " + lastSpecialChunkTypeFirstTeam, this);
-                return;
-            }
+            Log.ELazy(() => "GenerateFinalSequence called with invalid lastSpecialChunkTypeFirstTeam: " + lastSpecialChunkTypeFirstTeam, this);
+            return -1;
         }
 
-        private void GenerateFinalSequence()
+        private int GenerateFinalSequence()
         {
             _numChunksGenerated++;
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
@@ -193,9 +190,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
                     (int)SpecialRoadChunkIndex.FINISH_LINE,
-                    RoadChunkType.STRAIGHT,
+                    RoadChunkType.FINISH_LINE,
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
+            return _numChunksGenerated;
         }
 
         private void GenerateNextSequence(GeneratedRoadChunkInfo lastDequeuedChunk)

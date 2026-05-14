@@ -133,12 +133,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public void SetContext(RaceNetContext context)
         {
             //TODO
-            // context.NetState.OnRaceTimerExpired += qualcosa;
             // context.NetState.OnFinishLineChunkIdSet += qualcosa;
             // vedi tu se una certa iscrizione ti serve solo lato client o solo lato server o host
             //poi quando hai ottenuto il finish line chunk id puoi settarlo in autonomia nello store
             // context.NetState.SetFinishLineChunkId(finishlinechunkid);
             context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);
+            context.NetState.OnFinishLineChunkIdSet += OnFinishLineChunkIdSet;
             if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
@@ -227,7 +227,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 {
                     PooledRoadChunk oldRoadChunk = _activeRoadChunks.First.Value;
                     RemoveChunk(oldRoadChunk);
-                    SpawnRoadChunk();
+                    if (!_hasFinishLineSpawned)
+                    {
+                        SpawnRoadChunk();
+                    }
                 }
             }
             else
@@ -235,7 +238,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 PooledRoadChunk lastChunk = _activeRoadChunks.Last.Value;
                 Transform exitAnchor = lastChunk.Component.NextRoadAnchors[0];
                 if (_firstPlayerTransform is null) return;
-                if (_firstPlayerTransform.transform.position.z > exitAnchor.position.z - _serverBufferDistance)
+                if (_firstPlayerTransform.transform.position.z > exitAnchor.position.z - _serverBufferDistance && !_hasFinishLineSpawned)
                 {
                     SpawnRoadChunk();
                 }
@@ -284,10 +287,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             {
                 if (chunkInfoWithItems.roadChunkInfo.type == RoadChunkType.FINISH_LINE)
                 {
-                    if (_hasFinishLineSpawned)
-                    {
-                        break;
-                    }
+                    Log.DLazy(() => "Spawning Final Line", this);
                     _hasFinishLineSpawned = true;
                 }
                 int nextChunkIndex = chunkInfoWithItems.roadChunkInfo.index;
@@ -333,7 +333,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Log.WLazy(() => "First team last special chunk type is null on timer expired, defaulting to start line", this);
                 firstTeamLastSpecialChunkType = RoadChunkType.START_LINE;
             }
-            _trackGenerator.SetFinalSequence(firstTeamLastSpecialChunkType);
+            int finishLineId = _trackGenerator.ServerSetFinalSequence(firstTeamLastSpecialChunkType);
+                context.NetState.SetFinishLineChunkId(finishLineId);
+                Log.DLazy(() => $"Timer expired, set finish line chunk id to {finishLineId} based on first team last special chunk type {firstTeamLastSpecialChunkType}", this);
+        }
+
+        private void OnFinishLineChunkIdSet(int finishLineChunkId)
+        {
+            if (_isServer)
+            {
+                return;
+            }
+            Log.WLazy(() => $"Finish line chunk id set to {finishLineChunkId}", this);
+            //_trackGenerator.SetFinishLineChunkId(finishLineChunkId);
         }
     }
 }

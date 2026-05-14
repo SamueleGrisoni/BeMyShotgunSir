@@ -15,6 +15,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 case RoadChunkType.TURN:
                 case RoadChunkType.STRAIGHT:
                 case RoadChunkType.START_LINE:
+                case RoadChunkType.FINISH_LINE:
                     PlaceNormalRoadChunk(chunk, position, activeRoadChunkCount);
                     break;
                 case RoadChunkType.STARTING_CROSSROAD:
@@ -22,8 +23,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     break;
                 case RoadChunkType.ENDING_CROSSROAD:
                     PlaceEndingCrossroad(chunk);
-                    break;
-                default:
                     break;
             }
             chunk.gameObject.SetActive(true);

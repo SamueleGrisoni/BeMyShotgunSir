@@ -199,9 +199,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc25fed85d614f7184021ae251302128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.ItemSpawner
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 541111384414961198}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 541111384414961198}
   _itemData: {fileID: 11400000, guid: e9dce43d4db29ec418ac6b7d49b839f3, type: 2}
 --- !u!1 &1237150524246912392
 GameObject:
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.LevelGenerator.RoadManager
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 541111384414961198}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 541111384414961198}
   _driver: {fileID: 0}
   _trackData: {fileID: 11400000, guid: d62cccd29d423ce4eb0ba1290f11cbfe, type: 2}
   _trackGenerator: {fileID: 7871337774522450373}
@@ -423,7 +423,7 @@ MonoBehaviour:
   _environmentSpawner: {fileID: 7738397220102761310}
   _itemSpawner: {fileID: 1162758152213850260}
   _trackPooler: {fileID: 5188299226515914168}
-  _clientDespawnBufferDistance: 20
+  _clientDespawnBufferDistance: 80
   _serverBufferDistance: 150
 --- !u!114 &541111384414961198
 MonoBehaviour:
@@ -443,7 +443,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 1266191972067650112}
+  - {fileID: 1162758152213850260}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -454,7 +456,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584228899221341244
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -473,15 +475,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 14
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 10004602310093759576
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: 0, y: 0, z: -10.5}
+    Rotation: {x: -0, y: -0, z: -0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!1 &3790765072458754911
 GameObject:
   m_ObjectHideFlags: 0
