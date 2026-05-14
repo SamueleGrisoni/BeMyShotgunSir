@@ -9,9 +9,8 @@ using UnityEngine;
 namespace BeMyShotgunSir.Gameplay.PowerUps
 {
     [CreateAssetMenu(fileName = "SOInvisibility_PU", menuName = "Be My Shotgun, Sir!/PowerUp/Invisibility", order = 0)]
-    public class SOInvisibility_PU : SOPowerUp //TODO
+    public class SOInvisibility_PU : SOPowerUp
     {
-        public static Action<bool> OnInvisibilityEffectApplied;
         public override void OnUse(PowerUpRuntime runtime, StrategyContext context)
         {
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
