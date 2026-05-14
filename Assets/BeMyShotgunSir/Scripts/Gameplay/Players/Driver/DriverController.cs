@@ -70,7 +70,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 Log.ELazy(() => $"Trying to apply Invisibility effect for driver with no team. Ignoring.", this);
                 return;
             }
-            bool isMemberOfTeam = _netState.IsTeamMember(LocalConnection.ClientId, TeamId.Value);
+            bool isMemberOfTeam = _netState.IsTeamMember(TeamId.Value);
             bool shouldHide = isApplying && !isMemberOfTeam;
             transform.GetComponentInChildren<DriverVisuals>()._visualModel.gameObject.SetActive(!shouldHide);
         }
