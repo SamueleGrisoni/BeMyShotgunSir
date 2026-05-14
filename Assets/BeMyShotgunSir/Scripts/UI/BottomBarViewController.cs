@@ -43,6 +43,12 @@ namespace BeMyShotgunSir.Scripts.UI
             _role = _finalBindSource.Role;
         }
 
+        private void Update()
+        {
+            if (_inputPublisher != null)
+                Debug.Log($"Battery charge from driver: {_inputPublisher.GetBatteryCharge()}");
+        }
+
         #region Visual Elements
         private VisualElement _root;
         private VisualElement _bottomBar;

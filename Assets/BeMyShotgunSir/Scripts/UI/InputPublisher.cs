@@ -1,6 +1,5 @@
 using System;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
-using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.UI
 {

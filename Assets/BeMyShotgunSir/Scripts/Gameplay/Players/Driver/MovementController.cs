@@ -299,10 +299,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _driverController = driverController;
             _raceNetContext = context;
             InputConsumer = inputConsumer;
-            InputConsumer.OnBoostPressed += ExecuteBoost;
-            InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
-            InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
-            InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
+            if (InputConsumer != null)
+            {
+                InputConsumer.OnBoostPressed += ExecuteBoost;
+                InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
+                InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
+                InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
+            }
         }
 
         #endregion
@@ -367,7 +370,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
         }
         [TargetRpc]
-        private void Send_ExecuteDriverFeedback(NetworkConnection conn, DriverFeedback driverFeedback) => InputConsumer.SendDriveFeedbackToShotgun(driverFeedback);
+        private void Send_ExecuteDriverFeedback(NetworkConnection conn, DriverFeedback driverFeedback)
+        {
+            if (InputConsumer != null)
+                InputConsumer.SendDriveFeedbackToShotgun(driverFeedback);
+        }
 
         [Server]
         private void Server_BatteryEarlyCommitment(float batteryCharge)
@@ -388,7 +395,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
         }
         [TargetRpc]
-        private void Send_BatteryEarlyCommitment(NetworkConnection conn, float batteryCharge) => InputConsumer.BatteryChargeEarlyCommitment(batteryCharge);
+        private void Send_BatteryEarlyCommitment(NetworkConnection conn, float batteryCharge)
+        {
+            if (InputConsumer != null)
+                InputConsumer.BatteryChargeEarlyCommitment(batteryCharge);
+        }
+
 
         private void ExecuteWheelMessageOnDriver(WheelMessages wheelMessages)
         {
@@ -482,8 +494,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (state != ReplicateState.Replayed)
                 _currentSteerInput = data.SteerInput;
 
-            if (InputConsumer != null)
-                InputConsumer.ChargeBattery = _currentBatteryCharge;
+            if (InputConsumer != null && TeamId.HasValue)
+            {
+                if (_raceNetContext.NetState.IsTeamMember(TeamId.Value))
+                    InputConsumer.ChargeBattery = _currentBatteryCharge;
+            }
         }
 
         private void ApplyBumpRepulsion(RaceTeamData teamData)

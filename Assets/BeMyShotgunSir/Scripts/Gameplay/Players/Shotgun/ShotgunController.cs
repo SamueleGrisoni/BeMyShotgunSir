@@ -7,6 +7,7 @@ using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Object;
+using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
 {
@@ -62,7 +63,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
         [Server] //TODO UI Bind
         private void TriggerAction(PowerUpActionType actionType) => _powerUpsNetController.TriggerAction_ServerRpc(actionType);
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc]
         private void WheelMessagesToDriver(WheelMessages wheelMessages) => WheelMessagesToDriver_Server(wheelMessages);
         [Server]
         private void WheelMessagesToDriver_Server(WheelMessages wheelMessages)
@@ -74,6 +75,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             {
                 if (conn != null)
                     Send_WheelMessagesToDriver(conn, wheelMessages);
+                else
+                    Debug.Log("Connessione non trovata");
             }
         }
         [TargetRpc]

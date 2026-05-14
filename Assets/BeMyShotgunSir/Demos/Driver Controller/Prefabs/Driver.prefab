@@ -140,7 +140,6 @@ GameObject:
   - component: {fileID: 3192123921943259604}
   - component: {fileID: 2002137533636311092}
   - component: {fileID: 6145024473074168795}
-  - component: {fileID: 1432123650663662027}
   m_Layer: 7
   m_Name: Movement
   m_TagString: Driver
@@ -204,7 +203,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 262144
   _log: 0
-  _isDebugInputEnabled: 1
+  _isDebugInputEnabled: 0
   _debugPowerUp: 1
   _onGrassBufferMin: 10
 --- !u!54 &2139825348868955056
@@ -410,21 +409,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1432123650663662027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1694670322626515296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bc2e627f7d2b2745a95f8e676f15b54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.ForkBarrierCollision
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 3192123921943259604}
-  _networkObjectCache: {fileID: 0}
 --- !u!1 &2204479149634885745
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,9 +974,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2222381057580843923, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: ShapeModule.type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222381057580843923, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: ShapeModule.angle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222381057580843923, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222381057580843923, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2732889835624388037, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4496121256619668532, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4496121256619668532, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4496121256619668532, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.22
       objectReference: {fileID: 0}
     - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
       propertyPath: m_LocalRotation.w

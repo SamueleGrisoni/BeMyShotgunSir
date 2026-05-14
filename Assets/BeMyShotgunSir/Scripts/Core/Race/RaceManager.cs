@@ -149,12 +149,22 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void OnTeamSpawned(ITeamNetControllerInitializer initializer)
         {
-            var lobbyNetContext = new LobbyNetContext(null, null, _lobbyNetStateStore, null);
-            _inputPublisher = new InputPublisher();
-            _playerRole = _netState.PlayerStates[LocalConnection.ClientId].Role;
-            var raceContext = new RaceNetContext(lobbyNetContext, this, _netController, _netState, _projector, _powerUpsNetController, _inputPublisher);
-            initializer.Initialize(raceContext, _roadManager);
-            BindRace_Final(_bindTargets);
+            if (_netState.TryGetTeamData(LocalConnection.ClientId, out RaceTeamData teamData))
+            {
+                if (_netState.IsTeamMember(teamData.TeamId))
+                {
+                    _playerRole = _netState.PlayerStates[LocalConnection.ClientId].Role;
+                    _inputPublisher = new InputPublisher();
+                    BindRace_Final(_bindTargets);
+                }
+                else
+                {
+                    var lobbyNetContext = new LobbyNetContext(null, null, _lobbyNetStateStore, null);
+                    var raceContext = new RaceNetContext(lobbyNetContext, this, _netController, _netState, _projector, _powerUpsNetController, _inputPublisher);
+                    initializer.Initialize(raceContext, _roadManager);
+                    BindRace_Final(_bindTargets);
+                }
+            }
         }
 
         private void BindRace_Final(IRaceBindTarget[] targets)

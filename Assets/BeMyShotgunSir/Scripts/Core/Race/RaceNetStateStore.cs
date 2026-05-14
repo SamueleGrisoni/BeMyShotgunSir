@@ -987,13 +987,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             return true;
         }
 
-        public bool IsTeamMember(int localConnectionId, int teamId)
+        public bool IsTeamMember(int teamId)
         {
-            if(!TryGetTeamDataByPlayerId(localConnectionId, out RaceTeamData teamData))
-            {
+            if (!TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData raceTeamData))
                 return false;
-            }
-            return teamData.TeamId == teamId;
+            else
+                return raceTeamData.TeamId == teamId;
         }
 
         public bool DidAllTeamsReachedChunk(int chunkId)
