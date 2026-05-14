@@ -28,11 +28,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (_teamNetController == null)
-            {
-                Log.ELazy(() => $"ShotgunController has no TeamNetController on start. TeamId will be null.", this);
-                return;
-            }
             OnShotgunSpawned?.Invoke(this);
         }
 

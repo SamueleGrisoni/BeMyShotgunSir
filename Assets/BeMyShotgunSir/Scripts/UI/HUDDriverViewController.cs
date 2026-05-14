@@ -55,10 +55,10 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void UpdateTeamProgress()
         {
-            foreach (KeyValuePair<int, RaceTeamData> teamsId in _viewModel.TeamData)
-            {
-                _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
-            }
+            // foreach (KeyValuePair<int, RaceTeamData> teamsId in _viewModel.TeamData)
+            // {
+            //     _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
+            // }
         }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

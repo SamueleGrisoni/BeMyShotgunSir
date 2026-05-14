@@ -715,6 +715,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Invisibility
       objectReference: {fileID: 0}
+    - target: {fileID: 1747447626252351450, guid: 6804c9d6d22b7a24cb58fa99b68327eb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7435309411910536701, guid: 6804c9d6d22b7a24cb58fa99b68327eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.294
@@ -771,6 +775,10 @@ PrefabInstance:
     - target: {fileID: 1499574131225770936, guid: 9b3a8f3d84ce6814295302794733b2d6, type: 3}
       propertyPath: m_Name
       value: RoadBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 1499574131225770936, guid: 9b3a8f3d84ce6814295302794733b2d6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1613331064374039297, guid: 9b3a8f3d84ce6814295302794733b2d6, type: 3}
       propertyPath: SceneId
@@ -911,7 +919,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 5107504928808324651}
   - {fileID: 2006144848}
-  - {fileID: 481700443}
   - {fileID: 1016839400441796935}
   - {fileID: 774609734046502956}
-  - {fileID: 879025793}

@@ -54,11 +54,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (_teamNetController == null)
-            {
-                Log.ELazy(() => $"DriverController has no TeamNetController on start. TeamId will be null.", this);
-                return;
-            }
             OnDriverSpawned?.Invoke(this);
         }
 

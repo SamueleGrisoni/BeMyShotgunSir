@@ -57,13 +57,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             _syncTeamId.Value = teamId;
             OnTeamIdAssigned?.Invoke();
             Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
-            if (TeamId.HasValue)
-            {
-                _raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress progress);
-                _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, new TeamTrackProgress(progress, 0, null, new PortalInfo(0, RoadChunkType.START_LINE)));
-            }
-            else
-                Log.ELazy(() => $"MovementController initialized without TeamId.", this);
         }
 
         public override void OnStartNetwork()
@@ -140,6 +133,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                 Log.ELazy(() => $"Failed to auto-initialize TeamNetController for ConnectionId: {LocalConnection.ClientId}. No team or player IDs found with team ID {_syncTeamId.Value}.", this, _log);
                 return;
             }
+
+            if (TeamId.HasValue)
+            {
+                _raceNetContext.NetState.TryGetTeamTrackProgress(TeamId.Value, out TeamTrackProgress progress);
+                _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, new TeamTrackProgress(progress, 0, null, new PortalInfo(0, RoadChunkType.START_LINE)));
+            }
+            else
+                Log.ELazy(() => $"MovementController initialized without TeamId.", this);
 
             _driverController.Initialize(_raceNetContext, this, _shotgunController);
             _shotgunController.Initialize(_raceNetContext, this, _driverController);

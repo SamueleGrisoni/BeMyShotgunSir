@@ -90,7 +90,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _markerLerpCoroutine = StartCoroutine(LerpMarkersRoutine());
 
-            SOInvisibility_PU.OnInvisibilityEffectApplied += OnInvisibilityEffectApplied;
+            // SOInvisibility_PU.OnInvisibilityEffectApplied += OnInvisibilityEffectApplied;
 
         }
 
