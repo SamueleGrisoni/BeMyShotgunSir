@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.SOSoundSource
   <MixerGroup>k__BackingField: 0
   <Clips>k__BackingField:
-  - <Clip>k__BackingField: {fileID: 8300000, guid: 28cc3105c659aae459c8abf014de87d6, type: 3}
+  - <Clip>k__BackingField: {fileID: 8300000, guid: 94ceb46e23b2621418d7c1f9ed881f3c, type: 3}
     <Volume>k__BackingField: 0.511
