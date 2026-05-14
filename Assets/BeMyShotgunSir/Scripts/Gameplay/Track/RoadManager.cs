@@ -138,7 +138,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             //poi quando hai ottenuto il finish line chunk id puoi settarlo in autonomia nello store
             // context.NetState.SetFinishLineChunkId(finishlinechunkid);
             context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);
-            context.NetState.OnFinishLineChunkIdSet += OnFinishLineChunkIdSet;
+            //context.NetState.OnFinishLineChunkIdSet += OnFinishLineChunkIdSet;
             if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
@@ -313,14 +313,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
         }
 
+        [Server]
         private void OnTimerRaceExpired(RaceNetContext context)
         {
-            if (!_isServer)
-            {
-                //Log.WLazy(() => "Timer expired but not server, ignoring", this);
-                return;
-            }
-
             bool canGetFirstTeamProgress = context.NetState.TryGetTeamTrackProgress(context.NetState.Leaderboard[0], out TeamTrackProgress progress);
             if (!canGetFirstTeamProgress)
             {
@@ -334,19 +329,18 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 Log.WLazy(() => "First team last special chunk type is null on timer expired, defaulting to start line", this);
                 firstTeamLastSpecialChunkType = RoadChunkType.START_LINE;
             }
+
             int finishLineId = _trackGenerator.ServerSetFinalSequence(firstTeamLastSpecialChunkType);
-            context.NetState.SetFinishLineChunkId(finishLineId);
+
             Log.DLazy(() => $"Timer expired, set finish line chunk id to {finishLineId} based on first team last special chunk type {firstTeamLastSpecialChunkType}", this);
+
+            RpcSetFinishLineChunkId(finishLineId);
         }
 
-        private void OnFinishLineChunkIdSet(int finishLineChunkId)
+        [ObserversRpc(ExcludeServer = true)]
+        private void RpcSetFinishLineChunkId(int finishLineChunkId)
         {
-            if (_isServer)
-            {
-                return;
-            }
             Log.WLazy(() => $"Finish line chunk id set to {finishLineChunkId}", this);
-            //
             _trackGenerator.SetFinishLineChunkId(finishLineChunkId);
         }
     }
