@@ -1,6 +1,5 @@
 using System;
 using BeMyShotgunSir.Gameplay.Players.Driver;
-using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
@@ -303,6 +302,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             InputConsumer.OnBoostPressed += ExecuteBoost;
             InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
             InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
+            InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
         }
 
         #endregion
@@ -323,6 +323,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 InputConsumer.OnBoostPressed -= ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
+                InputConsumer.OnDriverFeedbackPressed -= ExecuteDriverFeedback;
+                InputConsumer.OnWheelMessageOnDriver -= ExecuteWheelMessageOnDriver;
             }
         }
 
@@ -347,10 +349,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Server]
         private void ExecuteDriverFeedback_Server(DriverFeedback driverFeedback)
         {
-            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection conn))
+            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData))
             {
-                if (conn != null)
-                    Send_ExecuteDriverFeedback(conn, driverFeedback);
+                if (ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection connShotgun))
+                {
+                    if (connShotgun != null)
+
+                        Send_ExecuteDriverFeedback(connShotgun, driverFeedback);
+                }
+                if (ServerManager.Clients.TryGetValue(teamData.DriverConnectionId, out NetworkConnection connDriver))
+                {
+                    if (connDriver != null)
+                    {
+                        Send_ExecuteDriverFeedback(connDriver, driverFeedback);
+                    }
+                }
             }
         }
         [TargetRpc]
@@ -359,14 +372,28 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Server]
         private void Server_BatteryEarlyCommitment(float batteryCharge)
         {
-            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection conn))
+            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData))
             {
-                if (conn != null)
-                    Send_BatteryEarlyCommitment(conn, batteryCharge);
+                if (ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection connShotgun))
+                {
+                    if (connShotgun != null)
+                        Send_BatteryEarlyCommitment(connShotgun, batteryCharge);
+                }
+                if (ServerManager.Clients.TryGetValue(teamData.DriverConnectionId, out NetworkConnection driverShotgun))
+                {
+                    if (driverShotgun != null)
+                        Send_BatteryEarlyCommitment(driverShotgun, batteryCharge);
+                }
+
             }
         }
         [TargetRpc]
         private void Send_BatteryEarlyCommitment(NetworkConnection conn, float batteryCharge) => InputConsumer.BatteryChargeEarlyCommitment(batteryCharge);
+
+        private void ExecuteWheelMessageOnDriver(WheelMessages wheelMessages)
+        {
+            Debug.Log($"Arrived whelle message from shotgun to the driver: {wheelMessages}");
+        }
 
         #endregion
 
@@ -416,7 +443,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
 
                 _lastReplicateData = data;
-                Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
+                //Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
             }
             else
             {
@@ -454,6 +481,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             if (state != ReplicateState.Replayed)
                 _currentSteerInput = data.SteerInput;
+
+            if (InputConsumer != null)
+                InputConsumer.ChargeBattery = _currentBatteryCharge;
         }
 
         private void ApplyBumpRepulsion(RaceTeamData teamData)

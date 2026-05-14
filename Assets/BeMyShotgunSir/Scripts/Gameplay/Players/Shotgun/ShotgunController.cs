@@ -1,9 +1,11 @@
 using System;
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Messages;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Connection;
 using FishNet.Object;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
@@ -42,6 +44,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                 _inputConsumer = context.InputPublisher;
             _teamNetController = teamNetController;
             _driverController = driverController;
+            _netState = context.NetState;
+            _inputConsumer.OnWheelMessagePressed += WheelMessagesToDriver;
 
             _isInitialized = true;
             Log.DLazy(() => $"ShotgunController initialized with teamId {_teamNetController.TeamId}.", this);
@@ -58,5 +62,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
 
         [Server] //TODO UI Bind
         private void TriggerAction(PowerUpActionType actionType) => _powerUpsNetController.TriggerAction_ServerRpc(actionType);
+        [ServerRpc(RequireOwnership = false)]
+        private void WheelMessagesToDriver(WheelMessages wheelMessages) => WheelMessagesToDriver_Server(wheelMessages);
+        [Server]
+        private void WheelMessagesToDriver_Server(WheelMessages wheelMessages)
+        {
+            if (!TeamId.HasValue)
+                return;
+
+            if (_netState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && ServerManager.Clients.TryGetValue(teamData.DriverConnectionId, out NetworkConnection conn))
+            {
+                if (conn != null)
+                    Send_WheelMessagesToDriver(conn, wheelMessages);
+            }
+        }
+        [TargetRpc]
+        private void Send_WheelMessagesToDriver(NetworkConnection conn, WheelMessages wheelMessages) => _inputConsumer.SendWheelMessageToDriver(wheelMessages);
     }
 }

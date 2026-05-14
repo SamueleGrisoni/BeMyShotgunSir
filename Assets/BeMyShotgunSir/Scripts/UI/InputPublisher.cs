@@ -13,6 +13,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
     public interface IDriverInputConsumer
     {
+        // To Driver
         float SteerInput { get; }
         float DriftInput { get; }
         bool IsDrifting { get; }
@@ -20,6 +21,7 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action OnBoostPressed;
         event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         event Action<DriverFeedback> OnDriverFeedbackPressed;
+        event Action<WheelMessages> OnWheelMessageOnDriver;
         // From Driver
         float ChargeBattery { set; }
         void BatteryChargeEarlyCommitment(float batteryCharge);
@@ -32,6 +34,7 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action OnUsePressed;
         event Action OnFirePressed;
         event Action<WheelMessages> OnWheelMessagePressed;
+        void SendWheelMessageToDriver(WheelMessages wheelMessages);
     }
 
     public interface IInputPublisher
@@ -67,6 +70,7 @@ namespace BeMyShotgunSir.Scripts.UI
         public event Action<DriverFeedback> OnDriverFeedbackPressed;
         public event Action<float> OnBatteryChargeEarlyCommitment;
         public event Action<DriverFeedback> OnDriverSendFeedback;
+        public event Action<WheelMessages> OnWheelMessageOnDriver;
 
         public float SteerInput => _steerInput;
         public float DriftInput => _driftInput;
@@ -84,11 +88,7 @@ namespace BeMyShotgunSir.Scripts.UI
         public void SetIsMoving(bool isMoving) => _isMoving = isMoving;
 
         public float GetBatteryCharge() => _chargeBattery;
-        public void BatteryChargeEarlyCommitment(float batteryCharge)
-        {
-            OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
-            Debug.Log("Early commitment from the shotgun");
-        }
+        public void BatteryChargeEarlyCommitment(float batteryCharge) => OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
         public void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback) => OnDriverSendFeedback?.Invoke(driverFeedback);
 
 
@@ -105,6 +105,7 @@ namespace BeMyShotgunSir.Scripts.UI
         public void UsePowerUp() => OnUsePressed?.Invoke();
         public void Fire() => OnFirePressed?.Invoke();
         public void SendWheelMessage(WheelMessages message) => OnWheelMessagePressed?.Invoke(message);
+        public void SendWheelMessageToDriver(WheelMessages wheelMessages) => OnWheelMessageOnDriver?.Invoke(wheelMessages);
 
         #endregion
     }
