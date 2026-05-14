@@ -28,12 +28,8 @@ namespace BeMyShotgunSir.Scripts.UI
             }
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
-
-            //TODO: Race View Model events
-            // _viewModel.OnLobbyIPChanged += UpdateLobbyIP;
-            // _viewModel.OnPlayerCountChanged += UpdatePlayerCount;
-            // _viewModel.OnPlayerStatesChanged += UpdatePlayerStates;
         }
+
         public override void OnFinalBindComplete()
         {
             if (_finalBindSource == null)
@@ -44,6 +40,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
+            _inputPublisher.OnBatteryChargeEarlyCommitment += ReadEarlyCommitmentValue;
         }
 
         #region Visual Elements
@@ -59,11 +57,11 @@ namespace BeMyShotgunSir.Scripts.UI
         private VisualElement _commitBarMaskRight;
         #endregion
 
-        #region Public Properties
-        public float CommitmentValue;// { get; private set; }
-        public bool Show;// { get; private set; }
+        #region private fields
+        private float _commitmentValue;
+        private float _currentCommitmentFill;
+        private bool _updateEarlyCommitment;
         #endregion
-
 
         private void OnEnable()
         {
@@ -88,6 +86,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _arrowRight.pickingMode = PickingMode.Position;
 
             // _earlyCommitmentContainer.style.display = DisplayStyle.None;
+
+            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this);
+            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this);
         }
 
         IEnumerator InitNextFrame()
@@ -98,11 +99,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _arrowRight.RegisterCallback<PointerDownEvent>(ArrowRightHandler);
         }
 
-        private void Update()
-        {
-            // if (Show) ShowEarlyCommitment();
-            // else HideEarlyCommitment();
-        }
+        private void Update() => UpdateEarlyCommitment();
 
         private void OnDisable()
         {
@@ -111,29 +108,48 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
         #region Handlers
-        private void ArrowLeftHandler(PointerDownEvent evt)
-        {
-            Debug.Log("Left Arrow Pressed");
-        }
-
-        private void ArrowRightHandler(PointerDownEvent evt)
-        {
-            Debug.Log("Right Arrow Pressed");
-        }
+        private void ArrowLeftHandler(PointerDownEvent evt) => _inputPublisher.PressEarlyCommitment(CommitmentDirection.Left);
+        private void ArrowRightHandler(PointerDownEvent evt) => _inputPublisher.PressEarlyCommitment(CommitmentDirection.Right);
 
         #endregion
 
-        private void ShowEarlyCommitment()
+
+        private void ReadEarlyCommitmentValue(float commitmentValue)
         {
-            _earlyCommitmentContainer.style.display = DisplayStyle.Flex;
+            _commitmentValue = commitmentValue;
 
-            float fill = Mathf.Clamp01(CommitmentValue);
+            Log.DLazy(() => $"[{GetInstanceID()}] GO={gameObject.name} Role={_role} " + $"Value={commitmentValue} HUD={_hudDocument.GetInstanceID()} " + $"Publisher={_inputPublisher}", this);
 
-            _commitBarMaskLeft.style.height = Length.Percent(fill * 100f);
-            _commitBarMaskRight.style.height = Length.Percent(fill * 100f);
+            if (commitmentValue > 0f)
+            {
+                _updateEarlyCommitment = true;
+                ShowEarlyCommitment(true);
+            }
+            else
+            {
+                _updateEarlyCommitment = false;
+                ShowEarlyCommitment(false);
+            }
         }
 
-        private void HideEarlyCommitment() => _earlyCommitmentContainer.style.display = DisplayStyle.None;
+        private void UpdateEarlyCommitment()
+        {
+            if (!_updateEarlyCommitment) return;
+
+            _earlyCommitmentContainer.style.display = DisplayStyle.Flex;
+
+            float targetFill = Mathf.Clamp01(_commitmentValue / 100);
+
+            _currentCommitmentFill = Mathf.Lerp(_currentCommitmentFill, targetFill, Time.deltaTime * 8f);
+
+            _commitBarMaskLeft.style.height = Length.Percent(_currentCommitmentFill * 100);
+            _commitBarMaskRight.style.height = Length.Percent(_currentCommitmentFill * 100);
+
+            Log.DLazy(() => $"[{GetInstanceID()}] Written height: {_commitBarMaskLeft.style.height}", this);
+        }
+
+        private void ShowEarlyCommitment(bool show) => _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+
 
     }
 }

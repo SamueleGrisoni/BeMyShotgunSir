@@ -41,12 +41,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
-        }
 
-        private void Update()
-        {
-            if (_inputPublisher != null)
-                Debug.Log($"Battery charge from driver: {_inputPublisher.GetBatteryCharge()}");
         }
 
         #region Visual Elements
@@ -116,6 +111,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _boostControl.pickingMode = PickingMode.Ignore;
 
             StartCoroutine(InitNextFrame());
+
+            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this);
+            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this);
         }
 
         private IEnumerator InitNextFrame()
@@ -148,6 +146,12 @@ namespace BeMyShotgunSir.Scripts.UI
             _thumbUpButton.RegisterCallback<PointerDownEvent>(ThumbsUpDownHandler);
 
             _runStopButton.clicked += RunStopDownHandler;
+        }
+
+        private void Update()
+        {
+            if (_finalBindSource != null)
+                UpdateBoostBar();
         }
 
         private void OnDisable()
@@ -327,6 +331,25 @@ namespace BeMyShotgunSir.Scripts.UI
             _driftValue = 0f;
             _driftOrigin.style.display = DisplayStyle.None;
             _driftJoystick.style.display = DisplayStyle.None;
+        }
+
+        private void UpdateBoostBar()
+        {
+            float boost = _inputPublisher.GetBatteryCharge();
+            float boostFill = Mathf.Clamp01(boost / 100f);
+
+            if (boost > 100f)
+            {
+                float overboost = boost - 100f;
+                float overboostFill = Mathf.Clamp01(overboost / 100f);
+                _overboostBar.style.height = Length.Percent(overboostFill * 100f);
+            }
+            else
+            {
+                _overboostBar.style.height = Length.Percent(0f);
+            }
+            _boostBar.style.height = Length.Percent(boostFill * 100f);
+
         }
 
     }

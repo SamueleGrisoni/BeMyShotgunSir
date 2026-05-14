@@ -37,6 +37,8 @@
     position: absolute;
     width: 100%;
     bottom: 650px;
+    height: 500px;
+    justify-content: center;
 }
 
 .early-commitment {
