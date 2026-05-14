@@ -76,6 +76,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGenerated;
         public static event Action<int> OnCommonGenerated;
         public static event Action<CrossroadSegmentInfo> OnCrossroadGenerated;
+        public static event Action<int> OnFinishLineGenerated;
 
         public void Init(int seed)
         {
@@ -201,6 +202,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
             _hasFinishLineBeenGenerated = true;
+            OnFinishLineGenerated?.Invoke(_numChunksGenerated);
             return _numChunksGenerated;
         }
 
