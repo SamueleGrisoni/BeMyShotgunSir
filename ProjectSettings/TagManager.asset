@@ -12,6 +12,7 @@ TagManager:
   - Oil
   - Driver
   - Portal
+  - ForkBarrier
   layers:
   - Default
   - TransparentFX

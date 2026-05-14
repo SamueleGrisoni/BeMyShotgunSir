@@ -658,7 +658,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         #endregion
 
-        #region Portal / early commitment
+        #region Triggers and Collision
 
         private void OnTriggerEnter(Collider other)
         {
@@ -697,8 +697,26 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
         }
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (!TeamId.HasValue)
+                return;
+
+            if (IsOwner || (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && teamData.ShotgunConnectionId == base.LocalConnection.ClientId))
+            {
+                if (collision.gameObject.CompareTag("ForkBarrier"))
+                {
+                    collision.gameObject.TryGetComponent(out ForkBarrier forkBarrier);
+                    if (forkBarrier != null)
+                    {
+                        forkBarrier.SetBarrierVisible(true);
+                    }
+                }
+            }
+        }
+
         [ServerRpc]
-        public void ExecuteEarlyCommitment()
+        private void ExecuteEarlyCommitment()
         {
             if (_earlyCommitmentNotUsed && _earlyCommitmentEnabled)
             {

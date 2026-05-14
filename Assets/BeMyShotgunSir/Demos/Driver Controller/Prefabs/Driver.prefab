@@ -82,7 +82,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5823176394210027769}
-  - component: {fileID: 869496521538249166}
+  - component: {fileID: 8321478880501229331}
   m_Layer: 9
   m_Name: CommitmentCollider
   m_TagString: Untagged
@@ -105,8 +105,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8359259767688481148}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &869496521538249166
-SphereCollider:
+--- !u!65 &8321478880501229331
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -124,8 +124,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.90405566, y: 0.59097314, z: 1.7423072}
+  m_Center: {x: 0.007574469, y: -0.027773485, z: 0.047972083}
 --- !u!1 &1694670322626515296
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 3192123921943259604}
   - component: {fileID: 2002137533636311092}
   - component: {fileID: 6145024473074168795}
+  - component: {fileID: 1432123650663662027}
   m_Layer: 7
   m_Name: Movement
   m_TagString: Driver
@@ -187,7 +188,7 @@ MonoBehaviour:
   _sidecar: {fileID: 6190171562437922324}
   _sidecarModel: {fileID: 7985624542521542911}
   _boxCollider: {fileID: 8359259767688481148}
-  _commitmentCollider: {fileID: 869496521538249166}
+  _commitmentCollider: {fileID: 8321478880501229331}
   _obstacleCollider: {fileID: 4712929775903902836}
   _sidecarLayerMask:
     serializedVersion: 2
@@ -409,6 +410,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1432123650663662027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694670322626515296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc2e627f7d2b2745a95f8e676f15b54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.ForkBarrierCollision
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 3192123921943259604}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &2204479149634885745
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,7 +583,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -974,6 +990,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2732889835624388037, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.69126093
@@ -997,10 +1017,6 @@ PrefabInstance:
     - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
       propertyPath: m_Name
       value: Sidecar
-      objectReference: {fileID: 0}
-    - target: {fileID: 2732889835624388037, guid: 9392c8d687b88474d99804d995d01712, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
