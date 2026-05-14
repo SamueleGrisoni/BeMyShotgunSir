@@ -106,10 +106,10 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _raceMapViewController.UpdateMapFromTeamProgress(progress);
 
-            foreach (KeyValuePair<int, RaceTeamData> teamsId in _viewModel.TeamData)
-            {
-                _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
-            }
+            // foreach (KeyValuePair<int, RaceTeamData> teamsId in _viewModel.TeamData)
+            // {
+            //     _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
+            // }
         }
 
 
