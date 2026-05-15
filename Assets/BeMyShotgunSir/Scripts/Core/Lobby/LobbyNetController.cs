@@ -264,7 +264,6 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 Log.ELazy(() => "Failed to instantiate RaceManager.", this);
                 return;
             }
-
             _activeRaceManager.gameObject.name = _activeRaceManager.gameObject.name.Replace("(Clone)", " Server");
             Spawn(_activeRaceManager);
             InitRace_ObserversRpc();
@@ -274,6 +273,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void InitRace_ObserversRpc()
         {
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.LetsGo), null);
+            GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, true);
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
         }
     }

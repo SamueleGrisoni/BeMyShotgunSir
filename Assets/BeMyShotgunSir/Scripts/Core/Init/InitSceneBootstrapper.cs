@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core.Init
             if (SceneManager.GetSceneByName(SceneName.Lobby.ToString()).isLoaded)
                 SceneManager.UnloadSceneAsync(SceneName.Lobby.ToString());
             OnInitSceneInitialized?.Invoke();
+            GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, false);
 
             // if (!SceneManager.GetSceneByName(SceneName.UI.ToString()).isLoaded)
             //     SceneManager.LoadScene(SceneName.UI.ToString(), LoadSceneMode.Additive);

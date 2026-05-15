@@ -375,7 +375,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         [ObserversRpc]
-        private void ShowCountDown_ObserversRpc() => GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);//TODO show countdown on clients
+        private void ShowCountDown_ObserversRpc()
+        {
+            GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, false);
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);//TODO show countdown on clients
+        }
 
         private IEnumerator StartRaceAfterCountdown()
         {
