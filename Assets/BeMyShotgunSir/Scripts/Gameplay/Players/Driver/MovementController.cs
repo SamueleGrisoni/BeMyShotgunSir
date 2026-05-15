@@ -9,6 +9,7 @@ using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
+using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using GameKit.Dependencies.Utilities;
 using UnityEngine;
@@ -251,10 +252,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private float _activeDriftIntent = 0f;
         private float _predictedTicks;
         private int _onGrassBuffer = 0;
-        private bool _earlyCommitmentNotUsed;
-        private bool _earlyCommitmentEnabled;
         private int _currentChunkId;
         private float _currentPossibleChargeEarlyCommitment;
+
+        private readonly SyncVar<bool> _earlyCommitmentNotUsed = new SyncVar<bool>(true);
+        private readonly SyncVar<bool> _earlyCommitmentEnabled = new SyncVar<bool>(false);
 
         #endregion
 
@@ -278,8 +280,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _isOilAnimationActive = false;
             _commitmentDirection = CommitmentDirection.Default;
             _currentChunkId = 0;
-            _earlyCommitmentEnabled = false;
-            _earlyCommitmentNotUsed = true;
             _currentPossibleChargeEarlyCommitment = 0;
         }
 
@@ -287,6 +287,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void LateUpdate()
         {
+            Debug.Log($"{_earlyCommitmentEnabled.Value} | {_earlyCommitmentNotUsed.Value}");
             //Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
         }
 
@@ -304,7 +305,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 InputConsumer.OnBoostPressed += ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
                 InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
-                InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
+                //InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
             }
         }
 
@@ -327,7 +328,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 InputConsumer.OnBoostPressed -= ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
                 InputConsumer.OnDriverFeedbackPressed -= ExecuteDriverFeedback;
-                InputConsumer.OnWheelMessageOnDriver -= ExecuteWheelMessageOnDriver;
+                //InputConsumer.OnWheelMessageOnDriver -= ExecuteWheelMessageOnDriver;
             }
         }
 
@@ -338,12 +339,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public void ExecuteBoost() => _isBoosting = true;
         private void ExecuteInputEarlyCommitment(CommitmentDirection direction)
         {
-            _commitmentDirection = direction;
+            if (_earlyCommitmentEnabled.Value && _earlyCommitmentNotUsed.Value)
+                _commitmentDirection = direction;
             ExecuteEarlyCommitment();
         }
-        public void ExecuteEarlyCommitmentDebug(CommitmentDirection commitmentDirection)
+        public void ExecuteEarlyCommitmentDebug(CommitmentDirection direction)
         {
-            _commitmentDirection = commitmentDirection;
+            if (_earlyCommitmentEnabled.Value && _earlyCommitmentNotUsed.Value)
+                _commitmentDirection = direction;
             ExecuteEarlyCommitment();
         }
 
@@ -402,10 +405,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
 
-        private void ExecuteWheelMessageOnDriver(WheelMessages wheelMessages)
-        {
-            Debug.Log($"Arrived whelle message from shotgun to the driver: {wheelMessages}");
-        }
+        //private void ExecuteWheelMessageOnDriver(WheelMessages wheelMessages)
+        //{
+        //    Debug.Log($"Arrived whelle message from shotgun to the driver: {wheelMessages}");
+        //}
 
         #endregion
 
@@ -424,6 +427,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 UpdateActiveDriftIntent(_input.IsDrifting, _input.SteerInput);
                 rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
                 _input.IsStarting = false;
+                _commitmentDirection = CommitmentDirection.Default;
             }
             else
             {
@@ -431,6 +435,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 UpdateActiveDriftIntent(InputConsumer.IsDrifting, steerInput);
                 rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
                 _isBoosting = false;
+                _commitmentDirection = CommitmentDirection.Default;
             }
             return rd;
         }
@@ -446,22 +451,22 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
-            // if (state.IsFuture() && !IsOwner)
-            // {
-            //     _predictedTicks++;
-            //     data = _lastReplicateData;
+            if (state.IsFuture() && !IsOwner)
+            {
+                _predictedTicks++;
+                data = _lastReplicateData;
 
-            //     if (_predictedTicks > 1)
-            //         data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
+                if (_predictedTicks > 1)
+                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
 
-            //     _lastReplicateData = data;
-            //     //Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
-            // }
-            // else
-            // {
-            //     _predictedTicks = 0;
-            //     _lastReplicateData = data;
-            // }
+                _lastReplicateData = data;
+                Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this, _log);
+            }
+            else
+            {
+                _predictedTicks = 0;
+                _lastReplicateData = data;
+            }
 
             _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
                 ? LayerMask.NameToLayer("LeftCollider")
@@ -526,12 +531,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                         var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
 
-                        float pushStrength = 1f - (distance / _bumpRadius);
-
                         MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
                         if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
                         {
-                            Vector3 finalPush = lateralPushDirection.normalized * (_bumpForce * pushStrength);
+                            Vector3 finalPush = lateralPushDirection.normalized * _bumpForce;
                             repulsionForce += finalPush;
 
                             Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
@@ -614,7 +617,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 if (hit.collider.CompareTag("Grass"))
                 {
-                    //Debug.Log("Hit grass");
                     _onGrassBuffer++;
                     if (_onGrassBuffer > _onGrassBufferMin) return GroundType.Grass;
                 }
@@ -693,7 +695,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 float upwardVelocity = Vector3.Dot(_currentLinearVelocity, Vector3.up);
                 float force = (error * _springForce) - (upwardVelocity * _damping);
                 _predictionRigidbody.AddForce(Vector3.up * force, ForceMode.Acceleration);
-
             }
             else
             {
@@ -709,7 +710,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (other.CompareTag("Portal") && IsServerInitialized)
             {
-                Debug.Log("hit portale");
                 RoadChunk roadChunk = other.transform.parent.GetComponent<RoadChunk>();
                 if (roadChunk != null)
                 {
@@ -729,12 +729,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                                 _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
                                 Server_BatteryEarlyCommitment(_currentPossibleChargeEarlyCommitment);
                                 Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
-                                _earlyCommitmentEnabled = true;
+                                _earlyCommitmentEnabled.Value = true;
                             }
                             else
                             {
-                                _earlyCommitmentEnabled = false;
-                                _earlyCommitmentNotUsed = true;
+                                _earlyCommitmentEnabled.Value = false;
+                                _earlyCommitmentNotUsed.Value = true;
                             }
                         }
                     }
@@ -763,11 +763,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [ServerRpc]
         private void ExecuteEarlyCommitment()
         {
-            if (_earlyCommitmentNotUsed && _earlyCommitmentEnabled)
+            if (_earlyCommitmentNotUsed.Value && _earlyCommitmentEnabled.Value)
             {
                 _currentBatteryCharge = Math.Min(_currentBatteryCharge + _currentPossibleChargeEarlyCommitment, 200);
                 Log.DLazy(() => $"Commitmen executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
-                _earlyCommitmentNotUsed = false;
+                _earlyCommitmentNotUsed.Value = false;
             }
         }
 

@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
     public interface IDriverInputConsumer
     {
-        // To Driver
+        // From Movement Controller
         float SteerInput { get; }
         float DriftInput { get; }
         bool IsDrifting { get; }
@@ -20,8 +20,8 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action OnBoostPressed;
         event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         event Action<DriverFeedback> OnDriverFeedbackPressed;
-        event Action<WheelMessages> OnWheelMessageOnDriver;
-        // From Driver
+
+        // From Movement Controller
         float ChargeBattery { set; }
         void BatteryChargeEarlyCommitment(float batteryCharge);
         void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback);
@@ -54,6 +54,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         float GetBatteryCharge();
         event Action<float> OnBatteryChargeEarlyCommitment;
+        event Action<WheelMessages> OnWheelMessageOnDriver;
     }
     public class InputPublisher : IInputPublisher, IDriverInputConsumer, IShotgunInputConsumer
     {

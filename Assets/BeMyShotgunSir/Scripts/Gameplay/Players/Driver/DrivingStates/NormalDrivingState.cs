@@ -24,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.DriftingState, data, isReplayed);
                 return;
             }
-            if (data.IsBoosting && controller.CurrentBatteryCharge > 0)
+            if ((data.IsBoosting || data.CommitmentDirection != UI.CommitmentDirection.Default) && controller.CurrentBatteryCharge > 0)
             {
                 controller.ChangeState(controller.BoostState, data, isReplayed);
                 return;
