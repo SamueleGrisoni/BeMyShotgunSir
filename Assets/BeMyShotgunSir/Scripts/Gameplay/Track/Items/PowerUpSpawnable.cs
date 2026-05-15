@@ -4,6 +4,7 @@ using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
@@ -19,7 +20,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         }
 
         [SerializeField] private PowerUp _powerUpType;
-        public PowerUp PowerUpType => _powerUpType;
+        private readonly SyncVar<PowerUp> _syncPowerUpType;
+        public PowerUp PowerUpType => _syncPowerUpType.Value;
         private PowerUpsNetController _netController;
         private RaceNetStateStore _raceNetStateStore;
         [SerializeField] private float _rotationSpeed = 45f;
@@ -30,10 +32,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         private float _startLocalY;
         private float _minY;
 
-        public override void OnStartServer()
+        private void Awake()
         {
-            base.OnStartServer();
-            OnPowerUpSpawned?.Invoke(this);
+            _syncPowerUpType.Value = _powerUpType;
+            _syncPowerUpType.OnChange += UpdatePowerUpType;
+        }
+
+        private void UpdatePowerUpType(PowerUp prev, PowerUp next, bool asServer)
+        {
+            if (asServer)
+                return;
+            //TODO Here we could update the visuals based on the power-up type if needed
         }
 
         private void Start()
@@ -41,6 +50,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             _startLocalY = _itemVisualsPrefabs.transform.localPosition.y;
             _minY = _startLocalY;
         }
+
+        [Server]
+        public void SetPowerUpType(PowerUp powerUpType) => _syncPowerUpType.Value = _powerUpType;
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+            OnPowerUpSpawned?.Invoke(this);
+        }
+
 
         private void Update()
         {
