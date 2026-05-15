@@ -446,22 +446,22 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
-            if (state.IsFuture() && !IsOwner)
-            {
-                _predictedTicks++;
-                data = _lastReplicateData;
+            // if (state.IsFuture() && !IsOwner)
+            // {
+            //     _predictedTicks++;
+            //     data = _lastReplicateData;
 
-                if (_predictedTicks > 1)
-                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
+            //     if (_predictedTicks > 1)
+            //         data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
 
-                _lastReplicateData = data;
-                //Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
-            }
-            else
-            {
-                _predictedTicks = 0;
-                _lastReplicateData = data;
-            }
+            //     _lastReplicateData = data;
+            //     //Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this);
+            // }
+            // else
+            // {
+            //     _predictedTicks = 0;
+            //     _lastReplicateData = data;
+            // }
 
             _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
                 ? LayerMask.NameToLayer("LeftCollider")
