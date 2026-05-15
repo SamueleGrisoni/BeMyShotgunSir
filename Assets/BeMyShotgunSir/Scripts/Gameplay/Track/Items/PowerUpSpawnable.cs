@@ -85,7 +85,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             if (_netController != null)
                 return;
             _netController = powerUpsNetController;
-            _racaeNetStateStore = raceNetStateStore;
+            _raceNetStateStore = raceNetStateStore;
         }
 
         [Server]

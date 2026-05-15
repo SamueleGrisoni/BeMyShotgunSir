@@ -540,17 +540,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                             Log.DLazy(() => $"Detection for steal power up active | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
                             if (TeamId.HasValue && otherTeamId.HasValue)
                             {
-                                if (_raceNetContext.NetState.TryGetTeamActivePowerUps(TeamId.Value, out PowerUpIdentifier[] powerUpIdentifiers))
+                                int? powerUpIdentifier = _raceNetContext.PowerUpsNetController.GetInstanceId(TeamId.Value, PowerUp.StealPowerUp);
+                                if (powerUpIdentifier.HasValue)
                                 {
-                                    foreach (PowerUpIdentifier p in powerUpIdentifiers)
-                                    {
-                                        if (p.PowerUp == PowerUp.StealPowerUp)
-                                        {
-                                            _raceNetContext.PowerUpsNetController.SetPowerUpTarget_ServerRpc(p.InstanceId, otherTeamId.Value);
-                                            Debug.Log($"Power up stolen");
-                                            break;
-                                        }
-                                    }
+                                    _raceNetContext.PowerUpsNetController.SetPowerUpTarget_ServerRpc(powerUpIdentifier.Value, otherTeamId.Value);
+                                    Log.DLazy(() => $"Use of PowerUp steal. Identifier {powerUpIdentifier.Value} | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
                                 }
                             }
                         }
