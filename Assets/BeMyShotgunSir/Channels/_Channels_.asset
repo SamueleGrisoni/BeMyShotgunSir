@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: _Channels_
   m_EditorClassIdentifier: Assembly-CSharp::SOChannels
   <AudioRequestEvent>k__BackingField: {fileID: 11400000, guid: b2d81d9463c3c3d44b61e8b1a310b6db, type: 2}
+  <LoadingRequestEvent>k__BackingField: {fileID: 11400000, guid: bfc91e49daa462043bc9132266436d0e, type: 2}

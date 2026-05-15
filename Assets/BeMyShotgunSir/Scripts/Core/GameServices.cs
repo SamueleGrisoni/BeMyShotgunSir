@@ -5,6 +5,7 @@ using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
+using BeMyShotgunSir.Scripts.Events;
 
 namespace BeMyShotgunSir.Scripts.Core
 {

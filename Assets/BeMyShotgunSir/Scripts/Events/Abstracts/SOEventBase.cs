@@ -9,6 +9,7 @@ namespace BeMyShotgunSir.Scripts.Events.Abstracts
     {
         None = 0,
         AudioRequest = 1,
+        LoadingRequest = 2,
     }
 
     public abstract class SOEventBase : ScriptableObject

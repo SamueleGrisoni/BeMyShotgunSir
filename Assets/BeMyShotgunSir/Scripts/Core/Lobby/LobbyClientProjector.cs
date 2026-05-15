@@ -1,3 +1,4 @@
+using BeMyShotgunSir.Scripts.Events;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 

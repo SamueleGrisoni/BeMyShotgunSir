@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;

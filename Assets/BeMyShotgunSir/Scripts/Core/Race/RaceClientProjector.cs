@@ -1,6 +1,7 @@
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 using BeMyShotgunSir.Scripts.Utils;
+using BeMyShotgunSir.Scripts.Events;
 
 namespace BeMyShotgunSir.Scripts.Core.Race
 {
