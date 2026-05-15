@@ -457,6 +457,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _activeDriftIntent = Mathf.Sign(steerInput);
         }
 
+        [SerializeField] private bool _debugArmor;
+
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
@@ -480,10 +482,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _lastReplicateData = data;
             }
 
-            _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
-                ? LayerMask.NameToLayer("LeftCollider")
-                : LayerMask.NameToLayer("RightCollider");
-
             RaceTeamData teamData = default;
             if (_debugPowerUp)
             {
@@ -494,6 +492,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
             }
+
+            _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
+                ? LayerMask.NameToLayer("RightCollider")
+                : LayerMask.NameToLayer("LeftCollider");
+
+            _obstacleCollider.gameObject.layer = teamData.ActivePowerUpInfo.isArmorActive
+                ? LayerMask.NameToLayer("ArmorLayer")
+                : LayerMask.NameToLayer("ObstacleCollider");
+
+
 
             bool isReplayed = state.ContainsReplayed();
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
@@ -518,6 +526,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
 
             _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
+            _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive); // TODO aggiustare
         }
 
         private void ApplyBumpRepulsion(RaceTeamData teamData)
@@ -611,7 +620,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentBatteryCharge = data.CurrentBatteryCharge;
             _batteryChargeTimer = data.BatteryChargeTimer;
             _boostTimer = data.BoostTimer;
-            //_oilAnimationTimer = data.OilAnimationTimer;
 
             _currentStateType = data.StateType;
             _currentDrivingState = GetStateType(data.StateType);
@@ -749,7 +757,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                             _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
 
                             PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
-                            if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE) // TODO per ora viene ignorato il primo rettilineo
+                            if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE)
+                            // TODO controllare che il sidecar non torna e commita in chunk che ha già passato
                             {
                                 float lenght = trackProgress.NextSpecialChunkId - (lastSpecialChunk.Id + 1);
                                 float position = trackProgress.NextSpecialChunkId - _currentChunkId;

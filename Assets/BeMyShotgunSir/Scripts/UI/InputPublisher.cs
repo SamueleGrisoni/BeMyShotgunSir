@@ -36,7 +36,6 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action OnFirePressed;
         event Action<WheelMessages> OnWheelMessagePressed;
         void SendWheelMessageToDriver(WheelMessages wheelMessages);
-        event Action<DriverFeedback> OnDriverFeedbackToShotgun;
     }
 
     public interface IInputPublisher

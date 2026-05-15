@@ -73,10 +73,8 @@ MonoBehaviour:
   - {fileID: 2519103325016107008}
   _boostParticles:
   - {fileID: 4286060322843582963}
-  _armorParticles:
-  - {fileID: 4595919615682826461}
-  - {fileID: 9123714919020620063}
-  - {fileID: 1930390291573783837}
+  _shieldParticles: []
+  _armorOverlayMeshRenderer: {fileID: 4961554435841543028}
 --- !u!1 &1542830160653573291
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +208,7 @@ MonoBehaviour:
   _isDebugInputEnabled: 1
   _debugPowerUp: 0
   _onGrassBufferMin: 10
+  _debugShield: 0
 --- !u!54 &2139825348868955056
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1090,24 +1089,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
---- !u!198 &1930390291573783837 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 2863784318927447580, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
-  m_PrefabInstance: {fileID: 4428211699922705153}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2255236400058217134 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2465754446150183343, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
-  m_PrefabInstance: {fileID: 4428211699922705153}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &4595919615682826461 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 194736282932956124, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
-  m_PrefabInstance: {fileID: 4428211699922705153}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &9123714919020620063 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4893681567860847134, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
   m_PrefabInstance: {fileID: 4428211699922705153}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4614702863025001426
@@ -1142,6 +1126,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sidecar
       objectReference: {fileID: 0}
+    - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4855638414264437767, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+    - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 88cdd74014ee2444bb7dcc7f052699ca, type: 2}
     - target: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1258,6 +1258,11 @@ ParticleSystem:
 --- !u!198 &4949854773125701778 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 341109725996823360, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+  m_PrefabInstance: {fileID: 4614702863025001426}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &4961554435841543028 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
   m_PrefabInstance: {fileID: 4614702863025001426}
   m_PrefabAsset: {fileID: 0}
 --- !u!198 &4964710341574383938 stripped

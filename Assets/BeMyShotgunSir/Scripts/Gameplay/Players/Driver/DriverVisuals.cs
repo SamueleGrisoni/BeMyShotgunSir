@@ -29,7 +29,11 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private List<ParticleSystem> _driftParticles = new List<ParticleSystem>();
         [SerializeField] private List<TrailRenderer> _trailRendereresDrift = new List<TrailRenderer>();
         [SerializeField] private List<ParticleSystem> _boostParticles = new List<ParticleSystem>();
-        [SerializeField] private List<ParticleSystem> _armorParticles = new List<ParticleSystem>();
+        [SerializeField] private List<ParticleSystem> _shieldParticles = new List<ParticleSystem>();
+        [SerializeField] private SkinnedMeshRenderer _armorOverlayMeshRenderer;
+
+        private Material _armorOverlayMaterial;
+
 
         private struct TransformSnapshot
         {
@@ -48,6 +52,12 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         {
             base.OnStartNetwork();
             TimeManager.OnPostTick += OnPostTick;
+
+            if (_armorOverlayMeshRenderer.materials.Length > 1)
+            {
+                _armorOverlayMaterial = _armorOverlayMeshRenderer.materials[1];
+                _armorOverlayMaterial.SetFloat("_OverlayAlpha", 0.0f);
+            }
         }
 
         public override void OnStopNetwork()
@@ -192,7 +202,15 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
         public void SetArmorVisualEffects(bool isActive)
         {
-            foreach (ParticleSystem p in _armorParticles)
+            if (_armorOverlayMaterial != null)
+            {
+                _armorOverlayMaterial.SetFloat("_OverlayAlpha", isActive ? 1.0f : 0.0f);
+            }
+        }
+
+        public void SetShieldVisualEffects(bool isActive)
+        {
+            foreach (ParticleSystem p in _shieldParticles)
             {
                 ParticleSystem.EmissionModule emission = p.emission;
                 emission.enabled = isActive;
