@@ -16,6 +16,8 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         OilSlip,
         PlayerReady,
         LetsGo,
+        FinishRace,
+        Countdown,
         // ui
         UIClick,
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BeMyShotgunSir.Scripts.Core.Audio;
@@ -143,6 +144,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         isFinishLineNext: crossroad.type == RoadChunkType.START_LINE
                     );
 
+                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId - 1 == nextId)
+                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection);
+
                     if (!updated.IsEqual(value))
                         _netState.SetTeamTrackProgress(key, updated);
 
@@ -166,12 +170,24 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             if (allPlayersSurpassedCrossroad)
             {
+                if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == headChunkId)
+                {
+                    Log.DLazy(() => $"All players surpassed the finish line! ChunkId: {headChunkId}.", this, _log);
+                }
                 // Rimuoviamo e logghiamo
                 CrossroadSegmentInfo finishedCrossroad = _specialSegmentInfoQueue.Dequeue();
                 _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
             }
         }
+
+        [TargetRpc]
+        public void FinishRace_TargetRpc(NetworkConnection conn)
+        {
+            Log.DLazy(() => $"Team with connection ID {conn.ClientId} has finished the race! Showing finish screen.", this, _log);
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.FinishRace), null);
+            _clientProjector.ShowFinishScreen();
+        } //TODO
 
         private void OnDisable() => UnsubscribeEvents();
 
@@ -345,13 +361,48 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (NetState.AreAllPlayersReady())
             {
                 _isRaceStarted = true;
-                StartRace_ObservesrRpc();
+                Countdown();
+
                 Log.DLazy(() => $"All players are ready. Starting race.", this);
             }
         }
 
+        private void Countdown()
+        {
+            ShowCountDown_ObserversRpc();
+            // Start the race after the countdown
+            StartCoroutine(StartRaceAfterCountdown());
+        }
+
         [ObserversRpc]
-        private void StartRace_ObservesrRpc() => GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
+        private void ShowCountDown_ObserversRpc() => GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);//TODO show countdown on clients
+
+        private IEnumerator StartRaceAfterCountdown()
+        {
+            yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); // Adjust the delay as needed
+            StartRace_ObserversRpc();
+        }
+
+        [ObserversRpc]
+        private void StartRace_ObserversRpc()
+        {
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
+            _roadManager.StartRace();
+            //TODO activate player controls
+            foreach (RaceTeamData teamData in NetState.TeamData.Values)
+            {
+                if (teamData.DriverNob != null && teamData.ShotgunNob != null)
+                {
+                    teamData.DriverNob.TryGetComponent(out DriverController driver);
+                    if (driver != null)
+                        driver.ActivateControls_TargetRpc(_lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
+
+                    teamData.ShotgunNob.TryGetComponent(out ShotgunController shotgun);
+                    if (shotgun != null)
+                        shotgun.ActivateControls_TargetRpc(_lobbyNetState.PlayerStates[teamData.ShotgunConnectionId].Connection);
+                }
+            }
+        }
 
         private void Update()
         {

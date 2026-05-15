@@ -13,6 +13,8 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         [field: SerializeField, Range(0f, 1f)] public float LobbySceneMusicVolume { get; private set; } = 0.5f;
         [field: SerializeField] public AudioClip RaceSceneMusic { get; private set; }
         [field: SerializeField, Range(0f, 1f)] public float RaceSceneMusicVolume { get; private set; } = 0.5f;
+        [field: SerializeField] public AudioClip FinishRaceMusic { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float FinishRaceMusicVolume { get; private set; } = 0.5f;
 
         [field: SerializeField] public SOSoundSource JoinSound { get; private set; }
         [field: SerializeField] public AudioClip LeaveSound { get; private set; }
@@ -22,9 +24,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         [field: SerializeField] public AudioClip LetsGoSound { get; private set; }
         [field: SerializeField, Range(0f, 1f)] public float LetsGoSoundVolume { get; private set; } = 0.5f;
         [field: SerializeField] public SOSoundSource OilSlipSound { get; private set; }
-
-
-
-
+        [field: SerializeField] public AudioClip Countdown { get; internal set; }
+        [field: SerializeField, Range(0f, 1f)] public float CountdownVolume { get; internal set; } = 0.5f;
     }
 }

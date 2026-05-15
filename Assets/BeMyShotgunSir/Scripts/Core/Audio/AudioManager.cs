@@ -240,6 +240,22 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                         .WithVolume(_soundTracks.OilSlipSound.Clips[oilIndex].Volume);
                         ExecuteAudioRequest(request, targetSource);
                         break;
+                    case RequestEnum.FinishRace:
+                        if (request.Type != RequestEnum.FinishRace)
+                            return;
+                        _mainSource.clip = _soundTracks.FinishRaceMusic;
+                        _mainSource.volume = _soundTracks.FinishRaceMusicVolume;
+                        _mainSource.loop = false;
+                        _mainSource.Play();
+                        break;
+                    case RequestEnum.Countdown:
+                        if (request.Type != RequestEnum.Countdown)
+                            return;
+                        _mainSource.clip = _soundTracks.Countdown;
+                        _mainSource.volume = _soundTracks.CountdownVolume;
+                        _mainSource.loop = false;
+                        _mainSource.Play();
+                        break;
                     default:
                         break;
                 }

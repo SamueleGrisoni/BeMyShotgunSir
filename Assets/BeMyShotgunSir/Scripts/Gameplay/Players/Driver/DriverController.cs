@@ -4,6 +4,7 @@ using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 
@@ -69,5 +70,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             bool shouldHide = isApplying && !isMemberOfTeam;
             transform.GetComponentInChildren<DriverVisuals>()._visualModel.gameObject.SetActive(!shouldHide);
         }
+
+        [TargetRpc]
+        public void ActivateControls_TargetRpc(NetworkConnection connection) => Log.DLazy(() => $"Activating controls for driver on client {connection.ClientId}.", this, _log); //TODO
     }
 }

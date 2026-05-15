@@ -17,6 +17,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         void SetDriver(Transform driver);
         void UpdateFirstPlayer(Transform playerTransform);
         void UpdateLastPlayer(Transform playerTransform);
+        void StartRace();
     }
 
     public class RoadManager : NetworkBehaviour, IRoadManager
@@ -193,15 +194,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             for (int i = 0; i < _trackData.MaxActiveChunks; i++)
                 SpawnRoadChunk();
 
-            StartRace();
+            ReadyToRace();
             _isInitialized = true;
+        }
+
+        public void ReadyToRace()
+        {
+            _raceNetController.SetReadyToRace_ServerRpc();
+            Log.DLazy(() => "Starting race.", this, _log);
         }
 
         public void StartRace()
         {
-            _raceNetController.SetReadyToRace_ServerRpc();
-            Log.DLazy(() => "Starting race.", this, _log);
             _started = true;
+            Log.DLazy(() => "Received StartRace RPC, starting race on client.", this, _log);
         }
 
         private void Update()

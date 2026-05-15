@@ -20,6 +20,8 @@ MonoBehaviour:
   <LobbySceneMusicVolume>k__BackingField: 0.122
   <RaceSceneMusic>k__BackingField: {fileID: 8300000, guid: e8aaf591da28cc645a7d58c37c2d34a4, type: 3}
   <RaceSceneMusicVolume>k__BackingField: 0.098
+  <FinishRaceMusic>k__BackingField: {fileID: 8300000, guid: 957d65a9d35392d4d8a70e5a927577e9, type: 3}
+  <FinishRaceMusicVolume>k__BackingField: 0.125
   <JoinSound>k__BackingField: {fileID: 11400000, guid: afefcad36992f3c4187c7ea85e1d350a, type: 2}
   <LeaveSound>k__BackingField: {fileID: 8300000, guid: 60f6e1d079d3ced43b84ca0a2e244fe4, type: 3}
   <LeaveSoundVolume>k__BackingField: 0.155
@@ -28,3 +30,5 @@ MonoBehaviour:
   <LetsGoSound>k__BackingField: {fileID: 8300000, guid: 21316d20a51f2f147bded7b84130d037, type: 3}
   <LetsGoSoundVolume>k__BackingField: 0.155
   <OilSlipSound>k__BackingField: {fileID: 11400000, guid: 178ee16aa58bf294c8f3e51c8acfcae3, type: 2}
+  <Countdown>k__BackingField: {fileID: 8300000, guid: 484569b47b57e9247b075d6b8af5dbaf, type: 3}
+  <CountdownVolume>k__BackingField: 0.256

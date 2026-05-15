@@ -77,5 +77,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         }
         [TargetRpc]
         private void Send_WheelMessagesToDriver(NetworkConnection conn, WheelMessages wheelMessages) => _inputConsumer.SendWheelMessageToDriver(wheelMessages);
+        [TargetRpc]
+        public void ActivateControls_TargetRpc(NetworkConnection connection) => Log.DLazy(() => $"Activating controls for shotgun on client {connection.ClientId}.", this, _log); //TODO
     }
 }

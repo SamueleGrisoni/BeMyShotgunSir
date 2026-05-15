@@ -78,5 +78,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (asServer)
                 return;
         }
+
+        public void ShowFinishScreen() => _viewModel.SetShowFinishScreen(true);
     }
 }

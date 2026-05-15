@@ -40,6 +40,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public event Action OnLeaderboardChanged;
         public event Action OnInventoryChanged;
         public event Action OnTeamTrackProgressChanged;
+        public event Action OnShowFinishScreenChanged;
 
         public int? Seed => _netState.Seed;
         public ILobbyDataView LobbyDataView => _lobbyViewModel;
@@ -48,6 +49,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyDictionary<int, InventoryData> TeamInventories => _netState.PlayerInventories;
         public IReadOnlyList<int> Leaderboard => _netState.Leaderboard;
         public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _netState.TeamTrackProgress;
+        public bool ShowFinishScreen { get; private set; } = false;
 
         public RaceViewModel(LobbyViewModel lobbyViewModel, IRaceNetStateSubscribe netState, int clientId)
         {
@@ -90,6 +92,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             }
             Log.WLazy(() => $"Trying to get team id for client {clientId} but no player state found.", this);
             return false;
+        }
+
+        public void SetShowFinishScreen(bool v)
+        {
+            ShowFinishScreen = v;
+            OnShowFinishScreenChanged?.Invoke();
         }
     }
 }
