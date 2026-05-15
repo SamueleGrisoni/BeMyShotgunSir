@@ -1,4 +1,6 @@
 using System;
+using BeMyShotgunSir.Scripts.Core;
+using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
@@ -15,6 +17,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     {
         private bool _log = true;
         private bool _isInitialized = false;
+        [SerializeField] private AudioSource _audioSource;
         public static event Action<ShotgunController> OnShotgunSpawned;
         public static event Action OnShotgunInitialized;
         public IShotgunInputConsumer _inputConsumer;
@@ -54,8 +57,20 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                 _powerUpsNetController = powerUpsNetController;
         }
 
-        [Server] //TODO UI Bind
-        private void SetSelectedPowerUp(int slot) => _netState.SetSelectedPowerUp(TeamId.Value, slot);
+        [TargetRpc]
+        public void ApplySpearEffect_TargetRpc(NetworkConnection conn)
+        {
+            //SOUND
+            Log.DLazy(() => $"Applying Spear effect on shotgun for team {TeamId}.", this, _log); //TODO actual effect
+        }
+
+        [TargetRpc]
+        public void PickUpPowerUp_TargetRpc(NetworkConnection conn)
+        {
+            //SOUND
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
+            Log.DLazy(() => $"Picking up Power-Up on shotgun for team {TeamId}.", this, _log); //TODO actual effect
+        }
 
         [Server] //TODO UI Bind
         private void TriggerAction(PowerUpActionType actionType) => _powerUpsNetController.TriggerAction_ServerRpc(actionType);

@@ -320,15 +320,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public bool isShieldActive;
         public bool isArmorActive;
         public bool isInvisibilityActive;
+        public bool isSpearPowerUpActive;
         public bool isStealPowerUpActive;
         public bool isRerollPowerUpActive;
         public bool isRoadBlockActive;
-        public override string ToString() => $"ActivePowerUpInfo: isShieldActive: {isShieldActive}, isArmorActive: {isArmorActive}, isInvisibilityActive: {isInvisibilityActive}, isStealPowerUpActive: {isStealPowerUpActive}, isRerollPowerUpActive: {isRerollPowerUpActive}, isRoadBlockActive: {isRoadBlockActive}";
-        public ActivePowerUpsInfo(bool isShieldActive = false, bool isArmorActive = false, bool isInvisibilityActive = false, bool isStealPowerUpActive = false, bool isRerollPowerUpActive = false, bool isRoadBlockActive = false)
+        public override string ToString() => $"ActivePowerUpInfo: isShieldActive: {isShieldActive}, isArmorActive: {isArmorActive}, isInvisibilityActive: {isInvisibilityActive}, isSpearPowerUpActive: {isSpearPowerUpActive}, isStealPowerUpActive: {isStealPowerUpActive}, isRerollPowerUpActive: {isRerollPowerUpActive}, isRoadBlockActive: {isRoadBlockActive}";
+        public ActivePowerUpsInfo(bool isShieldActive = false, bool isArmorActive = false, bool isInvisibilityActive = false, bool isSpearPowerUpActive = false, bool isStealPowerUpActive = false, bool isRerollPowerUpActive = false, bool isRoadBlockActive = false)
         {
             this.isShieldActive = isShieldActive;
             this.isArmorActive = isArmorActive;
             this.isInvisibilityActive = isInvisibilityActive;
+            this.isSpearPowerUpActive = isSpearPowerUpActive;
             this.isStealPowerUpActive = isStealPowerUpActive;
             this.isRerollPowerUpActive = isRerollPowerUpActive;
             this.isRoadBlockActive = isRoadBlockActive;
@@ -546,6 +548,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         // State Read-only accessors
         public int? Seed => _seed.Value;
+        private ILobbyNetStateRead _lobbyNetStateStore;
+        public ILobbyNetStateRead LobbyNetStateStore => _lobbyNetStateStore;
         public IReadOnlyDictionary<int, RacePlayerState> PlayerStates => _racePlayerStates;
         public IReadOnlyDictionary<int, RaceTeamData> TeamData => _raceTeamData;
         public IReadOnlyDictionary<int, InventoryData> PlayerInventories => _racePlayerInventories;
@@ -560,6 +564,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _racePlayerStates.Collection.Clear();
             _raceTeamData.Collection.Clear();
             _leaderboard.Clear();
+
+            _lobbyNetStateStore = lobbyState;
 
             foreach (KeyValuePair<int, LobbyPlayerState> lobbyPlayerState in lobbyState.PlayerStates)
             {

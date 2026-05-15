@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.Players;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
@@ -282,6 +283,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             inventory = inventory.SetFreeSlot(powerUpType);
             _raceNetState.SetPlayerInventory(teamId, inventory);
             Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
+            _raceNetState.TryGetShotgunNob(teamId, out NetworkObject shotgunNob);
+            _raceNetState.TryGetTeamShotgunConnectionId(teamId, out int connectionId);
+            if (shotgunNob != null)
+                shotgunNob.GetComponent<ShotgunController>().PickUpPowerUp_TargetRpc(_raceNetState.LobbyNetStateStore.PlayerStates[connectionId].Connection);
             return true;
         }
 
