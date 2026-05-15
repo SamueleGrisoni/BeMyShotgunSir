@@ -1,0 +1,36 @@
+:root {
+}
+
+.title-root {
+}
+
+.title-background {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+    position: absolute;
+}
+
+.title-container {
+    align-items: center;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 200px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: upper-left;
+    white-space: pre-wrap;
+    -unity-font-style: normal;
+    top: 500px;
+    position: absolute;
+    align-self: center;
+    width: 90%;
+}
+
+.loading-image {
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/LoadingSidecar.png?fileID=2800000&guid=83f002e16afe448738c02968ff3b8de5&type=3#LoadingSidecar");
+    -unity-background-scale-mode: scale-to-fit;
+    width: 90%;
+    aspect-ratio: 2;
+    align-self: center;
+    bottom: 500px;
+    position: absolute;
+}

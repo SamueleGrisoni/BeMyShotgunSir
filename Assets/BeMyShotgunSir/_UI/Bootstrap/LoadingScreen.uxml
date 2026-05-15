@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Bootstrap/LoadingScreenUSS.uss?fileID=7433441132597879392&amp;guid=5ea8a619123684f398bfda415a91ebd0&amp;type=3#LoadingScreenUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <ui:VisualElement name="TitleRoot" class="title-root" style="flex-grow: 1;">
+        <ui:VisualElement name="TitleBackground" class="title-background" style="flex-grow: 1; position: absolute;"/>
+        <ui:VisualElement name="SafeArea" class="safe-area editor-preview">
+            <ui:VisualElement name="TitleContainer" class="title-container">
+                <ui:Label text="we are&#10;loading,&#10;SIR!" name="Title"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="LoadingImage" class="loading-image"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
