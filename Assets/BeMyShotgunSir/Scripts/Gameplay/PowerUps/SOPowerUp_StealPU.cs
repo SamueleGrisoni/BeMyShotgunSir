@@ -16,13 +16,6 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData.ActivePowerUpInfo.isStealPowerUpActive = true;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
-
-            if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
-                // driverNob.GetComponent<DriverController>().ApplyStealEffect(); //TODO
-                Log.DLazy(() => $"Applying Steal effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
-            else
-                Log.WLazy(() => $"Trying to apply Steal effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);
-
             runtime.ActivePowerUpData.PowerUpState = PowerUpState.Ticking;
             powerUpsNetController.AddActivePowerUp(runtime);
             base.OnUse(runtime, context);
@@ -31,7 +24,14 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
         public override void OnChangeTarget(PowerUpRuntime runtime, int instanceId, int targetTeamId, StrategyContext context)
         {
             base.OnChangeTarget(runtime, instanceId, targetTeamId, context);
-            //TODO send rpc to new target
+
+            UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+
+            if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
+                // driverNob.GetComponent<DriverController>().ApplyStealEffect(); //TODO
+                Log.DLazy(() => $"Applying Steal effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
+            else
+                Log.WLazy(() => $"Trying to apply Steal effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);
             runtime.Definition.OnExpire(runtime, context);
         }
 

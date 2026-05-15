@@ -366,7 +366,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Server]
         public void SetPowerUpTarget_ServerRpc(int instanceId, int targetTeamId, NetworkConnection connection = null)
         {
             if (!_activePowerUps.TryGetValue(instanceId, out PowerUpRuntime powerUpRuntime))
@@ -394,6 +394,32 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         }
 
         [Server]
+        public int? GetInstanceId(int teamId, PowerUp type)
+        {
+            if (!_raceNetState.TryGetTeamData(teamId, out RaceTeamData teamData))
+            {
+                Log.WLazy(() => $"Trying to get instance id of power-up {type} for team {teamId} but no data found for this team.", this);
+                return null;
+            }
+            if (teamData.ActivePowerUps == null || teamData.ActivePowerUps.Length == 0)
+            {
+                Log.WLazy(() => $"Trying to get instance id of power-up {type} for team {teamId} but this team has no active power-ups.", this);
+                return null;
+            }
+            foreach (PowerUpIdentifier powerUpIdentifier in teamData.ActivePowerUps)
+            {
+                if (powerUpIdentifier.PowerUp == type)
+                {
+                    if (!_activePowerUps.TryGetValue(powerUpIdentifier.InstanceId, out PowerUpRuntime powerUpRuntime))
+                        continue;
+                    Log.DLazy(() => $"Found instance id {powerUpIdentifier.InstanceId} for power-up {type} of team {teamId}.", this);
+                    return powerUpIdentifier.InstanceId;
+                }
+            }
+            return null;
+        }
+
+        [Server]
         public void SetPowerUpTarget(int instanceId, int targetTeamId)
         {
             if (!_activePowerUps.TryGetValue(instanceId, out PowerUpRuntime powerUpRuntime)) //redundant check but better safe than sorry
@@ -408,8 +434,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             _activePowerUps[instanceId].Definition.OnChangeTarget(powerUpRuntime, instanceId, targetTeamId, _strategyContext);
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void TriggerAction_ServerRpc(PowerUpAction action, NetworkConnection connection = null)
+        [Server]
+        public void TriggerAction_ServerRpc(PowerUpAction action)
         {
             if (!_activePowerUps.TryGetValue(action.Identifier.InstanceId, out PowerUpRuntime powerUpRuntime))
             {
@@ -419,7 +445,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             _activePowerUps[action.Identifier.InstanceId].Definition.OnAction(powerUpRuntime, _strategyContext, action);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Server]
         public void TriggerAction_ServerRpc(PowerUpActionType actionType, NetworkConnection connection = null)
         {
             if (!_raceNetState.TryGetTeamInventory(connection.ClientId, out InventoryData inventory))
