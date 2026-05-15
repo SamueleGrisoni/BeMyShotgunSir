@@ -12,7 +12,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
     public interface IDriverInputConsumer
     {
-        // From Movement Controller
+        // To Movement Controller
         float SteerInput { get; }
         float DriftInput { get; }
         bool IsDrifting { get; }
@@ -21,10 +21,12 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         event Action<DriverFeedback> OnDriverFeedbackPressed;
 
+
         // From Movement Controller
         float ChargeBattery { set; }
         void BatteryChargeEarlyCommitment(float batteryCharge);
-        void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback);
+        void EarlyCommitmentExecuted(float batteryCharge, CommitmentDirection commitmentDirection);
+        void SendDriverFeedbackToShotgun(DriverFeedback driverFeedback);
     }
 
     public interface IShotgunInputConsumer
@@ -34,6 +36,7 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action OnFirePressed;
         event Action<WheelMessages> OnWheelMessagePressed;
         void SendWheelMessageToDriver(WheelMessages wheelMessages);
+        event Action<DriverFeedback> OnDriverFeedbackToShotgun;
     }
 
     public interface IInputPublisher
@@ -54,6 +57,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         float GetBatteryCharge();
         event Action<float> OnBatteryChargeEarlyCommitment;
+        event Action<float, CommitmentDirection> OnEarlyCommitmentExecuted;
         event Action<WheelMessages> OnWheelMessageOnDriver;
     }
     public class InputPublisher : IInputPublisher, IDriverInputConsumer, IShotgunInputConsumer
@@ -69,8 +73,9 @@ namespace BeMyShotgunSir.Scripts.UI
         public event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         public event Action<DriverFeedback> OnDriverFeedbackPressed;
         public event Action<float> OnBatteryChargeEarlyCommitment;
-        public event Action<DriverFeedback> OnDriverSendFeedback;
+        public event Action<float, CommitmentDirection> OnEarlyCommitmentExecuted;
         public event Action<WheelMessages> OnWheelMessageOnDriver;
+        public event Action<DriverFeedback> OnDriverFeedbackToShotgun;
 
         public float SteerInput => _steerInput;
         public float DriftInput => _driftInput;
@@ -89,7 +94,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
         public float GetBatteryCharge() => _chargeBattery;
         public void BatteryChargeEarlyCommitment(float batteryCharge) => OnBatteryChargeEarlyCommitment?.Invoke(batteryCharge);
-        public void SendDriveFeedbackToShotgun(DriverFeedback driverFeedback) => OnDriverSendFeedback?.Invoke(driverFeedback);
+        public void EarlyCommitmentExecuted(float batteryCharge, CommitmentDirection commitmentDirection) => OnEarlyCommitmentExecuted?.Invoke(batteryCharge, commitmentDirection);
+        public void SendDriverFeedbackToShotgun(DriverFeedback driverFeedback) => OnDriverFeedbackToShotgun?.Invoke(driverFeedback);
 
 
         #endregion

@@ -29,7 +29,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.BoostState, data, isReplayed);
                 return;
             }
-            if (data.IsStarting)
+            if (!data.IsStarting)
             {
                 controller.ChangeState(controller.IdleState, data, isReplayed);
                 return;

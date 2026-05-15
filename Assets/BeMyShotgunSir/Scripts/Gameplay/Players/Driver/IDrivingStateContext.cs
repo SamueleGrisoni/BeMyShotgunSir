@@ -19,7 +19,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState BoostState { get; }
         IDrivingState GrassState { get; }
         IDrivingState OilState { get; }
-        //float CurrentAcceleration { get; set; }
         float DriftDirection { get; set; }
         float CurrentBatteryCharge { get; set; }
         float BatteryChargeTimer { get; set; }

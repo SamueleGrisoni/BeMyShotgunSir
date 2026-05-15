@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae8655b161065daa842b91a053f3b56, type: 3}
   m_Name: NormalSidecarStats
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Player.SOSidecarStats
-  <AccelerationForce>k__BackingField: 50
+  <AccelerationForce>k__BackingField: 45
   <MaxSpeed>k__BackingField: 17
   <Gravity>k__BackingField: 50
   <SteeringForce>k__BackingField: 50

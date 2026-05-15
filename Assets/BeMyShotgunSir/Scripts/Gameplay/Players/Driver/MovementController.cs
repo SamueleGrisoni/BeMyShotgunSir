@@ -3,6 +3,7 @@ using BeMyShotgunSir.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
@@ -118,7 +119,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private float _bumpRadius;
         [SerializeField] private float _bumpForce;
 
-        [SerializeField] private float _steerInputDecay = 0.05f;
+        [Header("Dead Reckoning")]
+        [SerializeField] private float _steerDecaySeconds = 0.3f;
 
         [Header("Ground Snap")]
         [SerializeField] private float _hoverHeight = 0.256f;
@@ -130,7 +132,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [Header("Debug")]
         [SerializeField] private bool _log = false;
         [SerializeField] private bool _isDebugInputEnabled = false;
-        [SerializeField] private bool _debugPowerUp = true; // TODO: rimuovere
+        [SerializeField] private bool _debugPowerUp = false; // TODO: rimuovere
 
         [Header("Grass")]
         [SerializeField] private int _onGrassBufferMin;
@@ -298,7 +300,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 InputConsumer.OnBoostPressed += ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
-                InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedback;
+                InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedbackPressed;
                 //InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
             }
         }
@@ -321,7 +323,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 InputConsumer.OnBoostPressed -= ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
-                InputConsumer.OnDriverFeedbackPressed -= ExecuteDriverFeedback;
+                InputConsumer.OnDriverFeedbackPressed -= ExecuteDriverFeedbackPressed;
                 //InputConsumer.OnWheelMessageOnDriver -= ExecuteWheelMessageOnDriver;
             }
         }
@@ -335,19 +337,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (_earlyCommitmentEnabled.Value && _earlyCommitmentNotUsed.Value)
                 _commitmentDirection = direction;
-            ExecuteEarlyCommitment();
+            ExecuteEarlyCommitment(direction);
         }
         public void ExecuteEarlyCommitmentDebug(CommitmentDirection direction)
         {
             if (_earlyCommitmentEnabled.Value && _earlyCommitmentNotUsed.Value)
                 _commitmentDirection = direction;
-            ExecuteEarlyCommitment();
+            ExecuteEarlyCommitment(direction);
         }
 
         [ServerRpc]
-        private void ExecuteDriverFeedback(DriverFeedback driverFeedback) => ExecuteDriverFeedback_Server(driverFeedback);
+        private void ExecuteDriverFeedbackPressed(DriverFeedback driverFeedback) => Server_DriverFeedback(driverFeedback);
         [Server]
-        private void ExecuteDriverFeedback_Server(DriverFeedback driverFeedback)
+        private void Server_DriverFeedback(DriverFeedback driverFeedback)
         {
             if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData))
             {
@@ -355,22 +357,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 {
                     if (connShotgun != null)
 
-                        Send_ExecuteDriverFeedback(connShotgun, driverFeedback);
-                }
-                if (ServerManager.Clients.TryGetValue(teamData.DriverConnectionId, out NetworkConnection connDriver))
-                {
-                    if (connDriver != null)
-                    {
-                        Send_ExecuteDriverFeedback(connDriver, driverFeedback);
-                    }
+                        Send_DriverFeedback(connShotgun, driverFeedback);
                 }
             }
         }
         [TargetRpc]
-        private void Send_ExecuteDriverFeedback(NetworkConnection conn, DriverFeedback driverFeedback)
+        private void Send_DriverFeedback(NetworkConnection conn, DriverFeedback driverFeedback)
         {
             if (InputConsumer != null)
-                InputConsumer.SendDriveFeedbackToShotgun(driverFeedback);
+                InputConsumer.SendDriverFeedbackToShotgun(driverFeedback);
         }
 
         [Server]
@@ -398,11 +393,32 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 InputConsumer.BatteryChargeEarlyCommitment(batteryCharge);
         }
 
+        [Server]
+        private void Server_EarlyCommitmentExecuted(float batteryCharge, CommitmentDirection commitmentDirection)
+        {
+            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData))
+            {
+                if (ServerManager.Clients.TryGetValue(teamData.ShotgunConnectionId, out NetworkConnection connShotgun))
+                {
+                    if (connShotgun != null)
+                        Send_EarlyCommitmentExecuted(connShotgun, batteryCharge, commitmentDirection);
+                }
+                if (ServerManager.Clients.TryGetValue(teamData.DriverConnectionId, out NetworkConnection driverShotgun))
+                {
+                    if (driverShotgun != null)
+                        Send_EarlyCommitmentExecuted(driverShotgun, batteryCharge, commitmentDirection);
+                }
+            }
+        }
 
-        //private void ExecuteWheelMessageOnDriver(WheelMessages wheelMessages)
-        //{
-        //    Debug.Log($"Arrived whelle message from shotgun to the driver: {wheelMessages}");
-        //}
+        [TargetRpc]
+        private void Send_EarlyCommitmentExecuted(NetworkConnection conn, float batteryCharge, CommitmentDirection commitmentDirection)
+        {
+            if (InputConsumer != null)
+                InputConsumer.EarlyCommitmentExecuted(batteryCharge, commitmentDirection);
+        }
+
+
 
         #endregion
 
@@ -420,7 +436,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 UpdateActiveDriftIntent(_input.IsDrifting, _input.SteerInput);
                 rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
-                _input.IsStarting = false;
                 _commitmentDirection = CommitmentDirection.Default;
             }
             else
@@ -451,7 +466,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 data = _lastReplicateData;
 
                 if (_predictedTicks > 1)
-                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, _steerInputDecay);
+                {
+                    float steerDecayPerTick = (float)TimeManager.TickDelta / Mathf.Max(_steerDecaySeconds, 0.001f);
+                    data.SteerInput = Mathf.MoveTowards(data.SteerInput, 0f, steerDecayPerTick);
+                }
 
                 _lastReplicateData = data;
                 Log.DLazy(() => $"Predicted ticks {_predictedTicks}", this, _log);
@@ -498,6 +516,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 if (_raceNetContext.NetState.IsTeamMember(TeamId.Value))
                     InputConsumer.ChargeBattery = _currentBatteryCharge;
             }
+
+            _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
         }
 
         private void ApplyBumpRepulsion(RaceTeamData teamData)
@@ -510,9 +530,30 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 {
                     if (hitCollider.transform.root == _parent.root) continue;
 
-                    if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
+                    MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
+
+                    if (IsServerInitialized) // Detection for the powerup effect only on the server
                     {
-                        Log.DLazy(() => $"Detection for steal power up active", this);
+                        if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
+                        {
+                            int? otherTeamId = otherDriver.GetTeamId();
+                            Log.DLazy(() => $"Detection for steal power up active | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
+                            if (TeamId.HasValue && otherTeamId.HasValue)
+                            {
+                                if (_raceNetContext.NetState.TryGetTeamActivePowerUps(TeamId.Value, out PowerUpIdentifier[] powerUpIdentifiers))
+                                {
+                                    foreach (PowerUpIdentifier p in powerUpIdentifiers)
+                                    {
+                                        if (p.PowerUp == PowerUp.StealPowerUp)
+                                        {
+                                            _raceNetContext.PowerUpsNetController.SetPowerUpTarget_ServerRpc(p.InstanceId, otherTeamId.Value);
+                                            Debug.Log($"Power up stolen");
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
@@ -525,7 +566,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                         var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
 
-                        MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
                         if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
                         {
                             Vector3 finalPush = lateralPushDirection.normalized * _bumpForce;
@@ -540,7 +580,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             if (repulsionForce != null)
                 _predictionRigidbody.AddForce(repulsionForce, ForceMode.Impulse);
-
         }
 
         #endregion
@@ -755,11 +794,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         [ServerRpc]
-        private void ExecuteEarlyCommitment()
+        private void ExecuteEarlyCommitment(CommitmentDirection commitmentDirection)
         {
             if (_earlyCommitmentNotUsed.Value && _earlyCommitmentEnabled.Value)
             {
                 _currentBatteryCharge = Math.Min(_currentBatteryCharge + _currentPossibleChargeEarlyCommitment, 200);
+                Server_EarlyCommitmentExecuted(_currentPossibleChargeEarlyCommitment, commitmentDirection);
+
                 Log.DLazy(() => $"Commitmen executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
                 _earlyCommitmentNotUsed.Value = false;
             }
@@ -799,6 +840,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             else if (drivingState == _oilState) return DrivingStateTpye.Oil;
             else return DrivingStateTpye.Normal;
         }
+
+        public int? GetTeamId() => TeamId;
 
         #endregion
     }

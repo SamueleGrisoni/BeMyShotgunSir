@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 194736282932956124}
   - component: {fileID: 8878647292045186611}
   m_Layer: 0
-  m_Name: vfx_Shield_01
+  m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
