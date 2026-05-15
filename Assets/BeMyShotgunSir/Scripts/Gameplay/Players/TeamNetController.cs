@@ -5,7 +5,6 @@ using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
-using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using Unity.Cinemachine;
@@ -51,13 +50,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
             ShotgunController.OnShotgunSpawned += OnShotgunSpawned;
         }
 
+        [Server(UseIsStarted = true)]
         public void SetTeamId(int teamId)
         {
-            if (InstanceFinder.IsServerStarted)
-            {
-                _syncTeamId.Value = teamId;
-                Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
-            }
+            _syncTeamId.Value = teamId;
+            Log.DLazy(() => $"TeamNetController assigned to team {_syncTeamId.Value}.", this, _log);
         }
 
         public override void OnStartNetwork()
