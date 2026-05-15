@@ -119,7 +119,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
             runtime.ActivePowerUpData.PowerUpState = PowerUpState.Expired;
             powerUpsNetController.RemoveActivePowerUp(runtime.ActivePowerUpData.ManagerInstanceId);
-            //TODO clean activePowerUp in team data?
+
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData = teamData.RemoveActivePowerUpResult(runtime.ActivePowerUpData.ManagerInstanceId);
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);

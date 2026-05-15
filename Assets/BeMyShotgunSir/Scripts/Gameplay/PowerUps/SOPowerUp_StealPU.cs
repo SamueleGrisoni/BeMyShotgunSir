@@ -1,7 +1,5 @@
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
-using BeMyShotgunSir.Scripts.Utils;
-using FishNet.Object;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.PowerUps
@@ -27,11 +25,17 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
 
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
 
-            if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
-                // driverNob.GetComponent<DriverController>().ApplyStealEffect(); //TODO
-                Log.DLazy(() => $"Applying Steal effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
-            else
-                Log.WLazy(() => $"Trying to apply Steal effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);
+            int ownerTeamId = runtime.ActivePowerUpData.OwnerTeamId;
+            PowerUp targetSelectedPowerUp = raceNetStateStore.TryGetInventorySelectedSlot(targetTeamId, out PuSlot selectedSlot) ? selectedSlot.PowerUp : PowerUp.None;
+            if (targetSelectedPowerUp != PowerUp.None)
+            {
+                if (raceNetStateStore.TryGetTeamInventory(targetTeamId, out InventoryData targetInventoryData))
+                    raceNetStateStore.SetTeamInventory(targetTeamId, targetInventoryData.RemoveAndUpdateSelected());
+                if (raceNetStateStore.TryGetTeamData(ownerTeamId, out RaceTeamData teamData))
+                {
+                    powerUpsNetController.AddPowerUpToTeam(ownerTeamId, targetSelectedPowerUp);
+                }
+            }
             runtime.Definition.OnExpire(runtime, context);
         }
 

@@ -871,6 +871,18 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             return true;
         }
 
+        public bool TryGetInventorySelectedSlot(int teamId, out PuSlot selectedSlot)
+        {
+            selectedSlot = default;
+            if (!TryGetTeamInventory(teamId, out InventoryData inventoryData))
+                return false;
+            if (inventoryData.SelectedSlot.HasValue)
+                selectedSlot = inventoryData.SelectedSlot.Value;
+            if (selectedSlot.PowerUp == PowerUp.None)
+                return false;
+            return true;
+        }
+
         public bool TryGetInventoryPowerUpInSlot(int teamId, int slotIndex, out PowerUp powerUp)
         {
             powerUp = default;
