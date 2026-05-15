@@ -285,12 +285,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
-        private void LateUpdate()
-        {
-            Debug.Log($"{_earlyCommitmentEnabled.Value} | {_earlyCommitmentNotUsed.Value}");
-            //Debug.Log($"Current chunkid: {_currentChunkId} | Current battery: {_currentBatteryCharge} | Early Commitment is enabled {_earlyCommitmentEnabled}");
-        }
-
         #endregion
 
         #region Initialization

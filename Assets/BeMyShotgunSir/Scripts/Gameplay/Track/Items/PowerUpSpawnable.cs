@@ -20,7 +20,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         }
 
         [SerializeField] private PowerUp _powerUpType;
-        private readonly SyncVar<PowerUp> _syncPowerUpType;
+        private readonly SyncVar<PowerUp> _syncPowerUpType = new SyncVar<PowerUp>(PowerUp.None);
         public PowerUp PowerUpType => _syncPowerUpType.Value;
         private PowerUpsNetController _netController;
         private RaceNetStateStore _raceNetStateStore;
@@ -31,12 +31,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
 
         private float _startLocalY;
         private float _minY;
-
-        private void Awake()
-        {
-            _syncPowerUpType.Value = _powerUpType;
-            _syncPowerUpType.OnChange += UpdatePowerUpType;
-        }
 
         private void UpdatePowerUpType(PowerUp prev, PowerUp next, bool asServer)
         {
@@ -54,9 +48,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         [Server]
         public void SetPowerUpType(PowerUp powerUpType) => _syncPowerUpType.Value = _powerUpType;
 
+        public override void OnStartNetwork()
+        {
+            base.OnStartNetwork();
+            _syncPowerUpType.OnChange += UpdatePowerUpType;
+
+        }
         public override void OnStartServer()
         {
             base.OnStartServer();
+            _syncPowerUpType.Value = _powerUpType;
             OnPowerUpSpawned?.Invoke(this);
         }
 
@@ -84,7 +85,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             if (_netController != null)
                 return;
             _netController = powerUpsNetController;
-            _raceNetStateStore = raceNetStateStore;
+            _racaeNetStateStore = raceNetStateStore;
         }
 
         [Server]
