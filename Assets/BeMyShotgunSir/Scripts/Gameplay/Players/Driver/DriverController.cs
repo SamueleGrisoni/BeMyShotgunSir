@@ -45,7 +45,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _netState = context.NetState;
 
             if (_inputConsumer == null || _teamNetController == null)
-                Log.ELazy(() => $"DriverController initialized with missing parameters.", this);
+                Log.WLazy(() => $"DriverController initialized with missing parameters.", this);
             else
                 Log.DLazy(() => $"DriverController initialized with teamId {_teamNetController.TeamId}.", this, _log);
 
