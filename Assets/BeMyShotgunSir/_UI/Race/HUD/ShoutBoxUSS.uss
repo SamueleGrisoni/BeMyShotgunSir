@@ -1,0 +1,27 @@
+:root {
+
+}
+
+#ShoutBox {
+    opacity: 0;
+    scale: 0.85 0.85;
+    transition-property: opacity, scale;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+#ShoutBox.shoutbox-in {
+    opacity: 1;
+    scale: 1 1;
+}
+
+#ShoutBox.shoutbox-out {
+    opacity: 0;
+    scale: 0.85 0.85;
+}
+
+#ShoutElement {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-to-fit;
+    margin: 50px;
+}

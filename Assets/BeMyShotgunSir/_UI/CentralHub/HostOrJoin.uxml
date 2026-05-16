@@ -9,13 +9,13 @@
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container">
                 <ui:VisualElement name="HostJoinButtonContainer" class="host-join-button-container">
+                    <ui:TextField name="JoinIPAddress" value="localhost" class="menu-field join-ip-address"/>
                     <ui:Button name="HostButton" class="menu-button host-button">
                         <ui:Label text="HOST RACE!" class="button-label"/>
                     </ui:Button>
                     <ui:Button name="JoinButton" class="menu-button join-button">
                         <ui:Label text="JOIN RACE!" class="button-label"/>
                     </ui:Button>
-                    <ui:TextField name="JoinIPAddress" value="localhost" class="menu-field join-ip-address"/>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:Button name="BackButton" class="menu-button back-button">

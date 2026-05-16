@@ -20,11 +20,12 @@
 }
 
 .marker-row {
-    height: 80px;
     position: relative;
     width: 90%;
-    flex-direction: column;
+    height: 80px;
     align-self: center;
+    flex-direction: column;
+    overflow: visible;
 }
 
 .team-marker {
@@ -36,18 +37,40 @@
     flex-direction: column;
     align-items: center;
     translate: -42px 0;
-}
-
-.team1-marker {
-    flex-direction: column;
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/TopBar_MarkerBlue.png?fileID=2800000&guid=fb065e4cd8075405a8860b2203b469ee&type=3#TopBar_MarkerBlue");
+    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/TopBar_MarkerWhite.png?fileID=2800000&guid=81b9322e3e59447d3ac4697a125504da&type=3#TopBar_MarkerWhite");
     -unity-background-scale-mode: scale-to-fit;
 }
 
-.team2-marker {
-    flex-direction: column;
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/TopBar_MarkerRed.png?fileID=2800000&guid=9a7c303ec08914941b817c035b128486&type=3#TopBar_MarkerRed");
-    -unity-background-scale-mode: scale-to-fit;
+.team-marker-0 {
+    -unity-background-image-tint-color: rgb(0, 0, 255);
+}
+
+.team-marker-1 {
+    -unity-background-image-tint-color: rgb(255, 0, 0);
+}
+
+.team-marker-2 {
+    -unity-background-image-tint-color: rgb(0, 255, 0);
+}
+
+.team-marker-3 {
+    -unity-background-image-tint-color: rgb(255, 255, 0);
+}
+
+.team-marker-4 {
+    -unity-background-image-tint-color: rgb(255, 0, 255);
+}
+
+.team-marker-5 {
+    -unity-background-image-tint-color: rgb(0, 255, 255);
+}
+
+.team-marker-6 {
+    -unity-background-image-tint-color: rgb(68, 0, 255);
+}
+
+.team-marker-7 {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
 }
 
 .map-bar {
@@ -78,33 +101,26 @@
 .team-icon {
     width: 64px;
     height: 64px;
-    border-radius: 16px;
-    border-width: 2px;
-    border-color: rgb(255, 255, 255);
-    flex-shrink: 0;
-    border-top-left-radius: 32px;
-    border-top-right-radius: 32px;
-    border-bottom-right-radius: 32px;
-    border-bottom-left-radius: 32px;
     top: 10px;
-}
-
-.team1-icon {
-    background-color: rgb(52, 152, 219);
-}
-
-.team2-icon {
-    background-color: rgb(231, 76, 60);
+    border-width: 2px;
+    border-color: white;
+    border-radius: 32px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    border-left-color: rgba(255, 255, 255, 0);
+    border-right-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(255, 255, 255, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
 }
 
 .team-needle {
     width: 4px;
     flex-grow: 1;
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     align-self: center;
 }
 
 .my-team {
-    scale: 1.5 1.5 1.5;
+    scale: 1.5 1.5;
     translate: -42px -25%;
 }

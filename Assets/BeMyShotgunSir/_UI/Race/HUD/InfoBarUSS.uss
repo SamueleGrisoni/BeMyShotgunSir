@@ -66,7 +66,6 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 100%;
     overflow: hidden;
 }
 
@@ -93,4 +92,46 @@
 
 .gauge-bar-right {
     background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/EarlyCommitment_RightArrowFull.png?fileID=2800000&guid=1bb82c271aae84c138adcd6e7c82884f&type=3#EarlyCommitment_RightArrowFull");
+}
+
+.info-message {
+    position: absolute;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 0;
+    scale: 0.85 0.85;
+
+    transition-property: opacity, scale;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+.info-message.info-message-in {
+    opacity: 1;
+    scale: 1 1;
+}
+
+.info-message.info-message-out {
+    opacity: 0;
+    scale: 0.85 0.85;
+}
+
+.feedback-indicator {
+    width: 240px;
+    height: 285px;
+    justify-content: center;
+    align-items: center;
+}
+
+.feedback-icon {
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.early-commitment-indicator {
+    justify-content: center;
+    align-items: center;
 }

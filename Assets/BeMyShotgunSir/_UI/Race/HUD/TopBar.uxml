@@ -1,5 +1,5 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/TopBarUSS.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBarUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/TopBarUSS.uss?fileID=7433441132597879392&amp;guid=e9e373e2fe0e7456d842292ff1cb2db2&amp;type=3#TopBarUSS"/>
     <ui:VisualElement name="TopBar" class="top-bar">
         <ui:VisualElement name="MapBarContainer" class="map-bar-container">
             <ui:VisualElement name="MapBar" class="map-bar"/>
