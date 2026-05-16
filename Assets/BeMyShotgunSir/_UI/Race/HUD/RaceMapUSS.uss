@@ -1,36 +1,35 @@
 :root {
 }
 
+.map-tiles {
+    position: absolute;
+    align-self: center;
+    width: 90%;
+    height: 95%;
+    overflow: hidden;
+}
+
+.map-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    flex-direction: column-reverse;
+    justify-content: center;
+    transform-origin: center center;
+}
+
 .row {
+    position: relative;
     flex-direction: row;
     height: 80px;
     margin-top: -1px;
+    flex-shrink: 0;
 }
 
 .rc-icon {
+    position: absolute;
     height: 100%;
     -unity-background-scale-mode: scale-to-fit;
-    width: 50%;
-}
-
-.fork {
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_Fork.png?fileID=2800000&guid=df7841bb30d224d7b8a3f9ca877785da&type=3#Tile_RC_Fork");
-    width: 100%;
-}
-
-.junction {
-    background-image: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/Tile_RC_Junction.png?fileID=2800000&guid=6eb2982864cb042dc9b39d09fe73331a&type=3#Tile_RC_Junction");
-    width: 100%;
-}
-
-.map-tiles {
-    flex-grow: 0;
-    height: 95%;
-    position: absolute;
-    width: 90%;
-    align-self: center;
-    flex-direction: column-reverse;
-    justify-content: center;
 }
 
 .fog-grid {

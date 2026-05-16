@@ -1,5 +1,5 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/BeMyShotgunSir/_UI/HUD/RaceMapUSS.uss?fileID=7433441132597879392&amp;guid=d22199f50fb33496faa57a62fc268c35&amp;type=3#RaceMapUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/RaceMapTest.uss?fileID=7433441132597879392&amp;guid=5bce93a08dcb64754abebf97fdca5659&amp;type=3#RaceMapTest"/>
     <ui:VisualElement name="UIRoot" class="uiroot" style="flex-grow: 1;">
         <ui:VisualElement name="ContentArea" class="content-area" style="height: 100%; justify-content: center;">
             <ui:VisualElement name="MapBase" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_Map.png?fileID=2800000&amp;guid=07a897c43306d4133987c4a16a884167&amp;type=3#HUD_Shotgun_Map&quot;); width: 100%; height: 100%;"/>

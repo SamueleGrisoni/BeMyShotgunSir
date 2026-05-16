@@ -10,7 +10,6 @@ using UnityEngine.UIElements;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
-
     public class RaceMapViewController : RaceBindTarget
     {
         private struct CachedSplitMap
@@ -35,15 +34,20 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private RoadChunkTile[] _tilesRC;
         [SerializeField] private RoadChunkTile _forkTileRC;
         [SerializeField] private RoadChunkTile _junctionTileRC;
+
+        [Header("Map Fit")]
+        [SerializeField, Range(0.1f, 1f)] private float _fitParentPercentage = 0.95f;
+        [SerializeField] private float _rowHeight = 80f;
+
         [Header("Fog Overlay")]
         [SerializeField] private Sprite[] _fogSprites;
         [SerializeField] private int _fogColumns = 6;
         [SerializeField] private int _fogRows = 10;
         [SerializeField] private float _revealStepDelay = 0.15f;
+
         [Header("Power-Ups")]
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
         [SerializeField] private SOPowerUpsData _powerUpsData;
-
 
         #region Bindings
         private RaceCommand _command;
@@ -53,6 +57,49 @@ namespace BeMyShotgunSir.Scripts.UI
         private RaceRole _role;
         #endregion
 
+        #region Visual Elements
+        private VisualElement _root;
+        private TemplateContainer _raceMap;
+        private VisualElement _mapTiles;
+        private VisualElement _mapContent;
+        private VisualElement _fogGrid;
+        private VisualElement[,] _fogTiles;
+        private VisualElement _powerUpArea;
+        private VisualElement _leftColumn;
+        private VisualElement _rightColumn;
+        #endregion
+
+        #region Private Fields
+        private float _tileLeftAnchorOut;
+        private float _tileRightAnchorOut;
+
+        private List<GeneratedRoadChunkInfoWithItems> _currentSplitData = new();
+        private readonly List<GeneratedItemInfo> _leftPowerUps = new();
+        private readonly List<GeneratedItemInfo> _rightPowerUps = new();
+
+        private readonly List<CachedSplitMap> _cachedSplitMaps = new();
+        private CachedSplitMap? _currentCachedMap;
+
+        private int _revealedFogSteps;
+        private readonly List<Vector2Int> _leftFogRevealOrder = new();
+        private readonly List<Vector2Int> _rightFogRevealOrder = new();
+
+        private Coroutine _fitRoutine;
+        private float _mapMinX;
+        private float _mapMaxX;
+        private int _generatedRowCount;
+        private bool _needsMapRebuild;
+
+        private bool _isShowing = false;
+
+        #endregion
+
+        #region Public Fields
+
+        public bool IsShowing => _isShowing;
+
+        #endregion
+
         public override void OnInitialBindComplete()
         {
             if (_initialBindSource == null)
@@ -60,9 +107,11 @@ namespace BeMyShotgunSir.Scripts.UI
                 Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
                 return;
             }
+
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
         }
+
         public override void OnFinalBindComplete()
         {
             if (_finalBindSource == null)
@@ -70,45 +119,11 @@ namespace BeMyShotgunSir.Scripts.UI
                 Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
                 return;
             }
+
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
         }
-
-        #region Visual Elements
-        private VisualElement _root;
-        private TemplateContainer _raceMap;
-        private VisualElement _mapTiles;
-        private VisualElement _fogGrid;
-        private VisualElement[,] _fogTiles;
-        private VisualElement _powerUpArea;
-        private VisualElement _leftColumn;
-        private VisualElement _rightColumn;
-
-        #endregion
-
-        #region private fields
-        private int _tileLeftAnchorOut;
-        private int _tileRightAnchorOut;
-
-        private List<GeneratedRoadChunkInfoWithItems> _currentSplitData = new List<GeneratedRoadChunkInfoWithItems>();
-        private readonly List<GeneratedItemInfo> _leftPowerUps = new();
-        private readonly List<GeneratedItemInfo> _rightPowerUps = new();
-
-        private readonly List<CachedSplitMap> _cachedSplitMaps = new();
-        private CachedSplitMap? _currentCachedMap;
-        private int _revealedFogSteps;
-        private readonly List<Vector2Int> _leftFogRevealOrder = new();
-        private readonly List<Vector2Int> _rightFogRevealOrder = new();
-
-
-        private bool _isShowing = false;
-        #endregion
-
-        #region Public Fields
-        public bool IsShowing => _isShowing;
-        #endregion
-
 
         private void Awake()
         {
@@ -116,21 +131,52 @@ namespace BeMyShotgunSir.Scripts.UI
             Log.DLazy(() => "RaceMapViewController enabled and subscribed to OnSplitGeneratedProvided event.", this);
         }
 
+        private void OnDestroy()
+        {
+            RoadManager.OnSplitGeneratedProvided -= SplitGeneratedHandler;
+
+            if (_fitRoutine != null)
+            {
+                StopCoroutine(_fitRoutine);
+                _fitRoutine = null;
+            }
+        }
+
         private void OnEnable()
         {
             if (_hudDocument == null)
             {
-                Debug.Log("Race Map Document reference missing!");
+                Log.ELazy(() => "Race Map Document reference missing!", this);
                 return;
             }
 
             _root = _hudDocument.rootVisualElement;
             _raceMap = _root.Q<TemplateContainer>("RaceMap");
+
+            if (_raceMap == null)
+            {
+                Log.ELazy(() => "RaceMap template not found.", this);
+                return;
+            }
+
             _mapTiles = _raceMap.Q<VisualElement>("MapTiles");
             _fogGrid = _raceMap.Q<VisualElement>("FogGrid");
             _powerUpArea = _raceMap.Q<VisualElement>("PowerUpArea");
             _leftColumn = _raceMap.Q<VisualElement>("LeftColumn");
             _rightColumn = _raceMap.Q<VisualElement>("RightColumn");
+
+            if (_mapTiles == null)
+            {
+                Log.ELazy(() => "MapTiles not found.", this);
+                return;
+            }
+
+            _mapContent = new VisualElement();
+            _mapContent.name = "MapContent";
+            _mapContent.AddToClassList("map-content");
+
+            _mapTiles.Clear();
+            _mapTiles.Add(_mapContent);
 
             BuildFogGrid();
             BuildFogRevealOrder();
@@ -140,6 +186,7 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
         #region Handlers
+
         private void SplitGeneratedHandler(List<GeneratedRoadChunkInfoWithItems> splitData)
         {
             if (splitData == null)
@@ -158,44 +205,76 @@ namespace BeMyShotgunSir.Scripts.UI
 
             TryLoadMapForCurrentTeamProgress();
         }
+
         #endregion
 
         #region Race Map Construction and Update Methods
+
         private void BuildRaceMap()
         {
-            var forkTile = new VisualElement();
-            forkTile.AddToClassList("rc-icon");
-            forkTile.AddToClassList("fork");
-            forkTile.style.backgroundImage = new StyleBackground(_forkTileRC.Icon);
+            if (_mapContent == null)
+                return;
 
-            var forkRow = new VisualElement();
-            forkRow.AddToClassList("row");
-            forkRow.AddToClassList("row-fork");
-            forkRow.Add(forkTile);
+            if (_tilesRC == null || _tilesRC.Length == 0)
+            {
+                Log.ELazy(() => "Road chunk tile array is empty.", this);
+                return;
+            }
 
-            _mapTiles.Add(forkRow);
-            _tileLeftAnchorOut = _forkTileRC.AnchorInPx;
-            _tileRightAnchorOut = _forkTileRC.AnchorOutPx;
+            ResetMapContentTransform();
+            _mapContent.Clear();
+            ResetGeneratedBounds();
+
+            if (!AddCenteredFork())
+            {
+                Log.ELazy(() => "Failed to add centered fork.", this);
+                return;
+            }
 
             BuildRowsFromSplit();
 
-            var junctionTile = new VisualElement();
-            junctionTile.AddToClassList("rc-icon");
-            junctionTile.AddToClassList("junction");
-            junctionTile.style.backgroundImage = new StyleBackground(_junctionTileRC.Icon);
+            if (!AddCenteredJunction())
+            {
+                Log.ELazy(() => "Failed to add centered junction.", this);
+                return;
+            }
 
-            var junctionRow = new VisualElement();
-            junctionRow.AddToClassList("row");
-            junctionRow.AddToClassList("row-junction");
-            junctionRow.Add(junctionTile);
+            RequestFitMapToParent();
+        }
 
-            _mapTiles.Add(junctionRow);
+        private bool AddCenteredFork()
+        {
+            if (_forkTileRC == null || _forkTileRC.Icon == null)
+                return false;
+
+            float forkWidth = GetSpriteWidthFromHeight(_forkTileRC.Icon, _rowHeight);
+
+            VisualElement row = CreateRow();
+            row.AddToClassList("row-fork");
+
+            VisualElement fork = CreateChunk(_forkTileRC, forkWidth);
+            fork.AddToClassList("fork");
+
+            float forkX = (_mapTiles.resolvedStyle.width - forkWidth) * 0.5f;
+
+            fork.style.left = forkX;
+
+            RegisterChunkBounds(forkX, forkWidth);
+            _generatedRowCount++;
+
+            row.Add(fork);
+            _mapContent.Add(row);
+
+            _tileLeftAnchorOut = forkX + _forkTileRC.AnchorInPx;
+            _tileRightAnchorOut = forkX + _forkTileRC.AnchorOutPx;
+
+            return true;
         }
 
         private void BuildRowsFromSplit()
         {
-            int prevAnchorLeft = _tileLeftAnchorOut;
-            int prevAnchorRight = _tileRightAnchorOut;
+            float prevAnchorLeft = _tileLeftAnchorOut;
+            float prevAnchorRight = _tileRightAnchorOut;
 
             VisualElement currentRow = null;
             int chunksInCurrentRow = 0;
@@ -204,7 +283,8 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 GeneratedRoadChunkInfo info = data.roadChunkInfo;
 
-                if (info.position == RoadChunkPosition.MIDDLE) continue;
+                if (info.position == RoadChunkPosition.MIDDLE)
+                    continue;
 
                 ExtractPowerUps(data);
 
@@ -212,27 +292,24 @@ namespace BeMyShotgunSir.Scripts.UI
 
                 if (tileIndex < 0 || tileIndex >= _tilesRC.Length)
                 {
-                    Debug.LogError($"Invalid tile index {tileIndex} for road chunk type {info.type} at position {info.position}");
+                    Log.ELazy(() => $"Invalid tile index {tileIndex} for road chunk type {info.type} at position {info.position}", this);
                     continue;
                 }
 
                 if (currentRow == null)
                 {
-                    currentRow = new VisualElement();
-                    currentRow.AddToClassList("row");
+                    currentRow = CreateRow();
                     chunksInCurrentRow = 0;
                 }
 
                 if (info.position == RoadChunkPosition.LEFT)
                 {
-                    AddChunkToRow(currentRow, tileIndex, prevAnchorLeft);
-                    prevAnchorLeft = prevAnchorLeft + _tilesRC[tileIndex].AnchorOutPx;
+                    prevAnchorLeft = AddChunkToRow(currentRow, tileIndex, prevAnchorLeft);
                     _tileLeftAnchorOut = prevAnchorLeft;
                 }
                 else if (info.position == RoadChunkPosition.RIGHT)
                 {
-                    AddChunkToRow(currentRow, tileIndex, prevAnchorRight);
-                    prevAnchorRight = prevAnchorRight + _tilesRC[tileIndex].AnchorOutPx;
+                    prevAnchorRight = AddChunkToRow(currentRow, tileIndex, prevAnchorRight);
                     _tileRightAnchorOut = prevAnchorRight;
                 }
 
@@ -240,42 +317,203 @@ namespace BeMyShotgunSir.Scripts.UI
 
                 if (chunksInCurrentRow == 2)
                 {
-                    _mapTiles.Add(currentRow);
+                    _mapContent.Add(currentRow);
+                    _generatedRowCount++;
+
                     currentRow = null;
                     chunksInCurrentRow = 0;
                 }
-
-
             }
         }
 
+        private bool AddCenteredJunction()
+        {
+            if (_junctionTileRC == null || _junctionTileRC.Icon == null)
+                return false;
+
+            float junctionWidth = GetSpriteWidthFromHeight(_junctionTileRC.Icon, _rowHeight);
+
+            VisualElement row = CreateRow();
+            row.AddToClassList("row-junction");
+
+            VisualElement junction = CreateChunk(_junctionTileRC, junctionWidth);
+            junction.AddToClassList("junction");
+
+            float junctionX = (_mapTiles.resolvedStyle.width - junctionWidth) * 0.5f;
+
+            junction.style.left = junctionX;
+
+            RegisterChunkBounds(junctionX, junctionWidth);
+            _generatedRowCount++;
+
+            row.Add(junction);
+            _mapContent.Add(row);
+
+            return true;
+        }
 
         private int GetTileIndex(GeneratedRoadChunkInfo info)
         {
             if (info.type == RoadChunkType.STRAIGHT)
-                return 8; // straight tile index
-            else return info.index;
+                return 8;
+
+            return info.index;
         }
 
-        private void AddChunkToRow(VisualElement row, int tileIndex, int prevAnchor)
+        private float AddChunkToRow(VisualElement row, int tileIndex, float previousAnchorOutAbs)
         {
-            int tileX = prevAnchor + _tilesRC[tileIndex].AnchorInPx;
+            RoadChunkTile tileData = _tilesRC[tileIndex];
 
-            var chunk = new VisualElement();
-            chunk.AddToClassList("rc-icon");
-            chunk.style.backgroundImage = new StyleBackground(_tilesRC[tileIndex].Icon);
+            if (tileData == null || tileData.Icon == null)
+                return previousAnchorOutAbs;
+
+            float tileWidth = GetSpriteWidthFromHeight(tileData.Icon, _rowHeight);
+
+            float tileX = previousAnchorOutAbs - tileData.AnchorInPx;
+            float nextAnchorOutAbs = tileX + tileData.AnchorOutPx;
+
+            VisualElement chunk = CreateChunk(tileData, tileWidth);
             chunk.style.left = tileX;
 
+            RegisterChunkBounds(tileX, tileWidth);
+
             row.Add(chunk);
+
+            return nextAnchorOutAbs;
+        }
+
+        private VisualElement CreateRow()
+        {
+            var row = new VisualElement();
+            row.AddToClassList("row");
+            row.style.height = _rowHeight;
+            return row;
+        }
+
+        private VisualElement CreateChunk(RoadChunkTile tileData, float width)
+        {
+            var chunk = new VisualElement();
+
+            chunk.AddToClassList("rc-icon");
+            chunk.style.backgroundImage = new StyleBackground(tileData.Icon);
+            chunk.style.width = width;
+            chunk.style.height = Length.Percent(100);
+            chunk.style.position = Position.Absolute;
+
+            return chunk;
+        }
+
+        private float GetSpriteWidthFromHeight(Sprite sprite, float height)
+        {
+            if (sprite == null || sprite.rect.height <= 0f)
+                return height;
+
+            return height * (sprite.rect.width / sprite.rect.height);
         }
 
         private void ClearRaceMap()
         {
-            while (_mapTiles.childCount > 0)
-            {
-                _mapTiles.RemoveAt(0);
-            }
+            _mapContent?.Clear();
         }
+
+        #endregion
+
+        #region Map Fit Methods
+
+        private void RequestFitMapToParent()
+        {
+            if (_fitRoutine != null)
+                StopCoroutine(_fitRoutine);
+
+            _fitRoutine = StartCoroutine(FitMapToParentNextFrame());
+        }
+
+        private IEnumerator FitMapToParentNextFrame()
+        {
+            ResetMapContentTransform();
+
+            yield return null;
+
+            FitMapToParent();
+
+            _fitRoutine = null;
+        }
+
+        private void ResetMapContentTransform()
+        {
+            if (_mapContent == null)
+                return;
+
+            _mapContent.style.scale = new Scale(Vector2.one);
+            _mapContent.style.translate = new Translate(0, 0);
+            _mapContent.style.transformOrigin = new TransformOrigin(
+                Length.Percent(50),
+                Length.Percent(50),
+                0
+            );
+        }
+
+        private void FitMapToParent()
+        {
+            if (_mapTiles == null || _mapContent == null)
+                return;
+
+            float containerWidth = _mapTiles.resolvedStyle.width;
+            float containerHeight = _mapTiles.resolvedStyle.height;
+
+            if (float.IsNaN(containerWidth) || containerWidth <= 0f)
+                return;
+
+            if (float.IsNaN(containerHeight) || containerHeight <= 0f)
+                return;
+
+            if (_mapMinX == float.MaxValue)
+                return;
+
+            float mapHeight = _generatedRowCount * _rowHeight;
+
+            if (mapHeight <= 0f)
+                return;
+
+            float centerX = containerWidth * 0.5f;
+
+            float maxHorizontalExtent = Mathf.Max(
+                Mathf.Abs(centerX - _mapMinX),
+                Mathf.Abs(_mapMaxX - centerX)
+            );
+
+            if (maxHorizontalExtent <= 0f)
+                return;
+
+            float targetHalfWidth = containerWidth * _fitParentPercentage * 0.5f;
+            float targetHeight = containerHeight * _fitParentPercentage;
+
+            float widthScale = targetHalfWidth / maxHorizontalExtent;
+            float heightScale = targetHeight / mapHeight;
+
+            float finalScale = Mathf.Min(widthScale, heightScale);
+
+            _mapContent.style.scale = new Scale(new Vector2(finalScale, finalScale));
+
+            Log.DLazy(() =>
+                $"Fit | minX: {_mapMinX} | maxX: {_mapMaxX} | height: {mapHeight} | scale: {finalScale}",
+                this
+            );
+        }
+
+        private void ResetGeneratedBounds()
+        {
+            _mapMinX = float.MaxValue;
+            _mapMaxX = float.MinValue;
+            _generatedRowCount = 0;
+        }
+
+        private void RegisterChunkBounds(float x, float width)
+        {
+            _mapMinX = Mathf.Min(_mapMinX, x);
+            _mapMaxX = Mathf.Max(_mapMaxX, x + width);
+        }
+
         #endregion
 
         #region Map Caching and Loading Methods
@@ -337,15 +575,16 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private CachedSplitMap? FindMapForProgress(TeamTrackProgress progress)
         {
+            if (!progress.LastSpecialChunkType.HasValue)
+                return null;
+
             for (int i = 0; i < _cachedSplitMaps.Count; i++)
             {
                 CachedSplitMap map = _cachedSplitMaps[i];
 
-                if (!progress.LastSpecialChunkType.HasValue)
-                    return null;
-
                 if ((progress.LastSpecialChunkType.Value.Type == RoadChunkType.START_LINE ||
-                    progress.LastSpecialChunkType.Value.Type == RoadChunkType.ENDING_CROSSROAD) && progress.NextSpecialChunkId == map.StartChunkId)
+                     progress.LastSpecialChunkType.Value.Type == RoadChunkType.ENDING_CROSSROAD) &&
+                    progress.NextSpecialChunkId == map.StartChunkId)
                 {
                     return map;
                 }
@@ -353,10 +592,36 @@ namespace BeMyShotgunSir.Scripts.UI
 
             return null;
         }
+
         private void LoadCachedMap(CachedSplitMap cachedMap)
         {
             _currentCachedMap = cachedMap;
             _currentSplitData = cachedMap.SplitData;
+
+            if (!IsMapLayoutReady())
+            {
+                _needsMapRebuild = true;
+                return;
+            }
+
+            RebuildCurrentMap();
+        }
+
+        private bool IsMapLayoutReady()
+        {
+            if (_mapTiles == null)
+                return false;
+
+            float width = _mapTiles.resolvedStyle.width;
+            float height = _mapTiles.resolvedStyle.height;
+
+            return !float.IsNaN(width) && width > 0f &&
+                   !float.IsNaN(height) && height > 0f;
+        }
+
+        private void RebuildCurrentMap()
+        {
+            _needsMapRebuild = false;
 
             ClearRaceMap();
             ClearPowerUps();
@@ -366,6 +631,22 @@ namespace BeMyShotgunSir.Scripts.UI
 
             ResetFogRevealProgress();
             BuildFogRevealOrder();
+        }
+
+        private IEnumerator RefreshMapAfterShow()
+        {
+            yield return null;
+
+            if (!IsMapLayoutReady())
+                yield break;
+
+            if (_needsMapRebuild && _currentCachedMap.HasValue)
+            {
+                RebuildCurrentMap();
+                yield break;
+            }
+
+            RequestFitMapToParent();
         }
 
         #endregion
@@ -568,6 +849,9 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void PopulateColumn(VisualElement column, List<GeneratedItemInfo> items)
         {
+            if (column == null)
+                return;
+
             column.Clear();
 
             foreach (GeneratedItemInfo item in items)
@@ -597,12 +881,17 @@ namespace BeMyShotgunSir.Scripts.UI
 
         #endregion
 
-
         #region Public Methods
+
         public void Show(bool show)
         {
             _raceMap.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
             _isShowing = show;
+
+            if (!show)
+                return;
+
+            StartCoroutine(RefreshMapAfterShow());
         }
 
         public void UpdateMapFromTeamProgress(TeamTrackProgress progress)
