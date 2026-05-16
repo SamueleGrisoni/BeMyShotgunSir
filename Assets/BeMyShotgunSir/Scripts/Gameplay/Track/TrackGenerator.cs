@@ -215,6 +215,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (lastDequeuedChunk.type == RoadChunkType.ENDING_CROSSROAD)
             {
                 _chunksRemainingInCurrentState = _rng.Next(_trackData.MinSplitRoadChunkCount, _trackData.MaxSplitRoadChunkCount);
+                if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 >= _finishLineChunkNumber)
+                {
+                    GenerateFinalSequence();
+                    return;
+                }
                 EnqueueSplitSegment();
             }
             else if (lastDequeuedChunk.type == RoadChunkType.STARTING_CROSSROAD)
