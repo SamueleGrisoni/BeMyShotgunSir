@@ -101,7 +101,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             _specialSegmentInfoQueue.Enqueue(new CrossroadSegmentInfo(RoadChunkType.START_LINE, 0));
         }
 
-        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _specialSegmentInfoQueue.Enqueue(info);
+        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _specialSegmentInfoQueue.Enqueue(info); //TODO ask for finish line to be sent here as well
 
         public void OnEnable() =>
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
@@ -379,6 +379,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         {
             GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, false);
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);//TODO show countdown on clients
+            _clientProjector.ShowCountdown();
         }
 
         private IEnumerator StartRaceAfterCountdown()

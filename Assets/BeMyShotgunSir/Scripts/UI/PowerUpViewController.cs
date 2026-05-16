@@ -10,6 +10,7 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class PowerUpViewController : RaceBindTarget
     {
+        private bool _log = false;
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
         [SerializeField] private float _swipeThreshold = 80f;
@@ -88,7 +89,7 @@ namespace BeMyShotgunSir.Scripts.UI
             StartCoroutine(InitNextFrame());
 
             InitPowerUpBar();
-            Log.DLazy(() => $"OnEnable PowerUpVC instance: {GetInstanceID()}", this);
+            Log.DLazy(() => $"OnEnable PowerUpVC instance: {GetInstanceID()}", this, _log);
         }
 
         IEnumerator InitNextFrame()
@@ -113,7 +114,7 @@ namespace BeMyShotgunSir.Scripts.UI
                 return;
             _viewModel.OnInventoryChanged -= UpdatePowerUpBar;
             _viewModel.OnInventoryChanged += UpdatePowerUpBar;
-            Log.DLazy(() => $"Subscribe PowerUpVC instance: {GetInstanceID()}", this);
+            Log.DLazy(() => $"Subscribe PowerUpVC instance: {GetInstanceID()}", this, _log);
 
         }
 
@@ -123,7 +124,7 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 if (_role != RaceRole.Shotgun)
                     return;
-                Log.DLazy(() => $"Power-up {index + 1} pointer down", this);
+                Log.DLazy(() => $"Power-up {index + 1} pointer down", this, _log);
                 _command.EquipPowerUp(index + 1);
 
                 _isPointerDown = true;
@@ -148,7 +149,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
                 if (delta.y < 0)
                 {
-                    Log.DLazy(() => $"Power-up {index + 1} swipe up detected. Requesting use of power-up.", this);
+                    Log.DLazy(() => $"Power-up {index + 1} swipe up detected. Requesting use of power-up.", this, _log);
                     _command.ActivatePowerUp();
                 }
             });
@@ -166,7 +167,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void SelectPowerUp(int index)
         {
-            Log.DLazy(() => $"Power-up {index + 1} selected", this);
+            Log.DLazy(() => $"Power-up {index + 1} selected", this, _log);
             for (int i = 0; i < _powerUps.Length; i++)
             {
                 if (i == index)
@@ -178,7 +179,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void UpdatePowerUpBar()
         {
-            Log.DLazy(() => "Updating power-up bar UI", this);
+            Log.DLazy(() => "Updating power-up bar UI", this, _log);
             _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId);
             if (teamId == null || !_viewModel.TeamInventories.TryGetValue(teamId.Value, out InventoryData inventory))
                 return;
@@ -192,13 +193,13 @@ namespace BeMyShotgunSir.Scripts.UI
 
                 if (powerUp != PowerUp.None)
                 {
-                    Log.DLazy(() => $"Power-up in slot {i}: {powerUp}", this);
+                    Log.DLazy(() => $"Power-up in slot {i}: {powerUp}", this, _log);
                     _powerUps[i - 1].Q<VisualElement>("Icon").style.backgroundImage = new StyleBackground(_powerUpIcons.GetIcon(powerUp));
                     _powerUps[i - 1].style.display = DisplayStyle.Flex;
                 }
                 else
                 {
-                    Log.DLazy(() => $"No power-up in slot {i}", this);
+                    Log.DLazy(() => $"No power-up in slot {i}", this, _log);
                     _powerUps[i - 1].style.display = DisplayStyle.None;
                 }
             }

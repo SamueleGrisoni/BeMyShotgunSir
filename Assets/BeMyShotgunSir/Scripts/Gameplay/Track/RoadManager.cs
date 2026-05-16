@@ -132,11 +132,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public void SetContext(RaceNetContext context)
         {
-            context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);
             if (_raceNetController == null) _raceNetController = context.NetController;
             _trackPooler.SetTrackData(_trackData);
             if (IsServerInitialized)
             {
+                context.NetState.OnRaceTimerExpired += () => OnTimerRaceExpired(context);
                 _isServer = true;
                 InitSpawnPoints();
                 _raceNetController.SetServerTrackReady_ServerRpc();
