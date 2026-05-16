@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845e57d0159a543849e588b6b0c3817a, type: 3}
+  m_Name: ShoutWheelIcons
+  m_EditorClassIdentifier: Assembly-CSharp::SOShoutWheelIcons
+  _shoutWheelIcons:
+  - Message: 1
+    Icon: {fileID: 21300000, guid: 55bd7964c4945426b84ac8825a22251e, type: 3}
+  - Message: 2
+    Icon: {fileID: 21300000, guid: 8dad40ab15bbd48a295c79f0d3047b46, type: 3}
+  - Message: 3
+    Icon: {fileID: 21300000, guid: d7de97f4f30ef48e1afd289b174f0f08, type: 3}
+  - Message: 4
+    Icon: {fileID: 21300000, guid: df2ca4bbcc4454b5fae8c47df197fdb6, type: 3}
+  - Message: 5
+    Icon: {fileID: 21300000, guid: d684ca7a3d48c4036a3c919440e36e49, type: 3}
+  - Message: 6
+    Icon: {fileID: 21300000, guid: 1fee231939d83478580b0586df9d3fdd, type: 3}
+  - Message: 8
+    Icon: {fileID: 21300000, guid: 2bbc54adb0f07459fbc0cb2a94d946a5, type: 3}
