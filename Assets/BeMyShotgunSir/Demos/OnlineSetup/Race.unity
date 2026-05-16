@@ -394,8 +394,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1229709095}
   - component: {fileID: 1229709096}
+  - component: {fileID: 1229709097}
   m_Layer: 0
-  m_Name: EndRace
+  m_Name: FinishScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -439,6 +440,19 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &1229709097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229709094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d119e3df7bc6d4749b583b04dfcb03f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _finishScreenDocument: {fileID: 1229709096}
 --- !u!1001 &1464196781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -630,6 +644,7 @@ MonoBehaviour:
   - _interfaceOwner: {fileID: 6370771299400993094}
   - _interfaceOwner: {fileID: 6501492836862139208}
   - _interfaceOwner: {fileID: 1185433174447249757}
+  - _interfaceOwner: {fileID: 1599854040}
   - _interfaceOwner: {fileID: 1599854040}
 --- !u!1 &606831962591698948
 GameObject:
