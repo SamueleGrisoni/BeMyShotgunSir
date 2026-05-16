@@ -241,7 +241,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _oilState = new OilDrivingState();
 
         private bool _isBoosting;
-        private bool _isStarting;
         private CommitmentDirection _commitmentDirection;
         private float _currentBatteryCharge;
         private float _batteryChargeTimer;
@@ -287,6 +286,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
+        private void Update()
+        {
+            Debug.Log($"CommitmentDirection: {_commitmentDirection} | Enabled: {_earlyCommitmentEnabled.Value}| Not used: {_earlyCommitmentNotUsed.Value}");
+        }
+
         #endregion
 
         #region Initialization
@@ -301,7 +305,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 InputConsumer.OnBoostPressed += ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
                 InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedbackPressed;
-                //InputConsumer.OnWheelMessageOnDriver += ExecuteWheelMessageOnDriver;
             }
         }
 
@@ -324,7 +327,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 InputConsumer.OnBoostPressed -= ExecuteBoost;
                 InputConsumer.OnEarlyCommitmentPressed -= ExecuteInputEarlyCommitment;
                 InputConsumer.OnDriverFeedbackPressed -= ExecuteDriverFeedbackPressed;
-                //InputConsumer.OnWheelMessageOnDriver -= ExecuteWheelMessageOnDriver;
             }
         }
 
@@ -436,7 +438,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 UpdateActiveDriftIntent(_input.IsDrifting, _input.SteerInput);
                 rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
-                _commitmentDirection = CommitmentDirection.Default;
             }
             else
             {
@@ -444,7 +445,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 UpdateActiveDriftIntent(InputConsumer.IsDrifting, steerInput);
                 rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
                 _isBoosting = false;
-                _commitmentDirection = CommitmentDirection.Default;
             }
             return rd;
         }
@@ -493,6 +493,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
             }
 
+            //_commitmentCollider.gameObject.layer = GetCommitmentCollisionLayer(data.CommitmentDirection);
             _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
                 ? LayerMask.NameToLayer("RightCollider")
                 : LayerMask.NameToLayer("LeftCollider");
@@ -501,13 +502,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 ? LayerMask.NameToLayer("ArmorLayer")
                 : LayerMask.NameToLayer("ObstacleCollider");
 
-
-
             bool isReplayed = state.ContainsReplayed();
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
             _currentDrivingState?.RunInputs(this, data, isReplayed);
 
-            ApplyBumpRepulsion(teamData);
+            ComputeCollisions(teamData);
             ApplyGroundSnap();
 
             _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
@@ -529,7 +528,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive); // TODO aggiustare
         }
 
-        private void ApplyBumpRepulsion(RaceTeamData teamData)
+        /*
+        private LayerMask GetCommitmentCollisionLayer(CommitmentDirection direction)
+        {
+            if (_earlyCommitmentEnabled.Value)
+            {
+                switch (direction)
+                {
+                    case CommitmentDirection.Left:
+                        return LayerMask.NameToLayer("RightCollider");
+                    case CommitmentDirection.Right:
+                        return LayerMask.NameToLayer("LeftCollider");
+                    case CommitmentDirection.Default:
+                        return LayerMask.NameToLayer("DefaultWallCollider");
+                    default:
+                        return LayerMask.NameToLayer("DefaultWallCollider");
+                }
+            }
+            else
+            {
+                return LayerMask.NameToLayer("DefaultWallCollider");
+            }
+        }
+        */
+
+        private void ComputeCollisions(RaceTeamData teamData)
         {
             Vector3 repulsionForce = Vector3.zero;
             if (!teamData.ActivePowerUpInfo.isArmorActive)
@@ -540,49 +563,71 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                     if (hitCollider.transform.root == _parent.root) continue;
 
                     MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
-
-                    if (IsServerInitialized) // Detection for the powerup effect only on the server
+                    if (otherDriver != null)
                     {
-                        if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
-                        {
-                            int? otherTeamId = otherDriver.GetTeamId();
-                            Log.DLazy(() => $"Detection for steal power up active | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
-                            if (TeamId.HasValue && otherTeamId.HasValue)
-                            {
-                                int? powerUpIdentifier = _raceNetContext.PowerUpsNetController.GetInstanceId(TeamId.Value, PowerUp.StealPowerUp);
-                                if (powerUpIdentifier.HasValue)
-                                {
-                                    _raceNetContext.PowerUpsNetController.SetPowerUpTarget_ServerRpc(powerUpIdentifier.Value, otherTeamId.Value);
-                                    Log.DLazy(() => $"Use of PowerUp steal. Identifier {powerUpIdentifier.Value} | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
-                                }
-                            }
-                        }
+                        CheckPowerUpCollisionEffect(teamData, otherDriver);
                     }
-
-                    Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
-                    rawPushDirection.y = 0;
-                    float distance = rawPushDirection.magnitude;
-                    if (distance > 0 && distance < _bumpRadius)
+                    if (otherDriver != null && otherDriver.IsBoosting())
                     {
-                        Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-                        forwardDir.y = 0;
-
-                        var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-
-                        if (lateralPushDirection.sqrMagnitude > 0.001f && otherDriver != null && otherDriver.IsBoosting())
+                        Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
+                        rawPushDirection.y = 0;
+                        float distance = rawPushDirection.magnitude;
+                        if (distance > 0 && distance < _bumpRadius)
                         {
-                            Vector3 finalPush = lateralPushDirection.normalized * _bumpForce;
-                            repulsionForce += finalPush;
+                            Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+                            forwardDir.y = 0;
 
-                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
-                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                            Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+                            var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+
+                            if (lateralPushDirection.sqrMagnitude > 0.001f)
+                            {
+                                Vector3 finalPush = lateralPushDirection.normalized * _bumpForce;
+                                repulsionForce += finalPush;
+
+                                Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                                Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                                Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+                            }
                         }
                     }
                 }
             }
-            if (repulsionForce != null)
-                _predictionRigidbody.AddForce(repulsionForce, ForceMode.Impulse);
+            _predictionRigidbody.AddForce(repulsionForce, ForceMode.Impulse);
+        }
+
+        private void CheckPowerUpCollisionEffect(RaceTeamData teamData, MovementController otherDriver)
+        {
+            if (IsServerInitialized)
+            {
+                if (teamData.ActivePowerUpInfo.isStealPowerUpActive)
+                {
+                    int? otherTeamId = otherDriver.GetTeamId();
+                    Log.DLazy(() => $"Detection for steal power up active | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
+                    if (TeamId.HasValue && otherTeamId.HasValue)
+                    {
+                        int? powerUpIdentifier = _raceNetContext.PowerUpsNetController.GetInstanceId(TeamId.Value, PowerUp.StealPowerUp);
+                        if (powerUpIdentifier.HasValue)
+                        {
+                            _raceNetContext.PowerUpsNetController.SetPowerUpTarget_ServerRpc(powerUpIdentifier.Value, otherTeamId.Value);
+                            Log.DLazy(() => $"Use of PowerUp steal. Identifier {powerUpIdentifier.Value} | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
+                        }
+                    }
+                }
+                if (teamData.ActivePowerUpInfo.isSpearPowerUpActive)
+                {
+                    int? otherTeamId = otherDriver.GetTeamId();
+                    Log.DLazy(() => $"Detection for spear power up active | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
+                    if (TeamId.HasValue && otherTeamId.HasValue)
+                    {
+                        int? powerUpIdentifier = _raceNetContext.PowerUpsNetController.GetInstanceId(TeamId.Value, PowerUp.Spear);
+                        if (powerUpIdentifier.HasValue)
+                        {
+                            _raceNetContext.PowerUpsNetController.SetPowerUpTarget_ServerRpc(powerUpIdentifier.Value, otherTeamId.Value);
+                            Log.DLazy(() => $"Use of PowerUp spear. Identifier {powerUpIdentifier.Value} | TeamId {TeamId.Value} | Other TeamId {otherTeamId.Value}", this);
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
@@ -757,6 +802,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                             _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
 
                             PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
+                            Debug.Log($"Last special chunk id: {lastSpecialChunk.Type}");
                             if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE)
                             // TODO controllare che il sidecar non torna e commita in chunk che ha già passato
                             {

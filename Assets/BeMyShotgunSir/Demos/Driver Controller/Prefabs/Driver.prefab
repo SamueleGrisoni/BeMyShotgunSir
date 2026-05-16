@@ -73,7 +73,9 @@ MonoBehaviour:
   - {fileID: 2519103325016107008}
   _boostParticles:
   - {fileID: 4286060322843582963}
-  _shieldParticles: []
+  _shieldParticles:
+  - {fileID: 4595919615682826461}
+  - {fileID: 9123714919020620063}
   _armorOverlayMeshRenderer: {fileID: 4961554435841543028}
 --- !u!1 &1542830160653573291
 GameObject:
@@ -85,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5823176394210027769}
   - component: {fileID: 8321478880501229331}
-  m_Layer: 9
+  m_Layer: 15
   m_Name: CommitmentCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +210,7 @@ MonoBehaviour:
   _isDebugInputEnabled: 1
   _debugPowerUp: 0
   _onGrassBufferMin: 10
-  _debugShield: 0
+  _debugArmor: 0
 --- !u!54 &2139825348868955056
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1085,13 +1087,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6237500064679832972, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
 --- !u!4 &2255236400058217134 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2465754446150183343, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
+  m_PrefabInstance: {fileID: 4428211699922705153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &4595919615682826461 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 194736282932956124, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
+  m_PrefabInstance: {fileID: 4428211699922705153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &9123714919020620063 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4893681567860847134, guid: aac08df0e2e76f94387d4d5f588f2a16, type: 3}
   m_PrefabInstance: {fileID: 4428211699922705153}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4614702863025001426

@@ -29,7 +29,7 @@ TagManager:
   - Armor PowerUp
   - LeftWallCollider
   - RightWallCollider
-  - 
+  - DefaultWallCollider
   - ObstacleCollider
   - ArmorLayer
   - GroundLayer
