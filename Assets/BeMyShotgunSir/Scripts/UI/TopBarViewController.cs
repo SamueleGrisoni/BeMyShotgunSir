@@ -1,5 +1,5 @@
 using System.Collections;
-using BeMyShotgunSir.Gameplay.PowerUps;
+using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
@@ -21,18 +21,20 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private VisualElement _root;
         private VisualElement _mapBarContainer;
-        private VisualElement _team1Marker;
-        private VisualElement _team1Icon;
-        private VisualElement _team2Marker;
-        private VisualElement _team2Icon;
+        private VisualElement _markerRow;
 
-        private float _team1CurrentPosition;
-        private float _team1TargetPosition;
-        private float _team2CurrentPosition;
-        private float _team2TargetPosition;
         private int? _teamId;
-
         private Coroutine _markerLerpCoroutine;
+
+        private readonly Dictionary<int, TeamMarkerView> _teamMarkers = new();
+
+        private class TeamMarkerView
+        {
+            public VisualElement Marker;
+            public VisualElement Icon;
+            public float CurrentPosition;
+            public float TargetPosition;
+        }
 
         public override void OnInitialBindComplete()
         {
@@ -46,6 +48,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _viewModel = _initialBindSource.ViewModel;
 
             _teamId = _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null;
+
+            _viewModel.OnTeamTrackProgressChanged += TeamTrackProgressChangedHandler;
         }
 
         public override void OnFinalBindComplete()
@@ -66,32 +70,23 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_topBarDocument == null)
             {
-                Debug.LogError("Top Bar Document reference missing!", this);
+                Log.ELazy(() => "Top Bar Document reference missing!", this);
                 return;
             }
 
             _root = _topBarDocument.rootVisualElement;
             _mapBarContainer = _root.Q<VisualElement>("MapBarContainer");
+            _markerRow = _root.Q<VisualElement>("MarkerRow");
 
-            if (_mapBarContainer == null)
+            if (_mapBarContainer == null || _markerRow == null)
             {
-                Debug.LogError("MapBarContainer not found!", this);
+                Log.ELazy(() => "Top bar visual elements not found!", this);
                 return;
             }
 
-            _team1Marker = _mapBarContainer.Q<VisualElement>("Team1Marker");
-            _team1Icon = _mapBarContainer.Q<VisualElement>("Team1Icon");
-            _team2Marker = _mapBarContainer.Q<VisualElement>("Team2Marker");
-            _team2Icon = _mapBarContainer.Q<VisualElement>("Team2Icon");
-
-            ScaleMyTeam(_teamId);
-            SetMarkerImmediate(_team1Marker, 0f);
-            SetMarkerImmediate(_team2Marker, 0f);
-
-            _markerLerpCoroutine = StartCoroutine(LerpMarkersRoutine());
+            ClearMarkers();
 
             // SOInvisibility_PU.OnInvisibilityEffectApplied += OnInvisibilityEffectApplied;
-
         }
 
         private void OnDisable()
@@ -101,56 +96,106 @@ namespace BeMyShotgunSir.Scripts.UI
                 StopCoroutine(_markerLerpCoroutine);
                 _markerLerpCoroutine = null;
             }
+
+            // SOInvisibility_PU.OnInvisibilityEffectApplied -= OnInvisibilityEffectApplied;
+        }
+
+        private void ClearMarkers()
+        {
+            _teamMarkers.Clear();
+            _markerRow.Clear();
+        }
+
+        private void AssignMarkers()
+        {
+            foreach (KeyValuePair<int, TeamTrackProgress> teamsIdValuePair in _viewModel.TeamTrackProgress)
+            {
+                if (_teamMarkers.ContainsKey(teamsIdValuePair.Key))
+                    continue;
+
+                CreateTeamMarker(teamsIdValuePair.Key);
+            }
+
+            ScaleMyTeam();
+
+            if (_markerLerpCoroutine == null && isActiveAndEnabled)
+                _markerLerpCoroutine = StartCoroutine(LerpMarkersRoutine());
+        }
+
+        private void CreateTeamMarker(int teamIndex)
+        {
+            if (_teamMarkers.ContainsKey(teamIndex))
+                return;
+
+            var marker = new VisualElement
+            {
+                name = $"Team{teamIndex}Marker"
+            };
+
+            marker.AddToClassList("team-marker");
+            marker.AddToClassList($"team-marker-{teamIndex}");
+
+            var icon = new VisualElement
+            {
+                name = $"Team{teamIndex}Icon"
+            };
+
+            icon.AddToClassList("team-icon");
+
+            marker.Add(icon);
+            _markerRow.Add(marker);
+
+            var markerView = new TeamMarkerView
+            {
+                Marker = marker,
+                Icon = icon,
+                CurrentPosition = 0f,
+                TargetPosition = 0f
+            };
+
+            _teamMarkers.Add(teamIndex, markerView);
+
+            SetMarkerPosition(marker, 0f);
         }
 
         private IEnumerator LerpMarkersRoutine()
         {
             while (true)
             {
-                _team1CurrentPosition = Mathf.Lerp(
-                    _team1CurrentPosition,
-                    _team1TargetPosition,
-                    Time.unscaledDeltaTime * _markerLerpSpeed
-                );
+                foreach (TeamMarkerView markerView in _teamMarkers.Values)
+                {
+                    markerView.CurrentPosition = Mathf.Lerp(
+                        markerView.CurrentPosition,
+                        markerView.TargetPosition,
+                        Time.unscaledDeltaTime * _markerLerpSpeed
+                    );
 
-                _team2CurrentPosition = Mathf.Lerp(
-                    _team2CurrentPosition,
-                    _team2TargetPosition,
-                    Time.unscaledDeltaTime * _markerLerpSpeed
-                );
-
-                SetMarkerPosition(_team1Marker, _team1CurrentPosition);
-                SetMarkerPosition(_team2Marker, _team2CurrentPosition);
+                    SetMarkerPosition(markerView.Marker, markerView.CurrentPosition);
+                }
 
                 yield return null;
             }
         }
 
-        private void ScaleMyTeam(int? teamId)
+        private void TeamTrackProgressChangedHandler()
         {
-            if (teamId == null)
-                return;
+            AssignMarkers();
 
-            switch (teamId)
+            IReadOnlyDictionary<int, TeamTrackProgress> teamTrackProgress = new Dictionary<int, TeamTrackProgress>(_viewModel.TeamTrackProgress);
+
+            foreach (KeyValuePair<int, TeamTrackProgress> teamsIdValuePair in teamTrackProgress)
             {
-                case 0:
-                    _team1Marker.AddToClassList("my-team");
-                    _team2Marker.RemoveFromClassList("my-team");
-                    break;
-                case 1:
-                    _team2Marker.AddToClassList("my-team");
-                    _team1Marker.RemoveFromClassList("my-team");
-                    break;
-                case 2:
-                    _team2Marker.AddToClassList("my-team");
-                    _team1Marker.RemoveFromClassList("my-team");
-                    break;
+                UpdateTeamMarker(teamsIdValuePair.Key, _viewModel.TeamTrackProgress[teamsIdValuePair.Key]);
             }
         }
 
-        private void SetMarkerImmediate(VisualElement marker, float position)
+        private void UpdateTeamMarker(int teamIndex, TeamTrackProgress progress)
         {
-            SetMarkerPosition(marker, position);
+            if (!_teamMarkers.TryGetValue(teamIndex, out TeamMarkerView markerView))
+                return;
+
+            float normalizedPosition = GetSectionNormalizedPosition(progress);
+            markerView.TargetPosition = normalizedPosition;
         }
 
         private void SetMarkerPosition(VisualElement marker, float position)
@@ -161,12 +206,18 @@ namespace BeMyShotgunSir.Scripts.UI
             marker.style.left = new StyleLength(new Length(position * 100f, LengthUnit.Percent));
         }
 
-        private void ChangeTeamIcon(int teamIndex, Sprite newIcon)
+        private void ScaleMyTeam()
         {
-            if (teamIndex == 0 && _team1Icon != null)
-                _team1Icon.style.backgroundImage = new StyleBackground(newIcon);
-            else if (teamIndex == 1 && _team2Icon != null)
-                _team2Icon.style.backgroundImage = new StyleBackground(newIcon);
+            if (_teamId == null)
+                return;
+
+            foreach (KeyValuePair<int, TeamMarkerView> pair in _teamMarkers)
+            {
+                if (pair.Key == _teamId.Value)
+                    pair.Value.Marker.AddToClassList("my-team");
+                else
+                    pair.Value.Marker.RemoveFromClassList("my-team");
+            }
         }
 
         private float GetSectionNormalizedPosition(TeamTrackProgress progress)
@@ -174,44 +225,35 @@ namespace BeMyShotgunSir.Scripts.UI
             int currentChunkId = progress.CurrentChunkId;
             int nextSpecialChunkId = progress.NextSpecialChunkId;
 
+            if (!progress.LastSpecialChunkType.HasValue)
+                return 0f;
+
             int lastSpecialChunkId = progress.LastSpecialChunkType.Value.Id;
 
             if (nextSpecialChunkId <= lastSpecialChunkId)
                 return 0f;
 
-            if (currentChunkId <= lastSpecialChunkId)
-                return 0f;
-
-            if (currentChunkId >= nextSpecialChunkId)
-                return 1f;
-
-            float sectionLength = nextSpecialChunkId - lastSpecialChunkId;
-            float currentSectionProgress = currentChunkId - lastSpecialChunkId;
-
-            return Mathf.Clamp01(currentSectionProgress / sectionLength);
+            return Mathf.Clamp01(
+                (float)(currentChunkId - lastSpecialChunkId) /
+                (nextSpecialChunkId - lastSpecialChunkId)
+            );
         }
 
         private void OnInvisibilityEffectApplied(bool isActive)
         {
-            switch (_teamId)
-            {
-                case 0:
-                    _team1Marker.style.opacity = isActive ? 0f : 1f;
-                    break;
-                case 1:
-                    _team2Marker.style.opacity = isActive ? 0f : 1f;
-                    break;
-            }
+            if (_teamId == null)
+                return;
+
+            if (_teamMarkers.TryGetValue(_teamId.Value, out TeamMarkerView markerView))
+                markerView.Marker.style.opacity = isActive ? 0f : 1f;
         }
 
-        public void UpdateTeamMarker(int teamIndex, TeamTrackProgress progress)
+        public void ChangeTeamIcon(int teamIndex, Sprite newIcon)
         {
-            float normalizedPosition = GetSectionNormalizedPosition(progress);
+            if (!_teamMarkers.TryGetValue(teamIndex, out TeamMarkerView markerView))
+                return;
 
-            if (teamIndex == 0)
-                _team1TargetPosition = normalizedPosition;
-            else if (teamIndex == 1)
-                _team2TargetPosition = normalizedPosition;
+            markerView.Icon.style.backgroundImage = new StyleBackground(newIcon);
         }
     }
 }

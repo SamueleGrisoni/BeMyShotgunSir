@@ -41,8 +41,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
-
-            _viewModel.OnTeamTrackProgressChanged += UpdateTeamProgress;
         }
 
 
@@ -55,9 +53,11 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void UpdateTeamProgress()
         {
-            // foreach (KeyValuePair<int, RaceTeamData> teamsId in _viewModel.TeamData)
+            // IReadOnlyDictionary<int, TeamTrackProgress> teamTrackProgress = new Dictionary<int, TeamTrackProgress>(_viewModel.TeamTrackProgress);
+
+            // foreach (KeyValuePair<int, TeamTrackProgress> teamsIdValuePair in teamTrackProgress)
             // {
-            //     _topBarViewController.UpdateTeamMarker(teamsId.Key, _viewModel.TeamTrackProgress[teamsId.Key]);
+            //     _topBarViewController.UpdateTeamMarker(teamsIdValuePair.Key, _viewModel.TeamTrackProgress[teamsIdValuePair.Key]);
             // }
         }
 
