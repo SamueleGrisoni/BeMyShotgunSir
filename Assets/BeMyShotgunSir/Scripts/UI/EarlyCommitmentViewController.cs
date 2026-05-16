@@ -42,6 +42,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _role = _finalBindSource.Role;
 
             _inputPublisher.OnBatteryChargeEarlyCommitment += ReadEarlyCommitmentValue;
+            _inputPublisher.OnEarlyCommitmentExecuted += EarlyCommitmentExecutedHandler;
         }
 
         #region Visual Elements
@@ -61,6 +62,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private float _commitmentValue;
         private float _currentCommitmentFill;
         private bool _updateEarlyCommitment;
+        private float _lastCommitmentValue = 0f;
         #endregion
 
         private void OnEnable()
@@ -110,6 +112,12 @@ namespace BeMyShotgunSir.Scripts.UI
         #region Handlers
         private void ArrowLeftHandler(PointerDownEvent evt) => _inputPublisher.PressEarlyCommitment(CommitmentDirection.Left);
         private void ArrowRightHandler(PointerDownEvent evt) => _inputPublisher.PressEarlyCommitment(CommitmentDirection.Right);
+        private void EarlyCommitmentExecutedHandler(float value, CommitmentDirection direction)
+        {
+            _updateEarlyCommitment = false;
+            _lastCommitmentValue = value;
+            ShowEarlyCommitment(false);
+        }
 
         #endregion
 
@@ -118,17 +126,10 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             _commitmentValue = commitmentValue;
 
-            // Log.DLazy(() => $"[{GetInstanceID()}] GO={gameObject.name} Role={_role} " + $"Value={commitmentValue} HUD={_hudDocument.GetInstanceID()} " + $"Publisher={_inputPublisher}", this);
-
-            if (commitmentValue > 0f)
+            if (commitmentValue >= _lastCommitmentValue)
             {
                 _updateEarlyCommitment = true;
                 ShowEarlyCommitment(true);
-            }
-            else
-            {
-                _updateEarlyCommitment = false;
-                ShowEarlyCommitment(false);
             }
         }
 
@@ -145,7 +146,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _commitBarMaskLeft.style.height = Length.Percent(_currentCommitmentFill * 100);
             _commitBarMaskRight.style.height = Length.Percent(_currentCommitmentFill * 100);
 
-            // Log.DLazy(() => $"[{GetInstanceID()}] Written height: {_commitBarMaskLeft.style.height}", this);
         }
 
         private void ShowEarlyCommitment(bool show) => _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
