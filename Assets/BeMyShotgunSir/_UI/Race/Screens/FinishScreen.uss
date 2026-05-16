@@ -1,0 +1,84 @@
+.finish-screen-root {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.finish-screen-root.hidden {
+    display: none;
+}
+
+.finish-screen-container {
+    width: 78%;
+    max-width: 1200px;
+    height: 650px;
+
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    background-color: rgba(0, 0, 0, 0.72);
+    border-radius: 48px;
+    border-width: 5px;
+    border-color: rgba(255, 255, 255, 0.18);
+
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+.result-label {
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 150px;
+    color: white;
+    -unity-text-align: middle-center;
+}
+
+.subtitle-label {
+    margin-top: 28px;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 58px;
+    color: rgba(255, 255, 255, 0.8);
+    -unity-text-align: middle-center;
+}
+
+.back-to-title-button {
+    width: 70%;
+    height: 120px;
+    margin-top: 60px;
+
+    border-radius: 32px;
+    border-width: 4px;
+    border-color: rgba(255, 255, 255, 0.2);
+
+    background-color: rgba(255, 255, 255, 0.08);
+
+    justify-content: center;
+    align-items: center;
+}
+
+.back-to-title-label {
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 70px;
+    color: white;
+    -unity-text-align: middle-center;
+}
+
+.finish-screen-root.win .finish-screen-container,
+.finish-screen-root.win .back-to-title-button {
+    border-color: rgba(60, 255, 120, 0.55);
+}
+
+.finish-screen-root.win .result-label {
+    color: rgb(60, 255, 120);
+}
+
+.finish-screen-root.lose .finish-screen-container,
+.finish-screen-root.lose .back-to-title-button {
+    border-color: rgba(255, 70, 70, 0.55);
+}
+
+.finish-screen-root.lose .result-label {
+    color: rgb(255, 70, 70);
+}

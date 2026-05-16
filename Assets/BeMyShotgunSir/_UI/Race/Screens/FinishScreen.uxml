@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Race/Screens/EndRace.uss?fileID=7433441132597879392&amp;guid=e08190658548a408489f32e35442d00d&amp;type=3#EndRace"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <ui:VisualElement name="FinishScreenRoot" class="finish-screen-root win">
+        <ui:VisualElement name="FinishScreenContainer" class="finish-screen-container">
+            <ui:Label name="ResultLabel" text="YOU WIN" class="result-label"/>
+            <ui:Label name="SubtitleLabel" text="First place!" class="subtitle-label"/>
+            <ui:Button name="BackToTitleButton" class="back-to-title-button">
+                <ui:Label text="BACK TO TITLE" class="back-to-title-label"/>
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

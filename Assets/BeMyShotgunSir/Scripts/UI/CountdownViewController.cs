@@ -14,11 +14,13 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private float _startVisibleTime = 1f;
         [SerializeField] private float _fadeOutTime = 0.35f;
 
+        #region Bindings
         private RaceCommand _command;
         private RaceViewModel _viewModel;
         private IRoadManager _roadManager;
         private IInputPublisher _inputPublisher;
         private RaceRole _role;
+        #endregion
 
         private VisualElement _root;
         private VisualElement _countdownOverlay;
