@@ -351,6 +351,94 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1106951181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1106951182}
+  m_Layer: 0
+  m_Name: Screens
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1106951182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106951181}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1599854039}
+  - {fileID: 1229709095}
+  m_Father: {fileID: 7413676381070152290}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1229709094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1229709095}
+  - component: {fileID: 1229709096}
+  m_Layer: 0
+  m_Name: EndRace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1229709095
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229709094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1106951182}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1229709096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229709094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1001 &1464196781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -413,6 +501,77 @@ Light:
   m_CorrespondingSourceObject: {fileID: 8914154406358149495, guid: 112dfdd88088b064981c134e85ee92ed, type: 3}
   m_PrefabInstance: {fileID: 1464196781}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1599854038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1599854039}
+  - component: {fileID: 1599854041}
+  - component: {fileID: 1599854040}
+  m_Layer: 0
+  m_Name: Countdown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1599854039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599854038}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1106951182}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1599854040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599854038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deaab83a2e19943998ac5b2c742362be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _hudDriverDocument: {fileID: 1599854041}
+  _startVisibleTime: 1
+  _fadeOutTime: 0.35
+--- !u!114 &1599854041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599854038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 6f34a4868e81b47c6acf07333a6ea518, type: 3}
+  m_SortingOrder: 99
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &1688697586
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +621,7 @@ MonoBehaviour:
   - _interfaceOwner: {fileID: 8767721996653740568}
   - _interfaceOwner: {fileID: 9112538945298442203}
   - _interfaceOwner: {fileID: 730762526729746982}
+  - _interfaceOwner: {fileID: 9112538945298442204}
   - _interfaceOwner: {fileID: 6188972351026919125}
   - _interfaceOwner: {fileID: 5654097745478332494}
   - _interfaceOwner: {fileID: 2652506528059584067}
@@ -470,6 +630,7 @@ MonoBehaviour:
   - _interfaceOwner: {fileID: 6370771299400993094}
   - _interfaceOwner: {fileID: 6501492836862139208}
   - _interfaceOwner: {fileID: 1185433174447249757}
+  - _interfaceOwner: {fileID: 1599854040}
 --- !u!1 &606831962591698948
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +848,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.ShoutWheelViewController
   _hudDocument: {fileID: 8326886875512098115}
+  _shoutWheelIcons: {fileID: 11400000, guid: 8cec1a957ed774d55a56a2e335c6cf20, type: 2}
+  _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
 --- !u!114 &6501492836862139208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -825,6 +988,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.InfoBarViewController
   _hudDocument: {fileID: 8326886875512098115}
+  _feedbackIcons: {fileID: 11400000, guid: a5d0b54fea99a4fe4a9b1dfa1390b8aa, type: 2}
+  _visibleTime: 1.5
+  _outTransitionTime: 0.25
 --- !u!4 &7413676381070152290
 Transform:
   m_ObjectHideFlags: 0
@@ -839,6 +1005,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3412152515731622529}
+  - {fileID: 1106951182}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7990161449961118851
@@ -854,6 +1021,7 @@ GameObject:
   - component: {fileID: 8767721996653740568}
   - component: {fileID: 9112538945298442203}
   - component: {fileID: 730762526729746982}
+  - component: {fileID: 9112538945298442204}
   - component: {fileID: 6188972351026919125}
   - component: {fileID: 5654097745478332494}
   m_Layer: 0
@@ -938,6 +1106,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
   _topBarDocument: {fileID: 2670020652954514328}
   _markerLerpSpeed: 8
+--- !u!114 &9112538945298442204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7990161449961118851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e2fbbbce19b44c6797623e4869d6235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _hudDocument: {fileID: 2670020652954514328}
+  _shoutWheelIcons: {fileID: 11400000, guid: 8cec1a957ed774d55a56a2e335c6cf20, type: 2}
+  _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
+  _visibleTime: 1.5
+  _outTransitionTime: 0.25
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
