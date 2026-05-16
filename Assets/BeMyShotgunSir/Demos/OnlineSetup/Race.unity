@@ -890,6 +890,8 @@ MonoBehaviour:
   - {fileID: 6511426155499482266, guid: 57eef84a035bd4094a60b6ea0f58b981, type: 3}
   _forkTileRC: {fileID: 387596927975374334, guid: 067515a5a16e74d00a618697431dfcc8, type: 3}
   _junctionTileRC: {fileID: 7649554479988010358, guid: 9391d8aea948c4b248e316221f08ad5b, type: 3}
+  _fitParentPercentage: 0.95
+  _rowHeight: 80
   _fogSprites:
   - {fileID: -1032105966, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
   - {fileID: 1829867595, guid: 298a30ae241b2482eb85572aa9a4506d, type: 3}
