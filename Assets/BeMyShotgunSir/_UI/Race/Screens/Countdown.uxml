@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/Race/Screens/CountdownUSS.uss?fileID=7433441132597879392&amp;guid=304088386ef67424886fca4d2366d93b&amp;type=3#CountdownUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <ui:VisualElement name="CountdownRoot" class="countdown-root">
+        <ui:VisualElement name="CountdownOverlay" class="countdown-overlay">
+            <ui:VisualElement name="SafeArea" class="safe-area editor-preview countdown-safe-area">
+                <ui:VisualElement name="CountdownPanel" class="countdown-panel">
+                    <ui:Label text="start" name="CountdownLabel" class="countdown-label"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
