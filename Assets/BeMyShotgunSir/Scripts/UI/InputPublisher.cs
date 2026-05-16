@@ -59,6 +59,7 @@ namespace BeMyShotgunSir.Scripts.UI
         event Action<float> OnBatteryChargeEarlyCommitment;
         event Action<float, CommitmentDirection> OnEarlyCommitmentExecuted;
         event Action<WheelMessages> OnWheelMessageOnDriver;
+        event Action<DriverFeedback> OnDriverFeedbackToShotgun;
     }
     public class InputPublisher : IInputPublisher, IDriverInputConsumer, IShotgunInputConsumer
     {

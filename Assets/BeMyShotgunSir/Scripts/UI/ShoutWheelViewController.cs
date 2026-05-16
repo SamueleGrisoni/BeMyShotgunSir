@@ -1,6 +1,7 @@
 using System.Collections;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace BeMyShotgunSir.Scripts.UI
     public class ShoutWheelViewController : RaceBindTarget
     {
         [SerializeField] private UIDocument _hudDocument;
+        [SerializeField] private SOShoutWheelIcons _shoutWheelIcons;
+        [SerializeField] private SOPowerUpIcons _powerUpIcons;
 
         #region Bindings
         private RaceCommand _command;
@@ -40,6 +43,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
+            _viewModel.OnInventoryChanged += UpdatePowerUpIcon;
         }
 
         #region Visual Elements
@@ -50,9 +55,9 @@ namespace BeMyShotgunSir.Scripts.UI
         private VisualElement _powerUp;
         private VisualElement _sorry;
         private VisualElement _badDriver;
-        private VisualElement _faster;
-        private VisualElement _bravo;
-        private VisualElement _warning;
+        private VisualElement _fast;
+        private VisualElement _nicePlay;
+        private VisualElement _caution;
         #endregion
 
         #region private fields
@@ -78,12 +83,13 @@ namespace BeMyShotgunSir.Scripts.UI
             _powerUp = _shoutWheel.Q<VisualElement>("PowerUp");
             _sorry = _shoutWheel.Q<VisualElement>("Sorry");
             _badDriver = _shoutWheel.Q<VisualElement>("BadDriver");
-            _faster = _shoutWheel.Q<VisualElement>("Fast");
-            _bravo = _shoutWheel.Q<VisualElement>("NicePlay");
-            _warning = _shoutWheel.Q<VisualElement>("Caution");
+            _fast = _shoutWheel.Q<VisualElement>("Fast");
+            _nicePlay = _shoutWheel.Q<VisualElement>("NicePlay");
+            _caution = _shoutWheel.Q<VisualElement>("Caution");
 
             StartCoroutine(InitNextFrame());
 
+            AssignShoutWheelIcons();
             Show(false);
         }
 
@@ -97,9 +103,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _powerUp.RegisterCallback<PointerDownEvent>(PowerUpHandler);
             _sorry.RegisterCallback<PointerDownEvent>(SorryHandler);
             _badDriver.RegisterCallback<PointerDownEvent>(BadDriverHandler);
-            _faster.RegisterCallback<PointerDownEvent>(FastHandler);
-            _bravo.RegisterCallback<PointerDownEvent>(NicePlayHandler);
-            _warning.RegisterCallback<PointerDownEvent>(CautionHandler);
+            _fast.RegisterCallback<PointerDownEvent>(FastHandler);
+            _nicePlay.RegisterCallback<PointerDownEvent>(NicePlayHandler);
+            _caution.RegisterCallback<PointerDownEvent>(CautionHandler);
         }
 
         #region Handlers
@@ -146,6 +152,39 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
         #endregion
+
+        private void AssignShoutWheelIcons()
+        {
+            _powerUp.style.backgroundImage = null;
+            _powerUp.style.display = DisplayStyle.None;
+            _goLeft.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.GoLeft));
+            _goRight.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.GoRight));
+            _sorry.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.Sorry));
+            _badDriver.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.BadDriver));
+            _fast.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.Fast));
+            _nicePlay.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.NicePlay));
+            _caution.style.backgroundImage = new StyleBackground(_shoutWheelIcons.GetIcon(WheelMessages.Caution));
+        }
+
+        private void UpdatePowerUpIcon()
+        {
+            _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId);
+            if (teamId == null || !_viewModel.TeamInventories.TryGetValue(teamId.Value, out InventoryData inventory))
+                return;
+
+            if (inventory.SelectedSlot == null || inventory.SelectedSlot.Value.PowerUp == PowerUp.None)
+            {
+                _powerUp.style.backgroundImage = null;
+                _powerUp.style.display = DisplayStyle.None;
+                return;
+            }
+
+            Sprite icon = _powerUpIcons.GetIcon(inventory.SelectedSlot.Value.PowerUp);
+
+            _powerUp.style.backgroundImage = new StyleBackground(icon);
+        }
+
+
 
         public void Show(bool show)
         {
