@@ -242,8 +242,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 _chunksRemainingInCurrentState--;
             }
             OnCommonGenerated?.Invoke(crossroadSegmentChunkCount);
-            //TODO
-            //this check always fail in clients because they spawn a fork making their _numChunksGenerated desynced with the server
             if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 == _finishLineChunkNumber)
             {
                 GenerateFinalSequence();

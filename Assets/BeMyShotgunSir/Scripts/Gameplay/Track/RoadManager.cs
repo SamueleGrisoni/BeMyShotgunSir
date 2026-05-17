@@ -312,8 +312,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
         }
 
-        //TODO
-        //this method is called when the timer expires, it call the server track generator to set the final sequence of the track based on the first team progress
         [Server]
         private void OnTimerRaceExpired(RaceNetContext context)
         {
@@ -338,9 +336,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             RpcSetFinishLineChunkId(finishLineId);
         }
 
-
-        //TODO
-        //this method is called on clients when the server sets the finish line chunk id, it set the finish line chunk id on the track generator so that clients can properly spawn the finish line chunk when needed
         [ObserversRpc(ExcludeServer = true)]
         private void RpcSetFinishLineChunkId(int finishLineChunkId)
         {
