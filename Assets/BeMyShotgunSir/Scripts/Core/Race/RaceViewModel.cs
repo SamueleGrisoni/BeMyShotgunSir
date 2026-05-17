@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 {
     public interface IRaceDataView : IDataView
     {
+        IRaceNetStateRead NetState { get; }
         int ClientId { get; }
         ILobbyDataView LobbyDataView { get; }
         int? Seed { get; }
@@ -34,7 +35,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     {
         private bool _log = false;
         private LobbyViewModel _lobbyViewModel;
-        private IRaceNetStateSubscribe _netState;
+        private IRaceNetStateSubscribe _netStateSub;
+        private RaceNetStateStore _netState;
+        public IRaceNetStateRead NetState => _netState;
         public int ClientId { get; private set; }
 
         public event Action OnSeedChanged;
@@ -55,17 +58,17 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _netState.TeamTrackProgress;
         public bool ShowFinishScreen { get; private set; } = false;
 
-        public RaceViewModel(LobbyViewModel lobbyViewModel, IRaceNetStateSubscribe netState, int clientId)
+        public RaceViewModel(LobbyViewModel lobbyViewModel, RaceNetStateStore netState, int clientId)
         {
             ClientId = clientId;
             _lobbyViewModel = lobbyViewModel;
             _netState = netState;
-            _netState.Seed_Sub.OnChange += OnSeedChanged_Propagate;
-            _netState.PlayerStates_Sub.OnChange += OnPlayerStatesChanged_Propagate;
-            _netState.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;
-            _netState.PlayerInventories_Sub.OnChange += OnInventoryChanged_Propagate;
-            _netState.Leaderboard_Sub.OnChange += OnLeaderboardChanged_Propagate;
-            _netState.TeamTrackProgress_Sub.OnChange += OnTeamTrackProgressChanged_Propagate;
+            _netStateSub.Seed_Sub.OnChange += OnSeedChanged_Propagate;
+            _netStateSub.PlayerStates_Sub.OnChange += OnPlayerStatesChanged_Propagate;
+            _netStateSub.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;
+            _netStateSub.PlayerInventories_Sub.OnChange += OnInventoryChanged_Propagate;
+            _netStateSub.Leaderboard_Sub.OnChange += OnLeaderboardChanged_Propagate;
+            _netStateSub.TeamTrackProgress_Sub.OnChange += OnTeamTrackProgressChanged_Propagate;
         }
 
 
