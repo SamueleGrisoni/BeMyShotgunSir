@@ -25,6 +25,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         float BoostTimer { get; set; }
         float OilAnimationTimer { get; set; }
         bool IsOilAnimationActive { get; set; }
+        CommitmentInfo CommitmentInfo { get; }
         void ChangeState(IDrivingState state, ReplicateData data, bool isReplayed);
         void ApplyAcceleration(Vector3 direction, float accelerationForce, float maxSpeed);
         void ApplySteering(float steerAmount, float steeringForce);

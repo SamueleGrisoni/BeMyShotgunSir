@@ -31,7 +31,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
         }
         private void OnDrift(InputValue value) => IsDrifting = value.isPressed;
-        private void OnBoost(InputValue value) => IsBoosting = value.isPressed;
+        private void OnBoost(InputValue value)
+        {
+            if (value.isPressed)
+            {
+                _movementController.ExecuteBoost();
+            }
+        }
         private void OnLeftEarlyCommitment(InputValue value)
         {
             if (value.isPressed)

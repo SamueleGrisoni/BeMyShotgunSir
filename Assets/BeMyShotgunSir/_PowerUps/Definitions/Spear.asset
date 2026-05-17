@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42a165b484332544878123f10e65fb7, type: 3}
   m_Name: Spear
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Gameplay.PowerUps.SOSpear_PU
-  <PowerUpType>k__BackingField: 0
-  <PowerUpClass>k__BackingField: 0
-  <IsOwnerTargeted>k__BackingField: 0
-  <Duration>k__BackingField: 0
+  <PowerUpType>k__BackingField: 4
+  <PowerUpClass>k__BackingField: 2
+  <IsOwnerTargeted>k__BackingField: 1
+  <Duration>k__BackingField: 10

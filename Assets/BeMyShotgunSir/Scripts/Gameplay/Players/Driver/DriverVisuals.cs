@@ -22,7 +22,6 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
         [Header("Snapshot Interpolation")]
         [SerializeField] private float _teleportThreshold = 3f;
-        //[SerializeField] private float _smoothingSpeedSlow = 15f;
 
         [Header("Visual Effects")]
         [SerializeField] private Transform _handle;
@@ -30,7 +29,8 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private List<TrailRenderer> _trailRendereresDrift = new List<TrailRenderer>();
         [SerializeField] private List<ParticleSystem> _boostParticles = new List<ParticleSystem>();
         [SerializeField] private List<ParticleSystem> _shieldParticles = new List<ParticleSystem>();
-        [SerializeField] private SkinnedMeshRenderer _armorOverlayMeshRenderer;
+        [SerializeField] private SkinnedMeshRenderer _overlayMeshRenderer;
+        [SerializeField] private GameObject _aimDecalProjector;
 
         private Material _armorOverlayMaterial;
 
@@ -47,17 +47,21 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         private double _prevSnapshotTime;
         private double _nextSnapshotTime;
         private bool _hasFirstSnapshot;
+        private float _timeSinceLastTick = 0f;
 
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
             TimeManager.OnPostTick += OnPostTick;
 
-            if (_armorOverlayMeshRenderer.materials.Length > 1)
+            if (_overlayMeshRenderer.materials.Length > 2)
             {
-                _armorOverlayMaterial = _armorOverlayMeshRenderer.materials[1];
+                _armorOverlayMaterial = _overlayMeshRenderer.materials[1];
                 _armorOverlayMaterial.SetFloat("_OverlayAlpha", 0.0f);
             }
+
+            if (_aimDecalProjector != null)
+                _aimDecalProjector.SetActive(false);
         }
 
         public override void OnStopNetwork()
@@ -81,10 +85,12 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             };
             _nextSnapshotTime = TimeManager.TicksToTime(TimeManager.LocalTick);
             _hasFirstSnapshot = true;
+            _timeSinceLastTick = 0f;
         }
 
         private void LateUpdate()
         {
+            _timeSinceLastTick += Time.deltaTime;
 
             if (IsServerInitialized)
             {
@@ -130,7 +136,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             }
 
             double now = TimeManager.TicksToTime(TimeManager.LocalTick) + Time.deltaTime;
-            float alpha = Mathf.Clamp01((float)((now - _prevSnapshotTime) / snapshotSpan));
+            float alpha = Mathf.Clamp01(_timeSinceLastTick / (float)TimeManager.TickDelta);
 
             float dist = Vector3.Distance(_parent.position, _prevSnapshot.Position);
             if (dist > _teleportThreshold)
@@ -141,9 +147,9 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 return;
             }
 
-            _parent.position = Vector3.Lerp(_prevSnapshot.Position, _nextSnapshot.Position, alpha);
-            _parent.rotation = Quaternion.Slerp(_prevSnapshot.ParentRotation, _nextSnapshot.ParentRotation, alpha);
-            _sidecar.localRotation = Quaternion.Slerp(_prevSnapshot.SidecarLocalRotation, _nextSnapshot.SidecarLocalRotation, alpha);
+            _parent.position = Vector3.LerpUnclamped(_prevSnapshot.Position, _nextSnapshot.Position, alpha);
+            _parent.rotation = Quaternion.LerpUnclamped(_prevSnapshot.ParentRotation, _nextSnapshot.ParentRotation, alpha);
+            _sidecar.localRotation = Quaternion.LerpUnclamped(_prevSnapshot.SidecarLocalRotation, _nextSnapshot.SidecarLocalRotation, alpha);
         }
 
         private void AnimateSteer()
@@ -206,6 +212,12 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             {
                 _armorOverlayMaterial.SetFloat("_OverlayAlpha", isActive ? 1.0f : 0.0f);
             }
+        }
+
+        public void SetAimVisualEffects(bool isActive)
+        {
+            if (_aimDecalProjector != null)
+                _aimDecalProjector.SetActive(isActive);
         }
 
         public void SetShieldVisualEffects(bool isActive)

@@ -76,7 +76,8 @@ MonoBehaviour:
   _shieldParticles:
   - {fileID: 4595919615682826461}
   - {fileID: 9123714919020620063}
-  _armorOverlayMeshRenderer: {fileID: 4961554435841543028}
+  _overlayMeshRenderer: {fileID: 4961554435841543028}
+  _aimDecalProjector: {fileID: 5968083873898975094}
 --- !u!1 &1542830160653573291
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,7 +211,7 @@ MonoBehaviour:
   _isDebugInputEnabled: 1
   _debugPowerUp: 0
   _onGrassBufferMin: 10
-  _debugArmor: 0
+  _debugAim: 0
 --- !u!54 &2139825348868955056
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -685,6 +686,66 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.92602587, y: 0.5651818, z: 1.6678932}
   m_Center: {x: -0.036987066, y: 0.011780769, z: 0.030314803}
+--- !u!1 &5968083873898975094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2614781135319171378}
+  - component: {fileID: 406944877909977608}
+  m_Layer: 0
+  m_Name: Decal Projector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2614781135319171378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5968083873898975094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.022, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6190171562437922324}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &406944877909977608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5968083873898975094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.DecalProjector
+  m_Material: {fileID: 2100000, guid: 5de2989c08f1b3c46a496a7e562baa1f, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_RenderingLayerMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0.5}
+  m_Size: {x: 2.2, y: 2.2, z: 1}
+  m_FadeFactor: 1
+  version: 1
+  m_DecalLayerMask: 1
 --- !u!1 &8924365376436740663
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,7 +1209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -1156,6 +1217,10 @@ PrefabInstance:
       objectReference: {fileID: 4855638414264437767, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
     - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f8aee5105049e9447b7a68e3486973d0, type: 2}
+    - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 2100000, guid: 88cdd74014ee2444bb7dcc7f052699ca, type: 2}
     - target: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
@@ -1234,10 +1299,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.22
       objectReference: {fileID: 0}
+    - target: {fileID: 7083718821574842431, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083718821574842431, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 68e61076405a7d4418f36245a3d81d23, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3504026666543589728, guid: 9392c8d687b88474d99804d995d01712, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1580024532620746182, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2614781135319171378}
     - targetCorrespondingSourceObject: {fileID: 1151504011689095969, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2002184963426932308}

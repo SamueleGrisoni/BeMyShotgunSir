@@ -63,6 +63,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             ClientId = clientId;
             _lobbyViewModel = lobbyViewModel;
             _netState = netState;
+            _netStateSub = netState;
             _netStateSub.Seed_Sub.OnChange += OnSeedChanged_Propagate;
             _netStateSub.PlayerStates_Sub.OnChange += OnPlayerStatesChanged_Propagate;
             _netStateSub.TeamData_Sub.OnChange += OnRaceTeamDataChanged_Propagate;

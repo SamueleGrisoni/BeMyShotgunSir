@@ -140,39 +140,32 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             }
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.Armor);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.Armor);
             }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.Invisibility);
-                Log.ELazy(() => $"Added Invisibility power-up to team {teamData.TeamId} for testing.", this);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.Invisibility);
+
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.RerollPowerUp);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.RerollPowerUp);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.RoadBlock);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.RoadBlock);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.Shield);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.Shield);
             }
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.Spear);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.Spear);
             }
             if (Input.GetKeyDown(KeyCode.Alpha6))
             {
-                _raceNetState.TryGetTeamDataByPlayerId(LocalConnection.ClientId, out RaceTeamData teamData);
-                AddPowerUpToTeam(teamData.TeamId, PowerUp.StealPowerUp);
+                DebugAddPowerUpToTeam_ServerRpc(LocalConnection.ClientId, PowerUp.StealPowerUp);
             }
             if (Input.GetKeyDown(KeyCode.U))
             {
@@ -182,6 +175,16 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 ActivatePowerUp(new InfoUsePowerUp(teamData.TeamId, selectedPowerUp));
             }
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void DebugAddPowerUpToTeam_ServerRpc(int clientId, PowerUp powerUp)
+        {
+            _raceNetState.TryGetTeamDataByPlayerId(clientId, out RaceTeamData teamData);
+            AddPowerUpToTeam(teamData.TeamId, powerUp);
+            Log.ELazy(() => $"Added {powerUp} power-up to team {teamData.TeamId} for testing.", this);
+
+        }
+
         public void OnDisable() => UnsubscribeEvents();
 
         private void UnsubscribeEvents() => PowerUpSpawnable.OnPowerUpSpawned -= OnPowerUpSpawned;
@@ -249,10 +252,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         private void Update()
         {
+            DebugUpdate(); //DEBUG
+
             if (!IsServerInitialized)
                 return;
-
-            DebugUpdate(); //DEBUG
 
             _tickTimer += Time.deltaTime;
             if (_tickTimer >= _tICK_INTERVAL)
@@ -393,6 +396,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             if (targetTeamData.IsTargetedByPowerUp(powerUpRuntime.ActivePowerUpData.PowerUp))
             {
                 Log.WLazy(() => $"Trying to change target of power-up instance {instanceId} to team {targetTeamId} but this team is already targeted by the same power-up.", this);
+                return;
+            }
+            if (targetTeamData.ActivePowerUpInfo.isShieldActive)
+            {
+                Log.WLazy(() => $"Target team {targetTeamId} has shield power up", this);
                 return;
             }
             SetPowerUpTarget(instanceId, targetTeamId);

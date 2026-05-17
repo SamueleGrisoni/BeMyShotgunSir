@@ -36,6 +36,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Oil,
     }
 
+    public enum CommitmentInfo
+    {
+        EnableNotUsed,
+        EnableUsed,
+        DisableOnSplit,
+        Disable
+    }
+
     public struct ReplicateData : IReplicateData
     {
         public float SteerInput;
@@ -217,6 +225,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         bool IDrivingStateContext.IsOnwer => IsOwner;
         bool IDrivingStateContext.IsServer => IsServerInitialized;
+        CommitmentInfo IDrivingStateContext.CommitmentInfo => _commitmentInfo.Value;
 
         #endregion
 
@@ -256,8 +265,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private int _currentChunkId;
         private float _currentPossibleChargeEarlyCommitment;
 
-        private readonly SyncVar<bool> _earlyCommitmentNotUsed = new SyncVar<bool>(true);
-        private readonly SyncVar<bool> _earlyCommitmentEnabled = new SyncVar<bool>(false);
+        private readonly SyncVar<CommitmentInfo> _commitmentInfo = new(CommitmentInfo.Disable);
+
+        public event Action<DrivingStateTpye> OnDrivingStateChanged;
 
         #endregion
 
@@ -280,6 +290,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _isBoosting = false;
             _isOilAnimationActive = false;
             _commitmentDirection = CommitmentDirection.Default;
+            _commitmentCollider.gameObject.layer = LayerMask.NameToLayer("DefaultWallCollider");
             _currentChunkId = 0;
             _currentPossibleChargeEarlyCommitment = 0;
         }
@@ -332,14 +343,21 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public void ExecuteBoost() => _isBoosting = true;
         private void ExecuteInputEarlyCommitment(CommitmentDirection direction)
         {
-            if (_earlyCommitmentEnabled.Value && _earlyCommitmentNotUsed.Value)
+            if (_commitmentInfo.Value == CommitmentInfo.EnableNotUsed)
+            {
                 _commitmentDirection = direction;
+                _isBoosting = true;
+            }
+
             ExecuteEarlyCommitment(direction);
         }
         public void ExecuteEarlyCommitmentDebug(CommitmentDirection direction)
         {
-            if (_earlyCommitmentEnabled.Value && _earlyCommitmentNotUsed.Value)
+            if (_commitmentInfo.Value == CommitmentInfo.EnableNotUsed)
+            {
                 _commitmentDirection = direction;
+                _isBoosting = true;
+            }
             ExecuteEarlyCommitment(direction);
         }
 
@@ -432,7 +450,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (_isDebugInputEnabled)
             {
                 UpdateActiveDriftIntent(_input.IsDrifting, _input.SteerInput);
-                rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _input.IsBoosting, _input.IsStarting, _commitmentDirection);
+                rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _isBoosting, _input.IsStarting, _commitmentDirection);
+                _isBoosting = false;
             }
             else
             {
@@ -452,8 +471,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _activeDriftIntent = Mathf.Sign(steerInput);
         }
 
-        [SerializeField] private bool _debugArmor;
-
+        [SerializeField] private bool _debugAim;
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
@@ -488,10 +506,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
             }
 
-            //_commitmentCollider.gameObject.layer = GetCommitmentCollisionLayer(data.CommitmentDirection);
-            _commitmentCollider.gameObject.layer = data.CommitmentDirection == CommitmentDirection.Left
-                ? LayerMask.NameToLayer("RightCollider")
-                : LayerMask.NameToLayer("LeftCollider");
+            _commitmentCollider.gameObject.layer = GetCommitmentCollisionLayer(data.CommitmentDirection);
 
             _obstacleCollider.gameObject.layer = teamData.ActivePowerUpInfo.isArmorActive
                 ? LayerMask.NameToLayer("ArmorLayer")
@@ -520,32 +535,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
 
             _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
-            _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive); // TODO aggiustare
+            _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive);
+            _driverVisual.SetAimVisualEffects(teamData.ActivePowerUpInfo.isSpearPowerUpActive || teamData.ActivePowerUpInfo.isStealPowerUpActive);
         }
 
-        /*
         private LayerMask GetCommitmentCollisionLayer(CommitmentDirection direction)
         {
-            if (_earlyCommitmentEnabled.Value)
+            if (_commitmentInfo.Value == CommitmentInfo.EnableUsed)
             {
-                switch (direction)
-                {
-                    case CommitmentDirection.Left:
-                        return LayerMask.NameToLayer("RightCollider");
-                    case CommitmentDirection.Right:
-                        return LayerMask.NameToLayer("LeftCollider");
-                    case CommitmentDirection.Default:
-                        return LayerMask.NameToLayer("DefaultWallCollider");
-                    default:
-                        return LayerMask.NameToLayer("DefaultWallCollider");
-                }
+                return direction == CommitmentDirection.Left ? LayerMask.NameToLayer("RightCollider") : LayerMask.NameToLayer("LeftCollider");
             }
             else
-            {
                 return LayerMask.NameToLayer("DefaultWallCollider");
-            }
         }
-        */
 
         private void ComputeCollisions(RaceTeamData teamData)
         {
@@ -676,7 +678,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         #region IDrivingStateContext methods
 
-        void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data, bool isReplayed)
+        private void ChangeState(IDrivingState state, ReplicateData data, bool isReplayed)
         {
             _currentDrivingState?.Exit(this, data, isReplayed);
             _previousDrivingState = _currentDrivingState;
@@ -684,7 +686,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentDrivingState = state;
             _currentStateType = GetStateType(state);
             _currentDrivingState?.Enter(this, data, isReplayed);
+
+            if (!isReplayed)
+            {
+                OnDrivingStateChanged?.Invoke(_currentStateType);
+            }
         }
+
+        void IDrivingStateContext.ChangeState(IDrivingState state, ReplicateData data, bool isReplayed) => ChangeState(state, data, isReplayed);
 
         GroundType IDrivingStateContext.CheckGround()
         {
@@ -804,13 +813,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                                 float position = trackProgress.NextSpecialChunkId - _currentChunkId;
                                 _currentPossibleChargeEarlyCommitment = (position / lenght) * 100;
                                 Server_BatteryEarlyCommitment(_currentPossibleChargeEarlyCommitment);
-                                Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
-                                _earlyCommitmentEnabled.Value = true;
+
+                                if (_commitmentInfo.Value != CommitmentInfo.EnableUsed)
+                                    _commitmentInfo.Value = CommitmentInfo.EnableNotUsed;
+                            }
+                            else if (lastSpecialChunk.Type == RoadChunkType.STARTING_CROSSROAD)
+                            {
+                                _commitmentInfo.Value = CommitmentInfo.DisableOnSplit;
                             }
                             else
                             {
-                                _earlyCommitmentEnabled.Value = false;
-                                _earlyCommitmentNotUsed.Value = true;
+                                _commitmentInfo.Value = CommitmentInfo.Disable;
                             }
                         }
                     }
@@ -839,13 +852,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [ServerRpc]
         private void ExecuteEarlyCommitment(CommitmentDirection commitmentDirection)
         {
-            if (_earlyCommitmentNotUsed.Value && _earlyCommitmentEnabled.Value)
+            if (_commitmentInfo.Value == CommitmentInfo.EnableNotUsed)
             {
                 _currentBatteryCharge = Math.Min(_currentBatteryCharge + _currentPossibleChargeEarlyCommitment, 200);
                 Server_EarlyCommitmentExecuted(_currentPossibleChargeEarlyCommitment, commitmentDirection);
 
-                Log.DLazy(() => $"Commitment executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
-                _earlyCommitmentNotUsed.Value = false;
+                Log.DLazy(() => $"Commitmen executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
+                _commitmentInfo.Value = CommitmentInfo.EnableUsed;
             }
         }
 
@@ -885,6 +898,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         public int? GetTeamId() => TeamId;
+
+        public void StartRace() => ChangeState(_normalState, default, false); // TODO da chi la faccio chiamare?
 
         #endregion
     }
