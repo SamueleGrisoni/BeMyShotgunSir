@@ -122,7 +122,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4950890425774858028}
   - component: {fileID: 1613331064374039297}
-  - component: {fileID: -1172100588028618891}
+  - component: {fileID: 1961472387466935594}
+  - component: {fileID: 2955249601882303458}
   m_Layer: 0
   m_Name: RoadBlock
   m_TagString: Untagged
@@ -172,7 +173,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: -1172100588028618891}
+  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -183,7 +184,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584228287960063526
+  _initializedTimestamp: -8584225922746213160
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -202,7 +203,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 19
+  <PrefabId>k__BackingField: 21
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 14777544290216600814
   SceneId: 0
@@ -211,7 +212,7 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
---- !u!114 &-1172100588028618891
+--- !u!114 &1961472387466935594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,12 +221,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 1499574131225770936}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Script: {fileID: 11500000, guid: 4944798ca9434d89bb9fa9f551a4a6d4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
-  _componentIndexCache: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.PowerUps.RoadBlockNO
+  _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1613331064374039297}
-  _networkObjectCache: {fileID: 1613331064374039297}
+  _networkObjectCache: {fileID: 0}
+  _lifeTime: 30
+  _blinkingDuration: 5
+  _blinkingFrequency: 0.15
+  _renderers: []
+--- !u!114 &2955249601882303458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499574131225770936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4944798ca9434d89bb9fa9f551a4a6d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.PowerUps.RoadBlockNO
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1613331064374039297}
+  _networkObjectCache: {fileID: 0}
+  _lifeTime: 30
+  _blinkingDuration: 5
+  _blinkingFrequency: 0.15
+  _renderers:
+  - {fileID: 9044379904967110125}
+  - {fileID: 255080633636935960}
+  - {fileID: 4962348672058493883}
+  - {fileID: 8978420632973073710}
+  - {fileID: 8652079627691733434}
+  - {fileID: 8030614390365666116}
+  - {fileID: 1968593143652070627}
+  - {fileID: 2922339493474364306}
 --- !u!1 &3008626075401871630
 GameObject:
   m_ObjectHideFlags: 0

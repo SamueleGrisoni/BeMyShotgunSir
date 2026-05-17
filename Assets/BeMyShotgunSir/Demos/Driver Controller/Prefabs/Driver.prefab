@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baca04ed9a7b7b748adeae5170db7296, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Gameplay.Players.Driver.DriverVisuals
-  _componentIndexCache: 255
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4726359609289288218}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 4726359609289288218}
   _audioSource: {fileID: 6145024473074168795}
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 7864906868263305960}
@@ -268,7 +268,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584231495647204995
+  _initializedTimestamp: -8584225949737244736
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -746,10 +746,10 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 4678414540309126450}
-  - {fileID: 0}
   - {fileID: 3998145195957461452}
   - {fileID: 7387308273733314743}
   - {fileID: 689659619137367902}
+  - {fileID: 7322070008880661126}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
   - {fileID: 3192123921943259604}
@@ -761,7 +761,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584231495647204995
+  _initializedTimestamp: -8584225949737244736
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -780,12 +780,12 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 6
+  <PrefabId>k__BackingField: 9
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7269134423280839538
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: -1.18319, y: -0.73, z: 1.16065}
+    Position: {x: 0, y: 0, z: 1.361}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
@@ -846,10 +846,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca51c805c277090c3bccd1f2705d02f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DriverController
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 4726359609289288218}
   _movementController: {fileID: 7864906868263305960}
+  _roadBlockPrefab: {fileID: 1613331064374039297, guid: 9b3a8f3d84ce6814295302794733b2d6, type: 3}
+  _backwardOffset: 2.5
+  _rightOffset: 4
 --- !u!114 &7387308273733314743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -862,7 +865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f5c37840766a0f44bbdadb7f6487b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DriverInput
-  _componentIndexCache: 3
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 4726359609289288218}
   _movementController: {fileID: 7864906868263305960}
@@ -897,7 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 4
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 4726359609289288218}
   _componentConfiguration: 0

@@ -30,8 +30,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         //specific
         public IDriverInputConsumer _inputConsumer;
         [SerializeField] private MovementController _movementController;
+        [SerializeField] private NetworkObject _roadBlockPrefab;
+        [SerializeField] private float _backwardOffset = 5f;
+        [SerializeField] private float _rightOffset = 2f;
         public Transform GetMovementTransform() => _movementController != null ? _movementController.transform : null;
-
+        private DriverVisuals _driverVisuals;
         public void SetName(string name) => transform.name = name;
 
         public void Initialize(RaceNetContext context, TeamNetController teamNetController, ShotgunController shotgunController)
@@ -48,7 +51,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 Log.WLazy(() => $"DriverController initialized with missing parameters.", this);
             else
                 Log.DLazy(() => $"DriverController initialized with teamId {_teamNetController.TeamId}.", this, _log);
-
+            _driverVisuals = transform.GetComponentInChildren<DriverVisuals>();
             _isInitialized = true;
         }
 
@@ -68,7 +71,28 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
             bool isMemberOfTeam = _netState.IsTeamMember(TeamId.Value);
             bool shouldHide = isApplying && !isMemberOfTeam;
-            transform.GetComponentInChildren<DriverVisuals>()._visualModel.gameObject.SetActive(!shouldHide);
+            _driverVisuals._visualModel.gameObject.SetActive(!shouldHide);
+        }
+
+        public void ApplyRoadBlockEffect()
+        {
+            if (_roadBlockPrefab == null)
+            {
+                Log.WLazy(() => $"Road block prefab is not assigned on DriverController for team {TeamId}. Ignoring.", this);
+                return;
+            }
+
+            Transform driverTransform = _driverVisuals.transform;
+            Vector3 spawnPosition = driverTransform.position
+                                    - (driverTransform.forward * _backwardOffset)
+                                    + (driverTransform.right * _rightOffset);
+            spawnPosition.y = 0;
+            Quaternion spawnRotation = driverTransform.rotation;
+
+            NetworkObject roadBlock = Instantiate(_roadBlockPrefab, spawnPosition, spawnRotation);
+            ServerManager.Spawn(roadBlock);
+
+            Log.DLazy(() => $"Road block spawned for team {TeamId} at {spawnPosition}.", this, _log);
         }
 
         [TargetRpc]
