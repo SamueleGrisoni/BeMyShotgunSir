@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4886080715034315480}
   - component: {fileID: 4658527094936874373}
   - component: {fileID: 5404680429251562629}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: ReRollPU
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 3444060317035662404}
   - component: {fileID: 2135857333131009076}
   - component: {fileID: 5873034280654376919}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: ReRollVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}

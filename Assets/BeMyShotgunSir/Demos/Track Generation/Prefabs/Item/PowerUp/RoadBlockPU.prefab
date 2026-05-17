@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6000807659524062937}
   - component: {fileID: 2527358303422843918}
   - component: {fileID: 7871275312412488057}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: RoadBlockPU
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 6343117132214782764}
   - component: {fileID: 7128879565705571988}
   - component: {fileID: 3654090359023583363}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: RoadBlockVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
