@@ -35,7 +35,7 @@ MonoBehaviour:
   - {fileID: 8975137325066715151, guid: 7d3baff4d37c8f8439412ec94ee349e1, type: 3}
   <RoadChunkInitPoolSize>k__BackingField: 10
   <StraightPercentage>k__BackingField: 30
-  <MinimumTrackLength>k__BackingField: 2
-  <MaximumTrackLength>k__BackingField: 2
-  <MinSplitRoadChunkCount>k__BackingField: 2
-  <MaxSplitRoadChunkCount>k__BackingField: 2
+  <MinimumTrackLength>k__BackingField: 6
+  <MaximumTrackLength>k__BackingField: 9
+  <MinSplitRoadChunkCount>k__BackingField: 3
+  <MaxSplitRoadChunkCount>k__BackingField: 6

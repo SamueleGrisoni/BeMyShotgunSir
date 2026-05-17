@@ -286,11 +286,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private void OnDestroy() => ObjectCaches<PredictionRigidbody>.StoreAndDefault(ref _predictionRigidbody);
 
-        private void Update()
-        {
-            Debug.Log($"CommitmentDirection: {_commitmentDirection} | Enabled: {_earlyCommitmentEnabled.Value}| Not used: {_earlyCommitmentNotUsed.Value}");
-        }
-
         #endregion
 
         #region Initialization
@@ -802,7 +797,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                             _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
 
                             PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
-                            Debug.Log($"Last special chunk id: {lastSpecialChunk.Type}");
                             if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE)
                             // TODO controllare che il sidecar non torna e commita in chunk che ha già passato
                             {
@@ -850,7 +844,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _currentBatteryCharge = Math.Min(_currentBatteryCharge + _currentPossibleChargeEarlyCommitment, 200);
                 Server_EarlyCommitmentExecuted(_currentPossibleChargeEarlyCommitment, commitmentDirection);
 
-                Log.DLazy(() => $"Commitmen executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
+                Log.DLazy(() => $"Commitment executed on chunk {_currentChunkId} | Added: {_currentPossibleChargeEarlyCommitment} | Battery: {_currentBatteryCharge}", this);
                 _earlyCommitmentNotUsed.Value = false;
             }
         }

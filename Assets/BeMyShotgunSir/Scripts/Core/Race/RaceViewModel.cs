@@ -104,6 +104,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnShowFinishScreenChanged?.Invoke();
         }
 
-        internal void SetShowCountdown() => OnShowCountdown?.Invoke();
+        public void SetShowCountdown() => OnShowCountdown?.Invoke();
     }
 }
