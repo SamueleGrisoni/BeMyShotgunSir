@@ -71,7 +71,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 308776339835955965}
   _networkObjectCache: {fileID: 0}
-  _powerUpType: 0
+  _powerUpType: 3
   _rotationSpeed: 45
   _bobHeight: 0.2
   _bobSpeed: 2

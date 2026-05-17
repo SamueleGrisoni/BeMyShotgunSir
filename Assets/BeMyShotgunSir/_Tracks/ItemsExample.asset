@@ -26,7 +26,6 @@ MonoBehaviour:
   - {fileID: -4340163266048404220, guid: 18c6e78af06956e4ca0fef1acd46414f, type: 3}
   <PowerUpItems>k__BackingField:
   - {fileID: 9062041027473337559, guid: 0437e1c6d6de1f949802d3192a987eb0, type: 3}
-  - {fileID: 8526612701864604738, guid: 347d5303f78a71c4a80eecb5563118d9, type: 3}
   - {fileID: 6444803088787013438, guid: dca4a3d9f5ed3af40ace7b50436a205a, type: 3}
   - {fileID: 4623139604264403000, guid: 364bf66b6769fb6429822a9493b45224, type: 3}
   - {fileID: 6210797754188931263, guid: 252fdcfbb6254d444a8925cf0bad932e, type: 3}
