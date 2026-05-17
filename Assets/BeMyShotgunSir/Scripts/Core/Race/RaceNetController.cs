@@ -98,6 +98,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             _teamProgress = new Dictionary<int, TeamProgress>();
             RoadManager.OnCrossroadProvided += OnCrossroadProvided;
+            // TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
             _specialSegmentInfoQueue.Enqueue(new CrossroadSegmentInfo(RoadChunkType.START_LINE, 0));
         }
 
@@ -144,7 +145,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         isFinishLineNext: crossroad.type == RoadChunkType.START_LINE
                     );
 
-                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId - 1 == nextId)
+                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == nextId)
                         FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection);
 
                     if (!updated.IsEqual(value))
