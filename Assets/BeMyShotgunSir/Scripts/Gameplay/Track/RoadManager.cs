@@ -53,7 +53,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         private LinkedList<PooledRoadChunk> _activeRoadChunks;
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGeneratedProvided;
-        public static event Action<CrossroadSegmentInfo> OnCrossroadProvided;
+        public static event Action<SpecialSegmentInfo> OnSpecialSegmentInfoProvided;
         public static event Action<int> OnCommonGenerated;
         private bool _hasFinishLineSpawned = false;
 
@@ -62,7 +62,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             base.OnStartNetwork();
             TrackGenerator.OnSplitGenerated += PropagateOnSplitGenerated;
             TrackGenerator.OnCommonGenerated += PropagateCommonGenerated;
-            TrackGenerator.OnCrossroadGenerated += PropagateOnCrossroad;
+            TrackGenerator.OnSpecialSegmentGenerated += PropagateOnSpecialSegment;
         }
 
         public override void OnStartServer()
@@ -84,7 +84,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             base.OnStopServer();
             TrackGenerator.OnSplitGenerated -= PropagateOnSplitGenerated;
             TrackGenerator.OnCommonGenerated -= PropagateCommonGenerated;
-            TrackGenerator.OnCrossroadGenerated -= PropagateOnCrossroad;
+            TrackGenerator.OnSpecialSegmentGenerated -= PropagateOnSpecialSegment;
         }
 
         private void PropagateOnSplitGenerated(List<GeneratedRoadChunkInfoWithItems> splitInfo)
@@ -106,10 +106,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             OnSplitGeneratedProvided?.Invoke(splitInfo);
         }
 
-        private void PropagateOnCrossroad(CrossroadSegmentInfo crossroadSegmentInfo)
+        private void PropagateOnSpecialSegment(SpecialSegmentInfo specialSegmentInfo)
         {
-            Log.DLazy(() => "Invoking OnCrossroadProvided with info: " + crossroadSegmentInfo, this);
-            OnCrossroadProvided?.Invoke(crossroadSegmentInfo);
+            Log.DLazy(() => "Invoking OnCrossroadProvided with info: " + specialSegmentInfo, this);
+            OnSpecialSegmentInfoProvided?.Invoke(specialSegmentInfo);
         }
 
         private void PropagateCommonGenerated(int sectionLenght)

@@ -38,11 +38,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         }
     }
 
-    public struct CrossroadSegmentInfo
+    public struct SpecialSegmentInfo
     {
         public RoadChunkType type;
         public int chunkNumber;
-        public CrossroadSegmentInfo(RoadChunkType type, int chunkNumber)
+        public SpecialSegmentInfo(RoadChunkType type, int chunkNumber)
         {
             this.type = type;
             this.chunkNumber = chunkNumber;
@@ -75,7 +75,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public static event Action<List<GeneratedRoadChunkInfoWithItems>> OnSplitGenerated;
         public static event Action<int> OnCommonGenerated;
-        public static event Action<CrossroadSegmentInfo> OnCrossroadGenerated;
+        public static event Action<SpecialSegmentInfo> OnSpecialSegmentGenerated;
         public static event Action<int> OnFinishLineGenerated;
 
         public void Init(int seed)
@@ -149,6 +149,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     RoadChunkType.STRAIGHT,
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
+            OnSpecialSegmentGenerated?.Invoke(new SpecialSegmentInfo(RoadChunkType.START_LINE, _numChunksGenerated));
+
             _numChunksGenerated++;
             _trackBits.Enqueue(new GeneratedRoadChunkInfoWithItems(
                 new GeneratedRoadChunkInfo(
@@ -207,6 +209,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 new List<GeneratedItemInfo>()));
             _hasFinishLineBeenGenerated = true;
             OnFinishLineGenerated?.Invoke(_numChunksGenerated);
+            OnSpecialSegmentGenerated?.Invoke(new SpecialSegmentInfo(RoadChunkType.FINISH_LINE, _numChunksGenerated));
             return _numChunksGenerated;
         }
 
@@ -259,7 +262,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     RoadChunkType.STARTING_CROSSROAD,
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                 new List<GeneratedItemInfo>()));
-            OnCrossroadGenerated?.Invoke(new CrossroadSegmentInfo(RoadChunkType.STARTING_CROSSROAD, _numChunksGenerated));
+            OnSpecialSegmentGenerated?.Invoke(new SpecialSegmentInfo(RoadChunkType.STARTING_CROSSROAD, _numChunksGenerated));
 
             while (_chunksRemainingInCurrentState > 0)
             {
@@ -282,7 +285,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                     RoadChunkType.ENDING_CROSSROAD,
                     RoadChunkPosition.MIDDLE, _numChunksGenerated),
                     new List<GeneratedItemInfo>()));
-            OnCrossroadGenerated?.Invoke(new CrossroadSegmentInfo(RoadChunkType.ENDING_CROSSROAD, _numChunksGenerated));
+            OnSpecialSegmentGenerated?.Invoke(new SpecialSegmentInfo(RoadChunkType.ENDING_CROSSROAD, _numChunksGenerated));
 
             OnSplitGenerated?.Invoke(splitSegmentChunks.ToList());
             foreach (GeneratedRoadChunkInfoWithItems splitSegmentChunk in splitSegmentChunks)

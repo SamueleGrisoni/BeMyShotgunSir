@@ -77,7 +77,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private Dictionary<int, TeamProgress> _teamProgress;
         private float _leaderboardUpdateTimer = 0f;
         private float _raceTimer = 0f;
-        private Queue<CrossroadSegmentInfo> _specialSegmentInfoQueue = new Queue<CrossroadSegmentInfo>();
+        private Queue<SpecialSegmentInfo> _specialSegmentInfoQueue = new Queue<SpecialSegmentInfo>();
 
         [Tooltip("Interval (seconds) between leaderboard updates on the server.")]
         [SerializeField] private float _tICK_INTERVAL = 0.2f;
@@ -97,12 +97,12 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 Log.ELazy(() => $"One or more required components are missing on RaceNetController.", this);
 
             _teamProgress = new Dictionary<int, TeamProgress>();
-            RoadManager.OnCrossroadProvided += OnCrossroadProvided;
+            RoadManager.OnSpecialSegmentInfoProvided += OnSpecialSegmentInfoProvided;
             // TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
-            _specialSegmentInfoQueue.Enqueue(new CrossroadSegmentInfo(RoadChunkType.START_LINE, 0));
+            //_specialSegmentInfoQueue.Enqueue(new SpecialSegmentInfo(RoadChunkType.START_LINE, 0)); //TODO rimosso perchè ora SpecialSegmentInfo viene inviato dopo: startline, startingCrossroad, endingCrossroad e FinishLine
         }
 
-        private void OnCrossroadProvided(CrossroadSegmentInfo info) => _specialSegmentInfoQueue.Enqueue(info); //TODO ask for finish line to be sent here as well
+        private void OnSpecialSegmentInfoProvided(SpecialSegmentInfo info) => _specialSegmentInfoQueue.Enqueue(info); //TODO ask for finish line to be sent here as well
 
         public void OnEnable() =>
             RoadManager.OnRoadManagerSpawned += OnRoadManagerSpawned;
@@ -131,8 +131,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             // 2. Aggiornamento progresso del player (Scanning della coda)
             for (int i = 0; i < _specialSegmentInfoQueue.Count; i++)
             {
-                CrossroadSegmentInfo crossroad = _specialSegmentInfoQueue.ElementAt(i);
-                if (currentProgress.CurrentChunkId == crossroad.chunkNumber)
+                SpecialSegmentInfo specialChunk = _specialSegmentInfoQueue.ElementAt(i);
+                if (currentProgress.CurrentChunkId == specialChunk.chunkNumber)
                 {
                     int nextId = (_specialSegmentInfoQueue.Count > i + 1)
                         ? _specialSegmentInfoQueue.ElementAt(i + 1).chunkNumber
@@ -141,8 +141,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     var updated = new TeamTrackProgress(
                         currentProgress,
                         nextSpecialChunkId: nextId,
-                        lastSpecialChunkType: new PortalInfo(crossroad.chunkNumber, crossroad.type),
-                        isFinishLineNext: crossroad.type == RoadChunkType.START_LINE
+                        lastSpecialChunkType: new PortalInfo(specialChunk.chunkNumber, specialChunk.type),
+                        isFinishLineNext: specialChunk.type == RoadChunkType.START_LINE //TODO lore fai un check perchè la final line ha type FINISH_LINE (sam)
                     );
 
                     if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == nextId)
@@ -176,7 +176,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                     Log.DLazy(() => $"All players surpassed the finish line! ChunkId: {headChunkId}.", this, _log);
                 }
                 // Rimuoviamo e logghiamo
-                CrossroadSegmentInfo finishedCrossroad = _specialSegmentInfoQueue.Dequeue();
+                SpecialSegmentInfo finishedCrossroad = _specialSegmentInfoQueue.Dequeue();
                 _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
             }
