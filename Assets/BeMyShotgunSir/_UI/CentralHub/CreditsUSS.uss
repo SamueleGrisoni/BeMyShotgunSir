@@ -1,4 +1,4 @@
-.settings-root {
+.credits-root {
     position: absolute;
     left: 0;
     right: 0;
@@ -7,10 +7,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-.settings-title {
+.credits-title {
     -unity-font-style: normal;
     font-size: 200px;
     color: white;
@@ -20,7 +20,7 @@
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
 }
 
-.settings-panel {
+.credits-panel {
     width: 100%;
     height: 100%;
     background-color: rgba(29, 29, 29, 0.95);
@@ -44,18 +44,20 @@
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
     border-bottom-left-radius: 50px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.settings-header {
+.credits-header {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     margin-top: 20px;
 }
 
-.settings-section-title {
-    font-size: 120px;
+.credits-section-title {
+    font-size: 100px;
     color: rgb(255, 255, 0);
     margin-top: 20px;
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
@@ -63,77 +65,33 @@
     margin-left: auto;
     margin-right: auto;
     -unity-text-align: middle-center;
+    white-space: nowrap;
+    margin-bottom: 20px;
 }
 
-.settings-slider-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 40px;
-    margin: 20px 0;
-    width: 90%;
-    justify-content: flex-end;
-    height: 400px;
-}
-
-.settings-slider-label {
-    min-width: 200px;
-    max-width: 300px;
+.credits-name {
     font-size: 80px;
     color: white;
-    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
-    -unity-text-align: middle-right;
-    white-space: normal;
-    margin-right: 50px;
-}
-
-.settings-slider-container {
-    flex-grow: 0;
-    width: 60%;
-    display: flex;
-    flex-direction: row;
-    top: -15px;
-}
-
-.settings-slider {
-    width: 100%;
-    height: 50px;
-    margin-top: -10px;
-    --unity-slider-background-color: rgb(40, 40, 72);
-    --unity-slider-fill-color: rgb(154, 104, 255);
-    --unity-slider-border-color: rgba(255, 255, 255, 0.2);
-    border-radius: 25px;
-}
-
-.settings-slider-value {
-    font-size: 32px;
-    color: white;
-    margin-left: 20px;
-    -unity-font-definition: resource("Fonts/EchoCity-Echotopia-Regular");
-    -unity-text-align: middle-right;
-}
-
-.settings-slider .unity-base-slider__drag-container {
-    display: flex;
-    justify-content: center;
-}
-
-.settings-slider .unity-base-slider__tracker {
-    height: 50px;
     margin-top: 5px;
-    border-radius: 6px;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
-    border-bottom-left-radius: 25px;
+    margin-bottom: 5px;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    -unity-text-align: middle-center;
 }
 
-.settings-slider .unity-base-slider__dragger {
-    width: 120px;
-    height: 120px;
-    border-radius: 999px;
-    background-color: white;
-    top: 0;
+.credits-disclaimer {
+    font-size: 40px;
+    color: rgb(255, 255, 0);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/ZingRust.ttf?fileID=12800000&guid=8fb97d298a61e46ae8116702da0d37bc&type=3#ZingRust");
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    -unity-text-align: middle-center;
+    white-space: normal;
 }
 
 .menu-button {
@@ -149,11 +107,5 @@
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
     font-size: 150px;
     margin-top: 50px;
-}
-
-.sliders-container {
-    flex-grow: 1;
-    width: 90%;
     align-self: center;
-    align-items: center;
 }

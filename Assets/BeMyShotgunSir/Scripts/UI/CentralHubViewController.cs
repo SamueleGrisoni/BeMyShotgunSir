@@ -28,6 +28,9 @@ namespace BeMyShotgunSir.Scripts.UI
         private Button _closeSettingsButton;
         #endregion
 
+        private VisualElement _creditsContainer;
+        private Button _closeCreditsButton;
+
 
 
         private void OnEnable()
@@ -40,7 +43,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _masterSlider = _root.Q<Slider>("MasterSlider");
             _musicSlider = _root.Q<Slider>("MusicSlider");
             _sfxSlider = _root.Q<Slider>("SfxSlider");
+            _creditsContainer = _root.Q<VisualElement>("CreditsContainer");
             _closeSettingsButton = _root.Q<Button>("CloseSettingsButton");
+            _closeCreditsButton = _root.Q<Button>("CloseCreditsButton");
 
             _masterSlider.lowValue = 0f;
             _masterSlider.highValue = 10f;
@@ -48,7 +53,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _musicSlider.highValue = 10f;
             _sfxSlider.lowValue = 0f;
             _sfxSlider.highValue = 10f;
-
+            SetupSliders();
 
             StartCoroutine(InitNextFrame());
             Show(false);
@@ -61,39 +66,17 @@ namespace BeMyShotgunSir.Scripts.UI
             _settingsButton.clicked += OnSettingsButtonClicked;
             _creditsButton.clicked += OnCreditsButtonClicked;
             _closeSettingsButton.clicked += OnCloseSettingsButtonClicked;
-
+            _closeCreditsButton.clicked += OnCloseCreditsButtonClicked;
             _masterSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);
             _musicSlider.RegisterValueChangedCallback(OnMusicVolumeChanged);
             _sfxSlider.RegisterValueChangedCallback(OnSfxVolumeChanged);
         }
 
-
-        private void OnPlayButtonClicked()
-        {
-            _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
-            Debug.Log("Play Button Clicked");
-        }
-
-        private void OnSettingsButtonClicked()
-        {
-            // Open the settings menu
-            _settingsContainer.style.display = DisplayStyle.Flex;
-            Debug.Log("Settings Button Clicked");
-        }
-
-        private void OnCloseSettingsButtonClicked()
-        {
-            // Close the settings menu
-            _settingsContainer.style.display = DisplayStyle.None;
-            Debug.Log("Close Settings Button Clicked");
-        }
-
-        private void OnCreditsButtonClicked()
-        {
-            // Open the credits page
-            Debug.Log("Credits Button Clicked");
-        }
-
+        private void OnPlayButtonClicked() => _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
+        private void OnSettingsButtonClicked() => _settingsContainer.style.display = DisplayStyle.Flex;
+        private void OnCloseSettingsButtonClicked() => _settingsContainer.style.display = DisplayStyle.None;
+        private void OnCreditsButtonClicked() => _creditsContainer.style.display = DisplayStyle.Flex;
+        private void OnCloseCreditsButtonClicked() => _creditsContainer.style.display = DisplayStyle.None;
 
 
         private void SetupSliders()

@@ -1,0 +1,20 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/CentralHub/CreditsUSS.uss?fileID=7433441132597879392&amp;guid=d005a5e091e2e445aab4d7e942f1e574&amp;type=3#CreditsUSS"/>
+    <ui:VisualElement name="CreditsRoot" class="credits-root">
+        <ui:VisualElement name="CreditsPanel" class="credits-panel">
+            <ui:VisualElement class="credits-header">
+                <ui:Label text="Credits" class="credits-title"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="credits-section">
+                <ui:Label text="This game was&#10;developed by:" class="credits-section-title"/>
+                <ui:Label text="Lorenzo Ricci" class="credits-name"/>
+                <ui:Label text="Samuele Grisoni" class="credits-name"/>
+                <ui:Label text="Christian Salvini" class="credits-name"/>
+                <ui:Label text="Marco Omegamorello Moretta" class="credits-name"/>
+                <ui:Label text="Developed for the Online Game Design course of the Università degli Studi di Milano taught by Prof. Laura Ripamonti and Prof. Dario Maggiorini" class="credits-disclaimer"/>
+            </ui:VisualElement>
+            <ui:Button name="CloseCreditsButton" text="Back" class="menu-button"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
