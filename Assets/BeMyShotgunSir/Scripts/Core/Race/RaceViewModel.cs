@@ -56,7 +56,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public IReadOnlyDictionary<int, InventoryData> TeamInventories => _netState.PlayerInventories;
         public IReadOnlyList<int> Leaderboard => _netState.Leaderboard;
         public IReadOnlyDictionary<int, TeamTrackProgress> TeamTrackProgress => _netState.TeamTrackProgress;
-        public bool ShowFinishScreen { get; private set; } = false;
 
         public RaceViewModel(LobbyViewModel lobbyViewModel, RaceNetStateStore netState, int clientId)
         {
@@ -102,11 +101,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             return false;
         }
 
-        public void SetShowFinishScreen(bool v)
-        {
-            ShowFinishScreen = v;
-            OnShowFinishScreenChanged?.Invoke();
-        }
+        public void SetShowFinishScreen() => OnShowFinishScreenChanged?.Invoke();
 
         public void SetShowCountdown(bool show) => OnShowCountdown?.Invoke(show);
     }

@@ -127,6 +127,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
 
             _netState.TryGetTeamTrackProgress(key, out TeamTrackProgress currentProgress);
+            _netState.TryGetTeamShotgunConnectionId(key, out int shotgunConnectionId);
 
             // 2. Aggiornamento progresso del player (Scanning della coda)
             for (int i = 0; i < _specialSegmentInfoQueue.Count; i++)
@@ -142,11 +143,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         currentProgress,
                         nextSpecialChunkId: nextId,
                         lastSpecialChunkType: new PortalInfo(specialChunk.chunkNumber, specialChunk.type),
-                        isFinishLineNext: specialChunk.type == RoadChunkType.START_LINE //TODO lore fai un check perchè la final line ha type FINISH_LINE (sam)
+                        isFinishLineNext: specialChunk.type == RoadChunkType.FINISH_LINE
                     );
 
-                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == nextId)
-                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection);
+                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == currentProgress.CurrentChunkId)
+                    {
+                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[shotgunConnectionId].Connection);
+                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection); //key is driver connection id
+                    }
 
                     if (!updated.IsEqual(value))
                         _netState.SetTeamTrackProgress(key, updated);
