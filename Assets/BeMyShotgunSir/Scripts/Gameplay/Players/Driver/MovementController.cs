@@ -536,7 +536,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
             _currentDrivingState?.RunInputs(this, data, isReplayed);
 
-            ComputeCollisions(teamData);
+            ComputeCollisions(teamData, isReplayed);
             ApplyGroundSnap();
 
             _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
@@ -569,7 +569,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 return LayerMask.NameToLayer("DefaultWallCollider");
         }
 
-        private void ComputeCollisions(RaceTeamData teamData)
+        private void ComputeCollisions(RaceTeamData teamData, bool isReplayed)
         {
             Vector3 repulsionForce = Vector3.zero;
             if (!teamData.ActivePowerUpInfo.isArmorActive)
@@ -604,6 +604,17 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                                 Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
                                 Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
                                 Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+
+                                if (!isReplayed)
+                                {
+                                    Vector3 rightDir = (_parentRotation * _sidecarLocalRotation) * Vector3.right;
+                                    rightDir.y = 0;
+                                    float dotProduct = Vector3.Dot(rightDir.normalized, rawPushDirection.normalized);
+                                    if (dotProduct < 0)
+                                        _driverVisual.RightCollisionAnimation();
+                                    else
+                                        _driverVisual.LeftCollisionAnimation();
+                                }
                             }
                         }
                     }
@@ -938,7 +949,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         public int? GetTeamId() => TeamId;
 
-        public void StartRace() => ChangeState(_normalState, default, false); // TODO da chi la faccio chiamare?
+        public void StartRace()
+        {
+            if (IsOwner)
+                _isStarting = true;
+        }
 
         #endregion
     }

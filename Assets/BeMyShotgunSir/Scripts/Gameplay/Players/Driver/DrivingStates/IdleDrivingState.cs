@@ -8,8 +8,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         {
             if (data.IsStarting)
             {
-                Log.DLazy(() => "Player has clicked start button", this, controller.Log);
                 controller.ChangeState(controller.NormalState, data, isReplayed);
+                return;
             }
         }
         public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed) => controller.ApplyAcceleration(controller.SidecarForward, 0f, 0f);

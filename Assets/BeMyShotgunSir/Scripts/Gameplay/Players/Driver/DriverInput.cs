@@ -27,7 +27,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         {
             if (value.isPressed)
             {
-                _movementController.ExecuteStart();
+                _movementController.StartRace();
             }
         }
         private void OnDrift(InputValue value) => IsDrifting = value.isPressed;

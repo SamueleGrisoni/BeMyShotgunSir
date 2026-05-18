@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Core;
-using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
 using UnityEngine;
@@ -31,6 +29,8 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private List<ParticleSystem> _shieldParticles = new List<ParticleSystem>();
         [SerializeField] private SkinnedMeshRenderer _overlayMeshRenderer;
         [SerializeField] private GameObject _aimDecalProjector;
+
+        [SerializeField] private Animator _visualModelAnimator;
 
         private Material _armorOverlayMaterial;
 
@@ -136,7 +136,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             }
 
             double now = TimeManager.TicksToTime(TimeManager.LocalTick) + Time.deltaTime;
-            float alpha = Mathf.Clamp01(_timeSinceLastTick / (float)TimeManager.TickDelta);
+            float alpha = Mathf.Clamp01((float)((now - _prevSnapshotTime) / snapshotSpan));
 
             float dist = Vector3.Distance(_parent.position, _prevSnapshot.Position);
             if (dist > _teleportThreshold)
@@ -186,7 +186,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         }
         public void OilAnimation()
         {
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
+            //GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
             StartCoroutine(ExecuteOilAnimation());
         }
 
@@ -199,7 +199,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             {
                 timer += Time.deltaTime;
                 float currentRotation = (_stats.AnimationStats.OilTotalRotation / _stats.AnimationStats.OilAnimationDuration) * Time.deltaTime;
-                _visualModel.localRotation *= Quaternion.Euler(0, 0, currentRotation);
+                _visualModel.localRotation *= Quaternion.Euler(0, currentRotation, 0);
                 yield return null;
             }
 
@@ -227,6 +227,18 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 ParticleSystem.EmissionModule emission = p.emission;
                 emission.enabled = isActive;
             }
+        }
+
+        public void RightCollisionAnimation()
+        {
+            if (_visualModelAnimator != null)
+                _visualModelAnimator.SetTrigger("HitRight");
+        }
+
+        public void LeftCollisionAnimation()
+        {
+            if (_visualModelAnimator != null)
+                _visualModelAnimator.SetTrigger("HitLeft");
         }
     }
 }
