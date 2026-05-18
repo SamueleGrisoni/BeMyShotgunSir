@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
@@ -8,7 +7,6 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
     public class DriverVisuals : NetworkBehaviour
     {
-        [SerializeField] private AudioSource _audioSource;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
@@ -186,24 +184,11 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         }
         public void OilAnimation()
         {
-            //GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
-            StartCoroutine(ExecuteOilAnimation());
-        }
-
-        private IEnumerator ExecuteOilAnimation()
-        {
-            float timer = 0f;
-            Quaternion startRotation = _visualModel.localRotation;
-
-            while (timer < _stats.AnimationStats.OilAnimationDuration)
+            // SOUND
+            if (_visualModelAnimator != null)
             {
-                timer += Time.deltaTime;
-                float currentRotation = (_stats.AnimationStats.OilTotalRotation / _stats.AnimationStats.OilAnimationDuration) * Time.deltaTime;
-                _visualModel.localRotation *= Quaternion.Euler(0, currentRotation, 0);
-                yield return null;
+                _visualModelAnimator.SetTrigger("Oil");
             }
-
-            _visualModel.localRotation = startRotation;
         }
 
         public void SetArmorVisualEffects(bool isActive)

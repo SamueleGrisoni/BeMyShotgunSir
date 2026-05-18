@@ -790,11 +790,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         void IDrivingStateContext.OilAnimation()
         {
-            if (_isOilAnimationActive)
-            {
-                SendOilAnimation();
-                _isOilAnimationActive = false;
-            }
+            _driverVisual.OilAnimation();
         }
 
 
@@ -909,13 +905,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _commitmentInfo.Value = CommitmentInfo.EnableUsed;
             }
         }
-
-        #endregion
-
-        #region RPC
-
-        [ObserversRpc]
-        private void SendOilAnimation() => _driverVisual.OilAnimation();
 
         #endregion
 

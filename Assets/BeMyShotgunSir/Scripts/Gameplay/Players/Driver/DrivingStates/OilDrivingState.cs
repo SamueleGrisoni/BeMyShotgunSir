@@ -9,11 +9,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
             Log.DLazy(() => "Entering oil state", this, controller.Log);
             controller.OilAnimationTimer = 0f;
             controller.IsOilAnimationActive = true;
+            if (!isReplayed)
+                controller.OilAnimation();
         }
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             controller.OilAnimationTimer += controller.TickDelta();
-            if (controller.OilAnimationTimer > controller.AnimationStats.OilAnimationDuration && controller.IsServer) // TODO togliere da qua velore hardcodato
+            if (controller.OilAnimationTimer > controller.AnimationStats.OilAnimationDuration) // TODO togliere da qua velore hardcodato
             {
                 controller.ChangeState(controller.PreviousDrivingState, data, isReplayed);
                 return;
@@ -22,10 +24,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {
             controller.ApplyAcceleration(controller.SidecarForward, 0f, controller.NormalStats.MaxSpeed);
-            if (controller.IsServer)
-            {
-                controller.OilAnimation();
-            }
         }
         public void Exit(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {

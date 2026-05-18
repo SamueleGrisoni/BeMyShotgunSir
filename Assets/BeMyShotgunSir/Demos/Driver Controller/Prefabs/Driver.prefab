@@ -48,7 +48,6 @@ MonoBehaviour:
   _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 0}
-  _audioSource: {fileID: 0}
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 7864906868263305960}
   _parent: {fileID: 4998179860331136265}
@@ -1233,6 +1232,18 @@ PrefabInstance:
     - target: {fileID: 4496121256619668532, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 5926053543904612865, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5926053543904612865, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5926053543904612865, guid: 9392c8d687b88474d99804d995d01712, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7083718821574842431, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_Enabled
