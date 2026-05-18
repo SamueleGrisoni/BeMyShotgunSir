@@ -642,15 +642,17 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             _needsMapRebuild = false;
 
+            ResetFogRevealProgress();
+            BuildFogRevealOrder();
+
             ClearRaceMap();
             ClearPowerUps();
 
             BuildRaceMap();
             PopulatePowerUps();
-
-            ResetFogRevealProgress();
-            BuildFogRevealOrder();
         }
+
+
 
         private IEnumerator RefreshMapAfterShow()
         {
@@ -767,7 +769,14 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 for (int x = 0; x < _fogColumns; x++)
                 {
-                    _fogTiles[x, y]?.RemoveFromClassList("revealed");
+                    VisualElement tile = _fogTiles[x, y];
+
+                    if (tile == null)
+                        continue;
+
+                    tile.RemoveFromClassList("fog-fade");
+                    tile.RemoveFromClassList("revealed");
+                    tile.style.opacity = 1f;
                 }
             }
         }
@@ -814,7 +823,14 @@ namespace BeMyShotgunSir.Scripts.UI
             if (x < 0 || x >= _fogColumns) return;
             if (y < 0 || y >= _fogRows) return;
 
-            _fogTiles[x, y]?.AddToClassList("revealed");
+            VisualElement tile = _fogTiles[x, y];
+
+            if (tile == null)
+                return;
+
+            tile.style.opacity = StyleKeyword.Null;
+            tile.AddToClassList("fog-fade");
+            tile.AddToClassList("revealed");
         }
 
         private void Shuffle<T>(List<T> list)
@@ -906,26 +922,27 @@ namespace BeMyShotgunSir.Scripts.UI
 
         public void Show(bool show)
         {
-            _raceMap.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            _raceMap.style.visibility = show ? Visibility.Visible : Visibility.Hidden;
             _isShowing = show;
 
             if (!show)
             {
-                _brokenRaceMap.style.display = DisplayStyle.None;
+                _brokenRaceMap.style.visibility = Visibility.Hidden;
                 return;
             }
 
             if (!_isHitBySpear)
             {
-                _brokenRaceMap.style.display = DisplayStyle.None;
+                _brokenRaceMap.style.visibility = Visibility.Hidden;
                 StartCoroutine(RefreshMapAfterShow());
             }
             else
             {
-                _raceMap.style.display = DisplayStyle.None;
-                _brokenRaceMap.style.display = DisplayStyle.Flex;
+                _raceMap.style.visibility = Visibility.Hidden;
+                _brokenRaceMap.style.visibility = Visibility.Visible;
             }
         }
+
 
         public void UpdateMapFromTeamProgress(TeamTrackProgress progress)
         {

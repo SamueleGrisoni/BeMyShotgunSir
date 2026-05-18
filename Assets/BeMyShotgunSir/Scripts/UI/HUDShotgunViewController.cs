@@ -123,7 +123,7 @@ namespace BeMyShotgunSir.Scripts.UI
                 || progress.NextSpecialChunkId == _finishLineChunkId)
             {
                 _raceMapButton.style.display = DisplayStyle.None;
-                // _raceMapViewController.Show(false);
+                _raceMapViewController.Show(false);
             }
             else
             {

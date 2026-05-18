@@ -11,26 +11,23 @@
 }
 
 .finish-screen-container {
-    width: 78%;
-    max-width: 1200px;
-    height: 650px;
-
-    justify-content: center;
+    width: 80%;
+    height: 50%;
     align-items: center;
     flex-direction: column;
-
     background-color: rgba(0, 0, 0, 0.72);
     border-radius: 48px;
     border-width: 5px;
     border-color: rgba(255, 255, 255, 0.18);
-
     padding-left: 60px;
     padding-right: 60px;
+    padding-top: 150px;
+    padding-bottom: 150px;
 }
 
 .result-label {
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
-    font-size: 150px;
+    font-size: 200px;
     color: white;
     -unity-text-align: middle-center;
 }
@@ -38,22 +35,19 @@
 .subtitle-label {
     margin-top: 28px;
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
-    font-size: 58px;
+    font-size: 100px;
     color: rgba(255, 255, 255, 0.8);
     -unity-text-align: middle-center;
 }
 
 .back-to-title-button {
     width: 70%;
-    height: 120px;
+    height: 300px;
     margin-top: 60px;
-
     border-radius: 32px;
     border-width: 4px;
     border-color: rgba(255, 255, 255, 0.2);
-
     background-color: rgba(255, 255, 255, 0.08);
-
     justify-content: center;
     align-items: center;
 }

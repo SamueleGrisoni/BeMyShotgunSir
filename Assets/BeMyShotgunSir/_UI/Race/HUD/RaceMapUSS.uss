@@ -41,10 +41,13 @@
 .fog-tile {
     position: absolute;
     opacity: 1;
-    transition-property: opacity;
-    transition-duration: 0.25s;
     -unity-background-scale-mode: stretch-to-fill;
     -unity-background-image-tint-color: rgb(80, 80, 80);
+}
+
+.fog-tile.fog-fade{
+    transition-property: opacity;
+    transition-duration: 0.25s;
 }
 
 .fog-tile.revealed {

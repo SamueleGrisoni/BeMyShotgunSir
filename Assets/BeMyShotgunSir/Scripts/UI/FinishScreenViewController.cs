@@ -19,10 +19,12 @@ namespace BeMyShotgunSir.Scripts.UI
         private RaceRole _role;
         #endregion
 
+        #region Visual Elements
         private VisualElement _root;
         private Label _resultLabel;
         private Label _subtitleLabel;
         private Button _backToTitleButton;
+        #endregion
 
         public override void OnInitialBindComplete()
         {
@@ -94,7 +96,7 @@ namespace BeMyShotgunSir.Scripts.UI
             Show(winnerTeamId == localTeamId);
         }
 
-        public void Show(bool hasWon)
+        private void Show(bool hasWon)
         {
             if (_root == null || _resultLabel == null)
                 return;
