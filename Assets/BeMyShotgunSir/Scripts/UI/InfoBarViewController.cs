@@ -70,8 +70,11 @@ namespace BeMyShotgunSir.Scripts.UI
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
 
-            _inputPublisher.OnDriverFeedbackToShotgun += ShowFeedback;
-            _inputPublisher.OnEarlyCommitmentExecuted += ShowEarlyCommitment;
+            if (_role == RaceRole.Shotgun)
+            {
+                _inputPublisher.OnDriverFeedbackToShotgun += ShowFeedback;
+                _inputPublisher.OnEarlyCommitmentExecuted += ShowEarlyCommitment;
+            }
         }
 
         private void OnEnable()

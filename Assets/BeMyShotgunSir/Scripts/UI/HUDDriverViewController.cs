@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private UIController_Race _uiControllerRace;
         [SerializeField] private UIDocument _hudDriverDocument;
         [SerializeField] private TopBarViewController _topBarViewController;
+        [SerializeField] private EarlyCommitmentViewController _earlyCommitmentViewController;
 
         #region Bindings
         private RaceCommand _command;
@@ -19,6 +20,10 @@ namespace BeMyShotgunSir.Scripts.UI
         private IRoadManager _roadManager;
         private IInputPublisher _inputPublisher;
         private RaceRole _role;
+        #endregion
+
+        #region private fields
+        private int _finishLineChunkId = -1;
         #endregion
 
         public override void OnInitialBindComplete()
@@ -41,6 +46,11 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
+            if (_role == RaceRole.Driver)
+            {
+                TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
+            }
         }
 
 
@@ -51,14 +61,10 @@ namespace BeMyShotgunSir.Scripts.UI
             _root = _hudDriverDocument.rootVisualElement;
         }
 
-        private void UpdateTeamProgress()
+        private void OnFinishLineGenerated(int finishLineChunkId)
         {
-            // IReadOnlyDictionary<int, TeamTrackProgress> teamTrackProgress = new Dictionary<int, TeamTrackProgress>(_viewModel.TeamTrackProgress);
-
-            // foreach (KeyValuePair<int, TeamTrackProgress> teamsIdValuePair in teamTrackProgress)
-            // {
-            //     _topBarViewController.UpdateTeamMarker(teamsIdValuePair.Key, _viewModel.TeamTrackProgress[teamsIdValuePair.Key]);
-            // }
+            _finishLineChunkId = finishLineChunkId;
+            _earlyCommitmentViewController.OnFinishRoad();
         }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

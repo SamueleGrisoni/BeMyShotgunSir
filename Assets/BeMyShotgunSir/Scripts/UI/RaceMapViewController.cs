@@ -48,6 +48,8 @@ namespace BeMyShotgunSir.Scripts.UI
         [Header("Power-Ups")]
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
         [SerializeField] private SOPowerUpsData _powerUpsData;
+        [SerializeField] private SOItem _itemData;
+
 
         #region Bindings
         private RaceCommand _command;
@@ -60,6 +62,7 @@ namespace BeMyShotgunSir.Scripts.UI
         #region Visual Elements
         private VisualElement _root;
         private TemplateContainer _raceMap;
+        private TemplateContainer _brokenRaceMap;
         private VisualElement _mapTiles;
         private VisualElement _mapContent;
         private VisualElement _fogGrid;
@@ -91,6 +94,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _needsMapRebuild;
 
         private bool _isShowing = false;
+        private bool _isHitBySpear = false;
 
         #endregion
 
@@ -110,6 +114,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
+
+            _viewModel.OnRaceTeamDataChanged += CheckPowerUpUpdateFromTeamData;
         }
 
         public override void OnFinalBindComplete()
@@ -123,6 +129,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
         }
 
         private void Awake()
@@ -152,13 +159,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _root = _hudDocument.rootVisualElement;
             _raceMap = _root.Q<TemplateContainer>("RaceMap");
-
-            if (_raceMap == null)
-            {
-                Log.ELazy(() => "RaceMap template not found.", this);
-                return;
-            }
-
+            _brokenRaceMap = _root.Q<TemplateContainer>("RaceMapBroken");
             _mapTiles = _raceMap.Q<VisualElement>("MapTiles");
             _fogGrid = _raceMap.Q<VisualElement>("FogGrid");
             _powerUpArea = _raceMap.Q<VisualElement>("PowerUpArea");
@@ -206,7 +207,25 @@ namespace BeMyShotgunSir.Scripts.UI
             TryLoadMapForCurrentTeamProgress();
         }
 
+        private void CheckPowerUpUpdateFromTeamData()
+        {
+            if (_viewModel == null)
+                return;
+
+            _viewModel.NetState.TryGetTeamData((int)(_viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null), out RaceTeamData teamData);
+
+            foreach (PowerUpIdentifier powerUpId in teamData.TargetedByPowerUps)
+            {
+                if (powerUpId.PowerUp == PowerUp.Spear)
+                {
+                    _isHitBySpear = true;
+                    break;
+                }
+            }
+        }
+
         #endregion
+
 
         #region Race Map Construction and Update Methods
 
@@ -876,6 +895,8 @@ namespace BeMyShotgunSir.Scripts.UI
                 return null;
 
             PowerUp powerUp = _powerUpsData.PowerUps[item.index].PowerUpType;
+            // PowerUp powerUp = _itemData.PowerUpItems[item.index].PowerUpType;
+
             return _powerUpIcons.GetIcon(powerUp);
         }
 
@@ -891,7 +912,16 @@ namespace BeMyShotgunSir.Scripts.UI
             if (!show)
                 return;
 
-            StartCoroutine(RefreshMapAfterShow());
+            if (!_isHitBySpear)
+            {
+                _brokenRaceMap.style.display = DisplayStyle.None;
+                StartCoroutine(RefreshMapAfterShow());
+            }
+            else
+            {
+                _raceMap.style.display = DisplayStyle.None;
+                _brokenRaceMap.style.display = DisplayStyle.Flex;
+            }
         }
 
         public void UpdateMapFromTeamProgress(TeamTrackProgress progress)

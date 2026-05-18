@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
@@ -10,6 +9,8 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class HUDShotgunViewController : RaceBindTarget
     {
+        private bool _log = false;
+
         [Header("UI References")]
         [SerializeField] private UIDocument _hudShotgunDocument;
         [SerializeField] private TopBarViewController _topBarViewController;
@@ -47,7 +48,11 @@ namespace BeMyShotgunSir.Scripts.UI
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
 
-            _viewModel.OnTeamTrackProgressChanged += UpdateTeamProgress;
+            if (_role == RaceRole.Shotgun)
+            {
+                _viewModel.OnTeamTrackProgressChanged += UpdateTeamProgress;
+                TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
+            }
         }
 
         #region Visual Elements
@@ -70,7 +75,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             StartCoroutine(InitNextFrame());
 
-            TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
+
         }
 
         IEnumerator InitNextFrame()

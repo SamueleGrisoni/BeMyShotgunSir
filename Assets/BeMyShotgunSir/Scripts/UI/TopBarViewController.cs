@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
@@ -187,6 +188,8 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 UpdateTeamMarker(teamsIdValuePair.Key, _viewModel.TeamTrackProgress[teamsIdValuePair.Key]);
             }
+
+
         }
 
         private void UpdateTeamMarker(int teamIndex, TeamTrackProgress progress)
@@ -196,6 +199,30 @@ namespace BeMyShotgunSir.Scripts.UI
 
             float normalizedPosition = GetSectionNormalizedPosition(progress);
             markerView.TargetPosition = normalizedPosition;
+
+            _viewModel.NetState.TryGetTeamData(teamIndex, out RaceTeamData teamData);
+
+            bool isInvisible = false;
+
+            foreach (PowerUpIdentifier activePowerUpId in teamData.ActivePowerUps)
+            {
+                if (activePowerUpId.PowerUp == PowerUp.Invisibility)
+                {
+                    isInvisible = true;
+                    break;
+                }
+            }
+
+            ShowTeamMarker(markerView, isInvisible);
+        }
+
+        private void ShowTeamMarker(TeamMarkerView markerView, bool isInvisible)
+        {
+            if (markerView == null)
+                return;
+
+            markerView.Marker.style.display = isInvisible ? DisplayStyle.None : DisplayStyle.Flex;
+            markerView.Icon.style.display = isInvisible ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         private void SetMarkerPosition(VisualElement marker, float position)
@@ -239,14 +266,6 @@ namespace BeMyShotgunSir.Scripts.UI
             );
         }
 
-        private void OnInvisibilityEffectApplied(bool isActive)
-        {
-            if (_teamId == null)
-                return;
-
-            if (_teamMarkers.TryGetValue(_teamId.Value, out TeamMarkerView markerView))
-                markerView.Marker.style.opacity = isActive ? 0f : 1f;
-        }
 
         public void ChangeTeamIcon(int teamIndex, Sprite newIcon)
         {

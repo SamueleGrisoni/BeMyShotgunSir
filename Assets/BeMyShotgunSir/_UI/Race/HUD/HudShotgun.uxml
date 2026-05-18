@@ -2,6 +2,7 @@
     <ui:Template name="InfoBar" src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/InfoBar.uxml?fileID=9197481963319205126&amp;guid=6a1fd2b10bf8b4296a846439ea80948a&amp;type=3#InfoBar"/>
     <ui:Template name="PowerUpBar" src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/PowerUpBar.uxml?fileID=9197481963319205126&amp;guid=55955954431934b96911c85a2d75db28&amp;type=3#PowerUpBar"/>
     <ui:Template name="RaceMap" src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/RaceMap.uxml?fileID=9197481963319205126&amp;guid=e3aeaa9702c9b43a08b7ea7e6d188aa5&amp;type=3#RaceMap"/>
+    <ui:Template name="RaceMapBroken" src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/RaceMapBroken.uxml?fileID=9197481963319205126&amp;guid=388adc2c4200e4d1dabecc14e8aa76c4&amp;type=3#RaceMapBroken"/>
     <ui:Template name="ShoutWheel" src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/ShoutWheel.uxml?fileID=9197481963319205126&amp;guid=b50a53239844848d6bfc2fd90788999a&amp;type=3#ShoutWheel"/>
     <ui:Template name="TopBar" src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/TopBar.uxml?fileID=9197481963319205126&amp;guid=2844772360ef641b18534d407b497b36&amp;type=3#TopBar"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/Race/HUD/HudShotgunUSS.uss?fileID=7433441132597879392&amp;guid=55a42b97918524c859bab4b209e01951&amp;type=3#HudShotgunUSS"/>
@@ -14,6 +15,9 @@
             <ui:Instance template="TopBar" name="TopBar"/>
             <ui:VisualElement name="RaceMapContainer" style="width: 1170px; height: 1720px; align-self: center; position: absolute; bottom: 550px;">
                 <ui:Instance template="RaceMap" name="RaceMap" style="flex-grow: 1;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="RaceMapBrokenContainer" style="width: 1170px; height: 1720px; align-self: center; position: absolute; bottom: 550px;">
+                <ui:Instance template="RaceMapBroken" name="RaceMapBroken" style="flex-grow: 1;"/>
             </ui:VisualElement>
             <ui:Instance template="InfoBar" name="InfoBar" class="info-bar"/>
             <ui:VisualElement name="ShoutWheelContainer" style="width: 1100px; height: 1400px; align-self: center; position: absolute; top: 400px; display: flex;">

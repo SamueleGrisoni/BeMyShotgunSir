@@ -63,6 +63,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private float _currentCommitmentFill;
         private bool _updateEarlyCommitment;
         private float _lastCommitmentValue = 0f;
+        private bool _onFinishRoad = false;
         #endregion
 
         private void OnEnable()
@@ -87,7 +88,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _arrowLeft.pickingMode = PickingMode.Position;
             _arrowRight.pickingMode = PickingMode.Position;
 
-            // _earlyCommitmentContainer.style.display = DisplayStyle.None;
+            _earlyCommitmentContainer.style.display = DisplayStyle.None;
+
+            _onFinishRoad = false;
 
             Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this);
             Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this);
@@ -124,6 +127,9 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ReadEarlyCommitmentValue(float commitmentValue)
         {
+            if (_onFinishRoad)
+                return;
+
             _commitmentValue = commitmentValue;
 
             if (commitmentValue >= _lastCommitmentValue)
@@ -150,6 +156,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ShowEarlyCommitment(bool show) => _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
 
+        public void OnFinishRoad() => _onFinishRoad = true;
 
     }
 }

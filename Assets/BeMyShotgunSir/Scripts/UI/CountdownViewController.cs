@@ -69,8 +69,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _countdownPanel = _root.Q<VisualElement>("CountdownPanel");
             _countdownLabel = _root.Q<Label>("CountdownLabel");
 
-            // HideImmediate();
-            ShowCountdownHandler();
+            HideImmediate();
         }
 
         private void OnDisable()
