@@ -48,6 +48,14 @@ MonoBehaviour:
   _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 0}
+  _engineEvent:
+    Guid:
+      Data1: 1288250722
+      Data2: 1268139489
+      Data3: -261836905
+      Data4: 928685484
+    Path: event:/Drive
+  _audioSource: {fileID: 0}
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 7864906868263305960}
   _parent: {fileID: 4998179860331136265}
@@ -144,7 +152,6 @@ GameObject:
   - component: {fileID: 2139825348868955056}
   - component: {fileID: 3192123921943259604}
   - component: {fileID: 2002137533636311092}
-  - component: {fileID: -4133340114202585750}
   m_Layer: 7
   m_Name: Movement
   m_TagString: Driver
@@ -319,37 +326,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-4133340114202585750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1694670322626515296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  Event: 
-  EventPlayTrigger: 0
-  EventStopTrigger: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
 --- !u!1 &2204479149634885745
 GameObject:
   m_ObjectHideFlags: 0

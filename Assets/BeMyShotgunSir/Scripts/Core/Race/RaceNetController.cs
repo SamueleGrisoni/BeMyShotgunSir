@@ -179,7 +179,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 {
                     Log.DLazy(() => $"All players surpassed the finish line! ChunkId: {headChunkId}.", this, _log);
                 }
-                // Rimuoviamo e logghiamo
                 SpecialSegmentInfo finishedCrossroad = _specialSegmentInfoQueue.Dequeue();
                 _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
@@ -389,7 +388,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private IEnumerator StartRaceAfterCountdown()
         {
-            yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); // Adjust the delay as needed
+            yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); //DANGER
             StartRace_ObserversRpc();
         }
 
@@ -399,7 +398,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
             _clientProjector.ShowCountdown(false);
             _roadManager.StartRace();
-            //TODO activate player controls
 
             foreach (RaceTeamData teamData in NetState.TeamData.Values)
             {

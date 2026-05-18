@@ -113,7 +113,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
         #region Inspector
-
         [SerializeField] private DriverController _driverController;
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
@@ -943,6 +942,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (IsOwner)
                 _isStarting = true;
         }
+
+        public float GetCurrentVelocity() => Math.Clamp(_predictionRigidbody.Rigidbody.linearVelocity.magnitude / 25f, 0f, 1f); // TODO settare valore in SO
 
         #endregion
     }

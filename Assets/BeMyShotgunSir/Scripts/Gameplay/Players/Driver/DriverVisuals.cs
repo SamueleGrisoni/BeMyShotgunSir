@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
+using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
     public class DriverVisuals : NetworkBehaviour
     {
+        [Header("Audio")][SerializeField] private EventReference _engineEvent;
+        private EventInstance _engineInstance;
+        [SerializeField] private AudioSource _audioSource;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
@@ -62,10 +67,23 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 _aimDecalProjector.SetActive(false);
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            _engineInstance = RuntimeManager.CreateInstance(_engineEvent);
+            _engineInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+            _engineInstance.start();
+        }
+
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
             TimeManager.OnPostTick -= OnPostTick;
+            if (_engineInstance.isValid())
+            {
+                _engineInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                _engineInstance.release();
+            }
         }
 
         private void OnPostTick()
@@ -84,6 +102,15 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             _nextSnapshotTime = TimeManager.TicksToTime(TimeManager.LocalTick);
             _hasFirstSnapshot = true;
             _timeSinceLastTick = 0f;
+        }
+
+        private void Update()
+        {
+            if (_engineInstance.isValid())
+            {
+                _engineInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+                _engineInstance.setParameterByName("Speed", _movement.GetCurrentVelocity());
+            }
         }
 
         private void LateUpdate()
