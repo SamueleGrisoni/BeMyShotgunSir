@@ -85,12 +85,18 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
-        private void ShowCountdownHandler()
+        private void ShowCountdownHandler(bool show = true)
         {
-            if (_countdownCoroutine != null)
+            if (_countdownCoroutine != null && !show)
                 StopCoroutine(_countdownCoroutine);
 
+            if (!show)
+            {
+                HideImmediate();
+                return;
+            }
             _countdownCoroutine = StartCoroutine(CountdownRoutine());
+            //TODO qui si potrebbe aggiungere una logica che quando rileva show false e la routine è attiva allora prima di nascondere la view mostra "START" per un breve periodo e poi nasconde tutto
         }
 
         private IEnumerator CountdownRoutine()

@@ -26,7 +26,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         event Action OnRaceTeamDataChanged;
         event Action OnLeaderboardChanged;
         event Action OnTeamTrackProgressChanged;
-        event Action OnShowCountdown;
+        event Action<bool> OnShowCountdown;
         event Action OnShowFinishScreenChanged;
 
     }
@@ -46,7 +46,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public event Action OnLeaderboardChanged;
         public event Action OnInventoryChanged;
         public event Action OnTeamTrackProgressChanged;
-        public event Action OnShowCountdown;
+        public event Action<bool> OnShowCountdown;
         public event Action OnShowFinishScreenChanged;
 
         public int? Seed => _netState.Seed;
@@ -108,6 +108,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             OnShowFinishScreenChanged?.Invoke();
         }
 
-        public void SetShowCountdown() => OnShowCountdown?.Invoke();
+        public void SetShowCountdown(bool show) => OnShowCountdown?.Invoke(show);
     }
 }

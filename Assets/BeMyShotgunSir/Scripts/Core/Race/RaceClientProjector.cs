@@ -81,6 +81,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         }
 
         public void ShowFinishScreen() => _viewModel.SetShowFinishScreen(true);
-        internal void ShowCountdown() => _viewModel.SetShowCountdown();
+        internal void ShowCountdown(bool show) => _viewModel.SetShowCountdown(show);
     }
 }

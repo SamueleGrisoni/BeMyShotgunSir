@@ -6,7 +6,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
 {
     public enum RequestEnum
     {
-        Play = 0,
+        None = 0,
         Stop,
         Loading,
         StartRace,
@@ -24,7 +24,7 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
 
     public class AudioRequest
     {
-        public RequestEnum Type { get; private set; } = RequestEnum.Play;
+        public RequestEnum Type { get; private set; } = RequestEnum.None;
         public AudioClip Clip { get; private set; }
         public bool AsMain { get; private set; } = false;
         public Vector3 StartingPosition { get; private set; }

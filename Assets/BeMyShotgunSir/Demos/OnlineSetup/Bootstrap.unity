@@ -194,37 +194,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &511418089
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 511418090}
-  m_Layer: 0
-  m_Name: inactive audios
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &511418090
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 511418089}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 565849613}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &565849610
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,8 +203,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 565849613}
-  - component: {fileID: 565849611}
-  - component: {fileID: 565849612}
   - component: {fileID: 565849614}
   m_Layer: 0
   m_Name: Audio Manager
@@ -244,36 +211,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &565849611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 565849610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18abc81daa2026b4b8bda741a7dca43a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.AudioManager
-  _pooler: {fileID: 565849612}
-  _soundTracks: {fileID: 11400000, guid: 39e47097a43205a429c0ebb8cd64b41f, type: 2}
---- !u!114 &565849612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 565849610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4230d5dae42e5c348bd4ab10b5aca1ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.AudioPooler
-  _inactiveObjsParent: {fileID: 511418089}
-  _activeObjsParent: {fileID: 2082211048}
-  _initCapacity: 5
-  _maxCapacity: 15
 --- !u!4 &565849613
 Transform:
   m_ObjectHideFlags: 0
@@ -286,108 +223,63 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 511418090}
-  - {fileID: 2082211049}
+  m_Children: []
   m_Father: {fileID: 2006144848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &565849614
-AudioSource:
+--- !u!114 &565849614
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565849610}
   m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18abc81daa2026b4b8bda741a7dca43a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Audio.AudioManager
+  <InitSceneMusic>k__BackingField:
+    Guid:
+      Data1: -1761057309
+      Data2: 1154119569
+      Data3: -1802772558
+      Data4: 687230113
+    Path: event:/InitMusic
+  <LobbySceneMusic>k__BackingField:
+    Guid:
+      Data1: 1310057858
+      Data2: 1205053454
+      Data3: 2049348228
+      Data4: 1343085448
+    Path: event:/LobbyMusic
+  <LoadingMusic>k__BackingField:
+    Guid:
+      Data1: -533416468
+      Data2: 1301086552
+      Data3: 1729341099
+      Data4: -1670608820
+    Path: event:/LoadingMusic
+  <CountdownSound>k__BackingField:
+    Guid:
+      Data1: -1648667822
+      Data2: 1099414915
+      Data3: -1393281106
+      Data4: 265440402
+    Path: event:/CountDown
+  <StartRaceMusic>k__BackingField:
+    Guid:
+      Data1: -484631205
+      Data2: 1108296786
+      Data3: 1642543232
+      Data4: -1020304315
+    Path: event:/RaceMusic
+  <FinishRaceMusic>k__BackingField:
+    Guid:
+      Data1: 466101863
+      Data2: 1141851193
+      Data3: -2076931169
+      Data4: 1880266018
+    Path: event:/FinishRaceMusic
 --- !u!1001 &648135647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -444,16 +336,39 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5670376026205633466, guid: 1b90a352be55254488e1a226f84aeae3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 648135650}
   m_SourcePrefab: {fileID: 100100000, guid: 1b90a352be55254488e1a226f84aeae3, type: 3}
 --- !u!4 &648135648 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4857198674768599716, guid: 1b90a352be55254488e1a226f84aeae3, type: 3}
   m_PrefabInstance: {fileID: 648135647}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &648135649 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5670376026205633466, guid: 1b90a352be55254488e1a226f84aeae3, type: 3}
+  m_PrefabInstance: {fileID: 648135647}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &648135650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648135649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &1045515486
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,6 +413,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a9188bf8b536e428c74d46e5947127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.GlobalManager
+  <PlayerJoinSFX>k__BackingField:
+    Guid:
+      Data1: 1308286748
+      Data2: 1278150717
+      Data3: 1696733351
+      Data4: 457444299
+    Path: event:/PlayerJoin
+  <PlayerLeaveSFX>k__BackingField:
+    Guid:
+      Data1: -589734932
+      Data2: 1290095900
+      Data3: -1678541655
+      Data4: -1578364346
+    Path: event:/PlayerLeave
   _lobbyManagerPrefab: {fileID: 8491619145890554402, guid: 2a95f435221185447af7158102adc114, type: 3}
 --- !u!1001 &1464196781
 PrefabInstance:
@@ -551,47 +480,39 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1589473841472741579, guid: 35ad95c2d5e00a3429ce037bf1bfa0ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1464196784}
   m_SourcePrefab: {fileID: 100100000, guid: 35ad95c2d5e00a3429ce037bf1bfa0ef, type: 3}
 --- !u!4 &1464196782 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7019782225028915116, guid: 35ad95c2d5e00a3429ce037bf1bfa0ef, type: 3}
   m_PrefabInstance: {fileID: 1464196781}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1610449985
+--- !u!1 &1464196783 stripped
 GameObject:
+  m_CorrespondingSourceObject: {fileID: 1589473841472741579, guid: 35ad95c2d5e00a3429ce037bf1bfa0ef, type: 3}
+  m_PrefabInstance: {fileID: 1464196781}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1464196784
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1610449986}
-  m_Layer: 0
-  m_Name: ---------------------------------------
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1610449986
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610449985}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.10276, y: -5.11976, z: -9.75556}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2006144848}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 1464196783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &1905700937
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,7 +625,7 @@ MonoBehaviour:
   _sceneCoordinator: {fileID: 2006144849}
   <ConnectionManager>k__BackingField: {fileID: 1045515488}
   <Channels>k__BackingField: {fileID: 11400000, guid: c72e358ecdcd8a64181a1f77ec4a2e86, type: 2}
-  <AudioManager>k__BackingField: {fileID: 565849611}
+  <AudioManager>k__BackingField: {fileID: 565849614}
   <NetworkManager>k__BackingField: {fileID: 7443408887460405119}
 --- !u!4 &2006144848
 Transform:
@@ -723,7 +644,6 @@ Transform:
   - {fileID: 648135648}
   - {fileID: 1464196782}
   - {fileID: 1905700940}
-  - {fileID: 1610449986}
   - {fileID: 1045515487}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -739,37 +659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 308baeaa208a3914593e0c7abd29c5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.SceneLoader
---- !u!1 &2082211048
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2082211049}
-  m_Layer: 0
-  m_Name: active audios
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2082211049
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2082211048}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 565849613}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &596934202678924821
 Transform:
   m_ObjectHideFlags: 0

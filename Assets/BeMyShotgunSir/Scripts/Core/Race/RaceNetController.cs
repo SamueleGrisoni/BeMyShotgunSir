@@ -379,8 +379,8 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void ShowCountDown_ObserversRpc()
         {
             GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, false);
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);//TODO show countdown on clients
-            _clientProjector.ShowCountdown();
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);
+            _clientProjector.ShowCountdown(true);
         }
 
         private IEnumerator StartRaceAfterCountdown()
@@ -393,8 +393,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void StartRace_ObserversRpc()
         {
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
+            _clientProjector.ShowCountdown(false);
             _roadManager.StartRace();
             //TODO activate player controls
+
             foreach (RaceTeamData teamData in NetState.TeamData.Values)
             {
                 if (teamData.DriverNob != null && teamData.ShotgunNob != null)
