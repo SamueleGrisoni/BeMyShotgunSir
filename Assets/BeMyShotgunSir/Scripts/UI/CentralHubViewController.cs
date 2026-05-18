@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UIElements;
+using FMODUnity;
+using FMOD.Studio;
 
 namespace BeMyShotgunSir.Scripts.UI
 {
@@ -11,27 +12,28 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private UIControllerInit _uiControllerInit;
         [SerializeField] private UIDocument _centralHubDocument;
 
-        [Header("Music Sliders")]
-        [SerializeField] private AudioMixer _masterMixer;
-        [SerializeField] private string[] _mixerGroupsVolumes = { "Master", "Soundtrack", "SFX" };
+        [Header("FMOD VCA Paths")]
+        [SerializeField] private string _masterVcaPath = "vca:/Master";
+        [SerializeField] private string _musicVcaPath = "vca:/Music";
+        [SerializeField] private string _sfxVcaPath = "vca:/SFX";
+
+        // Variabili interne per FMOD
+        private VCA _masterVca;
+        private VCA _musicVca;
+        private VCA _sfxVca;
 
         private VisualElement _root;
         private Button _playButton;
         private Button _settingsButton;
         private Button _creditsButton;
 
-        #region  Settings
+        #region Settings
         private VisualElement _settingsContainer;
         private Slider _masterSlider;
         private Slider _musicSlider;
         private Slider _sfxSlider;
         private Button _closeSettingsButton;
         #endregion
-
-        private VisualElement _creditsContainer;
-        private Button _closeCreditsButton;
-
-
 
         private void OnEnable()
         {
@@ -43,9 +45,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _masterSlider = _root.Q<Slider>("MasterSlider");
             _musicSlider = _root.Q<Slider>("MusicSlider");
             _sfxSlider = _root.Q<Slider>("SfxSlider");
-            _creditsContainer = _root.Q<VisualElement>("CreditsContainer");
             _closeSettingsButton = _root.Q<Button>("CloseSettingsButton");
-            _closeCreditsButton = _root.Q<Button>("CloseCreditsButton");
 
             _masterSlider.lowValue = 0f;
             _masterSlider.highValue = 10f;
@@ -53,7 +53,11 @@ namespace BeMyShotgunSir.Scripts.UI
             _musicSlider.highValue = 10f;
             _sfxSlider.lowValue = 0f;
             _sfxSlider.highValue = 10f;
-            SetupSliders();
+
+            // 1. Inizializza i collegamenti ai VCA di FMOD
+            _masterVca = RuntimeManager.GetVCA(_masterVcaPath);
+            _musicVca = RuntimeManager.GetVCA(_musicVcaPath);
+            _sfxVca = RuntimeManager.GetVCA(_sfxVcaPath);
 
             StartCoroutine(InitNextFrame());
             Show(false);
@@ -62,87 +66,94 @@ namespace BeMyShotgunSir.Scripts.UI
         private IEnumerator InitNextFrame()
         {
             yield return null;
+
             _playButton.clicked += OnPlayButtonClicked;
             _settingsButton.clicked += OnSettingsButtonClicked;
             _creditsButton.clicked += OnCreditsButtonClicked;
             _closeSettingsButton.clicked += OnCloseSettingsButtonClicked;
-            _closeCreditsButton.clicked += OnCloseCreditsButtonClicked;
+
+            // 2. Sincronizziamo gli slider con i volumi reali di FMOD all'avvio
+            SetupSliders();
+
             _masterSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);
             _musicSlider.RegisterValueChangedCallback(OnMusicVolumeChanged);
             _sfxSlider.RegisterValueChangedCallback(OnSfxVolumeChanged);
         }
 
-        private void OnPlayButtonClicked() => _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
-        private void OnSettingsButtonClicked() => _settingsContainer.style.display = DisplayStyle.Flex;
-        private void OnCloseSettingsButtonClicked() => _settingsContainer.style.display = DisplayStyle.None;
-        private void OnCreditsButtonClicked() => _creditsContainer.style.display = DisplayStyle.Flex;
-        private void OnCloseCreditsButtonClicked() => _creditsContainer.style.display = DisplayStyle.None;
+        private void OnPlayButtonClicked()
+        {
+            _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
+            Debug.Log("Play Button Clicked");
+        }
 
+        private void OnSettingsButtonClicked()
+        {
+            _settingsContainer.style.display = DisplayStyle.Flex;
+            Debug.Log("Settings Button Clicked");
+        }
+
+        private void OnCloseSettingsButtonClicked()
+        {
+            _settingsContainer.style.display = DisplayStyle.None;
+            Debug.Log("Close Settings Button Clicked");
+        }
+
+        private void OnCreditsButtonClicked()
+        {
+            Debug.Log("Credits Button Clicked");
+        }
 
         private void SetupSliders()
         {
-            float currentDB;
-            float linearValue;
+            float currentVolume;
 
-            // MASTER
-            if (_masterMixer.GetFloat(_mixerGroupsVolumes[0], out currentDB))
+            // Recupera e imposta il Master
+            if (_masterVca.isValid())
             {
-                linearValue = Mathf.Pow(10f, currentDB / 20f);
-                // Multiply by 10 to scale the 0-1 range to the 0-10 slider range
-                _masterSlider.value = linearValue * 10f;
+                _masterVca.getVolume(out currentVolume);
+                _masterSlider.value = currentVolume * 10f;
             }
 
-            // MUSIC
-            if (_masterMixer.GetFloat(_mixerGroupsVolumes[1], out currentDB))
+            // Recupera e imposta la Musica
+            if (_musicVca.isValid())
             {
-                linearValue = Mathf.Pow(10f, currentDB / 20f);
-                _musicSlider.value = linearValue * 10f;
+                _musicVca.getVolume(out currentVolume);
+                _musicSlider.value = currentVolume * 10f;
             }
 
-            // SFX
-            if (_masterMixer.GetFloat(_mixerGroupsVolumes[2], out currentDB))
+            // Recupera e imposta gli SFX
+            if (_sfxVca.isValid())
             {
-                linearValue = Mathf.Pow(10f, currentDB / 20f);
-                _sfxSlider.value = linearValue * 10f;
+                _sfxVca.getVolume(out currentVolume);
+                _sfxSlider.value = currentVolume * 10f;
             }
         }
 
         private void OnMasterVolumeChanged(ChangeEvent<float> evt)
         {
-            // The received value (evt.newValue) is between 0 and 10
-            float rawValue = evt.newValue;
+            // FMOD si aspetta un valore da 0 a 1, quindi basta dividere per 10
+            float normalizedValue = evt.newValue / 10f;
 
-            // Normalize: scale 0-10 to 0-1.
-            float normalizedValue = rawValue / 10f;
-
-            // Convert to Decibels (dB) using the normalized value.
-            // Using 0.0001f prevents issues with log(0).
-            float dBValue = Mathf.Log10(Mathf.Clamp(normalizedValue, 0.0001f, 1f)) * 20f;
-
-            _masterMixer.SetFloat(_mixerGroupsVolumes[0], dBValue);
+            if (_masterVca.isValid())
+                _masterVca.setVolume(normalizedValue);
         }
 
         private void OnMusicVolumeChanged(ChangeEvent<float> evt)
         {
-            float rawValue = evt.newValue;
-            float normalizedValue = rawValue / 10f;
+            float normalizedValue = evt.newValue / 10f;
 
-            float dBValue = Mathf.Log10(Mathf.Clamp(normalizedValue, 0.0001f, 1f)) * 20f;
-            _masterMixer.SetFloat(_mixerGroupsVolumes[1], dBValue);
+            if (_musicVca.isValid())
+                _musicVca.setVolume(normalizedValue);
         }
 
         private void OnSfxVolumeChanged(ChangeEvent<float> evt)
         {
-            float rawValue = evt.newValue;
-            float normalizedValue = rawValue / 10f;
+            float normalizedValue = evt.newValue / 10f;
 
-            float dBValue = Mathf.Log10(Mathf.Clamp(normalizedValue, 0.0001f, 1f)) * 20f;
-            _masterMixer.SetFloat(_mixerGroupsVolumes[2], dBValue);
+            if (_sfxVca.isValid())
+                _sfxVca.setVolume(normalizedValue);
         }
 
-
-
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
-
     }
 }
