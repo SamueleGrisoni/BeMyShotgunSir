@@ -51,6 +51,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _teamId = _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null;
 
             _viewModel.OnTeamTrackProgressChanged += TeamTrackProgressChangedHandler;
+            _viewModel.OnRaceTeamDataChanged += RaceTeamDataChangedHandler;
         }
 
         public override void OnFinalBindComplete()
@@ -86,8 +87,6 @@ namespace BeMyShotgunSir.Scripts.UI
             }
 
             ClearMarkers();
-
-            // SOInvisibility_PU.OnInvisibilityEffectApplied += OnInvisibilityEffectApplied;
         }
 
         private void OnDisable()
@@ -97,8 +96,6 @@ namespace BeMyShotgunSir.Scripts.UI
                 StopCoroutine(_markerLerpCoroutine);
                 _markerLerpCoroutine = null;
             }
-
-            // SOInvisibility_PU.OnInvisibilityEffectApplied -= OnInvisibilityEffectApplied;
         }
 
         private void ClearMarkers()
@@ -178,6 +175,7 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
+        #region Handlers
         private void TeamTrackProgressChangedHandler()
         {
             AssignMarkers();
@@ -188,9 +186,23 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 UpdateTeamMarker(teamsIdValuePair.Key, _viewModel.TeamTrackProgress[teamsIdValuePair.Key]);
             }
-
-
         }
+
+
+        private void RaceTeamDataChangedHandler()
+        {
+            if (_teamId == null)
+                return;
+
+            IReadOnlyDictionary<int, RaceTeamData> raceTeamData = new Dictionary<int, RaceTeamData>(_viewModel.NetState.TeamData);
+
+            foreach (KeyValuePair<int, RaceTeamData> teamData in raceTeamData)
+            {
+                if (_teamId != teamData.Key)
+                    CheckInvisibility(teamData.Key, teamData.Value);
+            }
+        }
+        #endregion
 
         private void UpdateTeamMarker(int teamIndex, TeamTrackProgress progress)
         {
@@ -199,22 +211,16 @@ namespace BeMyShotgunSir.Scripts.UI
 
             float normalizedPosition = GetSectionNormalizedPosition(progress);
             markerView.TargetPosition = normalizedPosition;
+        }
 
-            _viewModel.NetState.TryGetTeamData(teamIndex, out RaceTeamData teamData);
+        private void CheckInvisibility(int teamIndex, RaceTeamData teamData)
+        {
+            bool isInvisible = teamData.ActivePowerUpInfo.isInvisibilityActive;
 
-            bool isInvisible = false;
-
-            foreach (PowerUpIdentifier activePowerUpId in teamData.ActivePowerUps)
-            {
-                if (activePowerUpId.PowerUp == PowerUp.Invisibility)
-                {
-                    isInvisible = true;
-                    break;
-                }
-            }
-
+            _teamMarkers.TryGetValue(teamIndex, out TeamMarkerView markerView);
             ShowTeamMarker(markerView, isInvisible);
         }
+
 
         private void ShowTeamMarker(TeamMarkerView markerView, bool isInvisible)
         {
