@@ -50,3 +50,15 @@
     -unity-text-auto-size: best-fit 10px 250px;
     -unity-text-generator: advanced;
 }
+
+.settings-container {
+    flex-grow: 1;
+    position: absolute;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.71);
+    display: none;
+}

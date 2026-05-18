@@ -28,7 +28,7 @@ namespace BeMyShotgunSir.Scripts.UI
     {
         [Header("UI Controllers")]
         [Header("Central Hub")]
-        [SerializeField] private CentralHubController _centralHubController;
+        [SerializeField] private CentralHubViewController _centralHubViewController;
         [Header("Host Or Join Menu")]
         [SerializeField] private HostOrJoinViewController _hostOrJoinViewController;
 
@@ -51,7 +51,7 @@ namespace BeMyShotgunSir.Scripts.UI
             switch (screen)
             {
                 case UIScreen.CentralHub:
-                    _centralHubController.Show(show);
+                    _centralHubViewController.Show(show);
                     HideAllScreensExcept(centralHub: true);
                     break;
                 case UIScreen.HostOrJoin:
@@ -72,7 +72,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void HideAllScreensExcept(bool centralHub = false, bool hostOrJoin = false)
         {
-            if (!centralHub) _centralHubController.Show(false);
+            if (!centralHub) _centralHubViewController.Show(false);
             if (!hostOrJoin) _hostOrJoinViewController.Show(false);
         }
 

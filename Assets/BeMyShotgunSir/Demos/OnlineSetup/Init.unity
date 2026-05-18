@@ -363,6 +363,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.CentralHubController
   _uiControllerInit: {fileID: 1619524909}
   _centralHubDocument: {fileID: 772653375}
+  _masterMixer: {fileID: 24100000, guid: e8bac5037e4c0a14fa629694c55d18c0, type: 2}
+  _mixerGroupsVolumes:
+  - Master
+  - Music
+  - SFX
 --- !u!114 &772653375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4102c7198c57d497ea7acbf6b94ad486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.UIControllerInit
-  _centralHubController: {fileID: 772653374}
+  _centralHubViewController: {fileID: 772653374}
   _hostOrJoinViewController: {fileID: 603528906}
 --- !u!1 &1628785651
 GameObject:

@@ -1,0 +1,159 @@
+.settings-root {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.settings-title {
+    -unity-font-style: normal;
+    font-size: 200px;
+    color: white;
+    margin-top: auto;
+    margin-bottom: auto;
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+}
+
+.settings-panel {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(29, 29, 29, 0.95);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    padding: 24px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    border-top-width: 10px;
+    border-right-width: 10px;
+    border-bottom-width: 10px;
+    border-left-width: 10px;
+    border-left-color: rgba(255, 255, 255, 0.31);
+    border-right-color: rgba(255, 255, 255, 0.31);
+    border-top-color: rgba(255, 255, 255, 0.31);
+    border-bottom-color: rgba(255, 255, 255, 0.31);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.settings-section-title {
+    font-size: 120px;
+    color: rgb(255, 154, 104);
+    margin-top: 20px;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    -unity-text-align: middle-center;
+}
+
+.settings-slider-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+    margin: 20px 0;
+    width: 90%;
+    justify-content: flex-end;
+    height: 400px;
+}
+
+.settings-slider-label {
+    min-width: 200px;
+    max-width: 300px;
+    font-size: 80px;
+    color: white;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    -unity-text-align: middle-right;
+    white-space: normal;
+    margin-right: 50px;
+}
+
+.settings-slider-container {
+    flex-grow: 0;
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    top: -15px;
+}
+
+.settings-slider {
+    width: 100%;
+    height: 50px;
+    margin-top: -10px;
+    --unity-slider-background-color: rgb(40, 40, 72);
+    --unity-slider-fill-color: rgb(154, 104, 255);
+    --unity-slider-border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+}
+
+.settings-slider-value {
+    font-size: 32px;
+    color: white;
+    margin-left: 20px;
+    -unity-font-definition: resource("Fonts/EchoCity-Echotopia-Regular");
+    -unity-text-align: middle-right;
+}
+
+.settings-slider .unity-base-slider__drag-container {
+    display: flex;
+    justify-content: center;
+}
+
+.settings-slider .unity-base-slider__tracker {
+    height: 50px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.settings-slider .unity-base-slider__dragger {
+    width: 120px;
+    height: 120px;
+    border-radius: 999px;
+    background-color: white;
+    top: 0;
+}
+
+.menu-button {
+    width: 80%;
+    height: 200px;
+    border-radius: 40px;
+    border-width: 4px;
+    border-color: rgba(255, 255, 255, 0.15);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-bottom: 50px;
+    -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
+    font-size: 150px;
+    margin-top: 50px;
+}
+
+.sliders-container {
+    flex-grow: 1;
+    width: 90%;
+    align-self: center;
+    align-items: center;
+}
