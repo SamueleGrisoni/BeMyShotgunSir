@@ -50,7 +50,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             else
                 Log.WLazy(() => $"Trying to apply Spear effect for team {targetTeamId} but no shotgun nob found.", this);
 
-            runtime.Definition.OnExpire(runtime, context);
+            runtime.ActivePowerUpData.RemainingDuration = Duration;
         }
 
         public override void OnExpire(PowerUpRuntime runtime, StrategyContext context)
@@ -66,6 +66,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
                 targetTeamData.ActivePowerUpInfo.isTargetedBySpear = false;
                 raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.TargetTeamId.Value, targetTeamData);
             }
+
             else Log.WLazy(() => $"Trying to expire Spear effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no target team id found.", this);
             base.OnExpire(runtime, context);
         }
