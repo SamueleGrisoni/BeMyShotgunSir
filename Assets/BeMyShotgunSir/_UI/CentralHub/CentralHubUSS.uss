@@ -44,3 +44,9 @@
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
     font-size: 150px;
 }
+
+.play {
+    height: 500px;
+    -unity-text-auto-size: best-fit 10px 250px;
+    -unity-text-generator: advanced;
+}

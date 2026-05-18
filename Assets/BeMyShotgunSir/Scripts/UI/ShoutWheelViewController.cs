@@ -182,6 +182,8 @@ namespace BeMyShotgunSir.Scripts.UI
             Sprite icon = _powerUpIcons.GetIcon(inventory.SelectedSlot.Value.PowerUp);
 
             _powerUp.style.backgroundImage = new StyleBackground(icon);
+            _powerUp.style.display = DisplayStyle.Flex;
+
         }
 
 

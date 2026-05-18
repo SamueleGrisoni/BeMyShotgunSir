@@ -8,15 +8,15 @@
                 <ui:Label text="BE MY&#10;SHOTGUN,&#10;SIR!" name="Title"/>
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container">
-                <ui:Button name="PlayButton" class="menu-button">
+                <ui:Button name="PlayButton" class="menu-button play">
                     <ui:Label text="PLAY!" class="button-label"/>
                 </ui:Button>
-                <ui:Button name="SettingsButton" class="menu-button">
+                <!-- <ui:Button name="SettingsButton" class="menu-button">
                     <ui:Label text="SETTINGS" class="button-label"/>
                 </ui:Button>
                 <ui:Button name="FeedbackButton" class="menu-button">
                     <ui:Label text="FEEDBACK" class="button-label"/>
-                </ui:Button>
+                </ui:Button> -->
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
