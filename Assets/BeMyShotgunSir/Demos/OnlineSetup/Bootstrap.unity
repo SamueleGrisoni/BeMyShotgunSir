@@ -244,21 +244,21 @@ MonoBehaviour:
       Data2: 1154119569
       Data3: -1802772558
       Data4: 687230113
-    Path: event:/InitMusic
+    Path: event:/Music/InitMusic
   <LobbySceneMusic>k__BackingField:
     Guid:
       Data1: 1310057858
       Data2: 1205053454
       Data3: 2049348228
       Data4: 1343085448
-    Path: event:/LobbyMusic
+    Path: event:/Music/LobbyMusic
   <LoadingMusic>k__BackingField:
     Guid:
       Data1: -533416468
       Data2: 1301086552
       Data3: 1729341099
       Data4: -1670608820
-    Path: event:/LoadingMusic
+    Path: event:/Music/LoadingMusic
   <CountdownSound>k__BackingField:
     Guid:
       Data1: -1648667822
@@ -272,14 +272,14 @@ MonoBehaviour:
       Data2: 1108296786
       Data3: 1642543232
       Data4: -1020304315
-    Path: event:/RaceMusic
+    Path: event:/Music/RaceMusic
   <FinishRaceMusic>k__BackingField:
     Guid:
       Data1: 466101863
       Data2: 1141851193
       Data3: -2076931169
       Data4: 1880266018
-    Path: event:/FinishRaceMusic
+    Path: event:/Music/FinishRaceMusic
 --- !u!1001 &648135647
 PrefabInstance:
   m_ObjectHideFlags: 0
