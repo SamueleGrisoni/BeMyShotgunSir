@@ -431,8 +431,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 0}
-  m_SortingOrder: 0
+  sourceAsset: {fileID: 9197481963319205126, guid: fd811e0acc3554492bedd41df28e0cc0, type: 3}
+  m_SortingOrder: 98
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -645,7 +645,7 @@ MonoBehaviour:
   - _interfaceOwner: {fileID: 6501492836862139208}
   - _interfaceOwner: {fileID: 1185433174447249757}
   - _interfaceOwner: {fileID: 1599854040}
-  - _interfaceOwner: {fileID: 1599854040}
+  - _interfaceOwner: {fileID: 1229709097}
 --- !u!1 &606831962591698948
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,6 +978,7 @@ MonoBehaviour:
   _revealStepDelay: 0.5
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _powerUpsData: {fileID: 11400000, guid: abf26ee10e594fe4db43417fdeb2873d, type: 2}
+  _itemData: {fileID: 11400000, guid: e9dce43d4db29ec418ac6b7d49b839f3, type: 2}
 --- !u!114 &6659674886384904384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1086,6 +1087,7 @@ MonoBehaviour:
   _uiControllerRace: {fileID: 5075273795756905462}
   _hudDriverDocument: {fileID: 2670020652954514328}
   _topBarViewController: {fileID: 9112538945298442203}
+  _earlyCommitmentViewController: {fileID: 6188972351026919125}
 --- !u!1 &8810444420575351323
 GameObject:
   m_ObjectHideFlags: 0
