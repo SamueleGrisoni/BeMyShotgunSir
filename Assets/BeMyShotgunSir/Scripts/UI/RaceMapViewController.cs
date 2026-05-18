@@ -910,7 +910,10 @@ namespace BeMyShotgunSir.Scripts.UI
             _isShowing = show;
 
             if (!show)
+            {
+                _brokenRaceMap.style.display = DisplayStyle.None;
                 return;
+            }
 
             if (!_isHitBySpear)
             {
