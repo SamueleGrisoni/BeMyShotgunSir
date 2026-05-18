@@ -474,7 +474,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             {
                 float steerInput = InputConsumer.IsDrifting ? InputConsumer.DriftInput : InputConsumer.SteerInput;
                 UpdateActiveDriftIntent(InputConsumer.IsDrifting, steerInput);
-                rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
+                rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, _isStarting, _commitmentDirection);
                 _isBoosting = false;
                 _isStarting = false;
             }
@@ -938,6 +938,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         public int? GetTeamId() => TeamId;
+
+        public bool ShotgunPartOfTeam()
+        {
+            if (!TeamId.HasValue)
+                return false;
+
+            if (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData))
+            {
+                if (teamData.ShotgunConnectionId == LocalConnection.ClientId)
+                    return true;
+            }
+            return false;
+        }
 
         public void StartRace()
         {

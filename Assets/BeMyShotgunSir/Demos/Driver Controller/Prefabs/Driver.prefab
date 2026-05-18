@@ -62,12 +62,26 @@ MonoBehaviour:
       Data3: -1659768134
       Data4: -963470005
     Path: event:/LetsGo
+  _collisionEvent:
+    Guid:
+      Data1: -1270306617
+      Data2: 1277014847
+      Data3: -1659768134
+      Data4: -963470005
+    Path: event:/LetsGo
+  _oilEvent:
+    Guid:
+      Data1: -1270306617
+      Data2: 1277014847
+      Data3: -1659768134
+      Data4: -963470005
+    Path: event:/LetsGo
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 7864906868263305960}
   _parent: {fileID: 4998179860331136265}
   _sidecar: {fileID: 6190171562437922324}
   _visualModel: {fileID: 1312559053103448531}
-  _smoothingSpeedFast: 100
+  _smoothingSpeedFast: 30
   _teleportThreshold: 1
   _handle: {fileID: 6147583942181700300}
   _driftParticles:

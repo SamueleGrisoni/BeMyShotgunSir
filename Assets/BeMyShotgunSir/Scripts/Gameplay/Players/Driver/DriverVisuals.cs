@@ -9,10 +9,16 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
     public class DriverVisuals : NetworkBehaviour
     {
-        [Header("Audio")][SerializeField] private EventReference _engineEvent;
-        [Header("Audio")][SerializeField] private EventReference _driftEvent;
+        [Header("Audio")]
+        [SerializeField] private EventReference _engineEvent;
+        [SerializeField] private EventReference _driftEvent;
+        [SerializeField] private EventReference _collisionEvent;
+        [SerializeField] private EventReference _oilEvent;
         private EventInstance _engineInstance;
         private EventInstance _driftIstance;
+        private EventInstance _collisionInstance;
+        private EventInstance _oilInstance;
+
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
@@ -76,6 +82,12 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
             _driftIstance = RuntimeManager.CreateInstance(_driftEvent);
             _driftIstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+
+            _collisionInstance = RuntimeManager.CreateInstance(_collisionEvent);
+            _collisionInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+
+            _oilInstance = RuntimeManager.CreateInstance(_oilEvent);
+            _oilInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
         }
 
         public override void OnStopNetwork()
@@ -91,6 +103,16 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             {
                 _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 _driftIstance.release();
+            }
+            if (_collisionInstance.isValid())
+            {
+                _collisionInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                _collisionInstance.release();
+            }
+            if (_oilInstance.isValid())
+            {
+                _oilInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                _oilInstance.release();
             }
         }
 
@@ -124,6 +146,19 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         {
             if (IsServerInitialized)
             {
+                _parent.position = _movement.MovementPosition;
+                _parent.rotation = _movement.ParentRotation;
+                _sidecar.localRotation = _movement.SidecarLocalRotation;
+            }
+            else
+            {
+                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedFast);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedFast);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedFast);
+            }
+            /*
+            if (IsServerInitialized)
+            {
                 _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedFast);
                 _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedFast);
                 _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedFast);
@@ -134,10 +169,17 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 _parent.rotation = _movement.ParentRotation;
                 _sidecar.localRotation = _movement.SidecarLocalRotation;
             }
+            else if (!IsOwner && _movement.ShotgunPartOfTeam())
+            {
+                _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * 10f);
+                _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * 10f);
+                _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * 10f);
+            }
             else
             {
                 ApplySnapshotInterpolation();
             }
+            */
 
             AnimateSteer();
             AnimateDrifting();
@@ -203,10 +245,19 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 tr.emitting = isDrifting;
             }
 
+            if (!_movement.ShotgunPartOfTeam() && !IsOwner) return;
+
+            _driftIstance.getPlaybackState(out PLAYBACK_STATE playbackState);
             if (isDrifting)
-                _driftIstance.start();
+            {
+                if (playbackState == PLAYBACK_STATE.STOPPED)
+                    _driftIstance.start();
+            }
             else
-                _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            {
+                if (playbackState != PLAYBACK_STATE.STOPPED)
+                    _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
         }
         private void AnimateBoost()
         {
@@ -218,14 +269,20 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 ParticleSystem.EmissionModule emission = p.emission;
                 emission.enabled = isBoosting;
             }
+
+            if (!_movement.ShotgunPartOfTeam() && !IsOwner) return;
+            // SOUND
         }
         public void OilAnimation()
         {
-            // SOUND
             if (_visualModelAnimator != null)
             {
                 _visualModelAnimator.SetTrigger("Oil");
             }
+
+            if (!_movement.ShotgunPartOfTeam() && !IsOwner) return;
+
+            RuntimeManager.PlayOneShotAttached(_oilEvent, gameObject);
         }
 
         public void SetArmorVisualEffects(bool isActive)
@@ -255,12 +312,20 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         {
             if (_visualModelAnimator != null)
                 _visualModelAnimator.SetTrigger("HitRight");
+
+            if (!_movement.ShotgunPartOfTeam() && !IsOwner) return;
+
+            RuntimeManager.PlayOneShotAttached(_collisionEvent, gameObject);
         }
 
         public void LeftCollisionAnimation()
         {
             if (_visualModelAnimator != null)
                 _visualModelAnimator.SetTrigger("HitLeft");
+
+            if (!_movement.ShotgunPartOfTeam() && !IsOwner) return;
+
+            RuntimeManager.PlayOneShotAttached(_collisionEvent, gameObject);
         }
     }
 }
