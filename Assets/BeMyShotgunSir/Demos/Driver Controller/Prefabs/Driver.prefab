@@ -197,8 +197,8 @@ MonoBehaviour:
   _sidecarLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  _bumpRadius: 1.1
-  _bumpForce: 50
+  _sidecarCollisionsRadius: 1.1
+  _sidecarCollisionsForce: 50
   _steerDecaySeconds: 0.001
   _hoverHeight: 0.005
   _springForce: 50
@@ -212,6 +212,7 @@ MonoBehaviour:
   _debugPowerUp: 0
   _onGrassBufferMin: 10
   _debugAim: 0
+  _debugBumpState: 0
 --- !u!54 &2139825348868955056
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -800,7 +801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}

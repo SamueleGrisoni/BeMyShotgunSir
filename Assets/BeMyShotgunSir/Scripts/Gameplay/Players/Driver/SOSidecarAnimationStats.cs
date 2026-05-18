@@ -12,5 +12,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [field: Header("--- Oil Animation ---")]
         [field: SerializeField] public float OilTotalRotation { get; private set; }
         [field: SerializeField] public float OilAnimationDuration { get; private set; }
+
+        [field: Header("--- Bump ---")]
+        [field: SerializeField] public float BumpForce { get; private set; }
+        [field: SerializeField] public float BumpStunDuration { get; private set; }
+        [field: SerializeField] public float BumpRadius { get; private set; }
+        [field: SerializeField] public float RotationPerTick { get; private set; }
     }
 }
