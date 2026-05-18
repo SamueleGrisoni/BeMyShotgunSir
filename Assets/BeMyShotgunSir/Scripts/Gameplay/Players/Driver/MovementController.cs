@@ -323,6 +323,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (InputConsumer != null)
             {
                 InputConsumer.OnBoostPressed += ExecuteBoost;
+                InputConsumer.OnStartPressed += ExecuteStart;
                 InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
                 InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedbackPressed;
             }
@@ -551,11 +552,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             }
 
             if (state != ReplicateState.Replayed)
+            {
                 _currentSteerInput = data.SteerInput;
-
-            _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
-            _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive);
-            _driverVisual.SetAimVisualEffects(teamData.ActivePowerUpInfo.isSpearPowerUpActive || teamData.ActivePowerUpInfo.isStealPowerUpActive);
+                _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
+                _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive);
+                _driverVisual.SetAimVisualEffects(teamData.ActivePowerUpInfo.isSpearPowerUpActive || teamData.ActivePowerUpInfo.isStealPowerUpActive);
+            }
         }
 
         private LayerMask GetCommitmentCollisionLayer(CommitmentDirection direction)

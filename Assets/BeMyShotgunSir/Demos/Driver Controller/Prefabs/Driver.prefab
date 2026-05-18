@@ -55,7 +55,13 @@ MonoBehaviour:
       Data3: -261836905
       Data4: 928685484
     Path: event:/Drive
-  _audioSource: {fileID: 0}
+  _driftEvent:
+    Guid:
+      Data1: -1270306617
+      Data2: 1277014847
+      Data3: -1659768134
+      Data4: -963470005
+    Path: event:/LetsGo
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 7864906868263305960}
   _parent: {fileID: 4998179860331136265}
@@ -215,7 +221,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 262144
   _log: 0
-  _isDebugInputEnabled: 1
+  _isDebugInputEnabled: 0
   _debugPowerUp: 0
   _onGrassBufferMin: 10
   _debugAim: 0
@@ -673,7 +679,6 @@ GameObject:
   - component: {fileID: 7387308273733314743}
   - component: {fileID: 3826133632397438374}
   - component: {fileID: 689659619137367902}
-  - component: {fileID: 8788195671262239119}
   m_Layer: 0
   m_Name: Driver
   m_TagString: Untagged
@@ -907,28 +912,6 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
---- !u!95 &8788195671262239119
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8924365376436740663}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 10ea17a7c5ec24d4eaddf7e340f4f56c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2079169082985369013
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1117,6 +1100,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4998179860331136265}
     m_Modifications:
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.69126093
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7226053
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -92.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_Name
+      value: Sidecar
+      objectReference: {fileID: 0}
     - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1233,30 +1240,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 68e61076405a7d4418f36245a3d81d23, type: 2}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.69126093
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7226053
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -92.54
-      objectReference: {fileID: 0}
-    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_Name
-      value: Sidecar
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3504026666543589728, guid: 9392c8d687b88474d99804d995d01712, type: 3}

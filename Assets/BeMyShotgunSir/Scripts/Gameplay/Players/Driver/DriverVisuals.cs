@@ -10,8 +10,9 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
     public class DriverVisuals : NetworkBehaviour
     {
         [Header("Audio")][SerializeField] private EventReference _engineEvent;
+        [Header("Audio")][SerializeField] private EventReference _driftEvent;
         private EventInstance _engineInstance;
-        [SerializeField] private AudioSource _audioSource;
+        private EventInstance _driftIstance;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
@@ -50,7 +51,6 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         private double _prevSnapshotTime;
         private double _nextSnapshotTime;
         private bool _hasFirstSnapshot;
-        private float _timeSinceLastTick = 0f;
 
         public override void OnStartNetwork()
         {
@@ -73,6 +73,9 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             _engineInstance = RuntimeManager.CreateInstance(_engineEvent);
             _engineInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
             _engineInstance.start();
+
+            _driftIstance = RuntimeManager.CreateInstance(_driftEvent);
+            _driftIstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
         }
 
         public override void OnStopNetwork()
@@ -83,6 +86,11 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             {
                 _engineInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 _engineInstance.release();
+            }
+            if (_driftIstance.isValid())
+            {
+                _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                _driftIstance.release();
             }
         }
 
@@ -101,7 +109,6 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             };
             _nextSnapshotTime = TimeManager.TicksToTime(TimeManager.LocalTick);
             _hasFirstSnapshot = true;
-            _timeSinceLastTick = 0f;
         }
 
         private void Update()
@@ -115,8 +122,6 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
         private void LateUpdate()
         {
-            _timeSinceLastTick += Time.deltaTime;
-
             if (IsServerInitialized)
             {
                 _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedFast);
@@ -197,6 +202,11 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             {
                 tr.emitting = isDrifting;
             }
+
+            if (isDrifting)
+                _driftIstance.start();
+            else
+                _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
         private void AnimateBoost()
         {
