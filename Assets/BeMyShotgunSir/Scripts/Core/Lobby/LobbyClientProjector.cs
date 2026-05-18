@@ -1,4 +1,3 @@
-using BeMyShotgunSir.Scripts.Events;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
@@ -9,15 +8,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     {
         private ILobbyNetStateSubscribe _state;
         private LobbyViewModel _viewModel;
-        [SerializeField] private SOLobbySounds _sounds;
-        private SOAudioRequestEvent _audioRequestEvent;
 
         private void Awake()
         {
             _state = GetComponent<LobbyNetStateStore>();
             if (_state == null)
                 Debug.LogError("LobbyClientProjection requires LobbyNetStateStore on the same GameObject.", this);
-            _audioRequestEvent = GameServices.Instance.Channels.AudioRequestEvent;
 
         }
 

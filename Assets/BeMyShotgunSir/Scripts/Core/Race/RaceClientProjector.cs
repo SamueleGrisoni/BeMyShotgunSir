@@ -15,7 +15,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IRaceNetStateSubscribe _state;
         private RaceViewModel _viewModel;
         private SOAudioRequestEvent _audioRequestEvent;
-        [SerializeField] private SORaceSounds _sounds;
 
         private void Awake()
         {
@@ -24,8 +23,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             if (_state == null)
                 Log.ELazy(() => "RaceClientProjection requires RaceNetStateStore on the same GameObject.", this);
-            if (_sounds == null)
-                Log.ELazy(() => $"SORaceSounds reference is not assigned in the inspector.", this);
         }
 
         private void OnEnable()

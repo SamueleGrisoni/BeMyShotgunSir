@@ -1,6 +1,4 @@
 using System;
-using BeMyShotgunSir.Scripts.Core;
-using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.Messages;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
@@ -9,6 +7,8 @@ using BeMyShotgunSir.Scripts.UI;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Connection;
 using FishNet.Object;
+using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Gameplay.Players
@@ -17,7 +17,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
     {
         private bool _log = true;
         private bool _isInitialized = false;
-        [SerializeField] private AudioSource _audioSource;
         public static event Action<ShotgunController> OnShotgunSpawned;
         public static event Action OnShotgunInitialized;
         public IShotgunInputConsumer _inputConsumer;
@@ -27,6 +26,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         private RaceNetStateStore _netState;
         public int? TeamId => _teamNetController == null ? null : _teamNetController.TeamId;
         public void SetName(string name) => transform.name = name;
+
+        [Header("Audio")]
+        [SerializeField] private EventReference _pickUpPowerUpEvent;
+        [SerializeField] private EventReference _sufferSpearEvent;
 
         public override void OnStartClient()
         {
@@ -60,16 +63,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         [TargetRpc]
         public void ApplySpearEffect_TargetRpc(NetworkConnection conn)
         {
-            //SOUND
-            Log.DLazy(() => $"Applying Spear effect on shotgun for team {TeamId}.", this, _log); //TODO actual effect
+            EventInstance eventInstance = RuntimeManager.CreateInstance(_sufferSpearEvent);
+            eventInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+            if (eventInstance.isValid())
+                eventInstance.start();
         }
 
         [TargetRpc]
         public void PickUpPowerUp_TargetRpc(NetworkConnection conn)
         {
-            //SOUND
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
-            Log.DLazy(() => $"Picking up Power-Up on shotgun for team {TeamId}.", this, _log); //TODO actual effect
+            EventInstance eventInstance = RuntimeManager.CreateInstance(_pickUpPowerUpEvent);
+            eventInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+            if (eventInstance.isValid())
+                eventInstance.start();
         }
 
         [Server] //TODO UI Bind

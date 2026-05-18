@@ -324,8 +324,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public bool isStealPowerUpActive;
         public bool isRerollPowerUpActive;
         public bool isRoadBlockActive;
-        public override string ToString() => $"ActivePowerUpInfo: isShieldActive: {isShieldActive}, isArmorActive: {isArmorActive}, isInvisibilityActive: {isInvisibilityActive}, isSpearPowerUpActive: {isSpearPowerUpActive}, isStealPowerUpActive: {isStealPowerUpActive}, isRerollPowerUpActive: {isRerollPowerUpActive}, isRoadBlockActive: {isRoadBlockActive}";
-        public ActivePowerUpsInfo(bool isShieldActive = false, bool isArmorActive = false, bool isInvisibilityActive = false, bool isSpearPowerUpActive = false, bool isStealPowerUpActive = false, bool isRerollPowerUpActive = false, bool isRoadBlockActive = false)
+        public bool isTargetedBySpear;
+
+        public override string ToString() => $"ActivePowerUpInfo: isShieldActive: {isShieldActive}, isArmorActive: {isArmorActive}, isInvisibilityActive: {isInvisibilityActive}, isSpearPowerUpActive: {isSpearPowerUpActive}, isStealPowerUpActive: {isStealPowerUpActive}, isRerollPowerUpActive: {isRerollPowerUpActive}, isRoadBlockActive: {isRoadBlockActive}, isTargetedBySpear: {isTargetedBySpear}";
+        public ActivePowerUpsInfo(bool isShieldActive = false, bool isArmorActive = false, bool isInvisibilityActive = false, bool isSpearPowerUpActive = false, bool isStealPowerUpActive = false, bool isRerollPowerUpActive = false, bool isRoadBlockActive = false, bool isTargetedBySpear = false)
         {
             this.isShieldActive = isShieldActive;
             this.isArmorActive = isArmorActive;
@@ -334,6 +336,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             this.isStealPowerUpActive = isStealPowerUpActive;
             this.isRerollPowerUpActive = isRerollPowerUpActive;
             this.isRoadBlockActive = isRoadBlockActive;
+            this.isTargetedBySpear = isTargetedBySpear;
         }
     }
 

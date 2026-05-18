@@ -38,12 +38,14 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
                 {
                     if (targetPlayerState.Connection != null)
                     {
+                        raceNetStateStore.TryGetTeamData(targetTeamId, out RaceTeamData targetTeamData);
+                        targetTeamData.ActivePowerUpInfo.isTargetedBySpear = true;
+                        raceNetStateStore.SetTeamData(targetTeamId, targetTeamData);
                         targetShotgun.GetComponent<ShotgunController>().ApplySpearEffect_TargetRpc(targetPlayerState.Connection);
                     }
                     else
                         Log.WLazy(() => $"Trying to apply Spear effect for team {targetTeamId} but no connection found for player.", this);
                 }
-                // targetShotgun.GetComponent<ShotgunController>().ApplySpearEffect_TargetRpc();
             }
             else
                 Log.WLazy(() => $"Trying to apply Spear effect for team {targetTeamId} but no shotgun nob found.", this);
@@ -57,6 +59,14 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData.ActivePowerUpInfo.isSpearPowerUpActive = false;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+
+            if (runtime.ActivePowerUpData.TargetTeamId.HasValue)
+            {
+                raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.TargetTeamId.Value, out RaceTeamData targetTeamData);
+                targetTeamData.ActivePowerUpInfo.isTargetedBySpear = false;
+                raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.TargetTeamId.Value, targetTeamData);
+            }
+            else Log.WLazy(() => $"Trying to expire Spear effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no target team id found.", this);
             base.OnExpire(runtime, context);
         }
     }

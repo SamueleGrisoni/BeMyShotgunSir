@@ -287,9 +287,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             _raceNetState.SetPlayerInventory(teamId, inventory);
             Log.DLazy(() => $"Added power-up {powerUpType} to team {teamId}. Inventory now: {inventory}", this, _log);
             _raceNetState.TryGetShotgunNob(teamId, out NetworkObject shotgunNob);
-            _raceNetState.TryGetTeamShotgunConnectionId(teamId, out int connectionId);
+            _raceNetState.TryGetTeamShotgunConnectionId(teamId, out int shotgunConnectionId);
+            _raceNetState.TryGetTeamDriverConnectionId(teamId, out int driverConnectionId);
             if (shotgunNob != null)
-                shotgunNob.GetComponent<ShotgunController>().PickUpPowerUp_TargetRpc(_raceNetState.LobbyNetStateStore.PlayerStates[connectionId].Connection);
+            {
+                shotgunNob.GetComponent<ShotgunController>().PickUpPowerUp_TargetRpc(_raceNetState.LobbyNetStateStore.PlayerStates[shotgunConnectionId].Connection);
+                shotgunNob.GetComponent<ShotgunController>().PickUpPowerUp_TargetRpc(_raceNetState.LobbyNetStateStore.PlayerStates[driverConnectionId].Connection);
+            }
             return true;
         }
 
