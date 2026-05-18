@@ -34,7 +34,7 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         [field: SerializeField] public EventReference PlayerLeaveSFX { get; private set; }
         [field: SerializeField] public EventReference LetsGoSFX { get; private set; }
         [field: SerializeField] public EventReference PlayerReadySFX { get; private set; }
-        [field: SerializeField] public EventReference TeamMateSelectedSFX { get; private set; }
+        [field: SerializeField] public EventReference JoinTeamSFX { get; private set; }
         [field: SerializeField] public EventReference LeaveTeamSFX { get; private set; }
         private ServerManager _serverManager;
         private LobbyNetStateStore _netState;
@@ -213,8 +213,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void TeamMateSelected_TargetRpc(NetworkConnection conn, string teammateName)
         {
             Log.DLazy(() => $"Teammate {teammateName} selected.", this, _log);
-            if (!TeamMateSelectedSFX.IsNull)
-                RuntimeManager.PlayOneShot(TeamMateSelectedSFX, transform.position);
+            if (!JoinTeamSFX.IsNull)
+                RuntimeManager.PlayOneShot(JoinTeamSFX, transform.position);
         }
 
         [ServerRpc(RequireOwnership = false)]

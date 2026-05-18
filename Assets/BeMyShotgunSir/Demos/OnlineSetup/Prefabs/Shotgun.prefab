@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4995661455998479204}
   - component: {fileID: 6241470845712979180}
   - component: {fileID: -1998796233635084467}
-  - component: {fileID: 5982242696334384176}
   m_Layer: 6
   m_Name: Shotgun
   m_TagString: Untagged
@@ -108,7 +107,20 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 4995661455998479204}
   _networkObjectCache: {fileID: 4995661455998479204}
-  _audioSource: {fileID: 0}
+  _pickUpPowerUpEvent:
+    Guid:
+      Data1: 445006431
+      Data2: 1337899319
+      Data3: -1988885106
+      Data4: -813313809
+    Path: event:/Movement/PickPowerUp
+  _sufferSpearEvent:
+    Guid:
+      Data1: 937152239
+      Data2: 1308664950
+      Data3: 1324523409
+      Data4: 514640491
+    Path: event:/PowerUps/SufferSpear
 --- !u!114 &-1998796233635084467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,34 +167,3 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
---- !u!114 &5982242696334384176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2943404762094714123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  Event: 
-  EventPlayTrigger: 0
-  EventStopTrigger: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1

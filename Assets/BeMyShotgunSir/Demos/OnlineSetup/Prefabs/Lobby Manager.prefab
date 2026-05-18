@@ -132,42 +132,42 @@ MonoBehaviour:
       Data2: 1278150717
       Data3: 1696733351
       Data4: 457444299
-    Path: event:/PlayerJoin
+    Path: event:/Lobby/PlayerJoin
   <PlayerLeaveSFX>k__BackingField:
     Guid:
       Data1: -589734932
       Data2: 1290095900
       Data3: -1678541655
       Data4: -1578364346
-    Path: event:/PlayerLeave
+    Path: event:/Lobby/PlayerLeave
   <LetsGoSFX>k__BackingField:
     Guid:
       Data1: -1270306617
       Data2: 1277014847
       Data3: -1659768134
       Data4: -963470005
-    Path: event:/LetsGo
+    Path: event:/Lobby/LetsGo
   <PlayerReadySFX>k__BackingField:
     Guid:
       Data1: -1329560427
       Data2: 1286662809
       Data3: -93757805
       Data4: -2065414183
-    Path: event:/PlayerReady
-  <TeamMateSelectedSFX>k__BackingField:
+    Path: event:/Lobby/PlayerReady
+  <JoinTeamSFX>k__BackingField:
     Guid:
       Data1: -1401596007
       Data2: 1089831430
       Data3: 742083712
       Data4: 1962481836
-    Path: event:/SelectTeam
+    Path: event:/Lobby/JoinTeam
   <LeaveTeamSFX>k__BackingField:
     Guid:
-      Data1: -589734932
-      Data2: 1290095900
-      Data3: -1678541655
-      Data4: -1578364346
-    Path: event:/PlayerLeave
+      Data1: 1218747941
+      Data2: 1299929807
+      Data3: 1328995757
+      Data4: -958707420
+    Path: event:/Lobby/LeaveTeam
   _raceManager: {fileID: 3414248990729970632, guid: 515c13b689a1d004a9c85aaae30f5784, type: 3}
 --- !u!114 &7691412910215016252
 MonoBehaviour:
@@ -196,4 +196,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14d555ee6db5f0948a7ac6794fec8b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Core.Lobby.LobbyClientProjector
-  _sounds: {fileID: 11400000, guid: 1cec94964cd47174a8c2565159ad3408, type: 2}
