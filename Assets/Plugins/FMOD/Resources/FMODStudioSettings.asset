@@ -23,7 +23,7 @@ MonoBehaviour:
       Value: 9264
       HasValue: 1
     Overlay:
-      Value: 0
+      Value: 1
       HasValue: 1
     OverlayPosition:
       Value: 0
@@ -38,8 +38,8 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     BuildDirectory:
-      Value: Mobile
-      HasValue: 1
+      Value: 
+      HasValue: 0
     SpeakerMode:
       Value: 3
       HasValue: 1
@@ -118,7 +118,7 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     SampleRate:
-      Value: 0
+      Value: 48000
       HasValue: 1
     BuildDirectory:
       Value: 
@@ -245,7 +245,7 @@ MonoBehaviour:
   HasSourceProject: 0
   HasPlatforms: 0
   sourceProjectPath: 
-  sourceBankPath: Assets/BeMyShotgunSir/Audio/FMOD_Banks/Mobile
+  sourceBankPath: Assets/BeMyShotgunSir/Audio/FMOD_Banks/Desktop
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1

@@ -54,28 +54,42 @@ MonoBehaviour:
       Data2: 1268139489
       Data3: -261836905
       Data4: 928685484
-    Path: event:/Drive
+    Path: event:/Movement/Drive
   _driftEvent:
     Guid:
-      Data1: -1270306617
-      Data2: 1277014847
-      Data3: -1659768134
-      Data4: -963470005
-    Path: event:/LetsGo
+      Data1: -263505151
+      Data2: 1154359381
+      Data3: -192501083
+      Data4: 1465625693
+    Path: event:/Movement/Drift
   _collisionEvent:
     Guid:
-      Data1: -1270306617
-      Data2: 1277014847
-      Data3: -1659768134
-      Data4: -963470005
-    Path: event:/LetsGo
+      Data1: -10045767
+      Data2: 1316974562
+      Data3: -1039330157
+      Data4: 1077213124
+    Path: event:/Movement/Collision
   _oilEvent:
     Guid:
-      Data1: -1270306617
-      Data2: 1277014847
-      Data3: -1659768134
-      Data4: -963470005
-    Path: event:/LetsGo
+      Data1: 190858686
+      Data2: 1294011350
+      Data3: -1905205339
+      Data4: 642665387
+    Path: event:/Movement/OilSlip
+  _armorCollisionEvent:
+    Guid:
+      Data1: -2055057479
+      Data2: 1227312577
+      Data3: 1456756881
+      Data4: -1073449526
+    Path: event:/Movement/Armor Collision
+  _barrierCollisionEvent:
+    Guid:
+      Data1: 1305057684
+      Data2: 1184131319
+      Data3: -790380394
+      Data4: -5230235
+    Path: event:/Movement/BarrerCollision
   _stats: {fileID: 3826133632397438374}
   _movement: {fileID: 7864906868263305960}
   _parent: {fileID: 4998179860331136265}

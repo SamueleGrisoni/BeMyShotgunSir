@@ -37,6 +37,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         void OilAnimation();
         bool CheckForkBarrierCollision();
         void ApplyBump(float bumpForce, Vector3 direction);
+        void BumpSoundEffect();
         GroundType CheckGround();
         float TickDelta();
         bool IsOnwer { get; }

@@ -8,6 +8,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
         {
             controller.ApplyBump(controller.AnimationStats.BumpForce, -controller.SidecarForward);
             controller.BumpTimer = 0f;
+
+            if (!isReplayed)
+                controller.BumpSoundEffect();
         }
         public void CheckStateChange(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {

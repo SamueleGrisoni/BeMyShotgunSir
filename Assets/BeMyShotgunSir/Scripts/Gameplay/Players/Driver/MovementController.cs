@@ -26,7 +26,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Oil,
     }
 
-    public enum DrivingStateTpye : byte
+    public enum DrivingStateType : byte
     {
         Idle,
         Normal,
@@ -81,12 +81,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public float BoostTimer;
         public float OilAnimationTimer;
         public float BumpTimer;
-        public DrivingStateTpye StateType;
-        public DrivingStateTpye PreviousStateType;
+        public DrivingStateType StateType;
+        public DrivingStateType PreviousStateType;
         public int GrassBuffer;
         public ReconcileData(PredictionRigidbody pr, float parentRotationY, float sidecarLocalRotationY, Vector3 currentLinearVelocity,
                                 float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, float oilAnimationTimer, float bumpTimer,
-                                DrivingStateTpye stateType, DrivingStateTpye previousStateType, int grassBuffer) : this()
+                                DrivingStateType stateType, DrivingStateType previousStateType, int grassBuffer) : this()
         {
             PredictionRigidbody = pr;
             ParentRotationY = parentRotationY;
@@ -162,8 +162,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             set => _isOilAnimationActive = value;
         }
 
-        public bool IsBoosting() => _currentStateType == DrivingStateTpye.Boost;
-        public bool IsDrifting() => _currentStateType == DrivingStateTpye.Drifting;
+        public bool IsBoosting() => _currentStateType == DrivingStateType.Boost;
+        public bool IsDrifting() => _currentStateType == DrivingStateType.Drifting;
         public float CurrentSteerInput => _currentSteerInput;
         public float CurrentOilAnimationTimer => _oilAnimationTimer;
 
@@ -250,8 +250,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private IDrivingState _currentDrivingState;
         private IDrivingState _previousDrivingState;
-        private DrivingStateTpye _currentStateType;
-        private DrivingStateTpye _previousStateType;
+        private DrivingStateType _currentStateType;
+        private DrivingStateType _previousStateType;
 
         private IDrivingState _idleState = new IdleDrivingState();
         private IDrivingState _normalState = new NormalDrivingState();
@@ -281,7 +281,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         private readonly SyncVar<CommitmentInfo> _commitmentInfo = new(CommitmentInfo.Disable);
 
-        public event Action<DrivingStateTpye> OnDrivingStateChanged;
+        public event Action<DrivingStateType> OnDrivingStateChanged;
 
         #endregion
 
@@ -297,9 +297,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentLinearVelocity = Vector3.zero;
 
             _currentDrivingState = _idleState;
-            _currentStateType = DrivingStateTpye.Idle;
+            _currentStateType = DrivingStateType.Idle;
             _previousDrivingState = _idleState;
-            _previousStateType = DrivingStateTpye.Idle;
+            _previousStateType = DrivingStateType.Idle;
 
             _isBoosting = false;
             _isOilAnimationActive = false;
@@ -794,6 +794,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _driverVisual.OilAnimation();
         }
 
+        void IDrivingStateContext.BumpSoundEffect()
+        {
+            _driverVisual.BumpSoundEffect();
+        }
+
 
         bool IDrivingStateContext.CheckForkBarrierCollision()
         {
@@ -910,31 +915,31 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         #endregion
 
         #region State mapping helpers
-        private IDrivingState GetStateType(DrivingStateTpye stateType)
+        private IDrivingState GetStateType(DrivingStateType stateType)
         {
             switch (stateType)
             {
-                case DrivingStateTpye.Idle: return _idleState;
-                case DrivingStateTpye.Normal: return _normalState;
-                case DrivingStateTpye.Drifting: return _driftingState;
-                case DrivingStateTpye.Boost: return _boostState;
-                case DrivingStateTpye.Grass: return _grassState;
-                case DrivingStateTpye.Oil: return _oilState;
-                case DrivingStateTpye.Bump: return _bumpState;
+                case DrivingStateType.Idle: return _idleState;
+                case DrivingStateType.Normal: return _normalState;
+                case DrivingStateType.Drifting: return _driftingState;
+                case DrivingStateType.Boost: return _boostState;
+                case DrivingStateType.Grass: return _grassState;
+                case DrivingStateType.Oil: return _oilState;
+                case DrivingStateType.Bump: return _bumpState;
                 default:
                     return _normalState;
             }
         }
-        private DrivingStateTpye GetStateType(IDrivingState drivingState)
+        private DrivingStateType GetStateType(IDrivingState drivingState)
         {
-            if (drivingState == _idleState) return DrivingStateTpye.Idle;
-            else if (drivingState == _normalState) return DrivingStateTpye.Normal;
-            else if (drivingState == _driftingState) return DrivingStateTpye.Drifting;
-            else if (drivingState == _boostState) return DrivingStateTpye.Boost;
-            else if (drivingState == _grassState) return DrivingStateTpye.Grass;
-            else if (drivingState == _oilState) return DrivingStateTpye.Oil;
-            else if (drivingState == _bumpState) return DrivingStateTpye.Bump;
-            else return DrivingStateTpye.Normal;
+            if (drivingState == _idleState) return DrivingStateType.Idle;
+            else if (drivingState == _normalState) return DrivingStateType.Normal;
+            else if (drivingState == _driftingState) return DrivingStateType.Drifting;
+            else if (drivingState == _boostState) return DrivingStateType.Boost;
+            else if (drivingState == _grassState) return DrivingStateType.Grass;
+            else if (drivingState == _oilState) return DrivingStateType.Oil;
+            else if (drivingState == _bumpState) return DrivingStateType.Bump;
+            else return DrivingStateType.Normal;
         }
 
         public int? GetTeamId() => TeamId;
