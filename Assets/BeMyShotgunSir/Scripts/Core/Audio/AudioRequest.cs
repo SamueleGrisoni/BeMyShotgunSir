@@ -10,7 +10,6 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
         Stop,
         Loading,
         StartRace,
-        RaceFinish,
         PlayerJoin,
         PlayerLeave,
         OilSlip,

@@ -127,13 +127,9 @@ namespace BeMyShotgunSir.Scripts.Core.Audio
                         StopCurrentBGM();
                         PlayBGM(StartRaceMusic);
                         break;
-                    case RequestEnum.RaceFinish:
+                    case RequestEnum.FinishRace:
                         StopCurrentBGM();
                         PlayBGM(FinishRaceMusic);
-                        break;
-                    case RequestEnum.FinishRace:
-                        if (request.Type != RequestEnum.FinishRace)
-                            return;
                         break;
                     default:
                         break;
