@@ -276,7 +276,7 @@ namespace BeMyShotgunSir.Scripts.UI
             if (_runStopToggle) _runStopButton.AddToClassList("toggled");
             else _runStopButton.RemoveFromClassList("toggled");
 
-            _inputPublisher.SetIsMoving(_runStopToggle);
+            _inputPublisher.PressStart();
         }
 
         #endregion
