@@ -94,6 +94,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _needsMapRebuild;
 
         private bool _isShowing = false;
+        private int? _teamId;
         private bool _isHitBySpear = false;
 
         #endregion
@@ -114,8 +115,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _command = _initialBindSource.Command;
             _viewModel = _initialBindSource.ViewModel;
-
-            _viewModel.OnRaceTeamDataChanged += CheckPowerUpUpdateFromTeamData;
         }
 
         public override void OnFinalBindComplete()
@@ -130,13 +129,19 @@ namespace BeMyShotgunSir.Scripts.UI
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
 
+            if (_role == RaceRole.Shotgun)
+            {
+                _teamId = _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null;
+                _viewModel.OnRaceTeamDataChanged += CheckPowerUpUpdateFromTeamData;
+
+                RoadManager.OnSplitGeneratedProvided += SplitGeneratedHandler;
+
+                BuildFogGrid();
+                BuildFogRevealOrder();
+                ResetFogRevealProgress();
+            }
         }
 
-        private void Awake()
-        {
-            RoadManager.OnSplitGeneratedProvided += SplitGeneratedHandler;
-            Log.DLazy(() => "RaceMapViewController enabled and subscribed to OnSplitGeneratedProvided event.", this);
-        }
 
         private void OnDestroy()
         {
@@ -179,10 +184,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _mapTiles.Clear();
             _mapTiles.Add(_mapContent);
 
-            BuildFogGrid();
-            BuildFogRevealOrder();
-            ResetFogRevealProgress();
-
             Show(false);
         }
 
@@ -212,16 +213,11 @@ namespace BeMyShotgunSir.Scripts.UI
             if (_viewModel == null)
                 return;
 
-            _viewModel.NetState.TryGetTeamData((int)(_viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null), out RaceTeamData teamData);
+            IReadOnlyDictionary<int, RaceTeamData> raceTeamData = new Dictionary<int, RaceTeamData>(_viewModel.NetState.TeamData);
+            _isHitBySpear = raceTeamData.TryGetValue(_teamId.Value, out RaceTeamData teamData) && teamData.ActivePowerUpInfo.isTargetedBySpear;
 
-            foreach (PowerUpIdentifier powerUpId in teamData.TargetedByPowerUps)
-            {
-                if (powerUpId.PowerUp == PowerUp.Spear)
-                {
-                    _isHitBySpear = true;
-                    break;
-                }
-            }
+            if (_isShowing)
+                Show(true);
         }
 
         #endregion
