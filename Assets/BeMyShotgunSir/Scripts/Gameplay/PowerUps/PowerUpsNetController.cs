@@ -212,12 +212,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             if (_spawnedPowerUps.Count == 0)
                 return;
 
-            int randomIndex = Random.Range(0, (int)PowerUp.MAX);
+            int randomIndex = Random.Range(1, (int)PowerUp.MAX);
             int k = 0;
             for (int i = 0; i < _spawnedPowerUps.Count; i++)
             {
                 if (k % 3 == 0)
-                    randomIndex = Random.Range(0, (int)PowerUp.MAX);
+                    randomIndex = Random.Range(1, (int)PowerUp.MAX);
+                k++;
                 SpawnedPowerUpData data = _spawnedPowerUps[i];
                 data.reference.SetPowerUpType((PowerUp)randomIndex);
             }
