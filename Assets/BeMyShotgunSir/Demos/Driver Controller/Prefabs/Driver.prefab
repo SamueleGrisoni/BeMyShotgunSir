@@ -239,7 +239,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _sidecarCollisionsRadius: 1.1
-  _sidecarCollisionsForce: 50
+  _sidecarCollisionsForce: 25
   _steerDecaySeconds: 0.001
   _hoverHeight: 0.005
   _springForce: 50
