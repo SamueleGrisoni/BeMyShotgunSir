@@ -533,6 +533,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 : LayerMask.NameToLayer("ObstacleCollider");
 
             bool isReplayed = state.ContainsReplayed();
+
+            UpdateAllTimers((float)TimeManager.TickDelta);
+
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
             _currentDrivingState?.RunInputs(this, data, isReplayed);
 
@@ -573,54 +576,65 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private void ComputeCollisions(RaceTeamData teamData, bool isReplayed)
         {
             Vector3 repulsionForce = Vector3.zero;
-            if (!teamData.ActivePowerUpInfo.isArmorActive)
+            //if (!teamData.ActivePowerUpInfo.isArmorActive)
+            //{
+            Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _sidecarCollisionsRadius, _sidecarLayerMask);
+            foreach (Collider hitCollider in hitColliders)
             {
-                Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _sidecarCollisionsRadius, _sidecarLayerMask);
-                foreach (Collider hitCollider in hitColliders)
+                if (hitCollider.transform.root == _parent.root) continue;
+
+                MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
+                if (otherDriver == null)
+                    continue;
+
+                if (teamData.ActivePowerUpInfo.isArmorActive && !isReplayed)
                 {
-                    if (hitCollider.transform.root == _parent.root) continue;
-
-                    MovementController otherDriver = hitCollider.GetComponentInParent<MovementController>();
-                    if (otherDriver != null)
+                    if (!isReplayed && _armorSoundTimer <= 0f)
                     {
-                        CheckPowerUpCollisionEffect(teamData, otherDriver);
+                        _driverVisual.ArmorCollisionSuondEffect();
+                        _armorSoundTimer = 6f; // TODO spostare questo valore hardcodato
                     }
-                    if (otherDriver != null && otherDriver.IsBoosting())
+                    continue;
+                }
+
+                CheckPowerUpCollisionEffect(teamData, otherDriver);
+
+                if (!otherDriver.IsBoosting())
+                    continue;
+
+                Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
+                rawPushDirection.y = 0;
+                float distance = rawPushDirection.magnitude;
+                if (distance > 0 && distance < _sidecarCollisionsRadius)
+                {
+                    Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+                    forwardDir.y = 0;
+
+                    var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
+
+                    if (lateralPushDirection.sqrMagnitude > 0.001f)
                     {
-                        Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
-                        rawPushDirection.y = 0;
-                        float distance = rawPushDirection.magnitude;
-                        if (distance > 0 && distance < _sidecarCollisionsRadius)
+                        Vector3 finalPush = lateralPushDirection.normalized * _sidecarCollisionsForce;
+                        repulsionForce += finalPush;
+
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
+                        Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+
+                        if (!isReplayed)
                         {
-                            Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
-                            forwardDir.y = 0;
-
-                            var lateralPushDirection = Vector3.ProjectOnPlane(rawPushDirection, forwardDir.normalized);
-
-                            if (lateralPushDirection.sqrMagnitude > 0.001f)
-                            {
-                                Vector3 finalPush = lateralPushDirection.normalized * _sidecarCollisionsForce;
-                                repulsionForce += finalPush;
-
-                                Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
-                                Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
-                                Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
-
-                                if (!isReplayed)
-                                {
-                                    Vector3 rightDir = (_parentRotation * _sidecarLocalRotation) * Vector3.right;
-                                    rightDir.y = 0;
-                                    float dotProduct = Vector3.Dot(rightDir.normalized, rawPushDirection.normalized);
-                                    if (dotProduct < 0)
-                                        _driverVisual.RightCollisionAnimation();
-                                    else
-                                        _driverVisual.LeftCollisionAnimation();
-                                }
-                            }
+                            Vector3 rightDir = (_parentRotation * _sidecarLocalRotation) * Vector3.right;
+                            rightDir.y = 0;
+                            float dotProduct = Vector3.Dot(rightDir.normalized, rawPushDirection.normalized);
+                            if (dotProduct < 0)
+                                _driverVisual.RightCollisionAnimation();
+                            else
+                                _driverVisual.LeftCollisionAnimation();
                         }
                     }
                 }
             }
+            //}
             _predictionRigidbody.AddForce(repulsionForce, ForceMode.Impulse);
         }
 
@@ -789,15 +803,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 steerAngularRotationSlerp * (float)TimeManager.TickDelta
             );
         }
-        void IDrivingStateContext.OilAnimation()
-        {
-            _driverVisual.OilAnimation();
-        }
+        void IDrivingStateContext.OilAnimation() => _driverVisual.OilAnimation();
 
-        void IDrivingStateContext.BumpSoundEffect()
-        {
-            _driverVisual.BumpSoundEffect();
-        }
+        void IDrivingStateContext.BumpSoundEffect() => _driverVisual.BumpSoundEffect();
 
 
         bool IDrivingStateContext.CheckForkBarrierCollision()
@@ -848,6 +856,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 RoadChunk roadChunk = other.transform.parent.GetComponent<RoadChunk>();
                 if (roadChunk != null)
                 {
+                    if (roadChunk.ChunkNumber <= _currentChunkId)
+                    {
+                        Debug.Log("Sei tornato indietro");
+                        return;
+                    }
+
                     _currentChunkId = roadChunk.ChunkNumber;
                     if (TeamId.HasValue)
                     {
@@ -857,6 +871,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                             _raceNetContext.NetState.SetTeamTrackProgress(TeamId.Value, trackProgress);
 
                             PortalInfo lastSpecialChunk = trackProgress.LastSpecialChunkType.Value;
+                            Debug.Log($"Current {_currentChunkId} | Last {lastSpecialChunk.Id} | Next {trackProgress.NextSpecialChunkId} | Charge {_currentPossibleChargeEarlyCommitment}");
                             if (lastSpecialChunk.Type == RoadChunkType.ENDING_CROSSROAD || lastSpecialChunk.Type == RoadChunkType.START_LINE)
                             // TODO controllare che il sidecar non torna e commita in chunk che ha già passato
                             {
@@ -872,10 +887,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                             {
                                 _commitmentInfo.Value = CommitmentInfo.DisableOnSplit;
                             }
+                            /*
                             else
                             {
                                 _commitmentInfo.Value = CommitmentInfo.Disable;
                             }
+                            */
                         }
                     }
                 }
@@ -964,6 +981,27 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         public float GetCurrentVelocity() => Math.Clamp(_predictionRigidbody.Rigidbody.linearVelocity.magnitude / 25f, 0f, 1f); // TODO settare valore in SO
+
+        #endregion
+
+        #region Timers Management
+
+        private float _armorSoundTimer;
+        private void UpdateAllTimers(float deltaTime)
+        {
+            TickTimer(ref _armorSoundTimer, deltaTime);
+        }
+        private void TickTimer(ref float timer, float deltaTime)
+        {
+            if (timer > 0f)
+            {
+                timer -= deltaTime;
+                if (timer < 0f)
+                {
+                    timer = 0f;
+                }
+            }
+        }
 
         #endregion
     }

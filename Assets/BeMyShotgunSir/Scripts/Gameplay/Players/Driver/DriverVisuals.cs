@@ -323,5 +323,9 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         {
             RuntimeManager.PlayOneShotAttached(_barrierCollisionEvent, gameObject);
         }
+        public void ArmorCollisionSuondEffect()
+        {
+            RuntimeManager.PlayOneShotAttached(_armorCollisionEvent, gameObject);
+        }
     }
 }
