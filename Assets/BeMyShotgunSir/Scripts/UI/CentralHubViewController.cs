@@ -12,6 +12,9 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private UIControllerInit _uiControllerInit;
         [SerializeField] private UIDocument _centralHubDocument;
 
+        [SerializeField] private EventReference _buttonClickSFX;
+        private void PlayButtonClickSFX() => RuntimeManager.PlayOneShot(_buttonClickSFX);
+
         [Header("FMOD VCA Paths")]
         [SerializeField] private string _masterVcaPath = "vca:/Master";
         [SerializeField] private string _musicVcaPath = "vca:/Music";
@@ -88,12 +91,40 @@ namespace BeMyShotgunSir.Scripts.UI
             _sfxSlider.RegisterValueChangedCallback(OnSfxVolumeChanged);
         }
 
-        private void OnPlayButtonClicked() => _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
-        private void OnSettingsButtonClicked() => _settingsContainer.style.display = DisplayStyle.Flex;
-        private void OnCloseSettingsButtonClicked() => _settingsContainer.style.display = DisplayStyle.None;
-        private void OnCreditsButtonClicked() => _creditsContainer.style.display = DisplayStyle.Flex;
-        private void OnCloseCreditsButtonClicked() => _creditsContainer.style.display = DisplayStyle.None;
+        private void OnPlayButtonClicked()
+        {
+            PlayButtonClickSFX();
+            _uiControllerInit.ShowScreen(UIScreen.HostOrJoin, true);
+            Debug.Log("Play Button Clicked");
+        }
 
+        private void OnSettingsButtonClicked()
+        {
+            PlayButtonClickSFX();
+            _settingsContainer.style.display = DisplayStyle.Flex;
+            Debug.Log("Settings Button Clicked");
+        }
+
+        private void OnCloseSettingsButtonClicked()
+        {
+            PlayButtonClickSFX();
+            _settingsContainer.style.display = DisplayStyle.None;
+            Debug.Log("Close Settings Button Clicked");
+        }
+
+        private void OnCreditsButtonClicked()
+        {
+            PlayButtonClickSFX();
+            _creditsContainer.style.display = DisplayStyle.Flex;
+            Debug.Log("Credits Button Clicked");
+        }
+
+        private void OnCloseCreditsButtonClicked()
+        {
+            PlayButtonClickSFX();
+            _creditsContainer.style.display = DisplayStyle.None;
+            Debug.Log("Close Credits Button Clicked");
+        }
 
         private void SetupSliders()
         {
