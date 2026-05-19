@@ -29,6 +29,9 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             base.OnChangeTarget(runtime, instanceId, targetTeamId, context);
 
             UnwrapContext(context, out RaceNetStateStore raceNetStateStore, out PowerUpsNetController powerUpsNetController);
+            raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
+            teamData.ActivePowerUpInfo.isSpearPowerUpActive = false;
+            raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
 
             int ownerTeamId = runtime.ActivePowerUpData.OwnerTeamId;
             NetworkObject targetShotgun = raceNetStateStore.TryGetShotgunNob(targetTeamId, out NetworkObject nob) ? nob : null;
