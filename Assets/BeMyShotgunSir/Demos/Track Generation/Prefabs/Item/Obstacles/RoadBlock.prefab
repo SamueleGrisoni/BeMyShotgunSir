@@ -173,7 +173,8 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
+  - {fileID: 1961472387466935594}
+  - {fileID: 2955249601882303458}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -184,7 +185,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584225922746213160
+  _initializedTimestamp: -8584224607924628691
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -197,9 +198,9 @@ MonoBehaviour:
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
+  _ownerSmoothedProperties: 4294967295
   _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
+  _spectatorSmoothedProperties: 4294967295
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
@@ -224,9 +225,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944798ca9434d89bb9fa9f551a4a6d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.PowerUps.RoadBlockNO
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 1613331064374039297}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1613331064374039297}
   _lifeTime: 30
   _blinkingDuration: 5
   _blinkingFrequency: 0.15
@@ -243,9 +244,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944798ca9434d89bb9fa9f551a4a6d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.PowerUps.RoadBlockNO
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 1613331064374039297}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1613331064374039297}
   _lifeTime: 30
   _blinkingDuration: 5
   _blinkingFrequency: 0.15

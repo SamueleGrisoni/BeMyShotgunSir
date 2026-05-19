@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
+using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 
@@ -14,13 +16,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             foreach (GeneratedItemInfo itemInfo in items)
             {
                 if (itemInfo.type == ItemType.OBSTACLE)
-                {
                     SpawnObstacle(chunk, itemInfo);
-                }
                 else
-                {
                     SpawnPowerUp(chunk, itemInfo);
-                }
             }
         }
 
@@ -42,18 +40,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
         {
             ObstacleSpawner item = _itemData.ObstacleItems[itemInfo.index];
             PolygonSpawnArea polygonSpawnArea = chunk.AreaGroup[itemInfo.areaGroupIndex].ItemSpawnPoints[itemInfo.spawnPointIndex];
-            //Debug.Log("Spawning obstacle: " + item.name + " in area group: " + itemInfo.areaGroupIndex + " spawn point: " + itemInfo.spawnPointIndex);
             Instantiate(item, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation, polygonSpawnArea.transform);
         }
 
         private void SpawnPowerUp(RoadChunk chunk, GeneratedItemInfo itemInfo)
         {
-            PowerUpSpawnable item = _itemData.PowerUpItems[itemInfo.index];
+            PowerUp powerUpType = _itemData.PowerUpType[itemInfo.index];
+            Log.ELazy(() => $"Spawning power-up of type {powerUpType} in chunk {chunk.ChunkNumber} at area group {itemInfo.areaGroupIndex}", this);
             foreach (PolygonSpawnArea polygonSpawnArea in chunk.AreaGroup[itemInfo.areaGroupIndex].ItemSpawnPoints)
             {
-                PowerUpSpawnable nob = Instantiate(item, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation);
+                GenericPowerUp nob = Instantiate(_itemData.GenericPowerUpPrefab, polygonSpawnArea.GetPolygonBoundsCenter(),polygonSpawnArea.transform.rotation);
                 nob.SetChunkIndex(chunk.ChunkNumber);
                 Spawn(nob);
+                nob.SetPowerUpType(powerUpType);
             }
         }
     }

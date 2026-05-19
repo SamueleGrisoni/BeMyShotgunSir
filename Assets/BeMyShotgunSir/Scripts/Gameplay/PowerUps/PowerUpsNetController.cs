@@ -52,9 +52,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
     public class SpawnedPowerUpData
     {
-        public PowerUpSpawnable reference;
+        public GenericPowerUp reference;
         public int ChunkIndex;
-        public SpawnedPowerUpData(PowerUpSpawnable reference, int chunkIndex)
+        public SpawnedPowerUpData(GenericPowerUp reference, int chunkIndex)
         {
             this.reference = reference;
             ChunkIndex = chunkIndex;
@@ -122,7 +122,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             _strategyContext = new StrategyContext(_raceNetState, this, _activePowerUps);
         }
 
-        public void OnEnable() => PowerUpSpawnable.OnPowerUpSpawned += OnPowerUpSpawned;
+        public void OnEnable() => GenericPowerUp.OnPowerUpSpawned += OnPowerUpSpawned;
 
         public void DebugUpdate() //DEBUG
         {
@@ -187,7 +187,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 
         public void OnDisable() => UnsubscribeEvents();
 
-        private void UnsubscribeEvents() => PowerUpSpawnable.OnPowerUpSpawned -= OnPowerUpSpawned;
+        private void UnsubscribeEvents() => GenericPowerUp.OnPowerUpSpawned -= OnPowerUpSpawned;
 
         public override void OnStopNetwork()
         {
@@ -196,10 +196,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         }
 
         [Server]
-        public void OnPowerUpSpawned(PowerUpSpawnable powerUpSpawnable)
+        public void OnPowerUpSpawned(GenericPowerUp genericPowerUp)
         {
-            _spawnedPowerUps.Add(new SpawnedPowerUpData(powerUpSpawnable, powerUpSpawnable.ChunkIndex ?? -1));
-            powerUpSpawnable.Initialize(this, _raceNetState);
+            _spawnedPowerUps.Add(new SpawnedPowerUpData(genericPowerUp, genericPowerUp.ChunkIndex ?? -1));
+            genericPowerUp.Initialize(this, _raceNetState);
         }
 
         [Server]

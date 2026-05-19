@@ -31,7 +31,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2072696731984150244}
-  - {fileID: 1964106188992612157}
   - {fileID: 6312676423716735509}
   - {fileID: 2638425676812418470}
   m_Father: {fileID: 3155407643204640518}
@@ -542,57 +541,6 @@ MonoBehaviour:
   - {x: 7.5459785, y: 0, z: 36.9141}
   - {x: 7.3070107, y: 0, z: 44.8117}
   - {x: -5, y: 0, z: 45}
-  _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
-  _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
---- !u!1 &3444124817251655152
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1964106188992612157}
-  - component: {fileID: 4637843088213259153}
-  m_Layer: 0
-  m_Name: ItemArea1 (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1964106188992612157
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3444124817251655152}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.76, y: 0, z: -0.05}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6437858280877068860}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4637843088213259153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3444124817251655152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70c6a097a1eb57c4492693c59069e0cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Environment.PolygonSpawnArea
-  _points:
-  - {x: -1, y: 0, z: -1}
-  - {x: 1, y: 0, z: -1}
-  - {x: 1, y: 0, z: 1}
-  - {x: -1, y: 0, z: 1}
   _gizmoColor: {r: 0, g: 1, b: 0.4, a: 0.25}
   _gizmoOutlineColor: {r: 0, g: 1, b: 0.4, a: 1}
 --- !u!1 &3467662709744436417

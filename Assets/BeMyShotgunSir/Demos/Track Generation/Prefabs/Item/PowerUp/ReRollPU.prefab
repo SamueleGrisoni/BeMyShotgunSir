@@ -12,13 +12,15 @@ GameObject:
   - component: {fileID: 4886080715034315480}
   - component: {fileID: 4658527094936874373}
   - component: {fileID: 5404680429251562629}
+  - component: {fileID: -6129706712561349458}
+  - component: {fileID: 2714918916086528980}
   m_Layer: 20
   m_Name: ReRollPU
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6005565017824725598
 Transform:
   m_ObjectHideFlags: 0
@@ -47,14 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1637647b92df40eea32ce6a92393fcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.PowerUpSpawnable
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 4658527094936874373}
-  _networkObjectCache: {fileID: 0}
-  _powerUpType: 6
   _rotationSpeed: 45
   _bobHeight: 0.2
   _bobSpeed: 2
   _itemVisualsPrefabs: {fileID: 7283345552451465106}
+  PowerUpType: 6
+  _meshsRenderer:
+  - {fileID: 5873034280654376919}
 --- !u!114 &4658527094936874373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,7 +74,8 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: -6129706712561349458}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -84,7 +86,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584224559378426826
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -103,15 +105,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 2
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 2795747312356021190
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!65 &5404680429251562629
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -133,6 +135,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.76107305, z: 1}
   m_Center: {x: 0, y: 0.24842498, z: 0}
+--- !u!114 &-6129706712561349458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562677982431071713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 4658527094936874373}
+  _networkObjectCache: {fileID: 4658527094936874373}
+--- !u!114 &2714918916086528980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562677982431071713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32186fb70cc188d478826044a787ec0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.TriggerRelay
 --- !u!1 &7283345552451465106
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +210,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7283345552451465106}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8526612701864604738}
   - component: {fileID: 2108272606039199832}
   - component: {fileID: 7891002087951795142}
+  - component: {fileID: -2590607046301377151}
   m_Layer: 20
   m_Name: LassoPU
   m_TagString: Untagged
@@ -47,14 +48,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1637647b92df40eea32ce6a92393fcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Track.Items.PowerUp
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 7891002087951795142}
-  _networkObjectCache: {fileID: 7891002087951795142}
-  _powerUpType: 0
   _rotationSpeed: 45
   _bobHeight: 0.5
   _bobSpeed: 2
   _itemVisualsPrefabs: {fileID: 7888566469292851988}
+  _meshRenderer: {fileID: 0}
 --- !u!65 &2108272606039199832
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -95,7 +93,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 8526612701864604738}
+  - {fileID: -2590607046301377151}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -106,7 +104,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584229206315764863
+  _initializedTimestamp: -8584224679708618392
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -125,7 +123,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 2
+  <PrefabId>k__BackingField: 4
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 2989615640503772864
   SceneId: 0
@@ -134,6 +132,21 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+--- !u!114 &-2590607046301377151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122324353769909319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 7891002087951795142}
+  _networkObjectCache: {fileID: 7891002087951795142}
 --- !u!1 &7888566469292851988
 GameObject:
   m_ObjectHideFlags: 0

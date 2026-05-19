@@ -99,12 +99,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
                 {
                     if (position == RoadChunkPosition.LEFT && _numOfPowerUpSpawnedInLeftSplit < _itemData.MaxNumberOfPowerUpPerSplit)
                     {
-                        generatedPowerUps.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
+                        generatedPowerUps.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.PowerUpType.Length), ItemType.POWER_UP, areaGroupIndex));
                         _numOfPowerUpSpawnedInLeftSplit++;
                     }
                     else if (position == RoadChunkPosition.RIGHT && _numOfPowerUpSpawnedInRightSplit < _itemData.MaxNumberOfPowerUpPerSplit)
                     {
-                        generatedPowerUps.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.PowerUpItems.Length), ItemType.POWER_UP, areaGroupIndex));
+                        generatedPowerUps.Add(new GeneratedItemInfo(_rng.Next(0, _itemData.PowerUpType.Length), ItemType.POWER_UP, areaGroupIndex));
                         _numOfPowerUpSpawnedInRightSplit++;
                     }
                 }
