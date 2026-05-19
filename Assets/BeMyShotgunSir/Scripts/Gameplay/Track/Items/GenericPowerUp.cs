@@ -43,6 +43,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
+            OnPowerUpSpawned?.Invoke(this);
             _syncPowerUpType.OnChange += OnPowerUpTypeChanged;
             // PowerUpSpawnable[] mySpawnables = GetComponentsInChildren<PowerUpSpawnable>(includeInactive: true);
             // _spawnablePrefabs = new List<PowerUpSpawnable>(mySpawnables);
@@ -52,12 +53,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         {
             base.OnStopNetwork();
             _syncPowerUpType.OnChange -= OnPowerUpTypeChanged;
-        }
-
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
-            OnPowerUpSpawned?.Invoke(this);
         }
 
         public override void OnStartClient()

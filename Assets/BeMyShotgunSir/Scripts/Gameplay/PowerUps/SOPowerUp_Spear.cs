@@ -37,7 +37,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             NetworkObject targetShotgun = raceNetStateStore.TryGetShotgunNob(targetTeamId, out NetworkObject nob) ? nob : null;
             if (targetShotgun != null)
             {
-                if (raceNetStateStore.LobbyNetStateStore.TryGetPlayerState(targetTeamId, out LobbyPlayerState targetPlayerState))
+                if (raceNetStateStore.LobbyNetStateStore.TryGetPlayerState(teamData.ShotgunConnectionId, out LobbyPlayerState targetPlayerState))
                 {
                     if (targetPlayerState.Connection != null)
                     {
@@ -45,6 +45,7 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
                         targetTeamData.ActivePowerUpInfo.isTargetedBySpear = true;
                         raceNetStateStore.SetTeamData(targetTeamId, targetTeamData);
                         targetShotgun.GetComponent<ShotgunController>().ApplySpearEffect_TargetRpc(targetPlayerState.Connection);
+                        targetShotgun.GetComponent<ShotgunController>().ApplySpearEffect_TargetRpc(raceNetStateStore.LobbyNetStateStore.PlayerStates[ownerTeamId].Connection);
                     }
                     else
                         Log.WLazy(() => $"Trying to apply Spear effect for team {targetTeamId} but no connection found for player.", this);

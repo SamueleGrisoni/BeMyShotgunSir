@@ -121,7 +121,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             _strategyContext = new StrategyContext(_raceNetState, this, _activePowerUps);
         }
 
-        public void OnEnable() => GenericPowerUp.OnPowerUpSpawned += OnPowerUpSpawned;
+        public override void OnStartNetwork()
+        {
+            base.OnStartNetwork();
+            GenericPowerUp.OnPowerUpSpawned += OnPowerUpSpawned;
+        }
 
         public void DebugUpdate() //DEBUG
         {

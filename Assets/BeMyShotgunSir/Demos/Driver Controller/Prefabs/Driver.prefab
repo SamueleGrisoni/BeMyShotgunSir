@@ -249,7 +249,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 262144
   _log: 0
-  _isDebugInputEnabled: 1
+  _isDebugInputEnabled: 0
   _debugPowerUp: 0
   _onGrassBufferMin: 10
   _debugAim: 0
@@ -1128,6 +1128,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4998179860331136265}
     m_Modifications:
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.69126093
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7226053
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -92.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
+      propertyPath: m_Name
+      value: Sidecar
+      objectReference: {fileID: 0}
     - target: {fileID: 346861511790827686, guid: 9392c8d687b88474d99804d995d01712, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1244,30 +1268,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 68e61076405a7d4418f36245a3d81d23, type: 2}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.69126093
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7226053
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8253996037376773807, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -92.54
-      objectReference: {fileID: 0}
-    - target: {fileID: 8771091787928289351, guid: 29f9b6e89b26bad0a87456a13272b8f1, type: 3}
-      propertyPath: m_Name
-      value: Sidecar
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3504026666543589728, guid: 9392c8d687b88474d99804d995d01712, type: 3}

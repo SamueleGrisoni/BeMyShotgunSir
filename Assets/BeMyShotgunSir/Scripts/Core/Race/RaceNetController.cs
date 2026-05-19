@@ -148,6 +148,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
                     if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == currentProgress.CurrentChunkId)
                     {
+                        _netState.TryGetDriverNob(key, out NetworkObject driverNob);
+                        driverNob.GetComponent<DriverController>().ActivateControls_TargetRpc(_lobbyNetState.PlayerStates[shotgunConnectionId].Connection);
+                        driverNob.GetComponent<DriverController>().ActivateControls_TargetRpc(_lobbyNetState.PlayerStates[key].Connection);
                         FinishRace_TargetRpc(_lobbyNetState.PlayerStates[shotgunConnectionId].Connection);
                         FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection); //key is driver connection id
                     }
