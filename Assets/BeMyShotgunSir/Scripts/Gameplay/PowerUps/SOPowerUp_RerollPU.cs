@@ -16,9 +16,9 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             raceNetStateStore.TryGetTeamData(runtime.ActivePowerUpData.OwnerTeamId, out RaceTeamData teamData);
             teamData.ActivePowerUpInfo.isRerollPowerUpActive = true;
             raceNetStateStore.SetTeamData(runtime.ActivePowerUpData.OwnerTeamId, teamData);
+            powerUpsNetController.RandomizeSpawnedPowerUps();
 
             if (raceNetStateStore.TryGetDriverNob(runtime.ActivePowerUpData.OwnerTeamId, out NetworkObject driverNob))
-                // driverNob.GetComponent<DriverController>().ApplyRerollEffect(); //TODO
                 Log.DLazy(() => $"Applying Reroll effect to driver of team {runtime.ActivePowerUpData.OwnerTeamId}.", this);
             else
                 Log.WLazy(() => $"Trying to apply Reroll effect for team {runtime.ActivePowerUpData.OwnerTeamId} but no driver nob found.", this);
@@ -26,13 +26,6 @@ namespace BeMyShotgunSir.Gameplay.PowerUps
             Log.DLazy(() => $"Team {runtime.ActivePowerUpData.OwnerTeamId} is using Reroll.", this);
             OnExpire(runtime, context);
             base.OnUse(runtime, context);
-        }
-
-        public override void OnChangeTarget(PowerUpRuntime runtime, int instanceId, int targetTeamId, StrategyContext context)
-        {
-            base.OnChangeTarget(runtime, instanceId, targetTeamId, context);
-            //TODO send rpc to new target
-            runtime.Definition.OnExpire(runtime, context);
         }
 
         public override void OnExpire(PowerUpRuntime runtime, StrategyContext context)

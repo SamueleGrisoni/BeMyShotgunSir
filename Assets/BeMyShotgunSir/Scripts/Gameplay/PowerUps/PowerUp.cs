@@ -13,6 +13,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         RerollPowerUp, // Time-Based, reroll every team's current power-up for a random new one of the same class
         RoadBlock, // One-shot, spawn an obstacle on the track for the adversary team that they will have to avoid (could be a hole, a wall, oil on the ground...)
         // Lasso
+        MAX
     }
 
     public enum PowerUpClass

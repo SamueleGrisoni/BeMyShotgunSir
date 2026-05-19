@@ -37,17 +37,15 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             _raceNetStateStore = raceNetStateStore;
         }
 
-        public void SetPowerUpType(PowerUp powerUpType)
-        {
-            _syncPowerUpType.Value = powerUpType;
-        }
+        [Server(UseIsStarted = true)]
+        public void SetPowerUpType(PowerUp powerUpType) => _syncPowerUpType.Value = powerUpType;
 
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
             _syncPowerUpType.OnChange += OnPowerUpTypeChanged;
-            var mySpawnables = GetComponentsInChildren<PowerUpSpawnable>(includeInactive: true);
-            _spawnablePrefabs = new List<PowerUpSpawnable>(mySpawnables);
+            // PowerUpSpawnable[] mySpawnables = GetComponentsInChildren<PowerUpSpawnable>(includeInactive: true);
+            // _spawnablePrefabs = new List<PowerUpSpawnable>(mySpawnables);
         }
 
         public override void OnStopNetwork()
@@ -60,8 +58,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
         {
             base.OnStartServer();
             OnPowerUpSpawned?.Invoke(this);
-            if (_syncPowerUpType.Value != PowerUp.None)
-                OnPowerUpTypeChanged(PowerUp.None, _syncPowerUpType.Value, true);
         }
 
         public override void OnStartClient()
@@ -71,13 +67,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
                 OnPowerUpTypeChanged(PowerUp.None, _syncPowerUpType.Value, false);
         }
 
-        private void OnPowerUpTypeChanged(PowerUp prev, PowerUp next, bool asServer)
+        private void OnPowerUpTypeChanged(PowerUp _, PowerUp next, bool asServer)
         {
-            Debug.Log($"[PowerUp] Type to activate: {next} (int={( int)next}) | Prev: {prev} (int={(int)prev}) | IsServer: {asServer}");
-            foreach (var spawnable in _spawnablePrefabs)
+            foreach (PowerUpSpawnable spawnable in _spawnablePrefabs)
             {
                 bool isMatch = spawnable.PowerUpType == next;
-                //Debug.Log($"[PowerUp] Spawnable: {spawnable.name} ({spawnable.PowerUpType}) | Next: {next} | Match: {isMatch}");
                 if (isMatch)
                 {
                     spawnable.gameObject.SetActive(true);

@@ -243,7 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FMODUnity::FMODUnity.Settings
   switchSettingsMigration: 1
   HasSourceProject: 0
-  HasPlatforms: 0
+  HasPlatforms: 1
   sourceProjectPath: 
   sourceBankPath: Assets/BeMyShotgunSir/Audio/FMOD_Banks/Desktop
   sourceBankPathUnformatted: 

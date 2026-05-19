@@ -49,10 +49,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track.Items
             Log.ELazy(() => $"Spawning power-up of type {powerUpType} in chunk {chunk.ChunkNumber} at area group {itemInfo.areaGroupIndex}", this);
             foreach (PolygonSpawnArea polygonSpawnArea in chunk.AreaGroup[itemInfo.areaGroupIndex].ItemSpawnPoints)
             {
-                GenericPowerUp nob = Instantiate(_itemData.GenericPowerUpPrefab, polygonSpawnArea.GetPolygonBoundsCenter(),polygonSpawnArea.transform.rotation);
+                GenericPowerUp nob = Instantiate(_itemData.GenericPowerUpPrefab, polygonSpawnArea.GetPolygonBoundsCenter(), polygonSpawnArea.transform.rotation);
                 nob.SetChunkIndex(chunk.ChunkNumber);
-                Spawn(nob);
                 nob.SetPowerUpType(powerUpType);
+                Spawn(nob);
             }
         }
     }
