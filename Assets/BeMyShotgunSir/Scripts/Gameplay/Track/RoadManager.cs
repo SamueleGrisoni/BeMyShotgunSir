@@ -173,12 +173,22 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
 
         public void UpdateFirstPlayer(Transform playerTransform)
         {
+            if (playerTransform is null)
+            {
+                Log.WLazy(() => "Player transform is null in UpdateFirstPlayer, cannot update first player position", this);
+                return;
+            }
             if (_isServer)
                 _firstPlayerTransform = playerTransform;
         }
 
         public void UpdateLastPlayer(Transform playerTransform)
         {
+            if (playerTransform is null)
+            {
+                Log.WLazy(() => "Player transform is null in UpdateLastPlayer, cannot update last player position", this);
+                return;
+            }
             if (_isServer)
                 _lastPlayerTransform = playerTransform;
         }
