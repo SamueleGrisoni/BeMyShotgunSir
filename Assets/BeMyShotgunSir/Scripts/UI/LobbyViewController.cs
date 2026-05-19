@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Core;
 using BeMyShotgunSir.Scripts.Core.Lobby;
 using BeMyShotgunSir.Scripts.Utils;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,6 +13,9 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _log = true;
         [SerializeField] private UIController_Lobby _uiControllerLobby;
         [SerializeField] private UIDocument _lobbyDocument;
+
+        [SerializeField] private EventReference _buttonClickSFX;
+        private void PlayButtonClickSFX() => RuntimeManager.PlayOneShot(_buttonClickSFX, Vector3.zero);
 
         #region Bindings
         // INITIAL BINDING
@@ -44,6 +47,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private VisualElement _playersInfo;
         private readonly Dictionary<int, VisualElement> _playerRows = new();
         private Button _readyButton;
+        private Button _leaveTeamButton;
         private Button _leaveLobbyButton;
         private Button _backButton;
         private VisualElement _selectRoleContainer;
@@ -66,6 +70,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _playersInfo = _root.Q<VisualElement>("PlayersInfo");
 
             _readyButton = _root.Q<Button>("ReadyButton");
+            _leaveTeamButton = _root.Q<Button>("LeaveTeamButton");
             _leaveLobbyButton = _root.Q<Button>("LeaveLobbyButton");
             _backButton = _root.Q<Button>("BackButton");
             _selectRoleContainer = _root.Q<VisualElement>("SelectRoleContainer");
@@ -84,6 +89,7 @@ namespace BeMyShotgunSir.Scripts.UI
             yield return null;
 
             _readyButton.clicked += ReadyButtonHandler;
+            _leaveTeamButton.clicked += LeaveTeamButtonHandler;
             _leaveLobbyButton.clicked += LeaveLobbyButtonHandler;
             _backButton.clicked += BackButtonHandler;
             _driverButton.clicked += DriverButtonHandler;
@@ -106,6 +112,7 @@ namespace BeMyShotgunSir.Scripts.UI
             }
 
             _readyButton.clicked -= ReadyButtonHandler;
+            _leaveTeamButton.clicked -= LeaveTeamButtonHandler;
             _leaveLobbyButton.clicked -= LeaveLobbyButtonHandler;
             _backButton.clicked -= BackButtonHandler;
             _driverButton.clicked -= DriverButtonHandler;
@@ -118,20 +125,26 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ReadyButtonHandler()
         {
+            PlayButtonClickSFX();
             Log.DLazy(() => "Ready button clicked", this, _log);
             _command.SetPlayerReady_Request(true);
-            // _command.SelectTeamMate_Request(1);
-            // GameServices.Instance.ConnectionManager.StartGame();
         }
 
         private void LeaveLobbyButtonHandler()
         {
-            GameServices.Instance.UIFlowState.SetNextState(UIScreen.HostOrJoin);
-            CloseConnection();
+            PlayButtonClickSFX();
+            _command.QuitLobby_CMRequest();
+        }
+
+        private void LeaveTeamButtonHandler()
+        {
+            PlayButtonClickSFX();
+            _command.LeaveTeam_Request();
         }
 
         private void BackButtonHandler()
         {
+            PlayButtonClickSFX();
             CloseConnection();
             _uiControllerLobby.ShowScreen(UIScreen.CentralHub, true);
         }
@@ -145,6 +158,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void TeamRequestHandler(int teammateConnectionId)
         {
+            PlayButtonClickSFX();
             Log.DLazy(() => $"Player row clicked, teammateConnectionId={teammateConnectionId}", this, _log);
             _command.SelectTeamMate_Request(teammateConnectionId);
         }
@@ -297,6 +311,5 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
         public void Show(bool show) => _root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
-
     }
 }

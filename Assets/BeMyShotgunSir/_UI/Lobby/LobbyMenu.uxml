@@ -49,11 +49,11 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container" style="align-items: center; position: absolute; bottom: 200px; top: auto; width: 100%; justify-content: flex-end;">
-                <ui:Button name="LeaveTeamButton" class="menu-button ready-button" style="display: flex;">
-                    <ui:Label text="Leave team" class="button-label"/>
-                </ui:Button>
                 <ui:Button name="ReadyButton" class="menu-button ready-button">
                     <ui:Label text="READY!" class="button-label"/>
+                </ui:Button>
+                <ui:Button name="LeaveTeamButton" class="menu-button ready-button" style="display: flex;">
+                    <ui:Label text="Leave team" class="button-label"/>
                 </ui:Button>
                 <ui:Button name="LeaveLobbyButton" class="menu-button leave-lobby-button">
                     <ui:Label text="LEAVE LOBBY" class="button-label"/>

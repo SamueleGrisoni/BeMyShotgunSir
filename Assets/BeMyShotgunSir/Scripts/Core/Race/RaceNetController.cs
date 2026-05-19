@@ -127,6 +127,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 return;
 
             _netState.TryGetTeamTrackProgress(key, out TeamTrackProgress currentProgress);
+            _netState.TryGetTeamShotgunConnectionId(key, out int shotgunConnectionId);
 
             // 2. Aggiornamento progresso del player (Scanning della coda)
             for (int i = 0; i < _specialSegmentInfoQueue.Count; i++)
@@ -142,11 +143,14 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                         currentProgress,
                         nextSpecialChunkId: nextId,
                         lastSpecialChunkType: new PortalInfo(specialChunk.chunkNumber, specialChunk.type),
-                        isFinishLineNext: specialChunk.type == RoadChunkType.START_LINE //TODO lore fai un check perchè la final line ha type FINISH_LINE (sam)
+                        isFinishLineNext: specialChunk.type == RoadChunkType.FINISH_LINE
                     );
 
-                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == nextId)
-                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection);
+                    if (_netState.FinishLineChunkId != -1 && _netState.FinishLineChunkId == currentProgress.CurrentChunkId)
+                    {
+                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[shotgunConnectionId].Connection);
+                        FinishRace_TargetRpc(_lobbyNetState.PlayerStates[key].Connection); //key is driver connection id
+                    }
 
                     if (!updated.IsEqual(value))
                         _netState.SetTeamTrackProgress(key, updated);
@@ -175,7 +179,6 @@ namespace BeMyShotgunSir.Scripts.Core.Race
                 {
                     Log.DLazy(() => $"All players surpassed the finish line! ChunkId: {headChunkId}.", this, _log);
                 }
-                // Rimuoviamo e logghiamo
                 SpecialSegmentInfo finishedCrossroad = _specialSegmentInfoQueue.Dequeue();
                 _powerUpsNetController.DespawnSurpassedPowerUp(finishedCrossroad.chunkNumber);
                 Log.DLazy(() => $"All players surpassed crossroad {finishedCrossroad.chunkNumber}. Dequeued.", this, _log);
@@ -379,13 +382,13 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void ShowCountDown_ObserversRpc()
         {
             GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, false);
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);//TODO show countdown on clients
-            _clientProjector.ShowCountdown();
+            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Countdown), null);
+            _clientProjector.ShowCountdown(true);
         }
 
         private IEnumerator StartRaceAfterCountdown()
         {
-            yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); // Adjust the delay as needed
+            yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); //DANGER
             StartRace_ObserversRpc();
         }
 
@@ -393,8 +396,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private void StartRace_ObserversRpc()
         {
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.StartRace), null);
+            _clientProjector.ShowCountdown(false);
             _roadManager.StartRace();
-            //TODO activate player controls
+
             foreach (RaceTeamData teamData in NetState.TeamData.Values)
             {
                 if (teamData.DriverNob != null && teamData.ShotgunNob != null)

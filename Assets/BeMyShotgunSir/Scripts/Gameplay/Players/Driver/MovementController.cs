@@ -34,6 +34,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         Boost,
         Grass,
         Oil,
+        Bump,
     }
 
     public enum CommitmentInfo
@@ -79,11 +80,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         public float BatteryChargeTimer;
         public float BoostTimer;
         public float OilAnimationTimer;
+        public float BumpTimer;
         public DrivingStateTpye StateType;
         public DrivingStateTpye PreviousStateType;
         public int GrassBuffer;
         public ReconcileData(PredictionRigidbody pr, float parentRotationY, float sidecarLocalRotationY, Vector3 currentLinearVelocity,
-                                float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, float oilAnimationTimer, DrivingStateTpye stateType, DrivingStateTpye previousStateType, int grassBuffer) : this()
+                                float driftDirection, float currentBatteryCharge, float batteryChargeTimer, float boostTimer, float oilAnimationTimer, float bumpTimer,
+                                DrivingStateTpye stateType, DrivingStateTpye previousStateType, int grassBuffer) : this()
         {
             PredictionRigidbody = pr;
             ParentRotationY = parentRotationY;
@@ -94,6 +97,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             BatteryChargeTimer = batteryChargeTimer;
             BoostTimer = boostTimer;
             OilAnimationTimer = oilAnimationTimer;
+            BumpTimer = bumpTimer;
             StateType = stateType;
             PreviousStateType = previousStateType;
             GrassBuffer = grassBuffer;
@@ -109,7 +113,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
     public class MovementController : NetworkBehaviour, IDrivingStateContext
     {
         #region Inspector
-
         [SerializeField] private DriverController _driverController;
         [SerializeField] private DriverInput _input;
         [SerializeField] private DriverStats _stats;
@@ -124,8 +127,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         [SerializeField] private Collider _obstacleCollider;
 
         [SerializeField] private LayerMask _sidecarLayerMask;
-        [SerializeField] private float _bumpRadius;
-        [SerializeField] private float _bumpForce;
+        [SerializeField] private float _sidecarCollisionsRadius;
+        [SerializeField] private float _sidecarCollisionsForce;
 
         [Header("Dead Reckoning")]
         [SerializeField] private float _steerDecaySeconds = 0.3f;
@@ -171,6 +174,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         bool IDrivingStateContext.Log => _log;
         Vector3 IDrivingStateContext.ParentForward => _parentRotation * Vector3.forward;
         Vector3 IDrivingStateContext.SidecarForward => (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
+        LayerMask IDrivingStateContext.CommitmentColliderLayer => _commitmentCollider.gameObject.layer;
         SOSidecarStats IDrivingStateContext.NormalStats => _stats.NormalStats;
 
         SOSidecarStats IDrivingStateContext.BoostStats => _stats.BoostStats;
@@ -192,6 +196,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         IDrivingState IDrivingStateContext.GrassState => _grassState;
 
         IDrivingState IDrivingStateContext.OilState => _oilState;
+
+        IDrivingState IDrivingStateContext.BumpState => _bumpState;
 
         float IDrivingStateContext.DriftDirection
         {
@@ -223,6 +229,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             get => _isOilAnimationActive;
             set => _isOilAnimationActive = value;
         }
+        float IDrivingStateContext.BumpTimer
+        {
+            get => _bumpTimer;
+            set => _bumpTimer = value;
+        }
         bool IDrivingStateContext.IsOnwer => IsOwner;
         bool IDrivingStateContext.IsServer => IsServerInitialized;
         CommitmentInfo IDrivingStateContext.CommitmentInfo => _commitmentInfo.Value;
@@ -248,8 +259,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private IDrivingState _boostState = new BoostDrivingState();
         private IDrivingState _grassState = new GrassDrivingState();
         private IDrivingState _oilState = new OilDrivingState();
+        private IDrivingState _bumpState = new BumpDrivingState();
 
         private bool _isBoosting;
+        private bool _isStarting;
         private CommitmentDirection _commitmentDirection;
         private float _currentBatteryCharge;
         private float _batteryChargeTimer;
@@ -258,6 +271,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         private float _currentSteerInput;
         private bool _isOilAnimationActive;
         private float _oilAnimationTimer;
+        private float _bumpTimer;
         private ReplicateData _lastReplicateData;
         private float _activeDriftIntent = 0f;
         private float _predictedTicks;
@@ -309,6 +323,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (InputConsumer != null)
             {
                 InputConsumer.OnBoostPressed += ExecuteBoost;
+                InputConsumer.OnStartPressed += ExecuteStart;
                 InputConsumer.OnEarlyCommitmentPressed += ExecuteInputEarlyCommitment;
                 InputConsumer.OnDriverFeedbackPressed += ExecuteDriverFeedbackPressed;
             }
@@ -341,6 +356,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         #region Input events
 
         public void ExecuteBoost() => _isBoosting = true;
+        public void ExecuteStart() => _isStarting = true;
         private void ExecuteInputEarlyCommitment(CommitmentDirection direction)
         {
             if (_commitmentInfo.Value == CommitmentInfo.EnableNotUsed)
@@ -450,8 +466,9 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             if (_isDebugInputEnabled)
             {
                 UpdateActiveDriftIntent(_input.IsDrifting, _input.SteerInput);
-                rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _isBoosting, _input.IsStarting, _commitmentDirection);
+                rd = new(_input.SteerInput, _input.IsDrifting, _activeDriftIntent, _isBoosting, _isStarting, _commitmentDirection);
                 _isBoosting = false;
+                _isStarting = false;
             }
             else
             {
@@ -459,6 +476,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 UpdateActiveDriftIntent(InputConsumer.IsDrifting, steerInput);
                 rd = new(steerInput, InputConsumer.IsDrifting, _activeDriftIntent, _isBoosting, InputConsumer.IsMoving, _commitmentDirection);
                 _isBoosting = false;
+                _isStarting = false;
             }
             return rd;
         }
@@ -472,6 +490,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         [SerializeField] private bool _debugAim;
+        [SerializeField] private bool _debugBumpState;
         [Replicate]
         private void RunInputs(ReplicateData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
@@ -506,7 +525,8 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _raceNetContext.NetState.TryGetTeamData(TeamId.Value, out teamData);
             }
 
-            _commitmentCollider.gameObject.layer = GetCommitmentCollisionLayer(data.CommitmentDirection);
+            if (!_debugBumpState) // TODO togliere
+                _commitmentCollider.gameObject.layer = GetCommitmentCollisionLayer(data.CommitmentDirection);
 
             _obstacleCollider.gameObject.layer = teamData.ActivePowerUpInfo.isArmorActive
                 ? LayerMask.NameToLayer("ArmorLayer")
@@ -516,7 +536,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentDrivingState?.CheckStateChange(this, data, isReplayed);
             _currentDrivingState?.RunInputs(this, data, isReplayed);
 
-            ComputeCollisions(teamData);
+            ComputeCollisions(teamData, isReplayed);
             ApplyGroundSnap();
 
             _boxCollider.forward = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
@@ -525,18 +545,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _predictionRigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
             _predictionRigidbody.Simulate();
 
-            if (state != ReplicateState.Replayed)
-                _currentSteerInput = data.SteerInput;
-
             if (InputConsumer != null && TeamId.HasValue)
             {
                 if (_raceNetContext.NetState.IsTeamMember(TeamId.Value))
                     InputConsumer.ChargeBattery = _currentBatteryCharge;
             }
 
-            _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
-            _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive);
-            _driverVisual.SetAimVisualEffects(teamData.ActivePowerUpInfo.isSpearPowerUpActive || teamData.ActivePowerUpInfo.isStealPowerUpActive);
+            if (state != ReplicateState.Replayed)
+            {
+                _currentSteerInput = data.SteerInput;
+                _driverVisual.SetArmorVisualEffects(teamData.ActivePowerUpInfo.isArmorActive);
+                _driverVisual.SetShieldVisualEffects(teamData.ActivePowerUpInfo.isShieldActive);
+                _driverVisual.SetAimVisualEffects(teamData.ActivePowerUpInfo.isSpearPowerUpActive || teamData.ActivePowerUpInfo.isStealPowerUpActive);
+            }
         }
 
         private LayerMask GetCommitmentCollisionLayer(CommitmentDirection direction)
@@ -549,12 +570,12 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 return LayerMask.NameToLayer("DefaultWallCollider");
         }
 
-        private void ComputeCollisions(RaceTeamData teamData)
+        private void ComputeCollisions(RaceTeamData teamData, bool isReplayed)
         {
             Vector3 repulsionForce = Vector3.zero;
             if (!teamData.ActivePowerUpInfo.isArmorActive)
             {
-                Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _bumpRadius, _sidecarLayerMask);
+                Collider[] hitColliders = Physics.OverlapSphere(_predictionRigidbody.Rigidbody.position, _sidecarCollisionsRadius, _sidecarLayerMask);
                 foreach (Collider hitCollider in hitColliders)
                 {
                     if (hitCollider.transform.root == _parent.root) continue;
@@ -569,7 +590,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                         Vector3 rawPushDirection = _predictionRigidbody.Rigidbody.position - hitCollider.ClosestPoint(_predictionRigidbody.Rigidbody.position);
                         rawPushDirection.y = 0;
                         float distance = rawPushDirection.magnitude;
-                        if (distance > 0 && distance < _bumpRadius)
+                        if (distance > 0 && distance < _sidecarCollisionsRadius)
                         {
                             Vector3 forwardDir = (_parentRotation * _sidecarLocalRotation) * Vector3.forward;
                             forwardDir.y = 0;
@@ -578,12 +599,23 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
                             if (lateralPushDirection.sqrMagnitude > 0.001f)
                             {
-                                Vector3 finalPush = lateralPushDirection.normalized * _bumpForce;
+                                Vector3 finalPush = lateralPushDirection.normalized * _sidecarCollisionsForce;
                                 repulsionForce += finalPush;
 
                                 Debug.DrawRay(_predictionRigidbody.Rigidbody.position, forwardDir.normalized * 3f, Color.blue, 0.1f);
                                 Debug.DrawRay(_predictionRigidbody.Rigidbody.position, rawPushDirection, Color.white, 0.1f);
                                 Debug.DrawRay(_predictionRigidbody.Rigidbody.position, finalPush * 0.5f, Color.red, 0.5f);
+
+                                if (!isReplayed)
+                                {
+                                    Vector3 rightDir = (_parentRotation * _sidecarLocalRotation) * Vector3.right;
+                                    rightDir.y = 0;
+                                    float dotProduct = Vector3.Dot(rightDir.normalized, rawPushDirection.normalized);
+                                    if (dotProduct < 0)
+                                        _driverVisual.RightCollisionAnimation();
+                                    else
+                                        _driverVisual.LeftCollisionAnimation();
+                                }
                             }
                         }
                     }
@@ -645,6 +677,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 _batteryChargeTimer,
                 _boostTimer,
                 _oilAnimationTimer,
+                _bumpTimer,
                 _currentStateType,
                 _previousStateType,
                 _onGrassBuffer);
@@ -662,6 +695,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             _currentBatteryCharge = data.CurrentBatteryCharge;
             _batteryChargeTimer = data.BatteryChargeTimer;
             _boostTimer = data.BoostTimer;
+            _bumpTimer = data.BumpTimer;
 
             _currentStateType = data.StateType;
             _currentDrivingState = GetStateType(data.StateType);
@@ -757,12 +791,24 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
         void IDrivingStateContext.OilAnimation()
         {
-            if (_isOilAnimationActive)
-            {
-                SendOilAnimation();
-                _isOilAnimationActive = false;
-            }
+            _driverVisual.OilAnimation();
         }
+
+
+        bool IDrivingStateContext.CheckForkBarrierCollision()
+        {
+            LayerMask bumpLayer;
+            if (_commitmentCollider.gameObject.layer == LayerMask.NameToLayer("RightCollider"))
+                bumpLayer = LayerMask.GetMask("RightWallCollider");
+            else if (_commitmentCollider.gameObject.layer == LayerMask.NameToLayer("LeftCollider"))
+                bumpLayer = LayerMask.GetMask("LeftWallCollider");
+            else
+                return false;
+
+            return Physics.CheckSphere(_predictionRigidbody.Rigidbody.position, _stats.AnimationStats.BumpRadius, bumpLayer);
+        }
+
+        void IDrivingStateContext.ApplyBump(float bumpForce, Vector3 direction) => _predictionRigidbody.AddForce(bumpForce * direction, ForceMode.Impulse);
 
         #endregion
 
@@ -838,7 +884,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
             if (IsOwner || (_raceNetContext.NetState.TryGetTeamData(TeamId.Value, out RaceTeamData teamData) && teamData.ShotgunConnectionId == base.LocalConnection.ClientId))
             {
-                if (collision.gameObject.CompareTag("ForkBarrier"))
                 {
                     collision.gameObject.TryGetComponent(out ForkBarrier forkBarrier);
                     if (forkBarrier != null)
@@ -864,13 +909,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 
         #endregion
 
-        #region RPC
-
-        [ObserversRpc]
-        private void SendOilAnimation() => _driverVisual.OilAnimation();
-
-        #endregion
-
         #region State mapping helpers
         private IDrivingState GetStateType(DrivingStateTpye stateType)
         {
@@ -882,6 +920,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
                 case DrivingStateTpye.Boost: return _boostState;
                 case DrivingStateTpye.Grass: return _grassState;
                 case DrivingStateTpye.Oil: return _oilState;
+                case DrivingStateTpye.Bump: return _bumpState;
                 default:
                     return _normalState;
             }
@@ -894,12 +933,19 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
             else if (drivingState == _boostState) return DrivingStateTpye.Boost;
             else if (drivingState == _grassState) return DrivingStateTpye.Grass;
             else if (drivingState == _oilState) return DrivingStateTpye.Oil;
+            else if (drivingState == _bumpState) return DrivingStateTpye.Bump;
             else return DrivingStateTpye.Normal;
         }
 
         public int? GetTeamId() => TeamId;
 
-        public void StartRace() => ChangeState(_normalState, default, false); // TODO da chi la faccio chiamare?
+        public void StartRace()
+        {
+            if (IsOwner)
+                _isStarting = true;
+        }
+
+        public float GetCurrentVelocity() => Math.Clamp(_predictionRigidbody.Rigidbody.linearVelocity.magnitude / 25f, 0f, 1f); // TODO settare valore in SO
 
         #endregion
     }

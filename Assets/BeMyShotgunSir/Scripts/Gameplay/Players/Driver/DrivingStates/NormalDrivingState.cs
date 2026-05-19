@@ -29,9 +29,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.BoostState, data, isReplayed);
                 return;
             }
-            if (!data.IsStarting)
+            if (data.IsStarting)
             {
                 controller.ChangeState(controller.IdleState, data, isReplayed);
+                return;
+            }
+            if (controller.CheckForkBarrierCollision())
+            {
+                controller.ChangeState(controller.BumpState, data, isReplayed);
                 return;
             }
         }

@@ -1,10 +1,10 @@
 using System;
-using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Managing.Client;
 using FishNet.Managing.Server;
 using FishNet.Object;
 using FishNet.Transporting;
+using FMODUnity;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Scripts.Core
@@ -15,6 +15,9 @@ namespace BeMyShotgunSir.Scripts.Core
         private bool _isInitialized = false;
         private bool _isHostSession = false;
         private bool _isInLobby = false;
+
+        [field: SerializeField] public EventReference PlayerJoinSFX { get; private set; }
+        [field: SerializeField] public EventReference PlayerLeaveSFX { get; private set; }
 
         private ServerManager _serverManager;
         private ClientManager _clientManager;
@@ -168,7 +171,8 @@ namespace BeMyShotgunSir.Scripts.Core
         {
             if (args.ConnectionState == LocalConnectionState.Started)
             {
-                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerJoin), null);
+                if (!PlayerJoinSFX.IsNull)
+                    RuntimeManager.PlayOneShot(PlayerJoinSFX, transform.position);
                 Log.DLazy(() => "Server connection started.", this, _log);
                 EnterLobby();
                 return;
@@ -176,7 +180,8 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
-                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerLeave), null);
+                if (!PlayerLeaveSFX.IsNull)
+                    RuntimeManager.PlayOneShot(PlayerLeaveSFX, transform.position);
                 Log.WLazy(() => "Server connection stopped.", this);
                 QuitLobby();
             }
@@ -189,7 +194,8 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Started)
             {
-                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerJoin), null);
+                if (!PlayerJoinSFX.IsNull)
+                    RuntimeManager.PlayOneShot(PlayerJoinSFX, transform.position);
                 Log.DLazy(() => "Client connection started.", this, _log);
                 EnterLobby();
                 return;
@@ -197,7 +203,8 @@ namespace BeMyShotgunSir.Scripts.Core
 
             if (args.ConnectionState == LocalConnectionState.Stopped)
             {
-                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerLeave), null);
+                if (!PlayerLeaveSFX.IsNull)
+                    RuntimeManager.PlayOneShot(PlayerLeaveSFX, transform.position);
                 Log.WLazy(() => "Client connection stopped.", this);
                 QuitLobby();
             }

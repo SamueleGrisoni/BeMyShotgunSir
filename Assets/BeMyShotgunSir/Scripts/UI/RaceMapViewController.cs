@@ -30,6 +30,9 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
+        private bool _log = false;
+
+        [Header("UI References")]
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private RoadChunkTile[] _tilesRC;
         [SerializeField] private RoadChunkTile _forkTileRC;
@@ -48,18 +51,12 @@ namespace BeMyShotgunSir.Scripts.UI
         [Header("Power-Ups")]
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
         [SerializeField] private SOPowerUpsData _powerUpsData;
-
-        #region Bindings
-        private RaceCommand _command;
-        private RaceViewModel _viewModel;
-        private IRoadManager _roadManager;
-        private IInputPublisher _inputPublisher;
-        private RaceRole _role;
-        #endregion
+        [SerializeField] private SOItem _itemData;
 
         #region Visual Elements
         private VisualElement _root;
         private TemplateContainer _raceMap;
+        private TemplateContainer _brokenRaceMap;
         private VisualElement _mapTiles;
         private VisualElement _mapContent;
         private VisualElement _fogGrid;
@@ -91,20 +88,28 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _needsMapRebuild;
 
         private bool _isShowing = false;
-
+        private int? _teamId;
+        private bool _isHitBySpear = false;
         #endregion
 
         #region Public Fields
-
         public bool IsShowing => _isShowing;
+        #endregion
 
+
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
         #endregion
 
         public override void OnInitialBindComplete()
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
 
@@ -116,22 +121,28 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
 
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
+
+            if (_role == RaceRole.Shotgun)
+            {
+                _teamId = _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null;
+                _viewModel.OnRaceTeamDataChanged += CheckPowerUpUpdateFromTeamData;
+
+
+                BuildFogGrid();
+                BuildFogRevealOrder();
+                ResetFogRevealProgress();
+            }
         }
 
-        private void Awake()
-        {
-            RoadManager.OnSplitGeneratedProvided += SplitGeneratedHandler;
-            Log.DLazy(() => "RaceMapViewController enabled and subscribed to OnSplitGeneratedProvided event.", this);
-        }
 
-        private void OnDestroy()
+        private void OnDestroy() //TODO: Needed?
         {
             RoadManager.OnSplitGeneratedProvided -= SplitGeneratedHandler;
 
@@ -146,19 +157,13 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_hudDocument == null)
             {
-                Log.ELazy(() => "Race Map Document reference missing!", this);
+                Log.ELazy(() => "Race Map Document reference missing!", this, _log);
                 return;
             }
 
             _root = _hudDocument.rootVisualElement;
             _raceMap = _root.Q<TemplateContainer>("RaceMap");
-
-            if (_raceMap == null)
-            {
-                Log.ELazy(() => "RaceMap template not found.", this);
-                return;
-            }
-
+            _brokenRaceMap = _root.Q<TemplateContainer>("RaceMapBroken");
             _mapTiles = _raceMap.Q<VisualElement>("MapTiles");
             _fogGrid = _raceMap.Q<VisualElement>("FogGrid");
             _powerUpArea = _raceMap.Q<VisualElement>("PowerUpArea");
@@ -167,7 +172,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (_mapTiles == null)
             {
-                Log.ELazy(() => "MapTiles not found.", this);
+                Log.ELazy(() => "MapTiles not found.", this, _log);
                 return;
             }
 
@@ -178,11 +183,23 @@ namespace BeMyShotgunSir.Scripts.UI
             _mapTiles.Clear();
             _mapTiles.Add(_mapContent);
 
-            BuildFogGrid();
-            BuildFogRevealOrder();
-            ResetFogRevealProgress();
+            RoadManager.OnSplitGeneratedProvided += SplitGeneratedHandler;
 
             Show(false);
+        }
+
+        private void OnDisable()
+        {
+            RoadManager.OnSplitGeneratedProvided -= SplitGeneratedHandler;
+
+            if (_role == RaceRole.Shotgun)
+                _viewModel.OnRaceTeamDataChanged -= CheckPowerUpUpdateFromTeamData;
+
+            if (_fitRoutine != null)
+            {
+                StopCoroutine(_fitRoutine);
+                _fitRoutine = null;
+            }
         }
 
         #region Handlers
@@ -191,13 +208,13 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (splitData == null)
             {
-                Log.ELazy(() => "Split data is null. Cannot handle split generated event.", this);
+                Log.ELazy(() => "Split data is null. Cannot handle split generated event.", this, _log);
                 return;
             }
 
             if (!TryGetSplitBounds(splitData, out int startChunkId, out int endChunkId))
             {
-                Log.ELazy(() => "Cannot cache split map because bounds are invalid.", this);
+                Log.ELazy(() => "Cannot cache split map because bounds are invalid.", this, _log);
                 return;
             }
 
@@ -206,7 +223,20 @@ namespace BeMyShotgunSir.Scripts.UI
             TryLoadMapForCurrentTeamProgress();
         }
 
+        private void CheckPowerUpUpdateFromTeamData()
+        {
+            if (_viewModel == null)
+                return;
+
+            IReadOnlyDictionary<int, RaceTeamData> raceTeamData = new Dictionary<int, RaceTeamData>(_viewModel.NetState.TeamData);
+            _isHitBySpear = raceTeamData.TryGetValue(_teamId.Value, out RaceTeamData teamData) && teamData.ActivePowerUpInfo.isTargetedBySpear;
+
+            if (_isShowing)
+                Show(true);
+        }
+
         #endregion
+
 
         #region Race Map Construction and Update Methods
 
@@ -217,7 +247,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (_tilesRC == null || _tilesRC.Length == 0)
             {
-                Log.ELazy(() => "Road chunk tile array is empty.", this);
+                Log.ELazy(() => "Road chunk tile array is empty.", this, _log);
                 return;
             }
 
@@ -227,7 +257,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (!AddCenteredFork())
             {
-                Log.ELazy(() => "Failed to add centered fork.", this);
+                Log.ELazy(() => "Failed to add centered fork.", this, _log);
                 return;
             }
 
@@ -235,7 +265,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (!AddCenteredJunction())
             {
-                Log.ELazy(() => "Failed to add centered junction.", this);
+                Log.ELazy(() => "Failed to add centered junction.", this, _log);
                 return;
             }
 
@@ -292,7 +322,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
                 if (tileIndex < 0 || tileIndex >= _tilesRC.Length)
                 {
-                    Log.ELazy(() => $"Invalid tile index {tileIndex} for road chunk type {info.type} at position {info.position}", this);
+                    Log.ELazy(() => $"Invalid tile index {tileIndex} for road chunk type {info.type} at position {info.position}", this, _log);
                     continue;
                 }
 
@@ -497,7 +527,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             Log.DLazy(() =>
                 $"Fit | minX: {_mapMinX} | maxX: {_mapMaxX} | height: {mapHeight} | scale: {finalScale}",
-                this
+                this, _log
             );
         }
 
@@ -623,15 +653,17 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             _needsMapRebuild = false;
 
+            ResetFogRevealProgress();
+            BuildFogRevealOrder();
+
             ClearRaceMap();
             ClearPowerUps();
 
             BuildRaceMap();
             PopulatePowerUps();
-
-            ResetFogRevealProgress();
-            BuildFogRevealOrder();
         }
+
+
 
         private IEnumerator RefreshMapAfterShow()
         {
@@ -748,7 +780,14 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 for (int x = 0; x < _fogColumns; x++)
                 {
-                    _fogTiles[x, y]?.RemoveFromClassList("revealed");
+                    VisualElement tile = _fogTiles[x, y];
+
+                    if (tile == null)
+                        continue;
+
+                    tile.RemoveFromClassList("fog-fade");
+                    tile.RemoveFromClassList("revealed");
+                    tile.style.opacity = 1f;
                 }
             }
         }
@@ -795,7 +834,14 @@ namespace BeMyShotgunSir.Scripts.UI
             if (x < 0 || x >= _fogColumns) return;
             if (y < 0 || y >= _fogRows) return;
 
-            _fogTiles[x, y]?.AddToClassList("revealed");
+            VisualElement tile = _fogTiles[x, y];
+
+            if (tile == null)
+                return;
+
+            tile.style.opacity = StyleKeyword.Null;
+            tile.AddToClassList("fog-fade");
+            tile.AddToClassList("revealed");
         }
 
         private void Shuffle<T>(List<T> list)
@@ -876,6 +922,8 @@ namespace BeMyShotgunSir.Scripts.UI
                 return null;
 
             PowerUp powerUp = _powerUpsData.PowerUps[item.index].PowerUpType;
+            // PowerUp powerUp = _itemData.PowerUpItems[item.index].PowerUpType;
+
             return _powerUpIcons.GetIcon(powerUp);
         }
 
@@ -885,14 +933,27 @@ namespace BeMyShotgunSir.Scripts.UI
 
         public void Show(bool show)
         {
-            _raceMap.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            _raceMap.style.visibility = show ? Visibility.Visible : Visibility.Hidden;
             _isShowing = show;
 
             if (!show)
+            {
+                _brokenRaceMap.style.visibility = Visibility.Hidden;
                 return;
+            }
 
-            StartCoroutine(RefreshMapAfterShow());
+            if (!_isHitBySpear)
+            {
+                _brokenRaceMap.style.visibility = Visibility.Hidden;
+                StartCoroutine(RefreshMapAfterShow());
+            }
+            else
+            {
+                _raceMap.style.visibility = Visibility.Hidden;
+                _brokenRaceMap.style.visibility = Visibility.Visible;
+            }
         }
+
 
         public void UpdateMapFromTeamProgress(TeamTrackProgress progress)
         {

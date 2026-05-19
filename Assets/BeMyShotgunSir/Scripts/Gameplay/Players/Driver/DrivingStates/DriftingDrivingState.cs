@@ -41,6 +41,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver.DrivingStates
                 controller.ChangeState(controller.NormalState, data, isReplayed);
                 return;
             }
+            if (controller.CheckForkBarrierCollision())
+            {
+                controller.ChangeState(controller.BumpState, data, isReplayed);
+                return;
+            }
         }
         public void RunInputs(IDrivingStateContext controller, ReplicateData data, bool isReplayed)
         {

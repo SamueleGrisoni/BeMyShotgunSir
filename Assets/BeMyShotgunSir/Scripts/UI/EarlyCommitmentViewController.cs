@@ -9,7 +9,29 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class EarlyCommitmentViewController : RaceBindTarget
     {
+        private bool _log = false;
         [SerializeField] private UIDocument _hudDocument;
+
+        #region Visual Elements
+        private VisualElement _root;
+        private VisualElement _earlyCommitmentContainer;
+        private VisualElement _earlyCommitment;
+        private VisualElement _contentArea;
+        private VisualElement _earlyCommitmentLabel;
+        private VisualElement _commitmentChoice;
+        private VisualElement _arrowLeft;
+        private VisualElement _arrowRight;
+        private VisualElement _commitBarMaskLeft;
+        private VisualElement _commitBarMaskRight;
+        #endregion
+
+        #region private fields
+        private float _commitmentValue;
+        private float _currentCommitmentFill;
+        private bool _updateEarlyCommitment;
+        private float _lastCommitmentValue = 0f;
+        private bool _onFinishRoad = false;
+        #endregion
 
         #region Bindings
         private RaceCommand _command;
@@ -45,25 +67,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _inputPublisher.OnEarlyCommitmentExecuted += EarlyCommitmentExecutedHandler;
         }
 
-        #region Visual Elements
-        private VisualElement _root;
-        private VisualElement _earlyCommitmentContainer;
-        private VisualElement _earlyCommitment;
-        private VisualElement _contentArea;
-        private VisualElement _earlyCommitmentLabel;
-        private VisualElement _commitmentChoice;
-        private VisualElement _arrowLeft;
-        private VisualElement _arrowRight;
-        private VisualElement _commitBarMaskLeft;
-        private VisualElement _commitBarMaskRight;
-        #endregion
 
-        #region private fields
-        private float _commitmentValue;
-        private float _currentCommitmentFill;
-        private bool _updateEarlyCommitment;
-        private float _lastCommitmentValue = 0f;
-        #endregion
 
         private void OnEnable()
         {
@@ -87,10 +91,12 @@ namespace BeMyShotgunSir.Scripts.UI
             _arrowLeft.pickingMode = PickingMode.Position;
             _arrowRight.pickingMode = PickingMode.Position;
 
-            // _earlyCommitmentContainer.style.display = DisplayStyle.None;
+            _earlyCommitmentContainer.style.display = DisplayStyle.None;
 
-            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this);
-            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this);
+            _onFinishRoad = false;
+
+            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this, _log);
+            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this, _log);
         }
 
         IEnumerator InitNextFrame()
@@ -124,6 +130,9 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ReadEarlyCommitmentValue(float commitmentValue)
         {
+            if (_onFinishRoad)
+                return;
+
             _commitmentValue = commitmentValue;
 
             if (commitmentValue >= _lastCommitmentValue)
@@ -150,6 +159,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ShowEarlyCommitment(bool show) => _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
 
+        public void OnFinishRoad() => _onFinishRoad = true;
 
     }
 }

@@ -11,10 +11,29 @@ namespace BeMyShotgunSir.Scripts.UI
     public class PowerUpViewController : RaceBindTarget
     {
         private bool _log = false;
+        [Header("UI References")]
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
         [SerializeField] private float _swipeThreshold = 80f;
 
+        #region Visual Elements
+        private VisualElement _root;
+        private VisualElement _powerUpBarContainer;
+        private TemplateContainer _powerUpTemplate;
+        private VisualElement _powerUpList;
+        private VisualElement _powerUp1;
+        private VisualElement _powerUp2;
+        private VisualElement _powerUp3;
+        private VisualElement _powerUp4;
+        private VisualElement _powerUp5;
+        private VisualElement[] _powerUps;
+        #endregion
+
+        #region private fields
+        private Vector2 _pointerDownPos;
+        private bool _isPointerDown;
+        private int _teamId;
+        #endregion
 
         #region Bindings
         private RaceCommand _command;
@@ -48,35 +67,13 @@ namespace BeMyShotgunSir.Scripts.UI
             _role = _finalBindSource.Role;
         }
 
-        #region Visual Elements
-        private VisualElement _root;
-        private TemplateContainer _powerUpTemplate;
-        private VisualElement _powerUpList;
-        private VisualElement _powerUp1;
-        private VisualElement _powerUp2;
-        private VisualElement _powerUp3;
-        private VisualElement _powerUp4;
-        private VisualElement _powerUp5;
-        private VisualElement[] _powerUps;
-        #endregion
 
-        #region private fields
-        private Vector2 _pointerDownPos;
-        private bool _isPointerDown;
-        private int _teamId;
-        #endregion
-
-        #region Debug
-        private VisualElement _test1;
-        private VisualElement _test2;
-        private VisualElement _test3;
-        #endregion
 
         private void OnEnable()
         {
             _root = _hudDocument.rootVisualElement;
-            _test1 = _root.Q<VisualElement>("PowerUpBarContainer");
-            _powerUpTemplate = _test1.Q<TemplateContainer>("PowerUpBar");
+            _powerUpBarContainer = _root.Q<VisualElement>("PowerUpBarContainer");
+            _powerUpTemplate = _powerUpBarContainer.Q<TemplateContainer>("PowerUpBar");
             _powerUpList = _powerUpTemplate.Q<VisualElement>("PowerUpList");
             _powerUp1 = _powerUpList.Q<VisualElement>("PowerUp1");
             _powerUp2 = _powerUpList.Q<VisualElement>("PowerUp2");
@@ -112,6 +109,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_viewModel == null)
                 return;
+
             _viewModel.OnInventoryChanged -= UpdatePowerUpBar;
             _viewModel.OnInventoryChanged += UpdatePowerUpBar;
             Log.DLazy(() => $"Subscribe PowerUpVC instance: {GetInstanceID()}", this, _log);

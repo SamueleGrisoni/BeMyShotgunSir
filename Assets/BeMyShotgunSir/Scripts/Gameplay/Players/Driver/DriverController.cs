@@ -96,6 +96,6 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         [TargetRpc]
-        public void ActivateControls_TargetRpc(NetworkConnection connection) => Log.DLazy(() => $"Activating controls for driver on client {connection.ClientId}.", this, _log); //TODO
+        public void ActivateControls_TargetRpc(NetworkConnection connection) => _movementController.StartRace();
     }
 }

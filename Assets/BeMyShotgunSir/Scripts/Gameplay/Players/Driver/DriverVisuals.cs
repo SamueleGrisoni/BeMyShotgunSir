@@ -1,16 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
-using BeMyShotgunSir.Scripts.Core;
-using BeMyShotgunSir.Scripts.Core.Audio;
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using FishNet.Object;
+using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
 
 namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
     public class DriverVisuals : NetworkBehaviour
     {
-        [SerializeField] private AudioSource _audioSource;
+        [Header("Audio")][SerializeField] private EventReference _engineEvent;
+        [Header("Audio")][SerializeField] private EventReference _driftEvent;
+        private EventInstance _engineInstance;
+        private EventInstance _driftIstance;
         [SerializeField] private DriverStats _stats;
         [SerializeField] private MovementController _movement;
         [SerializeField] private Transform _parent;
@@ -32,6 +34,8 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         [SerializeField] private SkinnedMeshRenderer _overlayMeshRenderer;
         [SerializeField] private GameObject _aimDecalProjector;
 
+        [SerializeField] private Animator _visualModelAnimator;
+
         private Material _armorOverlayMaterial;
 
 
@@ -47,7 +51,6 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         private double _prevSnapshotTime;
         private double _nextSnapshotTime;
         private bool _hasFirstSnapshot;
-        private float _timeSinceLastTick = 0f;
 
         public override void OnStartNetwork()
         {
@@ -64,10 +67,31 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 _aimDecalProjector.SetActive(false);
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            _engineInstance = RuntimeManager.CreateInstance(_engineEvent);
+            _engineInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+            _engineInstance.start();
+
+            _driftIstance = RuntimeManager.CreateInstance(_driftEvent);
+            _driftIstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+        }
+
         public override void OnStopNetwork()
         {
             base.OnStopNetwork();
             TimeManager.OnPostTick -= OnPostTick;
+            if (_engineInstance.isValid())
+            {
+                _engineInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                _engineInstance.release();
+            }
+            if (_driftIstance.isValid())
+            {
+                _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                _driftIstance.release();
+            }
         }
 
         private void OnPostTick()
@@ -85,13 +109,19 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             };
             _nextSnapshotTime = TimeManager.TicksToTime(TimeManager.LocalTick);
             _hasFirstSnapshot = true;
-            _timeSinceLastTick = 0f;
+        }
+
+        private void Update()
+        {
+            if (_engineInstance.isValid())
+            {
+                _engineInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+                _engineInstance.setParameterByName("Speed", _movement.GetCurrentVelocity());
+            }
         }
 
         private void LateUpdate()
         {
-            _timeSinceLastTick += Time.deltaTime;
-
             if (IsServerInitialized)
             {
                 _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * _smoothingSpeedFast);
@@ -136,7 +166,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             }
 
             double now = TimeManager.TicksToTime(TimeManager.LocalTick) + Time.deltaTime;
-            float alpha = Mathf.Clamp01(_timeSinceLastTick / (float)TimeManager.TickDelta);
+            float alpha = Mathf.Clamp01((float)((now - _prevSnapshotTime) / snapshotSpan));
 
             float dist = Vector3.Distance(_parent.position, _prevSnapshot.Position);
             if (dist > _teleportThreshold)
@@ -172,6 +202,11 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             {
                 tr.emitting = isDrifting;
             }
+
+            if (isDrifting)
+                _driftIstance.start();
+            else
+                _driftIstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
         private void AnimateBoost()
         {
@@ -186,24 +221,11 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
         }
         public void OilAnimation()
         {
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.OilSlip), _audioSource);
-            StartCoroutine(ExecuteOilAnimation());
-        }
-
-        private IEnumerator ExecuteOilAnimation()
-        {
-            float timer = 0f;
-            Quaternion startRotation = _visualModel.localRotation;
-
-            while (timer < _stats.AnimationStats.OilAnimationDuration)
+            // SOUND
+            if (_visualModelAnimator != null)
             {
-                timer += Time.deltaTime;
-                float currentRotation = (_stats.AnimationStats.OilTotalRotation / _stats.AnimationStats.OilAnimationDuration) * Time.deltaTime;
-                _visualModel.localRotation *= Quaternion.Euler(0, 0, currentRotation);
-                yield return null;
+                _visualModelAnimator.SetTrigger("Oil");
             }
-
-            _visualModel.localRotation = startRotation;
         }
 
         public void SetArmorVisualEffects(bool isActive)
@@ -227,6 +249,18 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 ParticleSystem.EmissionModule emission = p.emission;
                 emission.enabled = isActive;
             }
+        }
+
+        public void RightCollisionAnimation()
+        {
+            if (_visualModelAnimator != null)
+                _visualModelAnimator.SetTrigger("HitRight");
+        }
+
+        public void LeftCollisionAnimation()
+        {
+            if (_visualModelAnimator != null)
+                _visualModelAnimator.SetTrigger("HitLeft");
         }
     }
 }

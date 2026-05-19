@@ -33,7 +33,6 @@ namespace BeMyShotgunSir.Scripts.Core
             Race.RaceManager.OnRaceManagerDespawned += OnRaceManagerDespawned;
 
             TryGetComponent(out _sceneCoordinator);
-
             AudioManager.Initialize();
             ConnectionManager.Initialize();
         }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &441494945411299020
+--- !u!1 &1072264655393695197
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,118 +8,32 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 794738373077103999}
-  - component: {fileID: 8253339148729557041}
+  - component: {fileID: 8847262048905558246}
   m_Layer: 0
-  m_Name: UI Controller Race
+  m_Name: Screens
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &794738373077103999
+--- !u!4 &8847262048905558246
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 441494945411299020}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.30634, y: 8.50394, z: 15.99799}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4178555749693309302}
-  - {fileID: 6484952865376414515}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8253339148729557041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 441494945411299020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ba0f9807b1b448d98100499735626e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.UIController_Race
-  _hudDriverViewController: {fileID: 4866846611282633913}
-  _hudShotgunViewController: {fileID: 5516568233059001549}
---- !u!1 &2735337696642507055
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2679987917710540137}
-  - component: {fileID: 6232512520423965476}
-  - component: {fileID: 1891565066910848188}
-  m_Layer: 0
-  m_Name: Countdown
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2679987917710540137
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2735337696642507055}
+  m_GameObject: {fileID: 1072264655393695197}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6484952865376414515}
+  m_Children:
+  - {fileID: 6797938793481468468}
+  - {fileID: 1657699961856145650}
+  m_Father: {fileID: 7754640229137464184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6232512520423965476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2735337696642507055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 6f34a4868e81b47c6acf07333a6ea518, type: 3}
-  m_SortingOrder: 99
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &1891565066910848188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2735337696642507055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deaab83a2e19943998ac5b2c742362be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  _hudDriverDocument: {fileID: 6232512520423965476}
-  _startVisibleTime: 1
-  _fadeOutTime: 0.35
---- !u!1 &3328228589706971653
+--- !u!1 &2851384910259134030
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,9 +41,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6850011887395924334}
-  - component: {fileID: 7494603143823104638}
-  - component: {fileID: 3915909528700629444}
+  - component: {fileID: 1657699961856145650}
+  - component: {fileID: 3171111698662617961}
+  - component: {fileID: 8676388615963628589}
   m_Layer: 0
   m_Name: FinishScreen
   m_TagString: Untagged
@@ -137,28 +51,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6850011887395924334
+--- !u!4 &1657699961856145650
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3328228589706971653}
+  m_GameObject: {fileID: 2851384910259134030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6484952865376414515}
+  m_Father: {fileID: 8847262048905558246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7494603143823104638
+--- !u!114 &3171111698662617961
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3328228589706971653}
+  m_GameObject: {fileID: 2851384910259134030}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -166,8 +80,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 0}
-  m_SortingOrder: 0
+  sourceAsset: {fileID: 9197481963319205126, guid: fd811e0acc3554492bedd41df28e0cc0, type: 3}
+  m_SortingOrder: 98
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -175,20 +89,20 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &3915909528700629444
+--- !u!114 &8676388615963628589
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3328228589706971653}
+  m_GameObject: {fileID: 2851384910259134030}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d119e3df7bc6d4749b583b04dfcb03f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _finishScreenDocument: {fileID: 7494603143823104638}
---- !u!1 &4169808579892608499
+  _finishScreenDocument: {fileID: 3171111698662617961}
+--- !u!1 &3094884752657872802
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -196,14 +110,14 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 153201903914121178}
-  - component: {fileID: 3293954288961202649}
-  - component: {fileID: 4866846611282633913}
-  - component: {fileID: 1096466854820657173}
-  - component: {fileID: 1880131593448069934}
-  - component: {fileID: 4180304851227683288}
-  - component: {fileID: 646389626179267242}
-  - component: {fileID: 1703296273154712490}
+  - component: {fileID: 2871737865582005972}
+  - component: {fileID: 1560424842243217361}
+  - component: {fileID: 1154889163757451817}
+  - component: {fileID: 8127618135094963446}
+  - component: {fileID: 7139959729920794994}
+  - component: {fileID: 4371838906909250349}
+  - component: {fileID: 8617196384948559749}
+  - component: {fileID: 3443418870483636824}
   m_Layer: 0
   m_Name: Driver
   m_TagString: Untagged
@@ -211,28 +125,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &153201903914121178
+--- !u!4 &2871737865582005972
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4178555749693309302}
+  m_Father: {fileID: 7150377123618451885}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3293954288961202649
+--- !u!114 &1560424842243217361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -249,94 +163,95 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &4866846611282633913
+--- !u!114 &1154889163757451817
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f31059872fe54a6db51459306df497b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDDriverViewController
-  _uiControllerRace: {fileID: 8253339148729557041}
-  _hudDriverDocument: {fileID: 3293954288961202649}
-  _topBarViewController: {fileID: 1096466854820657173}
---- !u!114 &1096466854820657173
+  _uiControllerRace: {fileID: 673641645470680985}
+  _hudDriverDocument: {fileID: 1560424842243217361}
+  _topBarViewController: {fileID: 8127618135094963446}
+  _earlyCommitmentViewController: {fileID: 8617196384948559749}
+--- !u!114 &8127618135094963446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
-  _topBarDocument: {fileID: 3293954288961202649}
+  _topBarDocument: {fileID: 1560424842243217361}
   _markerLerpSpeed: 8
---- !u!114 &1880131593448069934
+--- !u!114 &7139959729920794994
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
-  _hudDocument: {fileID: 3293954288961202649}
+  _hudDocument: {fileID: 1560424842243217361}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _swipeThreshold: 80
---- !u!114 &4180304851227683288
+--- !u!114 &4371838906909250349
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e2fbbbce19b44c6797623e4869d6235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _hudDocument: {fileID: 3293954288961202649}
+  _hudDocument: {fileID: 1560424842243217361}
   _shoutWheelIcons: {fileID: 11400000, guid: 8cec1a957ed774d55a56a2e335c6cf20, type: 2}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _visibleTime: 1.5
   _outTransitionTime: 0.25
---- !u!114 &646389626179267242
+--- !u!114 &8617196384948559749
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c80d141806fb746608f5032e52696e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.EarlyCommitmentController
-  _hudDocument: {fileID: 3293954288961202649}
---- !u!114 &1703296273154712490
+  _hudDocument: {fileID: 1560424842243217361}
+--- !u!114 &3443418870483636824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169808579892608499}
+  m_GameObject: {fileID: 3094884752657872802}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3c020507a290447ba6f8ca748c89cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BottomBarController
-  _hudDocument: {fileID: 3293954288961202649}
---- !u!1 &4790227760206385942
+  _hudDocument: {fileID: 1560424842243217361}
+--- !u!1 &3795675722143739772
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -344,32 +259,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6484952865376414515}
+  - component: {fileID: 7754640229137464184}
+  - component: {fileID: 673641645470680985}
   m_Layer: 0
-  m_Name: Screens
+  m_Name: UI Controller Race
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6484952865376414515
+--- !u!4 &7754640229137464184
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4790227760206385942}
+  m_GameObject: {fileID: 3795675722143739772}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -11.30634, y: 8.50394, z: 15.99799}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2679987917710540137}
-  - {fileID: 6850011887395924334}
-  m_Father: {fileID: 794738373077103999}
+  - {fileID: 7150377123618451885}
+  - {fileID: 8847262048905558246}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6336098627410793612
+--- !u!114 &673641645470680985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795675722143739772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ba0f9807b1b448d98100499735626e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.UIController_Race
+  _hudDriverViewController: {fileID: 1154889163757451817}
+  _hudShotgunViewController: {fileID: 241903618986737787}
+--- !u!1 &4047863481878382932
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -377,14 +307,14 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2382439235520223015}
-  - component: {fileID: 659986056891979023}
-  - component: {fileID: 5516568233059001549}
-  - component: {fileID: 4225856289402491409}
-  - component: {fileID: 7194257246901332898}
-  - component: {fileID: 8678354252075470640}
-  - component: {fileID: 571587430149639321}
-  - component: {fileID: 4712461955046808637}
+  - component: {fileID: 925427824873593700}
+  - component: {fileID: 4727294317536997868}
+  - component: {fileID: 241903618986737787}
+  - component: {fileID: 6580307722459378965}
+  - component: {fileID: 3287736265340496545}
+  - component: {fileID: 456862583637576731}
+  - component: {fileID: 5078343371024847663}
+  - component: {fileID: 8925041858395166588}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -392,28 +322,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2382439235520223015
+--- !u!4 &925427824873593700
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4178555749693309302}
+  m_Father: {fileID: 7150377123618451885}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &659986056891979023
+--- !u!114 &4727294317536997868
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -430,82 +360,82 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
---- !u!114 &5516568233059001549
+--- !u!114 &241903618986737787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bd5e3fcea20a4f42aebb271d978e45a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.HUDShotgunViewController
-  _hudShotgunDocument: {fileID: 659986056891979023}
-  _topBarViewController: {fileID: 4225856289402491409}
-  _infoBarViewController: {fileID: 7194257246901332898}
-  _shoutWheelViewController: {fileID: 8678354252075470640}
-  _raceMapViewController: {fileID: 571587430149639321}
-  _powerUpViewController: {fileID: 4712461955046808637}
---- !u!114 &4225856289402491409
+  _hudShotgunDocument: {fileID: 4727294317536997868}
+  _topBarViewController: {fileID: 6580307722459378965}
+  _infoBarViewController: {fileID: 3287736265340496545}
+  _shoutWheelViewController: {fileID: 456862583637576731}
+  _raceMapViewController: {fileID: 5078343371024847663}
+  _powerUpViewController: {fileID: 8925041858395166588}
+--- !u!114 &6580307722459378965
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e263576238954b008cbcd461f8588f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.TopBarViewController
-  _topBarDocument: {fileID: 659986056891979023}
+  _topBarDocument: {fileID: 4727294317536997868}
   _markerLerpSpeed: 8
---- !u!114 &7194257246901332898
+--- !u!114 &3287736265340496545
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc9c98fcf84a74b2d9e275ca20e79bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.InfoBarViewController
-  _hudDocument: {fileID: 659986056891979023}
+  _hudDocument: {fileID: 4727294317536997868}
   _feedbackIcons: {fileID: 11400000, guid: a5d0b54fea99a4fe4a9b1dfa1390b8aa, type: 2}
   _visibleTime: 1.5
   _outTransitionTime: 0.25
---- !u!114 &8678354252075470640
+--- !u!114 &456862583637576731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a10c1e671f5d422eac690517dd22fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.ShoutWheelViewController
-  _hudDocument: {fileID: 659986056891979023}
+  _hudDocument: {fileID: 4727294317536997868}
   _shoutWheelIcons: {fileID: 11400000, guid: 8cec1a957ed774d55a56a2e335c6cf20, type: 2}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
---- !u!114 &571587430149639321
+--- !u!114 &5078343371024847663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 473e3ee5ac753411db2268346a3549ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.RaceMapViewController
-  _hudDocument: {fileID: 659986056891979023}
+  _hudDocument: {fileID: 4727294317536997868}
   _tilesRC:
   - {fileID: 2935506388020526948, guid: 6de13c26177cb44dc9ef05350ed2c04b, type: 3}
   - {fileID: 6426572494250142434, guid: 6bfa52b09b45d4452a96cbff1e8fa536, type: 3}
@@ -606,22 +536,23 @@ MonoBehaviour:
   _revealStepDelay: 0.5
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _powerUpsData: {fileID: 11400000, guid: abf26ee10e594fe4db43417fdeb2873d, type: 2}
---- !u!114 &4712461955046808637
+  _itemData: {fileID: 11400000, guid: e9dce43d4db29ec418ac6b7d49b839f3, type: 2}
+--- !u!114 &8925041858395166588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6336098627410793612}
+  m_GameObject: {fileID: 4047863481878382932}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356d3579d3f1c480d99a775f322d99fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.UI.PowerUpViewController
-  _hudDocument: {fileID: 659986056891979023}
+  _hudDocument: {fileID: 4727294317536997868}
   _powerUpIcons: {fileID: 11400000, guid: bff65ed393d28421286a24e5a4e6f5c0, type: 2}
   _swipeThreshold: 80
---- !u!1 &8808116141152648899
+--- !u!1 &7976815851881614215
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -629,8 +560,79 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4178555749693309302}
-  - component: {fileID: 2429229460671809025}
+  - component: {fileID: 6797938793481468468}
+  - component: {fileID: 4230623205497602625}
+  - component: {fileID: 1805769135773464249}
+  m_Layer: 0
+  m_Name: Countdown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6797938793481468468
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7976815851881614215}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8847262048905558246}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4230623205497602625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7976815851881614215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: f857025069a8d4d73875235aad6c1877, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 6f34a4868e81b47c6acf07333a6ea518, type: 3}
+  m_SortingOrder: 99
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &1805769135773464249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7976815851881614215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deaab83a2e19943998ac5b2c742362be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _hudDriverDocument: {fileID: 4230623205497602625}
+  _startVisibleTime: 1
+  _fadeOutTime: 0.35
+--- !u!1 &8328485229420164801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7150377123618451885}
+  - component: {fileID: 6435666199471864474}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -638,30 +640,30 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4178555749693309302
+--- !u!4 &7150377123618451885
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8808116141152648899}
+  m_GameObject: {fileID: 8328485229420164801}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 153201903914121178}
-  - {fileID: 2382439235520223015}
-  m_Father: {fileID: 794738373077103999}
+  - {fileID: 2871737865582005972}
+  - {fileID: 925427824873593700}
+  m_Father: {fileID: 7754640229137464184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2429229460671809025
+--- !u!114 &6435666199471864474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8808116141152648899}
+  m_GameObject: {fileID: 8328485229420164801}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4b018773188a4306b440861259bd332, type: 3}

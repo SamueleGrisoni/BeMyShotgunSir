@@ -1,0 +1,33 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/CentralHub/SettingsUSS.uss?fileID=7433441132597879392&amp;guid=57983ae5e021c4a63a847bb5be878011&amp;type=3#SettingsUSS"/>
+    <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
+    <ui:VisualElement name="SettingsRoot" class="settings-root">
+        <ui:VisualElement name="SettingsPanel" class="settings-panel" style="align-items: center; justify-content: space-between;">
+            <ui:VisualElement class="settings-header">
+                <ui:Label text="Settings" class="settings-title"/>
+            </ui:VisualElement>
+            <ui:Label text="Audio" class="settings-section-title"/>
+            <ui:VisualElement name="Sliders" class="sliders-container">
+                <ui:VisualElement class="settings-slider-row">
+                    <ui:Label text="Master" class="settings-slider-label"/>
+                    <ui:VisualElement class="settings-slider-container">
+                        <ui:Slider name="MasterSlider" lowValue="0" highValue="10" class="settings-slider"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-slider-row">
+                    <ui:Label text="Music" class="settings-slider-label"/>
+                    <ui:VisualElement class="settings-slider-container">
+                        <ui:Slider name="MusicSlider" lowValue="0" highValue="10" class="settings-slider"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="settings-slider-row">
+                    <ui:Label text="SFX" class="settings-slider-label"/>
+                    <ui:VisualElement class="settings-slider-container">
+                        <ui:Slider name="SfxSlider" lowValue="0" highValue="10" class="settings-slider"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button name="CloseSettingsButton" text="Back" class="menu-button"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

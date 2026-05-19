@@ -10,24 +10,6 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class TopBarViewController : RaceBindTarget
     {
-        [SerializeField] private UIDocument _topBarDocument;
-        [SerializeField] private float _markerLerpSpeed = 8f;
-
-        private RaceCommand _command;
-        private RaceViewModel _viewModel;
-        private IRoadManager _roadManager;
-        private IInputPublisher _inputPublisher;
-        private RaceRole _role;
-
-        private VisualElement _root;
-        private VisualElement _mapBarContainer;
-        private VisualElement _markerRow;
-
-        private int? _teamId;
-        private Coroutine _markerLerpCoroutine;
-
-        private readonly Dictionary<int, TeamMarkerView> _teamMarkers = new();
-
         private class TeamMarkerView
         {
             public VisualElement Marker;
@@ -36,11 +18,37 @@ namespace BeMyShotgunSir.Scripts.UI
             public float TargetPosition;
         }
 
+        private bool _log = false;
+
+        [Header("UI References")]
+        [SerializeField] private UIDocument _topBarDocument;
+        [SerializeField] private float _markerLerpSpeed = 8f;
+
+        #region Visual Elements
+        private VisualElement _root;
+        private VisualElement _mapBarContainer;
+        private VisualElement _markerRow;
+        #endregion
+
+        #region private fields
+        private int? _teamId;
+        private Coroutine _markerLerpCoroutine;
+        private readonly Dictionary<int, TeamMarkerView> _teamMarkers = new();
+        #endregion
+
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
+        #endregion
+
         public override void OnInitialBindComplete()
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
 
@@ -50,13 +58,14 @@ namespace BeMyShotgunSir.Scripts.UI
             _teamId = _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null;
 
             _viewModel.OnTeamTrackProgressChanged += TeamTrackProgressChangedHandler;
+            _viewModel.OnRaceTeamDataChanged += RaceTeamDataChangedHandler;
         }
 
         public override void OnFinalBindComplete()
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
 
@@ -70,7 +79,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_topBarDocument == null)
             {
-                Log.ELazy(() => "Top Bar Document reference missing!", this);
+                Log.ELazy(() => "Top Bar Document reference missing!", this, _log);
                 return;
             }
 
@@ -80,13 +89,11 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (_mapBarContainer == null || _markerRow == null)
             {
-                Log.ELazy(() => "Top bar visual elements not found!", this);
+                Log.ELazy(() => "Top bar visual elements not found!", this, _log);
                 return;
             }
 
             ClearMarkers();
-
-            // SOInvisibility_PU.OnInvisibilityEffectApplied += OnInvisibilityEffectApplied;
         }
 
         private void OnDisable()
@@ -97,7 +104,8 @@ namespace BeMyShotgunSir.Scripts.UI
                 _markerLerpCoroutine = null;
             }
 
-            // SOInvisibility_PU.OnInvisibilityEffectApplied -= OnInvisibilityEffectApplied;
+            _viewModel.OnTeamTrackProgressChanged -= TeamTrackProgressChangedHandler;
+            _viewModel.OnRaceTeamDataChanged -= RaceTeamDataChangedHandler;
         }
 
         private void ClearMarkers()
@@ -177,6 +185,7 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
+        #region Handlers
         private void TeamTrackProgressChangedHandler()
         {
             AssignMarkers();
@@ -189,6 +198,22 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
+
+        private void RaceTeamDataChangedHandler()
+        {
+            if (_teamId == null)
+                return;
+
+            IReadOnlyDictionary<int, RaceTeamData> raceTeamData = new Dictionary<int, RaceTeamData>(_viewModel.NetState.TeamData);
+
+            foreach (KeyValuePair<int, RaceTeamData> teamData in raceTeamData)
+            {
+                if (_teamId != teamData.Key)
+                    CheckInvisibility(teamData.Key, teamData.Value);
+            }
+        }
+        #endregion
+
         private void UpdateTeamMarker(int teamIndex, TeamTrackProgress progress)
         {
             if (!_teamMarkers.TryGetValue(teamIndex, out TeamMarkerView markerView))
@@ -196,6 +221,24 @@ namespace BeMyShotgunSir.Scripts.UI
 
             float normalizedPosition = GetSectionNormalizedPosition(progress);
             markerView.TargetPosition = normalizedPosition;
+        }
+
+        private void CheckInvisibility(int teamIndex, RaceTeamData teamData)
+        {
+            bool isInvisible = teamData.ActivePowerUpInfo.isInvisibilityActive;
+
+            _teamMarkers.TryGetValue(teamIndex, out TeamMarkerView markerView);
+            ShowTeamMarker(markerView, isInvisible);
+        }
+
+
+        private void ShowTeamMarker(TeamMarkerView markerView, bool isInvisible)
+        {
+            if (markerView == null)
+                return;
+
+            markerView.Marker.style.display = isInvisible ? DisplayStyle.None : DisplayStyle.Flex;
+            markerView.Icon.style.display = isInvisible ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         private void SetMarkerPosition(VisualElement marker, float position)
@@ -239,14 +282,6 @@ namespace BeMyShotgunSir.Scripts.UI
             );
         }
 
-        private void OnInvisibilityEffectApplied(bool isActive)
-        {
-            if (_teamId == null)
-                return;
-
-            if (_teamMarkers.TryGetValue(_teamId.Value, out TeamMarkerView markerView))
-                markerView.Marker.style.opacity = isActive ? 0f : 1f;
-        }
 
         public void ChangeTeamIcon(int teamIndex, Sprite newIcon)
         {

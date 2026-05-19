@@ -1,4 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="Credits" src="project://database/Assets/BeMyShotgunSir/_UI/CentralHub/Credits.uxml?fileID=9197481963319205126&amp;guid=8475437f9fa184ab79883ee02eb27b9b&amp;type=3#Credits"/>
+    <ui:Template name="Settings" src="project://database/Assets/BeMyShotgunSir/_UI/CentralHub/Settings.uxml?fileID=9197481963319205126&amp;guid=9f1126189309c4c8cb92a170dc7bc465&amp;type=3#Settings"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/CentralHub/CentralHubUSS.uss?fileID=7433441132597879392&amp;guid=123dcbed6e6a441fab1b43163f03227b&amp;type=3#CentralHubUSS"/>
     <Style src="project://database/Assets/BeMyShotgunSir/_UI/SafeArea/SafeAreaUSS.uss?fileID=7433441132597879392&amp;guid=4c7f6a71594264a89a35233a6f99ef96&amp;type=3#SafeAreaUSS"/>
     <ui:VisualElement name="TitleRoot" class="title-root" style="flex-grow: 1;">
@@ -8,15 +10,21 @@
                 <ui:Label text="BE MY&#10;SHOTGUN,&#10;SIR!" name="Title"/>
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container">
-                <ui:Button name="PlayButton" class="menu-button">
+                <ui:Button name="PlayButton" class="menu-button play">
                     <ui:Label text="PLAY!" class="button-label"/>
                 </ui:Button>
                 <ui:Button name="SettingsButton" class="menu-button">
                     <ui:Label text="SETTINGS" class="button-label"/>
                 </ui:Button>
-                <ui:Button name="FeedbackButton" class="menu-button">
-                    <ui:Label text="FEEDBACK" class="button-label"/>
+                <ui:Button name="CreditsButton" class="menu-button">
+                    <ui:Label text="CREDITS" class="button-label"/>
                 </ui:Button>
+            </ui:VisualElement>
+            <ui:VisualElement name="SettingsContainer" class="settings-container">
+                <ui:Instance template="Settings" name="Settings" style="position: absolute; width: 1200px; height: 1500px; align-self: center;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="CreditsContainer" class="credits-container">
+                <ui:Instance template="Credits" name="Credits" style="width: 1200px; height: 1500px; align-self: center;"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

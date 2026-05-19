@@ -18,6 +18,7 @@ namespace BeMyShotgunSir.Scripts.UI
         bool IsDrifting { get; }
         bool IsMoving { get; }
         event Action OnBoostPressed;
+        event Action OnStartPressed;
         event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         event Action<DriverFeedback> OnDriverFeedbackPressed;
 
@@ -46,6 +47,7 @@ namespace BeMyShotgunSir.Scripts.UI
         void SetIsDrifting(bool isDrifting);
         void SetIsMoving(bool isMoving);
         void PressBoost();
+        void PressStart();
         void PressEarlyCommitment(CommitmentDirection direction);
         void PressDriverFeedback(DriverFeedback feedback);
         //Shotgun
@@ -70,6 +72,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _isMoving;
         private float _chargeBattery;
         public event Action OnBoostPressed;
+        public event Action OnStartPressed;
         public event Action<CommitmentDirection> OnEarlyCommitmentPressed;
         public event Action<DriverFeedback> OnDriverFeedbackPressed;
         public event Action<float> OnBatteryChargeEarlyCommitment;
@@ -88,6 +91,7 @@ namespace BeMyShotgunSir.Scripts.UI
         public void SetDriftInput(float input) => _driftInput = input;
         public void SetIsDrifting(bool isDrifting) => _isDrifting = isDrifting;
         public void PressBoost() => OnBoostPressed?.Invoke();
+        public void PressStart() => OnStartPressed?.Invoke();
         public void PressEarlyCommitment(CommitmentDirection direction) => OnEarlyCommitmentPressed?.Invoke(direction);
         public void PressDriverFeedback(DriverFeedback feedback) => OnDriverFeedbackPressed?.Invoke(feedback);
         public void SetIsMoving(bool isMoving) => _isMoving = isMoving;

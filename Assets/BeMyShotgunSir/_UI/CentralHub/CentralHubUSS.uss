@@ -44,3 +44,31 @@
     -unity-font-definition: url("project://database/Assets/BeMyShotgunSir/Demos/UI/Fonts/Edo_new.ttf?fileID=12800000&guid=7ef7c4949f3504cc4810fcd3922630c5&type=3#Edo_new");
     font-size: 150px;
 }
+
+.play {
+    height: 500px;
+    -unity-text-auto-size: best-fit 10px 250px;
+    -unity-text-generator: advanced;
+}
+
+.settings-container {
+    flex-grow: 1;
+    position: absolute;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.71);
+    display: none;
+}
+
+.credits-container {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.71);
+    display: none;
+}

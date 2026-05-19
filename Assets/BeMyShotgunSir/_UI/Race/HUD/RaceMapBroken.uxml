@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="UIRoot" class="uiroot" style="flex-grow: 1;">
+        <ui:VisualElement name="ContentArea" class="content-area" style="height: 100%; justify-content: center;">
+            <ui:VisualElement name="MapBase" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/BeMyShotgunSir/Demos/UI/Graphics/HUD_Shotgun_MapBroken.png?fileID=2800000&amp;guid=7b81848cd6bc941279dc7aeb86945bf4&amp;type=3#HUD_Shotgun_MapBroken&quot;);"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

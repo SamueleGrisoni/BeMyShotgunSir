@@ -184,7 +184,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         public void SetFinishLineChunkId(int chunkId)
         {
             _finishLineChunkNumber = chunkId;
-            if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 == _finishLineChunkNumber)
+            if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 >= _finishLineChunkNumber)
             {
                 GenerateFinalSequence();
             }
@@ -221,7 +221,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             }
             if (lastDequeuedChunk.type == RoadChunkType.ENDING_CROSSROAD)
             {
-                if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 == _finishLineChunkNumber)
+                if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 >= _finishLineChunkNumber)
                 {
                     GenerateFinalSequence();
                     return;
@@ -245,7 +245,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
                 _chunksRemainingInCurrentState--;
             }
             OnCommonGenerated?.Invoke(crossroadSegmentChunkCount);
-            if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 == _finishLineChunkNumber)
+            if (_finishLineChunkNumber != -1 && _numChunksGenerated + 2 >= _finishLineChunkNumber)
             {
                 GenerateFinalSequence();
             }

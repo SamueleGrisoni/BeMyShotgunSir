@@ -1,5 +1,6 @@
 using System.Collections;
 using BeMyShotgunSir.Scripts.Core;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,6 +10,8 @@ namespace BeMyShotgunSir.Scripts.UI
     {
         [SerializeField] private UIControllerInit _uiControllerInit;
         [SerializeField] private UIDocument _hostOrJoinDocument;
+        [SerializeField] private EventReference _buttonClickSFX;
+        private void PlayButtonClickSFX() => RuntimeManager.PlayOneShot(_buttonClickSFX, Vector3.zero);
 
 
         #region UI Elements
@@ -48,13 +51,25 @@ namespace BeMyShotgunSir.Scripts.UI
             _joinIPAddress.value = "localhost";
         }
 
-        private void HostButtonHandler() => GameServices.Instance.ConnectionManager.StartHost(_joinIPAddress.value);
+        private void HostButtonHandler()
+        {
+            PlayButtonClickSFX();
+            GameServices.Instance.ConnectionManager.StartHost(_joinIPAddress.value);
+        }
 
-        private void JoinButtonHandler() => GameServices.Instance.ConnectionManager.StartJoin(_joinIPAddress.value);
+        private void JoinButtonHandler()
+        {
+            PlayButtonClickSFX();
+            GameServices.Instance.ConnectionManager.StartJoin(_joinIPAddress.value);
+        }
 
         private void IpAddressChanged(ChangeEvent<string> evt) => _joinIPAddress.value = evt.newValue;
 
-        private void BackButtonHandler() => _uiControllerInit.ShowScreen(UIScreen.CentralHub, true);
+        private void BackButtonHandler()
+        {
+            PlayButtonClickSFX();
+            _uiControllerInit.ShowScreen(UIScreen.CentralHub, true);
+        }
 
         private void OnDisable()
         {

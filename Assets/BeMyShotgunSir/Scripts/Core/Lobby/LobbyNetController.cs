@@ -4,6 +4,7 @@ using FishNet.Connection;
 using FishNet.Managing.Server;
 using FishNet.Object;
 using FishNet.Transporting;
+using FMODUnity;
 using UnityEngine;
 
 
@@ -29,6 +30,12 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
     public class LobbyNetController : NetController, ILobbyNetController
     {
         private bool _log = true;
+        [field: SerializeField] public EventReference PlayerJoinSFX { get; private set; }
+        [field: SerializeField] public EventReference PlayerLeaveSFX { get; private set; }
+        [field: SerializeField] public EventReference LetsGoSFX { get; private set; }
+        [field: SerializeField] public EventReference PlayerReadySFX { get; private set; }
+        [field: SerializeField] public EventReference JoinTeamSFX { get; private set; }
+        [field: SerializeField] public EventReference LeaveTeamSFX { get; private set; }
         private ServerManager _serverManager;
         private LobbyNetStateStore _netState;
         public ILobbyNetStateRead NetState => _netState;
@@ -106,7 +113,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             {
                 if (!_netState.ContainsPlayer(connection.ClientId))
                 {
-                    GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerJoin), null);
+                    if (!PlayerJoinSFX.IsNull)
+                        RuntimeManager.PlayOneShot(PlayerJoinSFX, transform.position);
 
                     string defaultName = "Player " + connection.ClientId;
                     _netState.AddPlayer(connection, defaultName);
@@ -114,7 +122,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
             }
             else if (args.ConnectionState == RemoteConnectionState.Stopped)
             {
-                GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerLeave), null);
+                if (!PlayerLeaveSFX.IsNull)
+                    RuntimeManager.PlayOneShot(PlayerLeaveSFX, transform.position);
                 _netState.RemovePlayer(connection.ClientId);
             }
         }
@@ -145,9 +154,17 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                 return;
             }
             _netState.SetPlayerReady(connectionId, isReady);
+            PlayerReady_TargetRpc(conn, isReady);
 
             if (isReady && _netState.CheckAllPlayersReady())
                 StartRace();
+        }
+
+        [TargetRpc]
+        private void PlayerReady_TargetRpc(NetworkConnection conn, bool isReady)
+        {
+            if (!PlayerReadySFX.IsNull && isReady)
+                RuntimeManager.PlayOneShot(PlayerReadySFX, transform.position);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -196,7 +213,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         private void TeamMateSelected_TargetRpc(NetworkConnection conn, string teammateName)
         {
             Log.DLazy(() => $"Teammate {teammateName} selected.", this, _log);
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.PlayerReady), null);
+            if (!JoinTeamSFX.IsNull)
+                RuntimeManager.PlayOneShot(JoinTeamSFX, transform.position);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -215,9 +233,11 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                         int teammateConnectionId = teamInfo.DriverConnectionId == clientId ? teamInfo.ShotgunConnectionId : teamInfo.DriverConnectionId;
                         _netState.RemoveTeam(teamId);
                         _netState.SetPlayerTeam(clientId, null);
+                        LeaveTeam_TargetRpc(conn);
                         if (_netState.ContainsPlayer(teammateConnectionId))
                         {
                             _netState.SetPlayerTeam(teammateConnectionId, null);
+                            LeaveTeam_TargetRpc(_serverManager.Clients[teammateConnectionId]);
                         }
                         else
                         {
@@ -237,6 +257,13 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
                     return;
                 }
             }
+        }
+
+        [TargetRpc]
+        private void LeaveTeam_TargetRpc(NetworkConnection conn)
+        {
+            if (!LeaveTeamSFX.IsNull)
+                RuntimeManager.PlayOneShot(LeaveTeamSFX, transform.position);
         }
 
         [Server]
@@ -272,7 +299,8 @@ namespace BeMyShotgunSir.Scripts.Core.Lobby
         [ObserversRpc]
         private void InitRace_ObserversRpc()
         {
-            GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.LetsGo), null);
+            if (!LetsGoSFX.IsNull)
+                RuntimeManager.PlayOneShot(LetsGoSFX, transform.position);
             GameServices.Instance.Channels.LoadingRequestEvent.RaiseEvent(null, true);
             GameServices.Instance.Channels.AudioRequestEvent.RaiseEvent(null, new AudioRequest(RequestEnum.Loading), null);
         }
