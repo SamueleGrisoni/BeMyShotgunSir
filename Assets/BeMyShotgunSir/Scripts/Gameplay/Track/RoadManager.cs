@@ -259,8 +259,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
         {
             if (chunk.Component is ForkRoadChunk)
             {
-                chunk.Component.GetComponent<ForkRoadChunk>().LeftBarrierObject.SetActive(false);
-                chunk.Component.GetComponent<ForkRoadChunk>().RightBarrierObject.SetActive(false);
+                ForkBarrier[] barriers = chunk.Component.GetComponentsInChildren<ForkBarrier>();
+                foreach (var barrier in barriers)
+                {
+                    barrier.SetBarrierVisible(false);
+                }
             }
             _activeRoadChunks.RemoveFirst();
             _environmentSpawner.ClearSpawnedProps(chunk.Component);
