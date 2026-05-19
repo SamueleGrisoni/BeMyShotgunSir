@@ -134,7 +134,6 @@ namespace BeMyShotgunSir.Scripts.UI
                 _teamId = _viewModel.TryGetTeamIdFromClientId(_viewModel.ClientId, out int? teamId) ? teamId : null;
                 _viewModel.OnRaceTeamDataChanged += CheckPowerUpUpdateFromTeamData;
 
-                RoadManager.OnSplitGeneratedProvided += SplitGeneratedHandler;
 
                 BuildFogGrid();
                 BuildFogRevealOrder();
@@ -184,7 +183,23 @@ namespace BeMyShotgunSir.Scripts.UI
             _mapTiles.Clear();
             _mapTiles.Add(_mapContent);
 
+            RoadManager.OnSplitGeneratedProvided += SplitGeneratedHandler;
+
             Show(false);
+        }
+
+        private void OnDisable()
+        {
+            RoadManager.OnSplitGeneratedProvided -= SplitGeneratedHandler;
+
+            if (_role == RaceRole.Shotgun)
+                _viewModel.OnRaceTeamDataChanged -= CheckPowerUpUpdateFromTeamData;
+
+            if (_fitRoutine != null)
+            {
+                StopCoroutine(_fitRoutine);
+                _fitRoutine = null;
+            }
         }
 
         #region Handlers
