@@ -11,6 +11,7 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class ShoutBoxViewController : RaceBindTarget
     {
+        private bool _log = true;
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private SOShoutWheelIcons _shoutWheelIcons;
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
@@ -35,7 +36,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
 
@@ -47,7 +48,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
 
@@ -55,7 +56,8 @@ namespace BeMyShotgunSir.Scripts.UI
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
 
-            _inputPublisher.OnWheelMessageOnDriver += ShowShoutBox;
+            if (_role == RaceRole.Driver)
+                _inputPublisher.OnWheelMessageOnDriver += ShowShoutBox;
         }
 
         private void OnEnable()
@@ -70,7 +72,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void OnDisable()
         {
-            if (_inputPublisher != null)
+            if (_role == RaceRole.Driver)
                 _inputPublisher.OnWheelMessageOnDriver -= ShowShoutBox;
 
             if (_hideRoutine != null)
@@ -95,7 +97,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (icon == null)
             {
-                Log.ELazy(() => $"No icon found for message {message}. Shout box will not be shown.", this);
+                Log.ELazy(() => $"No icon found for message {message}. Shout box will not be shown.", this, _log);
                 return;
             }
 

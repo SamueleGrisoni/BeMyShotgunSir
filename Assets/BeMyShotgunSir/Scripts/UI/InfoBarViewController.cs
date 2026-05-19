@@ -10,6 +10,9 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class InfoBarViewController : RaceBindTarget
     {
+        private bool _log = false;
+
+        [Header("UI References")]
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private SOFeedbackIcons _feedbackIcons;
 
@@ -27,15 +30,11 @@ namespace BeMyShotgunSir.Scripts.UI
 
         #region Visual Elements
         private VisualElement _root;
-
         private VisualElement _boostBar;
         private VisualElement _overboostBar;
-
         private VisualElement _infoMessage;
-
         private VisualElement _feedbackIndicator;
         private VisualElement _feedbackIcon;
-
         private VisualElement _earlyCommitmentIndicator;
         private VisualElement _arrow;
         private VisualElement _commitBarMask;
@@ -50,7 +49,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
 
@@ -62,7 +61,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
 
@@ -155,7 +154,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (icon == null)
             {
-                Log.ELazy(() => $"No icon found for DriverFeedback {feedback}.", this);
+                Log.ELazy(() => $"No icon found for DriverFeedback {feedback}.", this, _log);
                 return;
             }
 

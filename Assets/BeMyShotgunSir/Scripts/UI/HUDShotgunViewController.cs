@@ -19,6 +19,17 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private RaceMapViewController _raceMapViewController;
         [SerializeField] private PowerUpViewController _powerUpViewController;
 
+        #region Visual Elements
+        private VisualElement _root;
+        private VisualElement _buttonContainer;
+        private Button _shoutWheelButton;
+        private Button _raceMapButton;
+        #endregion
+
+        #region private fields
+        private int _finishLineChunkId = -1;
+        #endregion
+
         #region Bindings
         private RaceCommand _command;
         private RaceViewModel _viewModel;
@@ -31,7 +42,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
             _command = _initialBindSource.Command;
@@ -41,7 +52,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
             _roadManager = _finalBindSource.RoadManager;
@@ -49,22 +60,9 @@ namespace BeMyShotgunSir.Scripts.UI
             _role = _finalBindSource.Role;
 
             if (_role == RaceRole.Shotgun)
-            {
                 _viewModel.OnTeamTrackProgressChanged += UpdateTeamProgress;
-                TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
-            }
+
         }
-
-        #region Visual Elements
-        private VisualElement _root;
-        private VisualElement _buttonContainer;
-        private Button _shoutWheelButton;
-        private Button _raceMapButton;
-        #endregion
-
-        #region private fields
-        private int _finishLineChunkId = -1;
-        #endregion
 
         private void OnEnable()
         {
@@ -75,7 +73,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             StartCoroutine(InitNextFrame());
 
-
+            TrackGenerator.OnFinishLineGenerated += OnFinishLineGenerated;
         }
 
         IEnumerator InitNextFrame()
@@ -84,6 +82,17 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _shoutWheelButton.clicked += ShoutWheelButtonHandler;
             _raceMapButton.clicked += RaceMapButtonHandler;
+        }
+
+        private void OnDisable()
+        {
+            _shoutWheelButton.clicked -= ShoutWheelButtonHandler;
+            _raceMapButton.clicked -= RaceMapButtonHandler;
+
+            TrackGenerator.OnFinishLineGenerated -= OnFinishLineGenerated;
+
+            if (_role == RaceRole.Shotgun)
+                _viewModel.OnTeamTrackProgressChanged -= UpdateTeamProgress;
         }
 
         private void ShoutWheelButtonHandler()
@@ -98,10 +107,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _shoutWheelViewController.Show(false);
         }
 
-        private void OnFinishLineGenerated(int finishLineChunkId)
-        {
-            _finishLineChunkId = finishLineChunkId;
-        }
+        private void OnFinishLineGenerated(int finishLineChunkId) => _finishLineChunkId = finishLineChunkId;
 
         private void UpdateTeamProgress()
         {
@@ -113,10 +119,12 @@ namespace BeMyShotgunSir.Scripts.UI
             #region debug
             if (progress.NextSpecialChunkId == _finishLineChunkId)
             {
-                Log.DLazy(() => "Next special chunk is the finish line!", this);
+                Log.DLazy(() => "Next special chunk is the finish line!", this, _log);
             }
             #endregion
-            Log.DLazy(() => "Current chunk id: " + progress.CurrentChunkId + ", Next special chunk id: " + progress.NextSpecialChunkId + ", Finish line chunk id: " + _finishLineChunkId, this);
+            Log.DLazy(() => "Current chunk id: " + progress.CurrentChunkId +
+                        ", Next special chunk id: " + progress.NextSpecialChunkId +
+                        ", Finish line chunk id: " + _finishLineChunkId, this, _log);
 
             if (progress.CurrentChunkId > progress.LastSpecialChunkType.Value.Id
                 && progress.LastSpecialChunkType.Value.Type == RoadChunkType.STARTING_CROSSROAD
@@ -128,7 +136,7 @@ namespace BeMyShotgunSir.Scripts.UI
             else
             {
                 _raceMapButton.style.display = DisplayStyle.Flex;
-                // _raceMapViewController.Show(true);
+                // _raceMapViewController.Show(true); // Uncommment if you want the map to pop up automatically - for debug
                 _shoutWheelViewController.Show(false);
             }
 

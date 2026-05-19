@@ -9,7 +9,29 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class EarlyCommitmentViewController : RaceBindTarget
     {
+        private bool _log = false;
         [SerializeField] private UIDocument _hudDocument;
+
+        #region Visual Elements
+        private VisualElement _root;
+        private VisualElement _earlyCommitmentContainer;
+        private VisualElement _earlyCommitment;
+        private VisualElement _contentArea;
+        private VisualElement _earlyCommitmentLabel;
+        private VisualElement _commitmentChoice;
+        private VisualElement _arrowLeft;
+        private VisualElement _arrowRight;
+        private VisualElement _commitBarMaskLeft;
+        private VisualElement _commitBarMaskRight;
+        #endregion
+
+        #region private fields
+        private float _commitmentValue;
+        private float _currentCommitmentFill;
+        private bool _updateEarlyCommitment;
+        private float _lastCommitmentValue = 0f;
+        private bool _onFinishRoad = false;
+        #endregion
 
         #region Bindings
         private RaceCommand _command;
@@ -45,26 +67,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _inputPublisher.OnEarlyCommitmentExecuted += EarlyCommitmentExecutedHandler;
         }
 
-        #region Visual Elements
-        private VisualElement _root;
-        private VisualElement _earlyCommitmentContainer;
-        private VisualElement _earlyCommitment;
-        private VisualElement _contentArea;
-        private VisualElement _earlyCommitmentLabel;
-        private VisualElement _commitmentChoice;
-        private VisualElement _arrowLeft;
-        private VisualElement _arrowRight;
-        private VisualElement _commitBarMaskLeft;
-        private VisualElement _commitBarMaskRight;
-        #endregion
 
-        #region private fields
-        private float _commitmentValue;
-        private float _currentCommitmentFill;
-        private bool _updateEarlyCommitment;
-        private float _lastCommitmentValue = 0f;
-        private bool _onFinishRoad = false;
-        #endregion
 
         private void OnEnable()
         {
@@ -92,8 +95,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
             _onFinishRoad = false;
 
-            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this);
-            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this);
+            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this, _log);
+            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this, _log);
         }
 
         IEnumerator InitNextFrame()

@@ -30,6 +30,9 @@ namespace BeMyShotgunSir.Scripts.UI
             }
         }
 
+        private bool _log = false;
+
+        [Header("UI References")]
         [SerializeField] private UIDocument _hudDocument;
         [SerializeField] private RoadChunkTile[] _tilesRC;
         [SerializeField] private RoadChunkTile _forkTileRC;
@@ -49,15 +52,6 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
         [SerializeField] private SOPowerUpsData _powerUpsData;
         [SerializeField] private SOItem _itemData;
-
-
-        #region Bindings
-        private RaceCommand _command;
-        private RaceViewModel _viewModel;
-        private IRoadManager _roadManager;
-        private IInputPublisher _inputPublisher;
-        private RaceRole _role;
-        #endregion
 
         #region Visual Elements
         private VisualElement _root;
@@ -96,20 +90,26 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _isShowing = false;
         private int? _teamId;
         private bool _isHitBySpear = false;
-
         #endregion
 
         #region Public Fields
-
         public bool IsShowing => _isShowing;
+        #endregion
 
+
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
         #endregion
 
         public override void OnInitialBindComplete()
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
 
@@ -121,7 +121,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
 
@@ -142,7 +142,7 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
 
-        private void OnDestroy()
+        private void OnDestroy() //TODO: Needed?
         {
             RoadManager.OnSplitGeneratedProvided -= SplitGeneratedHandler;
 
@@ -157,7 +157,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_hudDocument == null)
             {
-                Log.ELazy(() => "Race Map Document reference missing!", this);
+                Log.ELazy(() => "Race Map Document reference missing!", this, _log);
                 return;
             }
 
@@ -172,7 +172,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (_mapTiles == null)
             {
-                Log.ELazy(() => "MapTiles not found.", this);
+                Log.ELazy(() => "MapTiles not found.", this, _log);
                 return;
             }
 
@@ -208,13 +208,13 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (splitData == null)
             {
-                Log.ELazy(() => "Split data is null. Cannot handle split generated event.", this);
+                Log.ELazy(() => "Split data is null. Cannot handle split generated event.", this, _log);
                 return;
             }
 
             if (!TryGetSplitBounds(splitData, out int startChunkId, out int endChunkId))
             {
-                Log.ELazy(() => "Cannot cache split map because bounds are invalid.", this);
+                Log.ELazy(() => "Cannot cache split map because bounds are invalid.", this, _log);
                 return;
             }
 
@@ -247,7 +247,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (_tilesRC == null || _tilesRC.Length == 0)
             {
-                Log.ELazy(() => "Road chunk tile array is empty.", this);
+                Log.ELazy(() => "Road chunk tile array is empty.", this, _log);
                 return;
             }
 
@@ -257,7 +257,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (!AddCenteredFork())
             {
-                Log.ELazy(() => "Failed to add centered fork.", this);
+                Log.ELazy(() => "Failed to add centered fork.", this, _log);
                 return;
             }
 
@@ -265,7 +265,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (!AddCenteredJunction())
             {
-                Log.ELazy(() => "Failed to add centered junction.", this);
+                Log.ELazy(() => "Failed to add centered junction.", this, _log);
                 return;
             }
 
@@ -322,7 +322,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
                 if (tileIndex < 0 || tileIndex >= _tilesRC.Length)
                 {
-                    Log.ELazy(() => $"Invalid tile index {tileIndex} for road chunk type {info.type} at position {info.position}", this);
+                    Log.ELazy(() => $"Invalid tile index {tileIndex} for road chunk type {info.type} at position {info.position}", this, _log);
                     continue;
                 }
 
@@ -527,7 +527,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             Log.DLazy(() =>
                 $"Fit | minX: {_mapMinX} | maxX: {_mapMaxX} | height: {mapHeight} | scale: {finalScale}",
-                this
+                this, _log
             );
         }
 

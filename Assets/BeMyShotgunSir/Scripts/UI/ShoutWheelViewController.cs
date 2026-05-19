@@ -11,41 +11,14 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class ShoutWheelViewController : RaceBindTarget
     {
+        private bool _log = false;
+
+        [Header("UI References")]
         [SerializeField] private UIDocument _hudDocument;
+
+        [Header("Icons")]
         [SerializeField] private SOShoutWheelIcons _shoutWheelIcons;
         [SerializeField] private SOPowerUpIcons _powerUpIcons;
-
-        #region Bindings
-        private RaceCommand _command;
-        private RaceViewModel _viewModel;
-        private IRoadManager _roadManager;
-        private IInputPublisher _inputPublisher;
-        private RaceRole _role;
-        #endregion
-
-        public override void OnInitialBindComplete()
-        {
-            if (_initialBindSource == null)
-            {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
-                return;
-            }
-            _command = _initialBindSource.Command;
-            _viewModel = _initialBindSource.ViewModel;
-        }
-        public override void OnFinalBindComplete()
-        {
-            if (_finalBindSource == null)
-            {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
-                return;
-            }
-            _roadManager = _finalBindSource.RoadManager;
-            _inputPublisher = _finalBindSource.InputPublisher;
-            _role = _finalBindSource.Role;
-
-            _viewModel.OnInventoryChanged += UpdatePowerUpIcon;
-        }
 
         #region Visual Elements
         private VisualElement _root;
@@ -68,11 +41,45 @@ namespace BeMyShotgunSir.Scripts.UI
         public bool IsShowing => _isShowing;
         #endregion
 
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
+        #endregion
+
+        public override void OnInitialBindComplete()
+        {
+            if (_initialBindSource == null)
+            {
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
+                return;
+            }
+            _command = _initialBindSource.Command;
+            _viewModel = _initialBindSource.ViewModel;
+        }
+        public override void OnFinalBindComplete()
+        {
+            if (_finalBindSource == null)
+            {
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
+                return;
+            }
+            _roadManager = _finalBindSource.RoadManager;
+            _inputPublisher = _finalBindSource.InputPublisher;
+            _role = _finalBindSource.Role;
+
+            _viewModel.OnInventoryChanged += UpdatePowerUpIcon;
+        }
+
+
+
         private void OnEnable()
         {
             if (_hudDocument == null)
             {
-                Log.DLazy(() => "Shout Wheel Document reference missing!", this);
+                Log.DLazy(() => "Shout Wheel Document reference missing!", this, _log);
                 return;
             }
 
@@ -91,6 +98,22 @@ namespace BeMyShotgunSir.Scripts.UI
 
             AssignShoutWheelIcons();
             Show(false);
+        }
+
+        private void OnDisable()
+        {
+            _goLeft.clicked -= GoLeftHandler;
+            _goRight.clicked -= GoRightHandler;
+
+            _powerUp.UnregisterCallback<PointerDownEvent>(PowerUpHandler);
+            _sorry.UnregisterCallback<PointerDownEvent>(SorryHandler);
+            _badDriver.UnregisterCallback<PointerDownEvent>(BadDriverHandler);
+            _fast.UnregisterCallback<PointerDownEvent>(FastHandler);
+            _nicePlay.UnregisterCallback<PointerDownEvent>(NicePlayHandler);
+            _caution.UnregisterCallback<PointerDownEvent>(CautionHandler);
+
+            if (_viewModel != null)
+                _viewModel.OnInventoryChanged -= UpdatePowerUpIcon;
         }
 
         IEnumerator InitNextFrame()
@@ -112,42 +135,42 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void GoLeftHandler()
         {
-            Log.DLazy(() => "Go Left button pressed. Sending GoLeft message.", this);
+            Log.DLazy(() => "Go Left button pressed. Sending GoLeft message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.GoLeft);
         }
         private void GoRightHandler()
         {
-            Log.DLazy(() => "Go Right button pressed. Sending GoRight message.", this);
+            Log.DLazy(() => "Go Right button pressed. Sending GoRight message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.GoRight);
         }
         private void PowerUpHandler(PointerDownEvent evt)
         {
-            Log.DLazy(() => "Power Up button pressed. Sending PowerUp message.", this);
+            Log.DLazy(() => "Power Up button pressed. Sending PowerUp message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.PowerUp);
         }
         private void SorryHandler(PointerDownEvent evt)
         {
-            Log.DLazy(() => "Sorry button pressed. Sending Sorry message.", this);
+            Log.DLazy(() => "Sorry button pressed. Sending Sorry message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.Sorry);
         }
         private void BadDriverHandler(PointerDownEvent evt)
         {
-            Log.DLazy(() => "Bad Driver button pressed. Sending BadDriver message.", this);
+            Log.DLazy(() => "Bad Driver button pressed. Sending BadDriver message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.BadDriver);
         }
         private void FastHandler(PointerDownEvent evt)
         {
-            Log.DLazy(() => "Fast button pressed. Sending Fast message.", this);
+            Log.DLazy(() => "Fast button pressed. Sending Fast message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.Fast);
         }
         private void NicePlayHandler(PointerDownEvent evt)
         {
-            Log.DLazy(() => "Nice Play button pressed. Sending NicePlay message.", this);
+            Log.DLazy(() => "Nice Play button pressed. Sending NicePlay message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.NicePlay);
         }
         private void CautionHandler(PointerDownEvent evt)
         {
-            Log.DLazy(() => "Caution button pressed. Sending Caution message.", this);
+            Log.DLazy(() => "Caution button pressed. Sending Caution message.", this, _log);
             _inputPublisher.SendWheelMessage(WheelMessages.Caution);
         }
 

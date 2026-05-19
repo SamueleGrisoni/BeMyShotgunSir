@@ -11,38 +11,8 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class BottomBarViewController : RaceBindTarget
     {
+        private bool _log = false;
         [SerializeField] private UIDocument _hudDocument;
-
-        #region Bindings
-        private RaceCommand _command;
-        private RaceViewModel _viewModel;
-        private IRoadManager _roadManager;
-        private IInputPublisher _inputPublisher;
-        private RaceRole _role;
-        #endregion
-
-        public override void OnInitialBindComplete()
-        {
-            if (_initialBindSource == null)
-            {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
-                return;
-            }
-            _command = _initialBindSource.Command;
-            _viewModel = _initialBindSource.ViewModel;
-        }
-        public override void OnFinalBindComplete()
-        {
-            if (_finalBindSource == null)
-            {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
-                return;
-            }
-            _roadManager = _finalBindSource.RoadManager;
-            _inputPublisher = _finalBindSource.InputPublisher;
-            _role = _finalBindSource.Role;
-
-        }
 
         #region Visual Elements
         private VisualElement _root;
@@ -86,6 +56,39 @@ namespace BeMyShotgunSir.Scripts.UI
 
         #endregion
 
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
+        #endregion
+
+        public override void OnInitialBindComplete()
+        {
+            if (_initialBindSource == null)
+            {
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
+                return;
+            }
+            _command = _initialBindSource.Command;
+            _viewModel = _initialBindSource.ViewModel;
+        }
+        public override void OnFinalBindComplete()
+        {
+            if (_finalBindSource == null)
+            {
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
+                return;
+            }
+            _roadManager = _finalBindSource.RoadManager;
+            _inputPublisher = _finalBindSource.InputPublisher;
+            _role = _finalBindSource.Role;
+
+        }
+
+
+
 
         private void OnEnable()
         {
@@ -112,8 +115,8 @@ namespace BeMyShotgunSir.Scripts.UI
 
             StartCoroutine(InitNextFrame());
 
-            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this);
-            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this);
+            Log.DLazy(() => $"Role: {_role}, HUD: {_hudDocument.name}, GameObject: {gameObject.name}", this, _log);
+            Log.DLazy(() => $"HUD instance id: {_hudDocument.GetInstanceID()}", this, _log);
         }
 
         private IEnumerator InitNextFrame()
@@ -171,7 +174,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void DriftDownHandler(PointerDownEvent e)
         {
-
             if (_driftPointerId != -1) return;
             _driftPointerId = e.pointerId;
             _driftControl.CapturePointer(e.pointerId);
@@ -179,7 +181,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _driftOriginX = e.localPosition.x;
             _driftMaxRadius = _driftControl.resolvedStyle.width * 0.25f;
 
-            ShowDriftGhost(e.localPosition);
+            // ShowDriftGhost(e.localPosition); // Optional: Show a visual indicator for the drift control
             _driftValue = 0f;
             e.StopPropagation();
 
@@ -189,7 +191,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void DriftMoveHandler(PointerMoveEvent e)
         {
-            // Debug.Log($"[Drift] PointerMove — pos={e.position}");
             if (e.pointerId != _driftPointerId) return;
 
             float delta = Mathf.Clamp(e.localPosition.x - _driftOriginX, -_driftMaxRadius, _driftMaxRadius);
@@ -200,26 +201,22 @@ namespace BeMyShotgunSir.Scripts.UI
 
             e.StopPropagation();
             _inputPublisher.SetDriftInput(_driftValue);
-            Debug.Log($"[Drift] Value={_driftValue:F2}");
 
         }
         private void DriftUpHandler(PointerUpEvent e)
         {
-            Debug.Log($"[Drift] PointerUp — pointerId={e.pointerId}");
             _inputPublisher.SetIsDrifting(false);
             _inputPublisher.SetDriftInput(0);
             ResetDrift(e.pointerId);
         }
         private void DriftCancelHandler(PointerCancelEvent e)
         {
-            Debug.Log($"[Drift] PointerCancel — pointerId={e.pointerId}");
             _inputPublisher.SetIsDrifting(false);
             _inputPublisher.SetDriftInput(0);
             ResetDrift(e.pointerId);
         }
         private void SteerDownHandler(PointerDownEvent e)
         {
-            // Debug.Log($"[Steer] PointerDown — pointerId={e.pointerId} pos={e.position}");
             if (_steerPointerId != -1) return;
             _steerPointerId = e.pointerId;
             _steerControl.CapturePointer(e.pointerId);
@@ -234,7 +231,6 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void SteerMoveHandler(PointerMoveEvent e)
         {
-            // Debug.Log($"[Steer] PointerMove — pos={e.position}");
             if (e.pointerId != _steerPointerId) return;
             ApplySteer(e.position.x);
             e.StopPropagation();
@@ -242,36 +238,36 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void SteerUpHandler(PointerUpEvent e)
         {
-            Debug.Log($"[Steer] PointerUp — pointerId={e.pointerId}");
+            Log.DLazy(() => $"[Steer] PointerUp — pointerId={e.pointerId}", this, _log);
             ResetSteer(e.pointerId);
         }
         private void SteerCancelHandler(PointerCancelEvent e)
         {
-            Debug.Log($"[Steer] PointerCancel — pointerId={e.pointerId}");
+            Log.DLazy(() => $"[Steer] PointerCancel — pointerId={e.pointerId}", this, _log);
             ResetSteer(e.pointerId);
         }
 
         private void BoostDownHandler(PointerDownEvent e)
         {
-            Debug.Log("[Boost] Pressed");
+            Log.DLazy(() => $"[Boost] Pressed", this, _log);
             _inputPublisher.PressBoost();
         }
 
         private void ThumbsDownDownHandler(PointerDownEvent e)
         {
-            Debug.Log("[Feedback] Thumbs Down");
+            Log.DLazy(() => $"[Feedback] Thumbs Down", this, _log);
             _inputPublisher.PressDriverFeedback(DriverFeedback.ThumbsDown);
         }
 
         private void ThumbsUpDownHandler(PointerDownEvent e)
         {
-            Debug.Log("[Feedback] Thumbs Up");
+            Log.DLazy(() => $"[Feedback] Thumbs Up", this, _log);
             _inputPublisher.PressDriverFeedback(DriverFeedback.ThumbsUp);
         }
 
         private void RunStopDownHandler()
         {
-            Debug.Log("[Debug] Run/Stop Toggled");
+            Log.DLazy(() => $"[Debug] Run/Stop Toggled", this, _log);
             _runStopToggle = !_runStopToggle;
             if (_runStopToggle) _runStopButton.AddToClassList("toggled");
             else _runStopButton.RemoveFromClassList("toggled");
@@ -292,7 +288,7 @@ namespace BeMyShotgunSir.Scripts.UI
             );
 
             _inputPublisher.SetSteerInput(_steerValue);
-            Debug.Log($"[Steer] Value={_steerValue:F2}");
+            Log.DLazy(() => $"[Steer] Value={_steerValue:F2}", this, _log);
         }
 
         private void ResetSteer(int pointerId)
@@ -309,8 +305,6 @@ namespace BeMyShotgunSir.Scripts.UI
         }
 
 
-
-
         private void ShowDriftGhost(Vector2 localPos)
         {
             _driftOrigin.style.display = DisplayStyle.Flex;
@@ -325,6 +319,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ResetDrift(int pointerId)
         {
+            Log.DLazy(() => $"[Drift] Resetting drift — pointerId={pointerId}", this, _log);
             if (pointerId != _driftPointerId) return;
             _driftControl.ReleasePointer(_driftPointerId);
             _driftPointerId = -1;

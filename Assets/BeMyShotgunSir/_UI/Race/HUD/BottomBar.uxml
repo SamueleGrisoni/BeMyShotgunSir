@@ -3,7 +3,7 @@
     <ui:VisualElement name="UIRoot" class="uiroot">
         <ui:VisualElement name="ContentArea" class="content-area ">
             <ui:VisualElement name="UpperArea" class="upper-area">
-                <ui:VisualElement name="DriftControl" class="drift-control editor-debug">
+                <ui:VisualElement name="DriftControl" class="drift-control">
                     <ui:VisualElement name="DriftOrigin" class="drift-origin"/>
                     <ui:VisualElement name="DriftJoystick" class="drift-joystick"/>
                 </ui:VisualElement>

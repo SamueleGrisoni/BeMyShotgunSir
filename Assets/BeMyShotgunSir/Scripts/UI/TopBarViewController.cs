@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Core.Race;
-using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using BeMyShotgunSir.Scripts.Gameplay.Track;
 using BeMyShotgunSir.Scripts.Utils;
 using UnityEngine;
@@ -11,24 +10,6 @@ namespace BeMyShotgunSir.Scripts.UI
 {
     public class TopBarViewController : RaceBindTarget
     {
-        [SerializeField] private UIDocument _topBarDocument;
-        [SerializeField] private float _markerLerpSpeed = 8f;
-
-        private RaceCommand _command;
-        private RaceViewModel _viewModel;
-        private IRoadManager _roadManager;
-        private IInputPublisher _inputPublisher;
-        private RaceRole _role;
-
-        private VisualElement _root;
-        private VisualElement _mapBarContainer;
-        private VisualElement _markerRow;
-
-        private int? _teamId;
-        private Coroutine _markerLerpCoroutine;
-
-        private readonly Dictionary<int, TeamMarkerView> _teamMarkers = new();
-
         private class TeamMarkerView
         {
             public VisualElement Marker;
@@ -37,11 +18,37 @@ namespace BeMyShotgunSir.Scripts.UI
             public float TargetPosition;
         }
 
+        private bool _log = false;
+
+        [Header("UI References")]
+        [SerializeField] private UIDocument _topBarDocument;
+        [SerializeField] private float _markerLerpSpeed = 8f;
+
+        #region Visual Elements
+        private VisualElement _root;
+        private VisualElement _mapBarContainer;
+        private VisualElement _markerRow;
+        #endregion
+
+        #region private fields
+        private int? _teamId;
+        private Coroutine _markerLerpCoroutine;
+        private readonly Dictionary<int, TeamMarkerView> _teamMarkers = new();
+        #endregion
+
+        #region Bindings
+        private RaceCommand _command;
+        private RaceViewModel _viewModel;
+        private IRoadManager _roadManager;
+        private IInputPublisher _inputPublisher;
+        private RaceRole _role;
+        #endregion
+
         public override void OnInitialBindComplete()
         {
             if (_initialBindSource == null)
             {
-                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this);
+                Log.ELazy(() => "Initial bind source is null. Cannot complete initial bind.", this, _log);
                 return;
             }
 
@@ -58,7 +65,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_finalBindSource == null)
             {
-                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this);
+                Log.ELazy(() => "Final bind source is null. Cannot complete final bind.", this, _log);
                 return;
             }
 
@@ -72,7 +79,7 @@ namespace BeMyShotgunSir.Scripts.UI
         {
             if (_topBarDocument == null)
             {
-                Log.ELazy(() => "Top Bar Document reference missing!", this);
+                Log.ELazy(() => "Top Bar Document reference missing!", this, _log);
                 return;
             }
 
@@ -82,7 +89,7 @@ namespace BeMyShotgunSir.Scripts.UI
 
             if (_mapBarContainer == null || _markerRow == null)
             {
-                Log.ELazy(() => "Top bar visual elements not found!", this);
+                Log.ELazy(() => "Top bar visual elements not found!", this, _log);
                 return;
             }
 
@@ -96,6 +103,9 @@ namespace BeMyShotgunSir.Scripts.UI
                 StopCoroutine(_markerLerpCoroutine);
                 _markerLerpCoroutine = null;
             }
+
+            _viewModel.OnTeamTrackProgressChanged -= TeamTrackProgressChangedHandler;
+            _viewModel.OnRaceTeamDataChanged -= RaceTeamDataChangedHandler;
         }
 
         private void ClearMarkers()
