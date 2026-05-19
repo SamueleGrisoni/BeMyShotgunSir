@@ -18,5 +18,5 @@ MonoBehaviour:
   <OilAnimationDuration>k__BackingField: 1
   <BumpForce>k__BackingField: 50
   <BumpStunDuration>k__BackingField: 1.5
-  <BumpRadius>k__BackingField: 1.1
+  <BumpRadius>k__BackingField: 0.7
   <RotationPerTick>k__BackingField: 45
