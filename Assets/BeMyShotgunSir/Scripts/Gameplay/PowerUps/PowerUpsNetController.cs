@@ -194,10 +194,11 @@ namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
             UnsubscribeEvents();
         }
 
-        [Server]
+
         public void OnPowerUpSpawned(GenericPowerUp genericPowerUp)
         {
-            _spawnedPowerUps.Add(new SpawnedPowerUpData(genericPowerUp, genericPowerUp.ChunkIndex ?? -1));
+            if (IsServerInitialized)
+                _spawnedPowerUps.Add(new SpawnedPowerUpData(genericPowerUp, genericPowerUp.ChunkIndex ?? -1));
             genericPowerUp.Initialize(this, _raceNetState);
         }
 
