@@ -137,7 +137,7 @@ namespace BeMyShotgunSir.Scripts.UI
             {
                 _raceMapButton.style.display = DisplayStyle.Flex;
                 // _raceMapViewController.Show(true); // Uncommment if you want the map to pop up automatically - for debug
-                _shoutWheelViewController.Show(false);
+                // _shoutWheelViewController.Show(false);
             }
 
             _raceMapViewController.UpdateMapFromTeamProgress(progress);
