@@ -64,7 +64,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
             base.OnStartNetwork();
             TimeManager.OnPostTick += OnPostTick;
 
-            if (_overlayMeshRenderer.materials.Length > 2)
+            if (_overlayMeshRenderer.materials.Length > 1)
             {
                 _armorOverlayMaterial = _overlayMeshRenderer.materials[1];
                 _armorOverlayMaterial.SetFloat("_OverlayAlpha", 0.0f);
