@@ -84,7 +84,9 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         [SerializeField] private float _maxRaceTime = 30f;
         [SerializeField] private NetworkObject _roadManagerPrefab;
         [SerializeField] private TeamNetController _teamPrefab;
-        [SerializeField] private DriverController _driverPrefab;
+        [SerializeField] private SODriver _driverSO;
+        private DriverController[] _driverPrefab;
+        private int _driverPrefabIndex = 0;
         [SerializeField] private ShotgunController _shotgunPrefab;
 
         private void Awake()
@@ -95,6 +97,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             if (_netState == null || _clientProjector == null || _powerUpsNetController == null)
                 Log.ELazy(() => $"One or more required components are missing on RaceNetController.", this);
+
+            if (_driverSO == null || _shotgunPrefab == null || _teamPrefab == null || _roadManagerPrefab == null)
+                Log.ELazy(() => $"One or more required prefabs or scriptable objects are not assigned in the inspector of RaceNetController.", this);
+            else _driverPrefab = _driverSO.DriverPrefabs;
 
             _teamProgress = new Dictionary<int, TeamProgress>();
             RoadManager.OnSpecialSegmentInfoProvided += OnSpecialSegmentInfoProvided;
@@ -314,10 +320,11 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
                         //MEMO I could move the setup logic into the team net controller changing ownership after spawn
                         //driver setup
-                        DriverController player = Instantiate(_driverPrefab, spawnPoint.position, spawnPoint.rotation);
+                        DriverController player = Instantiate(_driverPrefab[_driverPrefabIndex], spawnPoint.position, spawnPoint.rotation);
                         player.name = "Driver Team " + teamState.TeamId + " Player " + teamData.DriverConnectionId;
                         player.NetworkObject.SetParent(team);
                         Spawn(player, _lobbyNetState.PlayerStates[teamData.DriverConnectionId].Connection);
+                        _driverPrefabIndex = (_driverPrefabIndex + 1) % _driverPrefab.Length;
 
                         //Shotgun setup
                         ShotgunController shotgun = Instantiate(_shotgunPrefab, spawnPoint.position, spawnPoint.rotation);
