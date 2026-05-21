@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab35ce157ef26db4ab1fc4f718645f36, type: 3}
+  m_Name: SODriver
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.SODriver
+  <DriverPrefabs>k__BackingField:
+  - {fileID: 531611659595425096, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
+  - {fileID: 3998145195957461452, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
+  - {fileID: 2672201724886021604, guid: aa10ff5086a05614fb734bcef2bb5c3a, type: 3}
+  - {fileID: 6538469402468010348, guid: f8e91d5a86a20b942a30201ac3840597, type: 3}
+  - {fileID: 3518451503312675153, guid: c4dbf3e05e705d446b18d94b35d4ad54, type: 3}
+  - {fileID: 8913676230848864633, guid: fca507fe7ac5b0a4683e0601d2f1db77, type: 3}
+  - {fileID: 2295712367987383154, guid: 838026fbf7393f2468eb6720a878997c, type: 3}
