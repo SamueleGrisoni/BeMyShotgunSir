@@ -91,7 +91,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 7
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 6056240133633981798
+  <AssetPathHash>k__BackingField: 1789236290280648692
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
   _maxRaceTime: 180
   _roadManagerPrefab: {fileID: 541111384414961198, guid: ba6a141122910ec45a2b80b692164a12, type: 3}
   _teamPrefab: {fileID: 2298635876974246946, guid: 8b88fc387409a0b4e8fcdc15935e35fb, type: 3}
-  _driverPrefab: {fileID: 3998145195957461452, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
+  _driverSO: {fileID: 11400000, guid: 1812db5e0489f5b45a4a26200a9f072c, type: 2}
   _shotgunPrefab: {fileID: 6241470845712979180, guid: 029f48ff96d137e4e8431c49ee205570, type: 3}
 --- !u!114 &3562243664245549473
 MonoBehaviour:
