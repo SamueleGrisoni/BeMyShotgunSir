@@ -128,6 +128,10 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
 
         private void LateUpdate()
         {
+            _parent.position = Vector3.Lerp(_parent.position, _movement.MovementPosition, Time.deltaTime * 10f);
+            _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * 10f);
+            _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * 10f);
+            /*
             if (IsServerInitialized)
             {
                 _parent.position = _movement.MovementPosition;
@@ -140,6 +144,7 @@ namespace BeMyShotgunSir.Gameplay.Players.Driver
                 _parent.rotation = Quaternion.Slerp(_parent.rotation, _movement.ParentRotation, Time.deltaTime * _smoothingSpeedFast);
                 _sidecar.localRotation = Quaternion.Slerp(_sidecar.localRotation, _movement.SidecarLocalRotation, Time.deltaTime * _smoothingSpeedFast);
             }
+            */
             /*
             if (IsServerInitialized)
             {
