@@ -52,6 +52,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
     public struct RaceTeamData
     {
         public int TeamId;
+        public int ColorId;
         public int DriverConnectionId;
         public int ShotgunConnectionId;
         public bool IsTeamSpawned;
@@ -62,9 +63,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public PowerUpIdentifier[] TargetedByPowerUps;
         public ActivePowerUpsInfo ActivePowerUpInfo;
 
-        public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId)
+        public RaceTeamData(int teamId, int driverConnectionId, int shotgunConnectionId, int colorId = 0)
         {
             TeamId = teamId;
+            ColorId = colorId;
             DriverConnectionId = driverConnectionId;
             ShotgunConnectionId = shotgunConnectionId;
             TeamNob = null;
@@ -76,9 +78,10 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             ActivePowerUpInfo = default;
         }
 
-        public RaceTeamData(RaceTeamData other, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null, NetworkObject driverNob = null, NetworkObject shotgunNob = null, PowerUpIdentifier[] activePowerUps = null, PowerUpIdentifier[] targetedByPowerUps = null, ActivePowerUpsInfo? activePowerUpInfo = null)
+        public RaceTeamData(RaceTeamData other, int colorId, InventoryData? inventory = null, bool? isTeamSpawned = null, NetworkObject teamNob = null, NetworkObject driverNob = null, NetworkObject shotgunNob = null, PowerUpIdentifier[] activePowerUps = null, PowerUpIdentifier[] targetedByPowerUps = null, ActivePowerUpsInfo? activePowerUpInfo = null)
         {
             TeamId = other.TeamId;
+            ColorId = colorId;
             DriverConnectionId = other.DriverConnectionId;
             ShotgunConnectionId = other.ShotgunConnectionId;
 
@@ -94,19 +97,19 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         public RaceTeamData RemoveActivePowerUpResult(int instanceId)
         {
             PowerUpIdentifier[] newActivePowerUps = ActivePowerUps.Where(identifier => identifier.InstanceId != instanceId).ToArray();
-            return new RaceTeamData(this, activePowerUps: newActivePowerUps);
+            return new RaceTeamData(this, colorId: ColorId, activePowerUps: newActivePowerUps);
         }
 
         public RaceTeamData AddActivePowerUpResult(PowerUpIdentifier identifier)
         {
             PowerUpIdentifier[] newActivePowerUps = ActivePowerUps.Append(identifier).ToArray();
-            return new RaceTeamData(this, activePowerUps: newActivePowerUps);
+            return new RaceTeamData(this, colorId: ColorId, activePowerUps: newActivePowerUps);
         }
 
         public RaceTeamData RemoveTargetedByPowerUpResult(int instanceId)
         {
             PowerUpIdentifier[] newTargetedByPowerUps = TargetedByPowerUps.Where(identifier => identifier.InstanceId != instanceId).ToArray();
-            return new RaceTeamData(this, targetedByPowerUps: newTargetedByPowerUps);
+            return new RaceTeamData(this, colorId: ColorId, targetedByPowerUps: newTargetedByPowerUps);
         }
 
         public RaceTeamData AddTargetedByPowerUpResult(PowerUpIdentifier identifier, int targetTeamId)
@@ -114,7 +117,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
             if (targetTeamId != TeamId)
                 return this;
             PowerUpIdentifier[] newTargetedByPowerUps = TargetedByPowerUps.Append(identifier).ToArray();
-            return new RaceTeamData(this, targetedByPowerUps: newTargetedByPowerUps);
+            return new RaceTeamData(this, colorId: ColorId, targetedByPowerUps: newTargetedByPowerUps);
         }
 
         public override string ToString() => $"TeamId: {TeamId}, \nDriverConnectionId: {DriverConnectionId}, \nShotgunConnectionId: {ShotgunConnectionId}, \nIsTeamSpawned: {IsTeamSpawned}, \nTeamNob: {TeamNob}, \nDriverNob: {DriverNob}, \nShotgunNob: {ShotgunNob}, \nActivePowerUps: [{string.Join(",\n ", ActivePowerUps)}], \nTargetedByPowerUps: [{string.Join(",\n ", TargetedByPowerUps)}], \nActivePowerUpInfo: {ActivePowerUpInfo}";
