@@ -12,6 +12,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public class DriverController : NetworkBehaviour
     {
+        [SerializeField] private bool _automaticStartEnabled = false;
         //utility
         private bool _log = true;
         private bool _isInitialized = false;
@@ -96,6 +97,10 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
         }
 
         [TargetRpc]
-        public void ActivateControls_TargetRpc(NetworkConnection connection) => _movementController.StartRace();
+        public void ActivateControls_TargetRpc(NetworkConnection connection)
+        {
+            if (_automaticStartEnabled)
+                _movementController.StartRace();
+        }
     }
 }
