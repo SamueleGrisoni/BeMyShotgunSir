@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/BeMyShotgunSir/Demos/OnlineSetup/Bootstrap.unity
+    path: Assets/BeMyShotgunSir/Scenes/Bootstrap.unity
     guid: 5e700d7d9518bef4bb206c2a24de79ba
   - enabled: 1
-    path: Assets/BeMyShotgunSir/Demos/OnlineSetup/Init.unity
+    path: Assets/BeMyShotgunSir/Scenes/Init.unity
     guid: 221d39667f274df4098c31a6b2538b8b
   - enabled: 1
-    path: Assets/BeMyShotgunSir/Demos/OnlineSetup/Lobby.unity
+    path: Assets/BeMyShotgunSir/Scenes/Lobby.unity
     guid: b6d68765d7678a24dbc5b7950c7b1d16
   - enabled: 1
     path: Assets/BeMyShotgunSir/Demos/UI.unity
     guid: e99f99c291e054cfba9305b52756132c
   - enabled: 1
-    path: Assets/BeMyShotgunSir/Demos/OnlineSetup/Race.unity
+    path: Assets/BeMyShotgunSir/Scenes/Race.unity
     guid: 0338725d8527abb4baa693401ead203c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
