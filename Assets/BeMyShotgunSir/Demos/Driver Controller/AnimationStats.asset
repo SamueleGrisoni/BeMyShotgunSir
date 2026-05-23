@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e6792949dc2ef258ab566dec2e16e67, type: 3}
   m_Name: AnimationStats
   m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Scripts.Gameplay.Players.Driver.SOSidecarAnimationStats
-  <MaxSteerAngle>k__BackingField: 30
-  <SteerAnimationSpeed>k__BackingField: 10
+  <MaxSteerAngle>k__BackingField: 15
+  <SteerAnimationSpeed>k__BackingField: 7
   <OilTotalRotation>k__BackingField: 360
   <OilAnimationDuration>k__BackingField: 1
   <BumpForce>k__BackingField: 35
   <BumpStunDuration>k__BackingField: 1.5
-  <BumpRadius>k__BackingField: 0.7
+  <BumpRadius>k__BackingField: 1
   <RotationPerTick>k__BackingField: 45
