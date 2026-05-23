@@ -24706,7 +24706,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584220785596899925
+  _initializedTimestamp: -8584220375267291496
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -44355,70 +44355,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!1 &2317887790570135768
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6674509076596532784}
-  - component: {fileID: 1594783434501250601}
-  m_Layer: 0
-  m_Name: CinemachineBrain
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6674509076596532784
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2317887790570135768}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.12218326, y: 0, z: 0, w: 0.9925076}
-  m_LocalPosition: {x: 0, y: 1, z: -4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3936639379094671228}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1594783434501250601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2317887790570135768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
-  ShowDebugText: 0
-  ShowCameraFrustum: 1
-  IgnoreTimeScale: 0
-  WorldUpOverride: {fileID: 0}
-  ChannelMask: -1
-  UpdateMethod: 2
-  BlendUpdateMethod: 1
-  LensModeOverride:
-    Enabled: 0
-    DefaultMode: 2
-  DefaultBlend:
-    Style: 1
-    Time: 2
-    CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  CustomBlends: {fileID: 0}
 --- !u!1 &2332145425537893889
 GameObject:
   m_ObjectHideFlags: 0
@@ -74650,7 +74586,6 @@ Transform:
   - {fileID: 8096243366278945247}
   - {fileID: 6229016313235440596}
   - {fileID: 7787234742128035180}
-  - {fileID: 6674509076596532784}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4726359609289288218
@@ -74689,7 +74624,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584220785596899925
+  _initializedTimestamp: -8584220375267291496
   _localLevelOfDetailCalculationType: 0
   _useLevelOfDetail: 0
   _useRootLevelOfDetail: 1
@@ -77499,6 +77434,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: _initializedTimestamp
+      value: -8584220374036693791
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
       propertyPath: <IsNested>k__BackingField
       value: 1
       objectReference: {fileID: 0}
@@ -77507,13 +77446,45 @@ PrefabInstance:
       value: 65535
       objectReference: {fileID: 0}
     - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: NetworkBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: <AssetPathHash>k__BackingField
+      value: 17328038245619819956
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
       propertyPath: <ComponentIndex>k__BackingField
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8416993059404301049}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
       propertyPath: InitializedParentNetworkBehaviour
       value: 
       objectReference: {fileID: 4678414540309126450}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: SerializedTransformProperties.IsValid
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: SerializedTransformProperties.Scale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: SerializedTransformProperties.Scale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: SerializedTransformProperties.Scale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+      propertyPath: SerializedTransformProperties.Rotation.w
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8582750907665450176, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
       propertyPath: m_Name
       value: Environment
@@ -77528,3 +77499,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 657164420842234222, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
   m_PrefabInstance: {fileID: 7282152588475950082}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8416993059404301049 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1279107669448468219, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
+  m_PrefabInstance: {fileID: 7282152588475950082}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6152b8bff21618439337a9a4ee2b6a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Gameplay.Players.Driver.CameraEnvironment
