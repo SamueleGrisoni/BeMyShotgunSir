@@ -31,6 +31,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private bool _updateEarlyCommitment;
         private float _lastCommitmentValue = 0f;
         private bool _onFinishRoad = false;
+        private bool _isShowing = false;
         #endregion
 
         #region Bindings
@@ -157,7 +158,49 @@ namespace BeMyShotgunSir.Scripts.UI
 
         }
 
-        private void ShowEarlyCommitment(bool show) => _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+        private Coroutine _hideEarlyCommitmentLabelCoroutine;
+
+        private void ShowEarlyCommitment(bool show)
+        {
+            bool risingEdge = show && !_isShowing;
+
+            _earlyCommitmentContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+
+            if (risingEdge)
+            {
+                _earlyCommitmentLabel.RemoveFromClassList("hide");
+
+                if (_hideEarlyCommitmentLabelCoroutine != null)
+                    StopCoroutine(_hideEarlyCommitmentLabelCoroutine);
+
+                _hideEarlyCommitmentLabelCoroutine = StartCoroutine(HideEarlyCommitmentLabel());
+            }
+
+            if (!show)
+            {
+                _isShowing = false;
+
+                if (_hideEarlyCommitmentLabelCoroutine != null)
+                {
+                    StopCoroutine(_hideEarlyCommitmentLabelCoroutine);
+                    _hideEarlyCommitmentLabelCoroutine = null;
+                }
+
+                _earlyCommitmentLabel.RemoveFromClassList("hide");
+                return;
+            }
+
+            _isShowing = true;
+        }
+
+        private IEnumerator HideEarlyCommitmentLabel()
+        {
+            yield return new WaitForSeconds(2f); //DEBUG [UI] Here you can adjust how long the label stays visible after the commitment starts
+
+            _earlyCommitmentLabel.AddToClassList("hide");
+            _hideEarlyCommitmentLabelCoroutine = null;
+        }
+
 
         public void OnFinishRoad() => _onFinishRoad = true;
 

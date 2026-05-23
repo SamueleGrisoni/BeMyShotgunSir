@@ -15,6 +15,7 @@
 }
 
 .earlycommitment-label {
+    opacity: 1;
     height: 35%;
     border-radius: 40px;
     border-width: 0;
@@ -28,6 +29,13 @@
     -unity-text-generator: advanced;
     -unity-text-auto-size: best-fit 80px 300px;
     width: 80%;
+    transition-property: opacity;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+.earlycommitment-label.hide {
+    opacity: 0;
 }
 
 .commitment-choice {
