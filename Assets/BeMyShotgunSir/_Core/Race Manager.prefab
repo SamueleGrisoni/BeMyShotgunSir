@@ -128,6 +128,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3414248990729970632}
   _networkObjectCache: {fileID: 3414248990729970632}
+  _seed: BMMS
   _tICK_INTERVAL: 0.2
   _maxRaceTime: 180
   _roadManagerPrefab: {fileID: 541111384414961198, guid: ba6a141122910ec45a2b80b692164a12, type: 3}
