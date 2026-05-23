@@ -24,6 +24,7 @@ namespace BeMyShotgunSir.Scripts.UI
         [SerializeField] private UIDocument _topBarDocument;
         [SerializeField] private float _markerLerpSpeed = 8f;
 
+
         #region Visual Elements
         private VisualElement _root;
         private VisualElement _mapBarContainer;
@@ -72,7 +73,6 @@ namespace BeMyShotgunSir.Scripts.UI
             _roadManager = _finalBindSource.RoadManager;
             _inputPublisher = _finalBindSource.InputPublisher;
             _role = _finalBindSource.Role;
-
         }
 
         private void OnEnable()
@@ -140,8 +140,10 @@ namespace BeMyShotgunSir.Scripts.UI
                 name = $"Team{teamIndex}Marker"
             };
 
+            _viewModel.NetState.TeamData.TryGetValue(teamIndex, out RaceTeamData teamData); //DEBUG [UI] Get team data to assign the correct color to the marker.
+
             marker.AddToClassList("team-marker");
-            marker.AddToClassList($"team-marker-{teamIndex}");
+            marker.AddToClassList($"team-marker-{teamData.ColorId}");
 
             var icon = new VisualElement
             {
