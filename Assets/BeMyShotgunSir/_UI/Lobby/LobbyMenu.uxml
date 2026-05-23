@@ -18,34 +18,50 @@
                         <ui:Label text="TEAM" name="Team" class="header-text header-team" style="-unity-text-align: upper-center;"/>
                         <ui:Label text="READY" name="Ready" class="player-ready-text header-text header-ready" style="width: 25%; -unity-text-align: upper-center;"/>
                     </ui:VisualElement>
-                    <ui:VisualElement name="Player1" class="player-row">
-                        <ui:Label text="Player 1" name="Name" class="player-name"/>
-                        <ui:Label text="-" name="Team" class="player-team"/>
-                        <ui:VisualElement name="Ready" class="ready">
-                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                    <ui:ScrollView name="PlayersScrollView" class="players-scroll-view" mode="Vertical" touch-scroll-type="Elastic">
+                        <ui:VisualElement name="Player1" class="player-row">
+                            <ui:Label text="Player 1" name="Name" class="player-name"/>
+                            <ui:Label text="-" name="Team" class="player-team"/>
+                            <ui:VisualElement name="Ready" class="ready">
+                                <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                            </ui:VisualElement>
                         </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="Player2" class="player-row">
-                        <ui:Label text="Player 2" name="Name" class="player-name"/>
-                        <ui:Label text="-" name="Team" class="player-team"/>
-                        <ui:VisualElement name="Ready" class="ready">
-                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        <ui:VisualElement name="Player2" class="player-row">
+                            <ui:Label text="Player 2" name="Name" class="player-name"/>
+                            <ui:Label text="-" name="Team" class="player-team"/>
+                            <ui:VisualElement name="Ready" class="ready">
+                                <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                            </ui:VisualElement>
                         </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="Player3" class="player-row">
-                        <ui:Label text="Player 3" name="Name" class="player-name"/>
-                        <ui:Label text="-" name="Team" class="player-team"/>
-                        <ui:VisualElement name="Ready" class="ready">
-                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        <ui:VisualElement name="Player3" class="player-row">
+                            <ui:Label text="Player 3" name="Name" class="player-name"/>
+                            <ui:Label text="-" name="Team" class="player-team"/>
+                            <ui:VisualElement name="Ready" class="ready">
+                                <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                            </ui:VisualElement>
                         </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="Player4" class="player-row">
-                        <ui:Label text="Player 4" name="Name" class="player-name"/>
-                        <ui:Label text="-" name="Team" class="player-team"/>
-                        <ui:VisualElement name="Ready" class="ready">
-                            <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                        <ui:VisualElement name="Player4" class="player-row">
+                            <ui:Label text="Player 4" name="Name" class="player-name"/>
+                            <ui:Label text="-" name="Team" class="player-team"/>
+                            <ui:VisualElement name="Ready" class="ready">
+                                <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                            </ui:VisualElement>
                         </ui:VisualElement>
-                    </ui:VisualElement>
+                        <ui:VisualElement name="Player5" class="player-row">
+                            <ui:Label text="Player 5" name="Name" class="player-name"/>
+                            <ui:Label text="-" name="Team" class="player-team"/>
+                            <ui:VisualElement name="Ready" class="ready">
+                                <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="Player6" class="player-row">
+                            <ui:Label text="Player 6" name="Name" class="player-name"/>
+                            <ui:Label text="-" name="Team" class="player-team"/>
+                            <ui:VisualElement name="Ready" class="ready">
+                                <ui:Label text="READY" name="ReadyLabel" class="ready-label"/>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:ScrollView>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ButtonContainer" class="button-container" style="align-items: center; position: absolute; bottom: 200px; top: auto; width: 100%; justify-content: flex-end;">

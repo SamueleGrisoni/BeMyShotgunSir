@@ -45,6 +45,7 @@ namespace BeMyShotgunSir.Scripts.UI
         private Label _lobbyIPAddress;
         private Label _playersInLobby;
         private VisualElement _playersInfo;
+        private ScrollView _playersScrollView;
         private readonly Dictionary<int, VisualElement> _playerRows = new();
         private Button _readyButton;
         private Button _leaveTeamButton;
@@ -68,6 +69,14 @@ namespace BeMyShotgunSir.Scripts.UI
             _lobbyIPAddress = _root.Q<Label>("LobbyIPAddress");
             _playersInLobby = _root.Q<Label>("PlayersInLobby");
             _playersInfo = _root.Q<VisualElement>("PlayersInfo");
+            _playersInfo = _root.Q<VisualElement>("PlayersInfo");
+            _playersScrollView = _root.Q<ScrollView>("PlayersScrollView");
+
+            if (_playersScrollView != null)
+            {
+                _playersScrollView.mode = ScrollViewMode.Vertical;
+                _playersScrollView.touchScrollBehavior = ScrollView.TouchScrollBehavior.Elastic;
+            }
 
             _readyButton = _root.Q<Button>("ReadyButton");
             _leaveTeamButton = _root.Q<Button>("LeaveTeamButton");
@@ -194,17 +203,9 @@ namespace BeMyShotgunSir.Scripts.UI
 
         private void ClearPlayerList()
         {
-            if (_playersInfo == null) return;
+            if (_playersScrollView == null) return;
 
-            var rows = _playersInfo.Query<VisualElement>(className: "player-row").ToList();
-
-            foreach (VisualElement row in rows)
-            {
-                if (row.ClassListContains("header"))
-                    continue;
-
-                row.RemoveFromHierarchy();
-            }
+            _playersScrollView.contentContainer.Clear();
         }
 
         private void UpdatePlayerStates()
@@ -233,7 +234,7 @@ namespace BeMyShotgunSir.Scripts.UI
                 else
                 {
                     VisualElement newRow = BuildPlayerRow(playerState);
-                    _playersInfo.Add(newRow);
+                    _playersScrollView.contentContainer.Add(newRow);
                     _playerRows[i] = newRow;
                 }
             }
