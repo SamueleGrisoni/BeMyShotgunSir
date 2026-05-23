@@ -59,6 +59,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         //utility
         private bool _log = true;
         private bool _isInitialized = false;
+        [SerializeField] private string _seed;
 
         //CONTEXT
         private LobbyNetStateStore _lobbyNetState;
@@ -218,8 +219,15 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
             _isInitialized = true;
             int s = seed;
-            if (seed == -1)
-                s = DateTime.Now.Ticks.ToString().GetHashCode();
+            if (string.IsNullOrEmpty(_seed))
+            {
+                if (seed == -1)
+                    s = DateTime.Now.Ticks.ToString().GetHashCode();
+            }
+            else
+            {
+                s = _seed.GetHashCode();
+            }
             _netState.SetSeed(s);
 
             Log.DLazy(() => $"Initializing race with seed {NetState.Seed}.", this);
