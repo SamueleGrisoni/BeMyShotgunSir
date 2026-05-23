@@ -41,12 +41,13 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* //DEBUG [UI] Here you can adjust the colors for each team marker */
 .team-marker-0 {
-    -unity-background-image-tint-color: rgb(0, 0, 255);
+    -unity-background-image-tint-color: rgb(255, 170, 0);
 }
 
 .team-marker-1 {
-    -unity-background-image-tint-color: rgb(255, 0, 0);
+    -unity-background-image-tint-color: rgb(255, 0, 255);
 }
 
 .team-marker-2 {
@@ -54,23 +55,23 @@
 }
 
 .team-marker-3 {
-    -unity-background-image-tint-color: rgb(255, 255, 0);
+    -unity-background-image-tint-color: rgb(255, 0, 0);
 }
 
 .team-marker-4 {
-    -unity-background-image-tint-color: rgb(255, 0, 255);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
 }
 
 .team-marker-5 {
-    -unity-background-image-tint-color: rgb(0, 255, 255);
+    -unity-background-image-tint-color: rgb(0, 0, 255);
 }
 
 .team-marker-6 {
-    -unity-background-image-tint-color: rgb(68, 0, 255);
+    -unity-background-image-tint-color: rgb(0, 0, 0);
 }
 
 .team-marker-7 {
-    -unity-background-image-tint-color: rgb(255, 255, 255);
+    -unity-background-image-tint-color: rgb(0, 221, 255);
 }
 
 .map-bar {
