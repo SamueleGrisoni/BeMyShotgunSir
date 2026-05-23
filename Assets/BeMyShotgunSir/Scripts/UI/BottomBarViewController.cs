@@ -108,6 +108,7 @@ namespace BeMyShotgunSir.Scripts.UI
             _thumbUpButton = _feedbackContainer.Q("ThumbUpButton");
 
             _runStopButton = _bottomBar.Q<Button>("RunStopButton");
+            _runStopButton.RemoveFromClassList("debug"); //DEBUG [UI] Comment to show the RUN/STOP button
 
             // Set the correct picking modes for overlapping controls
             _feedbackContainer.pickingMode = PickingMode.Ignore;
