@@ -1,11 +1,10 @@
-using FishNet.Object;
 using Unity.Cinemachine;
 using UnityEngine;
 
 
 namespace BeMyShotgunSir.Gameplay.Players.Driver
 {
-    public class CameraEnvironment : NetworkBehaviour
+    public class CameraEnvironment : MonoBehaviour
     {
         [SerializeField] private CinemachineCamera _targetCamera;
         private void LateUpdate()
