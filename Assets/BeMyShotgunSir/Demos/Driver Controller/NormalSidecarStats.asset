@@ -15,7 +15,7 @@ MonoBehaviour:
   <AccelerationForce>k__BackingField: 35
   <MaxSpeed>k__BackingField: 17
   <Gravity>k__BackingField: 50
-  <SteeringForce>k__BackingField: 55
-  <LateralGripFactor>k__BackingField: 55
+  <SteeringForce>k__BackingField: 45
+  <LateralGripFactor>k__BackingField: 45
   <SteerAngularRotation>k__BackingField: 15
   <SteerAngularRotationSlerp>k__BackingField: 60
