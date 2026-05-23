@@ -1,6 +1,7 @@
 ###############################
 ### CUSTOM IGNORE FOLDERS   ###
 ###############################
+Trailer/**
 **/__ignore/**
 **/__ignore.meta
 __[Ii]gnore[Ff]older/*
