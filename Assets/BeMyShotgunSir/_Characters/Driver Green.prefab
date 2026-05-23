@@ -48,8 +48,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1691779345374097310, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1692613559377210164, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693202889966265800, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2040229487851531600, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
       propertyPath: SceneId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3879902168211719850, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3880744849637839044, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5459872537985951411, guid: 79ba3e5321e09ad498bcb170a717889d, type: 3}
