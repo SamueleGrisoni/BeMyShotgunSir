@@ -41,7 +41,6 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* //DEBUG [UI] Here you can adjust the colors for each team marker */
 .team-marker-0 {
     -unity-background-image-tint-color: rgb(255, 170, 0);
 }
@@ -83,7 +82,7 @@
     -unity-background-scale-mode: scale-to-fit;
     position: relative;
     top: 50%;
-    height: 108px;
+    height: 135px;
 }
 
 .bar-cap {
