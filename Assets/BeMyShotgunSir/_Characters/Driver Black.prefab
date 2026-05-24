@@ -92,10 +92,6 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 104aecbb3c04d5347b5e0be8f6000a5b, type: 2}
-    - target: {fileID: 4961554435841543028, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 104aecbb3c04d5347b5e0be8f6000a5b, type: 2}
     - target: {fileID: 8924365376436740663, guid: 256925f7faab0e3c3a21d49d4e2ca949, type: 3}
       propertyPath: m_Name
       value: Driver Black

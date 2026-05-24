@@ -39466,7 +39466,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: e92825efc3e2b4e409acdc243981f425, type: 2}
-  - {fileID: 2100000, guid: e92825efc3e2b4e409acdc243981f425, type: 2}
+  - {fileID: 2100000, guid: f8aee5105049e9447b7a68e3486973d0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -77491,7 +77491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8582750907665450176, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
