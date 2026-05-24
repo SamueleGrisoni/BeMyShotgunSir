@@ -68,10 +68,6 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 4116eb12ebb1da84b8e33a1ccf66a935, type: 2}
-    - target: {fileID: 6247383185096154972, guid: aa10ff5086a05614fb734bcef2bb5c3a, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4116eb12ebb1da84b8e33a1ccf66a935, type: 2}
     - target: {fileID: 7615698665829594655, guid: aa10ff5086a05614fb734bcef2bb5c3a, type: 3}
       propertyPath: m_Name
       value: Driver Red
