@@ -407,7 +407,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IEnumerator StartRaceAfterCountdown()
         {
             yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); //DANGER
-            StartRace_ObserversRpc();
+            // StartRace_ObserversRpc();
         }
 
         [ObserversRpc]
@@ -434,11 +434,22 @@ namespace BeMyShotgunSir.Scripts.Core.Race
 
         private void Update()
         {
+
             if (!IsServerInitialized || !_isRaceStarted)
                 return;
 
+            UpdateDebug();
             UpdateTimer();
             UpdateLeaderboard();
+        }
+
+        [Server]
+        private void UpdateDebug()
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                StartRace_ObserversRpc();
+            }
         }
 
         [Server]
