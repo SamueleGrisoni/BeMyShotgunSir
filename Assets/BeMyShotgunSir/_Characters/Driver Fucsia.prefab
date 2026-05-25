@@ -74712,7 +74712,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 4726359609289288218}
   _networkObjectCache: {fileID: 4726359609289288218}
-  _automaticStartEnabled: 0
+  _automaticStartEnabled: 1
   _movementController: {fileID: 7864906868263305960}
   _roadBlockPrefab: {fileID: 1613331064374039297, guid: 9b3a8f3d84ce6814295302794733b2d6, type: 3}
   _backwardOffset: 2.5
@@ -77458,10 +77458,6 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
-      propertyPath: 'NetworkBehaviours.Array.data[0]'
-      value: 
-      objectReference: {fileID: 8416993059404301049}
-    - target: {fileID: 7632212876852736504, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
       propertyPath: InitializedParentNetworkBehaviour
       value: 
       objectReference: {fileID: 4678414540309126450}
@@ -77503,14 +77499,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 657164420842234222, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
   m_PrefabInstance: {fileID: 7282152588475950082}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8416993059404301049 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1279107669448468219, guid: 1e4fd51261831d242ba2838a41546a12, type: 3}
-  m_PrefabInstance: {fileID: 7282152588475950082}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6152b8bff21618439337a9a4ee2b6a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeMyShotgunSir.Gameplay.Players.Driver.CameraEnvironment
