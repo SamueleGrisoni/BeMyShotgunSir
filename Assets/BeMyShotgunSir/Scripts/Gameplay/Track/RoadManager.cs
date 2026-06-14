@@ -225,11 +225,14 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Track
             if (!_started)
                 return;
 
-            if (_driver == null || _activeRoadChunks.Count == 0)
+            if (_activeRoadChunks.Count == 0)
                 return;
 
             if (!_isServer)
             {
+                if (_driver == null)
+                    return;
+
                 PooledRoadChunk firstChunk = _activeRoadChunks.First.Value;
                 Transform exitAnchor = firstChunk.Component.NextRoadAnchors[0];
                 if (_driver.transform.position.z > exitAnchor.position.z + _clientDespawnBufferDistance)
