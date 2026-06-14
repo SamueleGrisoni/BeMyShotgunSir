@@ -407,7 +407,7 @@ namespace BeMyShotgunSir.Scripts.Core.Race
         private IEnumerator StartRaceAfterCountdown()
         {
             yield return new WaitForSeconds(BMMSDefaults.COUNTDOWN_TIME); //DANGER
-            // StartRace_ObserversRpc();
+            StartRace_ObserversRpc();
         }
 
         [ObserversRpc]
