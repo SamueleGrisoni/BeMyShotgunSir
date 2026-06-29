@@ -2,7 +2,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 
 
-namespace BeMyShotgunSir.Gameplay.Players.Driver
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public class CameraEnvironment : MonoBehaviour
     {

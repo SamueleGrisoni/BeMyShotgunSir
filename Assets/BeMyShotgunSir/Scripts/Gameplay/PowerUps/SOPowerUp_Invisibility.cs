@@ -6,7 +6,7 @@ using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.PowerUps
+namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
     [CreateAssetMenu(fileName = "SOInvisibility_PU", menuName = "Be My Shotgun, Sir!/PowerUp/Invisibility", order = 0)]
     public class SOInvisibility_PU : SOPowerUp

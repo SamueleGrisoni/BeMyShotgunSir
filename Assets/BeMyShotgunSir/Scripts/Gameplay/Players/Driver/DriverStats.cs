@@ -1,7 +1,7 @@
 using BeMyShotgunSir.Scripts.Gameplay.Players.Driver;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.Players.Driver
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public class DriverStats : MonoBehaviour
     {

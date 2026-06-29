@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 
-namespace BeMyShotgunSir.Editor
+namespace BeMyShotgunSir.Scripts.Editor
 {
 
     [CustomEditor(typeof(PolygonSpawnArea))]

@@ -5,7 +5,7 @@ using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.PowerUps
+namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
     [CreateAssetMenu(fileName = "SORoadBlock_PU", menuName = "Be My Shotgun, Sir!/PowerUp/RoadBlock", order = 0)]
     public class SORoadBlock_PU : SOPowerUp

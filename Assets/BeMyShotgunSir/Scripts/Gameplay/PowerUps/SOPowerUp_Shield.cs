@@ -2,7 +2,7 @@ using BeMyShotgunSir.Scripts.Core.Race;
 using BeMyShotgunSir.Scripts.Gameplay.PowerUps;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.PowerUps
+namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
     [CreateAssetMenu(fileName = "SOShield_PU", menuName = "Be My Shotgun, Sir!/PowerUp/Shield", order = 0)]
     public class SOShield_PU : SOPowerUp

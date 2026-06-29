@@ -4,7 +4,7 @@ using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.PowerUps
+namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
     [CreateAssetMenu(fileName = "SOReroll_PU", menuName = "Be My Shotgun, Sir!/PowerUp/Reroll", order = 0)]
     public class SOReroll_PU : SOPowerUp

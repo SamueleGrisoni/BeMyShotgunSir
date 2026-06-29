@@ -5,7 +5,7 @@ using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.Players.Driver
+namespace BeMyShotgunSir.Scripts.Gameplay.Players.Driver
 {
     public class DriverVisuals : NetworkBehaviour
     {

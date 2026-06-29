@@ -6,7 +6,7 @@ using BeMyShotgunSir.Scripts.Utils;
 using FishNet.Object;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Gameplay.PowerUps
+namespace BeMyShotgunSir.Scripts.Gameplay.PowerUps
 {
     [CreateAssetMenu(fileName = "SOSpear_PU", menuName = "Be My Shotgun, Sir!/PowerUp/Spear", order = 0)]
     public class SOSpear_PU : SOPowerUp
