@@ -1,9 +1,9 @@
-﻿using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
+using BeMyShotgunSir.Scripts.Gameplay.Track.Environment;
 using BeMyShotgunSir.Scripts.Gameplay.Track.Items;
 using UnityEditor;
 using UnityEngine;
 
-namespace BeMyShotgunSir.Editor
+namespace BeMyShotgunSir.Scripts.Editor
 {
     public class BatchVariantCreator
     {
