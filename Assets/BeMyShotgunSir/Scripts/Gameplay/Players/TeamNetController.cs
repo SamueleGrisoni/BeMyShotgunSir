@@ -25,7 +25,7 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
         public static event Action<ITeamNetControllerInitializer> OnTeamSpawned;
 
         //CONTEXT
-        private RaceNetContext _raceNetContext;
+        private RaceNetContext _raceNetContext; 
         private IRaceNetController _raceNetController;
         private LobbyNetContext _lobbyNetContext;
         private LobbyNetStateStore _lobbyNetStateStore;
@@ -157,6 +157,13 @@ namespace BeMyShotgunSir.Scripts.Gameplay.Players
                     return;
                 }
                 cam.enabled = true;
+                CameraEnvironment skyBg = GetComponentInChildren<CameraEnvironment>(true);
+                if (skyBg == null) {
+
+                    Log.WLazy(() => $"No CameraEnvironment found in children of TeamNetController for team {TeamId}.", this);
+                    return;
+                }
+                skyBg.gameObject.SetActive(true);
             }
 
             _syncTeamId.OnChange -= TrySetUpTeam;
